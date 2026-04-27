@@ -1,6 +1,45 @@
 # SUAPNE - Sistema Unificado para Atendimento às Pessoas com Necessidades Especiais
 Sistema para a organização dos dados, documentos, planos de trabalho e atendimentos semanais dos estudantes que necessitam de acompanhamento da CNAPNE para o Instituto Federal do Paraná campus Curitiba.
 
+# Quick Start
+
+As instruções a seguir consideram a utilização do sistema operacional Windows 10 ou 11.
+
+## Instalador
+
+Você pode executar o arquivo `QuickSetup.bat` na raíz do projeto para instalar automaticamente todos os requisitos e preparar o ambiente.
+
+## Instalação Manual
+
+Caso você deseje realizar o processo manualmente, abaixo estão todas as dependências necessárias.
+
+### Requisitos
+
+- PHP ≥ v8.2.12
+- Composer ≥ v2.9.4
+- Node.js ≥ v25.2.1
+- NPM ≥ v11.6.2
+- MySQL ≥ v9.5
+
+### Preparar ambiente
+
+Abra um terminal e execute os comandos na raíz do projeto:
+```
+composer install # Instala dependências do Composer
+npm install # Instala dependências do NPM
+copy .env.example .env # Copia variáveis de ambiente
+php artisan key:generate # Gera uma nova APP_KEY do .env da aplicação
+php artisan storage:link # Cria symlink de 'storage/app/public' para 'public/storage'
+php artisan wayfinder:generate --path=resources/js/wayfinder --skip-actions # Gera pastas da dependência laravel/wayfinder
+```
+
+## Iniciar Aplicação
+
+Abra um terminal e execute os comandos na raíz do projeto:
+```
+composer dev # Inicia a aplicação em 'http://localhost:8000' (Caso o .env não tenha sido modificado)
+```
+
 # Equipe
 - Edwin Neftaly Jimenez Luis
 - Gabriel Gimenez Mori
