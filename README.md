@@ -3,17 +3,19 @@ Sistema para a organização dos dados, documentos, planos de trabalho e atendim
 
 # Quick Start
 
-As instruções a seguir consideram a utilização do sistema operacional Windows 10 ou 11.
+As instruções a seguir englobam tudo que é necessário para preparar e executar a aplicação.
+
+Utilize o sistema operacional Windows 10 ou 11.
 
 ## Instalador
 
-Você pode executar o arquivo `QuickSetup.bat` na raíz do projeto para instalar automaticamente todos os requisitos e preparar o ambiente.
+Você pode executar o arquivo `QuickSetup.bat` na raíz do projeto para instalar automaticamente todos os requisitos, preparar o ambiente e iniciar a aplicação.
 
 ## Instalação Manual
 
 Caso você deseje realizar o processo manualmente, abaixo estão todas as dependências necessárias.
 
-### Requisitos
+#### Requisitos
 
 - PHP ≥ v8.2.12
 - Composer ≥ v2.9.4
@@ -21,7 +23,7 @@ Caso você deseje realizar o processo manualmente, abaixo estão todas as depend
 - NPM ≥ v11.6.2
 - MySQL ≥ v9.5
 
-### Preparar ambiente
+#### Preparar ambiente
 
 Abra um terminal e execute os comandos na raíz do projeto:
 ```
@@ -30,10 +32,16 @@ npm install # Instala dependências do NPM
 copy .env.example .env # Copia variáveis de ambiente
 php artisan key:generate # Gera uma nova APP_KEY do .env da aplicação
 php artisan storage:link # Cria symlink de 'storage/app/public' para 'public/storage'
-php artisan wayfinder:generate --path=resources/js/wayfinder --skip-actions # Gera pastas da dependência laravel/wayfinder
 ```
 
-## Iniciar Aplicação
+Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário. Depois, execute:
+```
+php artisan migrate:fresh --seed # Realiza as migrations e cria usuário primário
+# E-mail do usuário primário: admin@admin.com
+# Senha do usuário primário: 12345
+```
+
+#### Iniciar Aplicação
 
 Abra um terminal e execute os comandos na raíz do projeto:
 ```
