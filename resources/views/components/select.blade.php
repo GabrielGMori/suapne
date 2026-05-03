@@ -15,7 +15,7 @@
         name="{{ $submittedName }}"
         id="{{ $name }}"
         @if ($multiple) multiple @endif
-        {{ $attributes->merge(['class' => 'form-control form-control--soft ' . ($multiple ? 'form-control--multiselect' : 'form-control--select') . ' min-w-70 cursor-pointer']) }}
+        {{ $attributes->merge(['class' => 'form-control form-control-soft ' . ($multiple ? 'form-control--multiselect' : 'form-control--select') . ' min-w-70 cursor-pointer']) }}
     >
         @if($placeholder && !$multiple)
             <option value="" disabled {{ $value === '' ? 'selected' : '' }}>{{ $placeholder }}</option>

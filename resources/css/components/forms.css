@@ -4,7 +4,7 @@
     }
 
     .form-label {
-        @apply text-body-medium text-white;
+        @apply inline w-full text-body-medium text-white;
     }
 
     .form-helper {
@@ -12,55 +12,15 @@
     }
 
     .form-control-wrap {
-        @apply relative;
+        @apply inline-block relative;
     }
 
     .form-control {
-        @apply h-11 rounded-lg bg-white px-2 text-body-medium text-black outline-none transition duration-150;
-    }
-
-    .form-control::placeholder {
-        @apply text-white/20
+        @apply h-11 rounded-lg px-2 text-body-medium outline-none transition duration-150;
     }
 
     .form-control:focus {
         @apply border-primary ring-2 ring-primary/20;
-    }
-
-    /* Appearance */
-    .form-control-outlined {
-        @apply bg-white border border-on-surface;
-    }
-
-    .form-control-soft {
-        @apply bg-surface border-transparent shadow-none;
-    }
-
-    .form-label-outlined {
-        @apply text-body-medium text-black;
-    }
-
-    /* Size */
-    .form-control-tiny {
-        @apply w-11 min-w-11 px-3;
-    }
-
-    .form-control-small {
-        @apply min-w-40 w-min;
-    }
-
-    .form-control-medium {
-        @apply min-w-75 w-min;
-    }
-
-    .form-control-large {
-        @apply min-w-100;
-    }
-
-
-
-    .form-control-tiny.form-control-select {
-        @apply pr-8;
     }
 
     .form-control-select {
@@ -71,10 +31,60 @@
         @apply h-32 cursor-pointer appearance-auto py-2 pr-4;
     }
 
+    .form-control-file {
+        @apply py-2 cursor-pointer;
+    }
+
     .form-control-textarea {
         @apply h-auto min-h-36 py-3;
     }
 
+    /* Appearance */
+    .form-control-default {
+        @apply bg-white text-black;
+    }
+    .form-control-default::placeholder {
+        @apply text-black/40;
+    }
+
+    .form-control-outlined {
+        @apply bg-white border border-on-surface text-black;
+    }
+
+    .form-control-surface {
+        @apply bg-surface border-transparent;
+    }
+
+    .form-label-outlined, .form-label-surface {
+        @apply text-black;
+    }
+
+    /* Size */
+    .form-control-tiny {
+        @apply w-11;
+    }
+
+    .form-control-small {
+        @apply w-40;
+    }
+
+    .form-control-medium {
+        @apply w-75;
+    }
+
+    .form-control-large {
+        @apply w-100;
+    }
+
+    .form-control-full {
+        @apply w-full;
+    }
+
+    .form-control-tiny.form-control-select {
+        @apply pr-8;
+    }
+
+    /* Icons */
     .form-icon {
         @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary-accent;
     }
@@ -99,51 +109,53 @@
         @apply absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-secondary hover:bg-black/5;
     }
 
+    /* Display Field */
     .display-field {
         @apply flex max-w-114 flex-col gap-2 border-b border-[#C5C5C5] pb-2 text-secondary;
     }
 
-    .display-field__label {
+    .display-field-label {
         @apply text-body-small text-secondary-accent;
     }
 
-    .display-field__value {
+    .display-field-value {
         @apply text-body-medium text-black;
     }
 
+    /* Multi-Select */
     .multi-select {
-        @apply relative w-full;
+        @apply relative text-nowrap;
     }
 
-    .multi-select__control {
-        @apply min-h-20 w-full rounded-lg border border-[#C5C5C5] bg-white px-3 py-2 text-left shadow-sm;
+    .multi-select-control {
+        @apply rounded-lg border border-[#C5C5C5] bg-white text-left cursor-pointer appearance-none pl-5 py-3;
     }
 
-    .multi-select__chips {
+    .multi-select-chips {
         @apply flex flex-wrap gap-2 pr-8;
     }
 
-    .multi-select__chip {
+    .multi-select-chip {
         @apply inline-flex items-center gap-1 rounded-md border border-[#CDD3DB] bg-[#eef1f5] px-2 py-1 text-body-medium text-black;
     }
 
-    .multi-select__chip-remove {
-        @apply inline-flex h-4 w-4 items-center justify-center text-secondary-accent;
+    .multi-select-chip-remove {
+        @apply inline-flex h-4 w-4 items-center justify-center text-secondary-accent hover:text-secondary cursor-pointer text-lg;
     }
 
-    .multi-select__clear {
-        @apply absolute right-3 top-3 text-secondary-accent;
+    .multi-select-clear {
+        @apply absolute right-3.5 top-3.5 text-secondary-accent hover:text-secondary cursor-pointer text-xl;
     }
 
-    .multi-select__menu {
-        @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-[#C5C5C5] bg-white shadow-md;
+    .multi-select-menu {
+        @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-[#C5C5C5] bg-white;
     }
 
-    .multi-select__option {
+    .multi-select-option {
         @apply flex w-full items-center justify-between px-3 py-2 text-left text-body-medium hover:bg-surface;
     }
 
-    .multi-select__option-selected {
+    .multi-select-option-selected {
         @apply bg-surface;
     }
 }

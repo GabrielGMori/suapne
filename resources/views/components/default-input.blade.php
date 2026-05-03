@@ -1,5 +1,5 @@
 @props([
-    'type' => 'default',
+    'type' => 'text',
 
     'appearance' => 'default',
     'size' => 'medium',
@@ -16,19 +16,14 @@
 
 @php
     $isDate = in_array($type, ['date', 'datetime'], true);
-    $isSelect = in_array($type, ['dropdown', 'dropdown_small'], true);
+    $isSelect = $type === 'select';
     $isMultiSelect = $type === 'multiselect';
 
-    $sizeClass = match ($size) {
-        'tiny' => 'form-control-tiny',
-        'small' => 'form-control-small',
-        'large' => 'form-control-large',
-        default => 'form-control-medium',
-    };
+    $sizeClass = "form-control-$size";
 
     $appearanceClass = match ($appearance) {
         'outlined' => 'form-control-outlined',
-        'soft' => 'form-control-soft',
+        'surface' => 'form-control-surface',
         default => 'form-control-default',
     };
 
@@ -37,7 +32,7 @@
         in_array($type, ['password', 'password_forgot'], true) => 'password',
         $type === 'date' => 'date',
         $type === 'datetime' => 'datetime-local',
-        default => 'text',
+        default => $type,
     };
 
     $resolvedPlaceholder = match (true) {
@@ -64,7 +59,7 @@
 @endphp
 
 <div
-    class="form-field"
+    class="form-field {{ $size == 'full' ? '' : 'w-max' }}"
     x-data="{
         showPassword: false,
         multiOpen: false,
@@ -95,37 +90,36 @@
     @click.outside="multiOpen = false"
 >
     @if ($label)
-        <label for="{{ $name }}" class="{{ $appearance === 'outlined' ? 'form-label-outlined' : 'form-label' }}">{{ $label }}</label>
+        <label for="{{ $name }}" class="form-label {{ 'form-label-' . $appearance }}">{{ $label }}</label>
     @endif
 
-    <div class="form-control-wrap w-full">
+    <div class="form-control-wrap">
         @if ($isSelect)
             <select
+                id="{{ $name }}"
                 name="{{ $submittedName }}"
                 @if ($multiple) multiple @endif
-                {{ $attributes->merge(['class' => trim($controlClass . ' ' . ($multiple ? 'form-control--multiselect' : 'form-control--select') . ' ' . ($type === 'dropdown_small' ? 'form-control--tiny' : ''))]) }}>
+                {{ $attributes->merge(['class' => trim($controlClass . ' ' . ($multiple ? 'form-control-multiselect' : 'form-control-select'))]) }}>
                 @unless ($multiple)
-                    <option value="">{{ $resolvedPlaceholder }}</option>
+                    <option value="" selected disabled>{{ $resolvedPlaceholder }}</option>
                 @endunless
                 @foreach ($options as $optionValue => $optionLabel)
-                    <option value="{{ $optionValue }}">{{ $optionLabel }}</option>
+                    <option value="{{ $optionValue }}" @selected(old($name, $value) == $optionValue)>{{ $optionLabel }}</option>
                 @endforeach
             </select>
 
-            @unless ($multiple)
-                <span class="form-caret {{ $type === 'dropdown_small' ? 'form-caret--small' : '' }}"></span>
-            @endunless
+            <span class="form-caret {{ $size === 'small' ? 'form-caret-small' : '' }}"></span>
         @elseif ($isMultiSelect)
-            <div class="multi-select">
+            <div class="multi-select {{ $sizeClass }}">
                 <button
                     type="button"
-                    class="multi-select__control"
+                    class="multi-select-control {{ $sizeClass }}"
                     @click="multiOpen = !multiOpen"
                 >
-                    <div class="multi-select__chips" x-show="selectedItems.length">
+                    <div class="multi-select-chips" x-show="selectedItems.length">
                         <template x-for="option in selectedOptions()" :key="option.value">
-                            <span class="multi-select__chip">
-                                <button type="button" class="multi-select__chip-remove" @click.stop="removeOption(option.value)">x</button>
+                            <span class="multi-select-chip">
+                                <button type="button" class="multi-select-chip-remove" @click.stop="removeOption(option.value)">&times;</button>
                                 <span x-text="option.label"></span>
                             </span>
                         </template>
@@ -133,38 +127,44 @@
                     <span x-show="!selectedItems.length" class="text-black/40">{{ $resolvedPlaceholder }}</span>
                 </button>
 
-                <button type="button" x-show="selectedItems.length" class="multi-select__clear" @click="clearSelections()" aria-label="Limpar seleção">x</button>
+                <button type="button" x-show="selectedItems.length" class="multi-select-clear" @click="clearSelections()" aria-label="Limpar seleção">&times;</button>
 
-                <div x-show="multiOpen" x-cloak class="multi-select__menu">
+                <div x-show="multiOpen" x-cloak class="multi-select-menu">
                     <template x-for="option in multiOptions" :key="option.value">
                         <button
                             type="button"
-                            class="multi-select__option"
-                            :class="{ 'multi-select__option--selected': isSelected(option.value) }"
+                            class="multi-select-option"
+                            :class="{ 'multi-select-option-selected': isSelected(option.value) }"
                             @click="toggleOption(option.value)"
                         >
                             <span x-text="option.label"></span>
-                            <span x-show="isSelected(option.value)">x</span>
+                            <span x-show="isSelected(option.value)">&times;</span>
                         </button>
                     </template>
                 </div>
 
+                <input type="hidden" name="{{ $name }}" value="" />
                 <template x-for="selectedItem in selectedItems" :key="selectedItem">
                     <input type="hidden" name="{{ $submittedName }}" :value="selectedItem" />
                 </template>
+
+                <span x-show="!selectedItems.length" class="form-caret {{ $size === 'small' ? 'form-caret-small' : '' }}"></span>
             </div>
         @elseif ($type === 'textarea')
             <textarea
+                id="{{ $name }}"
                 name="{{ $name }}"
                 placeholder="{{ $resolvedPlaceholder }}"
-                {{ $attributes->merge(['class' => $controlClass . ' form-control--textarea']) }}>{{ old($name, $value) }}</textarea>
+                {{ $attributes->merge(['class' => $controlClass . ' form-control-textarea']) }}>{{ old($name, $value) }}</textarea>
         @elseif ($type === 'file')
             <input
+                id="{{ $name }}"
                 name="{{ $name }}"
                 type="file"
-                {{ $attributes->merge(['class' => $controlClass]) }} />
+                {{ $attributes->merge(['class' => $controlClass . ' form-control-file']) }} />
         @elseif ($isDate)
             <input
+                id="{{ $name }}"
                 name="{{ $name }}"
                 type="{{ $inputType }}"
                 value="{{ old($name, $value) }}"
@@ -173,6 +173,7 @@
             />
         @else
             <input
+                id="{{ $name }}"
                 name="{{ $name }}"
                 type="{{ $inputType }}"
                 @if (in_array($type, ['password', 'password_forgot'], true))
@@ -192,7 +193,7 @@
     </div>
 
     @if ($type === 'password_forgot' && !$helper)
-        <a href="#" class="form-helper form-helper--center">Esqueceu ou deseja alterar sua senha?</a>
+        <a href="#" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
     @elseif ($helper)
         <p class="form-helper">{{ $helper }}</p>
     @endif
