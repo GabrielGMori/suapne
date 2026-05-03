@@ -1,0 +1,149 @@
+@layer components {
+    .form-field {
+        @apply flex flex-col gap-1;
+    }
+
+    .form-label {
+        @apply text-body-medium text-white;
+    }
+
+    .form-helper {
+        @apply text-label-small text-primary-accent w-full text-center;
+    }
+
+    .form-control-wrap {
+        @apply relative;
+    }
+
+    .form-control {
+        @apply h-11 rounded-lg bg-white px-2 text-body-medium text-black outline-none transition duration-150;
+    }
+
+    .form-control::placeholder {
+        @apply text-white/20
+    }
+
+    .form-control:focus {
+        @apply border-primary ring-2 ring-primary/20;
+    }
+
+    /* Appearance */
+    .form-control-outlined {
+        @apply bg-white border border-on-surface;
+    }
+
+    .form-control-soft {
+        @apply bg-surface border-transparent shadow-none;
+    }
+
+    .form-label-outlined {
+        @apply text-body-medium text-black;
+    }
+
+    /* Size */
+    .form-control-tiny {
+        @apply w-11 min-w-11 px-3;
+    }
+
+    .form-control-small {
+        @apply min-w-40 w-min;
+    }
+
+    .form-control-medium {
+        @apply min-w-75 w-min;
+    }
+
+    .form-control-large {
+        @apply min-w-100;
+    }
+
+
+
+    .form-control-tiny.form-control-select {
+        @apply pr-8;
+    }
+
+    .form-control-select {
+        @apply cursor-pointer appearance-none pr-12;
+    }
+
+    .form-control-multiselect {
+        @apply h-32 cursor-pointer appearance-auto py-2 pr-4;
+    }
+
+    .form-control-textarea {
+        @apply h-auto min-h-36 py-3;
+    }
+
+    .form-icon {
+        @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary-accent;
+    }
+
+    .form-caret {
+        @apply pointer-events-none absolute right-4 top-1/2 h-0 w-0 -translate-y-1/2 border-l-[8px] border-r-[8px] border-t-[11px] border-l-transparent border-r-transparent border-t-black;
+    }
+
+    .form-caret-small {
+        @apply right-2 border-l-[6px] border-r-[6px] border-t-[8px];
+    }
+
+    .form-icon-button {
+        @apply absolute right-3 top-1/2 flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded text-secondary-accent hover:bg-black/5;
+    }
+
+    .form-icon-small {
+        @apply right-1;
+    }
+
+    .form-password-toggle {
+        @apply absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-secondary hover:bg-black/5;
+    }
+
+    .display-field {
+        @apply flex max-w-114 flex-col gap-2 border-b border-[#C5C5C5] pb-2 text-secondary;
+    }
+
+    .display-field__label {
+        @apply text-body-small text-secondary-accent;
+    }
+
+    .display-field__value {
+        @apply text-body-medium text-black;
+    }
+
+    .multi-select {
+        @apply relative w-full;
+    }
+
+    .multi-select__control {
+        @apply min-h-20 w-full rounded-lg border border-[#C5C5C5] bg-white px-3 py-2 text-left shadow-sm;
+    }
+
+    .multi-select__chips {
+        @apply flex flex-wrap gap-2 pr-8;
+    }
+
+    .multi-select__chip {
+        @apply inline-flex items-center gap-1 rounded-md border border-[#CDD3DB] bg-[#eef1f5] px-2 py-1 text-body-medium text-black;
+    }
+
+    .multi-select__chip-remove {
+        @apply inline-flex h-4 w-4 items-center justify-center text-secondary-accent;
+    }
+
+    .multi-select__clear {
+        @apply absolute right-3 top-3 text-secondary-accent;
+    }
+
+    .multi-select__menu {
+        @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-[#C5C5C5] bg-white shadow-md;
+    }
+
+    .multi-select__option {
+        @apply flex w-full items-center justify-between px-3 py-2 text-left text-body-medium hover:bg-surface;
+    }
+
+    .multi-select__option-selected {
+        @apply bg-surface;
+    }
+}

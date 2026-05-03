@@ -34,12 +34,18 @@ php artisan key:generate # Gera uma nova APP_KEY do .env da aplicação
 php artisan storage:link # Cria symlink de 'storage/app/public' para 'public/storage'
 ```
 
-Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário. Depois, execute:
+Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário. 
+
+Primeiro, crie a database. Você pode fazer isso manualmente com o MySQL Workbench ou, caso o `mysql.exe` (Normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) estiver em seu PATH, utilize o comando modificando as váriaveis em "<>":
+```
+mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE <DB_DATABASE>;" # Cria a database no servidor MySQL
+```
+Depois, execute:
 ```
 php artisan migrate:fresh --seed # Realiza as migrations e cria usuário primário
-# E-mail do usuário primário: admin@admin.com
-# Senha do usuário primário: 12345
 ```
+- E-mail do usuário primário: admin@admin.com
+- Senha do usuário primário: 12345
 
 #### Iniciar Aplicação
 

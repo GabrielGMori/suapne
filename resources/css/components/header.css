@@ -1,0 +1,13 @@
+@layer components {
+    .app-header {
+        @apply flex w-full items-start justify-between bg-white px-16 py-16;
+    }
+
+    .app-header__logo-ifpr {
+        @apply h-16 object-contain;
+    }
+
+    .app-header__logo-cnapne {
+        @apply h-14 object-contain;
+    }
+}

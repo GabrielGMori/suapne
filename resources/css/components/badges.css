@@ -1,0 +1,53 @@
+@layer components {
+    .badge {
+        @apply inline-flex h-8 min-w-24 items-center justify-center rounded-lg px-4 text-label-small;
+    }
+
+    .badge--filled {
+        background-color: var(--badge-bg, #fca5a5);
+        color: var(--badge-color, #262626);
+        border: 1px solid transparent;
+    }
+
+    .badge--outlined {
+        @apply rounded-full bg-transparent;
+        color: var(--badge-color, #262626);
+        border: 1px solid var(--badge-border, #262626);
+    }
+
+    .badge--pending {
+        @apply bg-error/70 text-secondary;
+    }
+
+    .badge--outlined.badge--pending {
+        @apply text-orange border-orange;
+    }
+
+    .badge--waiting {
+        @apply bg-warn/50 text-secondary;
+    }
+
+    .badge--outlined.badge--waiting {
+        @apply text-orange border-orange;
+    }
+
+    .badge--approved {
+        @apply bg-success/40 text-secondary;
+    }
+
+    .badge--outlined.badge--approved {
+        @apply text-primary-accent border-primary-accent;
+    }
+
+    .badge--removed {
+        @apply border border-red text-red;
+    }
+
+    .badge--concluded {
+        @apply border border-primary-accent text-primary-accent;
+    }
+
+    .badge--preview {
+        @apply border border-tertiary text-tertiary;
+    }
+}

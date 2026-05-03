@@ -1,0 +1,49 @@
+@layer components {
+    .surface-panel {
+        @apply h-min overflow-hidden rounded-lg bg-surface;
+    }
+
+    .surface-panel__header {
+        @apply bg-primary px-4 py-2 text-label-large text-white;
+    }
+
+    .surface-panel__body {
+        @apply bg-surface px-4 py-4;
+    }
+
+    .surface-panel__summary {
+        @apply grid grid-cols-2 gap-x-10 gap-y-3 bg-surface px-4 py-4 text-body-medium text-secondary;
+    }
+
+    .surface-panel__summary-item {
+        @apply flex items-center gap-2;
+    }
+
+    .surface-panel__summary-label {
+        @apply text-label-medium text-secondary;
+    }
+
+    .surface-panel__toggle {
+        @apply flex cursor-pointer items-center justify-end gap-2 bg-surface px-4 py-3 text-body-small text-secondary;
+    }
+
+    .auth-card {
+        @apply flex w-full max-w-[390px] flex-col items-center rounded-3xl bg-primary-container px-8 py-10 text-white;
+    }
+
+    .auth-card--sm {
+        @apply min-h-[460px];
+    }
+
+    .auth-card--md {
+        @apply min-h-[680px];
+    }
+
+    .auth-card--lg {
+        @apply min-h-[860px];
+    }
+
+    .auth-card__title {
+        @apply mt-6 text-display-small text-on-surface;
+    }
+}

@@ -1,0 +1,29 @@
+@layer components {
+    .list-item {
+        @apply rounded-md bg-on-surface px-4 py-3 text-secondary;
+    }
+
+    .list-item__row {
+        @apply flex items-center justify-between gap-4;
+    }
+
+    .list-item__main {
+        @apply flex min-w-0 items-center gap-2;
+    }
+
+    .list-item__title {
+        @apply truncate text-title-small;
+    }
+
+    .list-item__meta {
+        @apply flex shrink-0 items-center gap-4 text-body-large;
+    }
+
+    .list-item__action {
+        @apply flex h-8 w-8 cursor-pointer items-center justify-center rounded text-secondary hover:bg-black/5;
+    }
+
+    li:has(> .list-item) {
+        list-style: none;
+    }
+}
