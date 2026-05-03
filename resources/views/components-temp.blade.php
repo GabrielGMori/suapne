@@ -1,428 +1,220 @@
 <x-layouts.app>
-    <div class="flex gap-0 min-h-screen bg-surface">
+    <div x-data="{
+        theme: 'default',
+        sbType: 'text',
+        sbLabel: 'Label de Exemplo',
+        sbPlaceholder: 'Digite algo...',
+        sbHelper: '',
+        sbSize: 'medium',
+        sbValue: '',
+        sbOptions: { '1': 'Opção A', '2': 'Opção B', '3': 'Opção C' }
+    }"
+    class="min-h-screen transition-colors duration-500 p-8"
+    :class="{
+        'bg-secondary-container text-white': theme === 'default',
+        'bg-white text-black': theme === 'outlined',
+        'bg-surface text-black': theme === 'surface'
+    }">
 
-        {{-- Sidebar Nav --}}
-        <aside class="w-56 flex-shrink-0 border-r border-on-surface/20 sticky top-0 h-screen overflow-y-auto py-6">
-            <p class="px-5 mb-2 text-label-small text-secondary-accent uppercase tracking-widest">Tipos</p>
-            <nav class="flex flex-col">
-                <a href="#text"        class="wiki-nav-link">Text</a>
-                <a href="#password"    class="wiki-nav-link">Password</a>
-                <a href="#select"      class="wiki-nav-link">Select</a>
-                <a href="#multiselect" class="wiki-nav-link">Multiselect</a>
-                <a href="#textarea"    class="wiki-nav-link">Textarea</a>
-                <a href="#date"        class="wiki-nav-link">Date</a>
-                <a href="#datetime"    class="wiki-nav-link">Datetime</a>
-                <a href="#file"        class="wiki-nav-link">File</a>
-            </nav>
-            <p class="px-5 mt-6 mb-2 text-label-small text-secondary-accent uppercase tracking-widest">Modificadores</p>
-            <nav class="flex flex-col">
-                <a href="#sizes"      class="wiki-nav-link">Sizes</a>
-                <a href="#appearance" class="wiki-nav-link">Appearance</a>
-                <a href="#all-props"  class="wiki-nav-link">All props</a>
-            </nav>
-        </aside>
+        <div class="max-w-6xl mx-auto">
+            <header class="mb-12 border-b border-on-surface pb-6">
+                <h1 class="text-display-medium font-bold uppercase tracking-tight">Wiki de Componentes: Input</h1>
+                <p class="text-body-large opacity-80 mt-2">Guia oficial de uso do componente <code>x-default-input</code>.</p>
+            </header>
 
-        {{-- Content --}}
-        <main class="flex-1 px-10 py-8 max-w-4xl">
-
-            <h1 class="text-heading-large mb-1">Form Control</h1>
-            <p class="text-body-medium text-secondary mb-10">
-                Componente unificado para todos os campos de formulário do sistema.
-                Usage: <code class="wiki-code">&lt;x-default-input type="..." name="..." /&gt;</code>
-            </p>
-
-            {{-- ================================================================ --}}
-            {{-- TEXT --}}
-            {{-- ================================================================ --}}
-            <section id="text" class="wiki-section">
-                <h2 class="wiki-section-title">Text</h2>
-                <p class="wiki-section-desc">Tipo padrão. Aceita qualquer valor string.</p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="text" name="demo_text_1" label="Sem valor" />
-                    <x-default-input type="text" name="demo_text_2" label="Com valor" value="João Silva" />
-                    <x-default-input type="text" name="demo_text_3" label="Com placeholder" placeholder="Digite seu nome completo" />
-                    <x-default-input type="text" name="demo_text_4" label="Com helper" helper="Este campo é obrigatório" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="text" name="nome" label="Nome" /&gt;
-
-&lt;x-default-input type="text" name="nome" label="Nome"
-    value="João Silva" /&gt;
-
-&lt;x-default-input type="text" name="nome"
-    placeholder="Digite seu nome completo" /&gt;
-
-&lt;x-default-input type="text" name="nome"
-    label="Nome" helper="Este campo é obrigatório" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- PASSWORD --}}
-            {{-- ================================================================ --}}
-            <section id="password" class="wiki-section">
-                <h2 class="wiki-section-title">Password</h2>
-                <p class="wiki-section-desc">
-                    Dois variantes: <code class="wiki-code">password</code> e <code class="wiki-code">password_forgot</code>.
-                    O variante forgot adiciona o link de redefinição automaticamente.
+            <!-- # Appearances -->
+            <section id="appearances" class="mb-16">
+                <h2 class="text-title-large mb-4"># Appearances (Aparências)</h2>
+                <p class="text-body-medium mb-6">
+                    A propriedade <code>appearance</code> define o estilo visual base do input. Ela deve ser escolhida de acordo com o contexto do fundo (background) onde o formulário está inserido.
                 </p>
 
-                <div class="wiki-preview">
-                    <x-default-input type="password" name="demo_pw_1" label="password" />
-                    <x-default-input type="password_forgot" name="demo_pw_2" label="password_forgot" />
+                <div class="flex gap-4 mb-8 bg-black/10 p-4 rounded-lg inline-flex">
+                    <button @click="theme = 'default'" class="px-6 py-2 rounded-md bg-white text-black font-bold hover:scale-105 transition">Default (Escuro)</button>
+                    <button @click="theme = 'outlined'" class="px-6 py-2 rounded-md border border-black bg-white text-black font-bold hover:scale-105 transition">Outlined (Borda)</button>
+                    <button @click="theme = 'surface'" class="px-6 py-2 rounded-md bg-on-surface text-black font-bold hover:scale-105 transition">Surface (Cinza)</button>
                 </div>
 
-                <pre class="wiki-code-block">&lt;x-default-input type="password" name="senha" label="Senha" /&gt;
-
-&lt;x-default-input type="password_forgot" name="senha" label="Senha" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- SELECT --}}
-            {{-- ================================================================ --}}
-            <section id="select" class="wiki-section">
-                <h2 class="wiki-section-title">Select</h2>
-                <p class="wiki-section-desc">
-                    Dropdown com caret customizado. Passe as opções como array associativo
-                    <code class="wiki-code">value => label</code>.
-                    A seleção é restaurada via <code class="wiki-code">old()</code> automaticamente.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input
-                        type="select"
-                        name="demo_select_1"
-                        label="Sem valor selecionado"
-                        :options="['ti' => 'Técnico em Informática', 'adm' => 'Administração', 'log' => 'Logística']"
-                    />
-                    <x-default-input
-                        type="select"
-                        name="demo_select_2"
-                        label="Com valor pré-selecionado"
-                        value="adm"
-                        :options="['ti' => 'Técnico em Informática', 'adm' => 'Administração', 'log' => 'Logística']"
-                    />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="select" name="curso" label="Curso"
-    :options="['ti' => 'Técnico em Informática', 'adm' => 'Administração']" /&gt;
-
-&lt;!-- Restaurar valor selecionado após falha de validação --&gt;
-&lt;x-default-input type="select" name="curso" label="Curso"
-    value="{{ old('curso', 0) }}"
-    :options="$cursos" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- MULTISELECT --}}
-            {{-- ================================================================ --}}
-            <section id="multiselect" class="wiki-section">
-                <h2 class="wiki-section-title">Multiselect</h2>
-                <p class="wiki-section-desc">
-                    Dropdown customizado com Alpine.js para múltiplas seleções.
-                    Submete como <code class="wiki-code">name[]</code>.
-                    Use <code class="wiki-code">nullable</code> na validação — o campo fica ausente quando nada é selecionado.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input
-                        type="multiselect"
-                        name="demo_multi_1"
-                        label="Sem seleção"
-                        :options="['mat' => 'Matemática', 'geo' => 'Geografia', 'fis' => 'Física', 'qui' => 'Química']"
-                    />
-                    <x-default-input
-                        type="multiselect"
-                        name="demo_multi_2"
-                        label="Com valores pré-selecionados"
-                        :value="['mat', 'fis']"
-                        :options="['mat' => 'Matemática', 'geo' => 'Geografia', 'fis' => 'Física', 'qui' => 'Química']"
-                    />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="multiselect" name="disciplinas" label="Disciplinas"
-    :options="$disciplinas" /&gt;
-
-&lt;!-- Com valores pré-selecionados --&gt;
-&lt;x-default-input type="multiselect" name="disciplinas"
-    :value="$professor-&gt;disciplinas-&gt;pluck('id')"
-    :options="$disciplinas" /&gt;
-
-&lt;!-- Regras de validação --&gt;
-'disciplinas'   =&gt; ['nullable', 'array'],
-'disciplinas.*' =&gt; ['integer', 'exists:disciplinas,id'],</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- TEXTAREA --}}
-            {{-- ================================================================ --}}
-            <section id="textarea" class="wiki-section">
-                <h2 class="wiki-section-title">Textarea</h2>
-                <p class="wiki-section-desc">Campo de texto multilinha. Altura mínima de 9rem.</p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="textarea" name="demo_ta_1" label="Vazio" />
-                    <x-default-input type="textarea" name="demo_ta_2" label="Com valor"
-                        value="O aluno demonstrou dificuldades em atividades em grupo." />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="textarea" name="necessidades" label="Necessidades"
-    placeholder="Descreva as necessidades do estudante" /&gt;
-
-&lt;x-default-input type="textarea" name="observacoes" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- DATE --}}
-            {{-- ================================================================ --}}
-            <section id="date" class="wiki-section">
-                <h2 class="wiki-section-title">Date</h2>
-                <p class="wiki-section-desc">
-                    Renderiza um <code class="wiki-code">type="date"</code> nativo.
-                    O value deve estar no formato <code class="wiki-code">Y-m-d</code>.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="date" name="demo_date_1" label="Vazio" />
-                    <x-default-input type="date" name="demo_date_2" label="Com valor" value="2008-01-01" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="date" name="data_nascimento" label="Data de nascimento" /&gt;
-
-&lt;!-- O Carbon formata automaticamente para Y-m-d --&gt;
-&lt;x-default-input type="date" name="data_nascimento" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- DATETIME --}}
-            {{-- ================================================================ --}}
-            <section id="datetime" class="wiki-section">
-                <h2 class="wiki-section-title">Datetime</h2>
-                <p class="wiki-section-desc">
-                    Renderiza <code class="wiki-code">type="datetime-local"</code>.
-                    O value deve estar no formato <code class="wiki-code">Y-m-d\TH:i</code>.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="datetime" name="demo_dt_1" label="Vazio" />
-                    <x-default-input type="datetime" name="demo_dt_2" label="Com valor" value="2026-03-30T15:30" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="datetime" name="dia_hora" label="Dia/Hora" /&gt;
-
-&lt;x-default-input type="datetime" name="dia_hora" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- FILE --}}
-            {{-- ================================================================ --}}
-            <section id="file" class="wiki-section">
-                <h2 class="wiki-section-title">File</h2>
-                <p class="wiki-section-desc">
-                    Upload de arquivo. Lembre-se de adicionar
-                    <code class="wiki-code">enctype="multipart/form-data"</code> no seu form.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="file" name="demo_file_1" label="Laudo" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;form method="POST" enctype="multipart/form-data"&gt;
-    &lt;x-default-input type="file" name="laudo" label="Laudo" /&gt;
-&lt;/form&gt;
-
-&lt;!-- Validação --&gt;
-'laudo' =&gt; ['required', 'file', 'mimes:pdf', 'max:10240'],</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- SIZES --}}
-            {{-- ================================================================ --}}
-            <section id="sizes" class="wiki-section">
-                <h2 class="wiki-section-title">Sizes</h2>
-                <p class="wiki-section-desc">
-                    Controlado pela prop <code class="wiki-code">size</code>. Aplica-se a todos os tipos.
-                    O padrão é <code class="wiki-code">medium</code>.
-                </p>
-
-                <div class="wiki-preview flex-col items-start">
-                    <x-default-input type="text" name="demo_size_tiny"   size="tiny"   placeholder="tiny" />
-                    <x-default-input type="text" name="demo_size_small"  size="small"  placeholder="small" />
-                    <x-default-input type="text" name="demo_size_medium" size="medium" placeholder="medium (padrão)" />
-                    <x-default-input type="text" name="demo_size_large"  size="large"  placeholder="large" />
-                    <x-default-input type="text" name="demo_size_full"   size="full"   placeholder="full" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="text" name="x" size="tiny" /&gt;
-&lt;x-default-input type="text" name="x" size="small" /&gt;
-&lt;x-default-input type="text" name="x" /&gt;             &lt;!-- padrão: medium --&gt;
-&lt;x-default-input type="text" name="x" size="large" /&gt;
-&lt;x-default-input type="text" name="x" size="full" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- APPEARANCE --}}
-            {{-- ================================================================ --}}
-            <section id="appearance" class="wiki-section">
-                <h2 class="wiki-section-title">Appearance</h2>
-                <p class="wiki-section-desc">
-                    Três variantes visuais. O padrão é <code class="wiki-code">default</code>.
-                    O label muda de cor automaticamente com a aparência.
-                </p>
-
-                <div class="wiki-preview">
-                    <x-default-input type="text" name="demo_app_1" label="default"   appearance="default"  placeholder="Aparência padrão" />
-                    <x-default-input type="text" name="demo_app_2" label="outlined"  appearance="outlined"  placeholder="Com borda" />
-                    <x-default-input type="text" name="demo_app_3" label="surface"   appearance="surface"   placeholder="Fundo surface" />
-                </div>
-
-                <pre class="wiki-code-block">&lt;x-default-input type="text" name="x" /&gt;
-&lt;x-default-input type="text" name="x" appearance="outlined" /&gt;
-&lt;x-default-input type="text" name="x" appearance="surface" /&gt;</pre>
-            </section>
-
-            {{-- ================================================================ --}}
-            {{-- ALL PROPS --}}
-            {{-- ================================================================ --}}
-            <section id="all-props" class="wiki-section">
-                <h2 class="wiki-section-title">All props</h2>
-
-                <div class="overflow-x-auto">
-                    <table class="wiki-table">
-                        <thead>
-                            <tr>
-                                <th>Prop</th>
-                                <th>Tipo</th>
-                                <th>Padrão</th>
-                                <th>Descrição</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code class="wiki-code">type</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">'text'</code></td>
-                                <td class="text-secondary">text, password, password_forgot, select, multiselect, textarea, file, date, datetime</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">name</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">''</code></td>
-                                <td class="text-secondary">Atributo HTML name. Usado também como id.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">label</code></td>
-                                <td class="text-secondary">string|null</td>
-                                <td><code class="wiki-code">null</code></td>
-                                <td class="text-secondary">Renderiza um label acima do campo. Omitido se null.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">value</code></td>
-                                <td class="text-secondary">mixed</td>
-                                <td><code class="wiki-code">''</code></td>
-                                <td class="text-secondary">Valor inicial. Substituído por old() em falha de validação.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">placeholder</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">''</code></td>
-                                <td class="text-secondary">Sobrescreve o placeholder resolvido automaticamente.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">size</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">'medium'</code></td>
-                                <td class="text-secondary">tiny, small, medium, large, full</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">appearance</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">'default'</code></td>
-                                <td class="text-secondary">default, outlined, surface</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">options</code></td>
-                                <td class="text-secondary">array</td>
-                                <td><code class="wiki-code">[]</code></td>
-                                <td class="text-secondary">Array associativo [value => label] para select e multiselect.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">multiple</code></td>
-                                <td class="text-secondary">bool</td>
-                                <td><code class="wiki-code">false</code></td>
-                                <td class="text-secondary">Habilita multiple nativo no select.</td>
-                            </tr>
-                            <tr>
-                                <td><code class="wiki-code">helper</code></td>
-                                <td class="text-secondary">string</td>
-                                <td><code class="wiki-code">''</code></td>
-                                <td class="text-secondary">Texto auxiliar exibido abaixo do campo.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border border-dashed border-on-surface p-8 rounded-xl">
+                    <x-default-input name="demo_app" label="Exemplo de Visualização" x-bind:appearance="theme" placeholder="O tema muda com os botões acima" />
+                    <div class="text-body-small italic">
+                        * O tema atual é: <strong x-text="theme"></strong>. <br>
+                        Use <code>appearance="outlined"</code> para fundos claros e <code>appearance="default"</code> para fundos escuros/containers.
+                    </div>
                 </div>
             </section>
 
-        </main>
+            <!-- # Types -->
+            <section id="types" class="mb-16">
+                <h2 class="text-title-large mb-4"># Types (Tipos)</h2>
+                <p class="text-body-medium mb-6">O atributo <code>type</code> define a funcionalidade do campo. Aceita tipos nativos do HTML e variações customizadas.</p>
+
+                <div class="space-y-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <x-default-input type="text" label="Texto" name="t_text" x-bind:appearance="theme" />
+                            <x-default-input type="password" label="Senha" name="t_pass" x-bind:appearance="theme" />
+                            <x-default-input type="password_forgot" label="Senha com Esqueci" name="t_pass_f" x-bind:appearance="theme" />
+                            <x-default-input type="select" label="Select" name="t_select" :options="['m' => 'Masculino', 'f' => 'Feminino']" x-bind:appearance="theme" />
+                        </div>
+                        <div class="space-y-4">
+                            <x-default-input type="multiselect" label="Multi-Select" name="t_multi" :options="['lar' => 'Laravel', 'alp' => 'Alpine', 'tai' => 'Tailwind']" x-bind:appearance="theme" />
+                            <x-default-input type="date" label="Data" name="t_date" x-bind:appearance="theme" />
+                            <x-default-input type="textarea" label="Textarea" name="t_area" x-bind:appearance="theme" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-4 bg-secondary text-white rounded-lg">
+                    <h3 class="text-label-large mb-2 text-primary-accent">O Atributo <code>options</code></h3>
+                    <p class="text-body-small">
+                        Para <code>select</code> e <code>multiselect</code>, passe um array associativo <code>['valor' => 'Rótulo']</code>.
+                        O componente gerencia automaticamente a seleção e o estado do Alpine.js para os chips.
+                    </p>
+                </div>
+            </section>
+
+            <!-- # Sizes -->
+            <section id="sizes" class="mb-16">
+                <h2 class="text-title-large mb-4"># Sizes (Tamanhos)</h2>
+                <p class="text-body-medium mb-4">Controla a largura fixa ou fluida do componente.</p>
+                <div class="space-y-4 bg-black/5 p-6 rounded-lg">
+                    <x-default-input size="tiny" label="Tiny (w-11)" name="s1" x-bind:appearance="theme" />
+                    <x-default-input size="small" label="Small (w-40)" name="s2" x-bind:appearance="theme" />
+                    <x-default-input size="medium" label="Medium (w-75) - Padrão" name="s3" x-bind:appearance="theme" />
+                    <x-default-input size="large" label="Large (w-100)" name="s4" x-bind:appearance="theme" />
+                    <x-default-input size="full" label="Full (w-full)" name="s5" x-bind:appearance="theme" />
+                </div>
+            </section>
+
+            <!-- # Text Attributes -->
+            <section id="attributes" class="mb-16">
+                <h2 class="text-title-large mb-4"># Atributos de Texto</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <ul class="space-y-4">
+                            <li><strong class="text-primary-accent">label:</strong> Título acima do campo.</li>
+                            <li><strong class="text-primary-accent">name:</strong> Atributo <code>name</code> para o formulário (e <code>id</code>).</li>
+                            <li><strong class="text-primary-accent">placeholder:</strong> Texto de instrução dentro do campo.</li>
+                            <li><strong class="text-primary-accent">value:</strong> Valor inicial do campo.</li>
+                            <li><strong class="text-primary-accent">helper:</strong> Texto de suporte/dica exibido abaixo do campo.</li>
+                        </ul>
+                    </div>
+                    <div class="p-6 bg-black/20 rounded-lg border border-primary">
+                        <x-default-input
+                            label="Exemplo de Atributos"
+                            name="exemplo_attr"
+                            placeholder="Sou o placeholder"
+                            value="Sou o valor"
+                            helper="Sou o texto helper explicando algo."
+                            x-bind:appearance="theme"
+                        />
+                    </div>
+                </div>
+            </section>
+
+            <!-- # Summary Table -->
+            <section id="summary" class="mb-16 overflow-hidden">
+                <h2 class="text-title-large mb-4"># Resumo de Atributos</h2>
+                <table class="w-full text-left border-collapse bg-white/5 rounded-lg">
+                    <thead>
+                        <tr class="border-b border-on-surface">
+                            <th class="p-4 text-label-medium">Atributo</th>
+                            <th class="p-4 text-label-medium">Padrão</th>
+                            <th class="p-4 text-label-medium">Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-body-small">
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-mono text-primary-accent">type</td>
+                            <td class="p-4">'text'</td>
+                            <td class="p-4">text, password, select, multiselect, date, textarea...</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-mono text-primary-accent">appearance</td>
+                            <td class="p-4">'default'</td>
+                            <td class="p-4">default, outlined, surface.</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-mono text-primary-accent">size</td>
+                            <td class="p-4">'medium'</td>
+                            <td class="p-4">tiny, small, medium, large, full.</td>
+                        </tr>
+                        <tr class="border-b border-white/10">
+                            <td class="p-4 font-mono text-primary-accent">options</td>
+                            <td class="p-4">[]</td>
+                            <td class="p-4">Array para Selects (Key => Label).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- # Sandbox Interativo -->
+            <section id="sandbox" class="mb-32">
+                <h2 class="text-title-large mb-6 text-tertiary"># Sandbox (Área de Testes)</h2>
+                <div class="bg-black/30 p-8 rounded-2xl border-2 border-tertiary">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- Controles -->
+                        <div class="space-y-4">
+                            <h3 class="text-label-large mb-4 uppercase">Configurações</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <x-default-input label="Mudar Label" name="sb_l" x-model="sbLabel" appearance="outlined" size="full" />
+                                <x-default-input label="Mudar Placeholder" name="sb_p" x-model="sbPlaceholder" appearance="outlined" size="full" />
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mt-4">
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-label-small">Tipo de Input</label>
+                                    <select x-model="sbType" class="h-11 rounded-lg px-2 bg-white text-black border">
+                                        <option value="text">text</option>
+                                        <option value="password">password</option>
+                                        <option value="date">date</option>
+                                        <option value="textarea">textarea</option>
+                                        <option value="select">select</option>
+                                    </select>
+                                </div>
+                                <div class="flex flex-col gap-1">
+                                    <label class="text-label-small">Tamanho</label>
+                                    <select x-model="sbSize" class="h-11 rounded-lg px-2 bg-white text-black border">
+                                        <option value="small">small</option>
+                                        <option value="medium">medium</option>
+                                        <option value="large">large</option>
+                                        <option value="full">full</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <x-default-input label="Texto Auxiliar (Helper)" name="sb_h" x-model="sbHelper" appearance="outlined" size="full" />
+                        </div>
+
+                        <!-- Resultado -->
+                        <div class="flex flex-col justify-center items-center bg-white/5 p-8 rounded-xl border border-white/10">
+                            <h3 class="text-label-small mb-8 opacity-50">PREVIEW EM TEMPO REAL</h3>
+
+                            <x-default-input
+                                x-bind:type="sbType"
+                                x-bind:label="sbLabel"
+                                x-bind:placeholder="sbPlaceholder"
+                                x-bind:helper="sbHelper"
+                                x-bind:size="sbSize"
+                                x-bind:appearance="theme"
+                                :options="['1' => 'Opção de Teste', '2' => 'Outra Opção']"
+                                name="sandbox_input"
+                            />
+
+                            <div class="mt-12 w-full">
+                                <p class="text-label-small mb-2">Código Gerado:</p>
+                                <pre class="bg-black p-4 rounded text-success text-body-small overflow-x-auto"><code>&lt;x-default-input
+    type="<span x-text="sbType"></span>"
+    appearance="<span x-text="theme"></span>"
+    size="<span x-text="sbSize"></span>"
+    label="<span x-text="sbLabel"></span>"
+    placeholder="<span x-text="sbPlaceholder"></span>"
+    helper="<span x-text="sbHelper"></span>"
+/&gt;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-
-    @push('styles')
-    <style>
-        .wiki-nav-link {
-            @apply px-5 py-1.5 text-body-medium text-secondary hover:text-primary hover:bg-surface transition-colors duration-100 border-l-2 border-transparent;
-        }
-        .wiki-nav-link.active {
-            @apply text-primary border-l-primary bg-surface;
-        }
-        .wiki-section {
-            @apply mb-14;
-        }
-        .wiki-section-title {
-            @apply text-heading-medium mb-1 pb-3 border-b border-on-surface/20;
-        }
-        .wiki-section-desc {
-            @apply text-body-medium text-secondary mt-2 mb-5;
-        }
-        .wiki-preview {
-            @apply flex flex-wrap gap-6 items-end bg-surface rounded-xl p-6 mb-4;
-        }
-        .wiki-code {
-            @apply font-mono text-label-small bg-surface px-1.5 py-0.5 rounded;
-        }
-        .wiki-code-block {
-            @apply font-mono text-label-small bg-surface rounded-xl p-5 overflow-x-auto whitespace-pre text-secondary;
-        }
-        .wiki-table {
-            @apply w-full text-body-medium border-collapse;
-        }
-        .wiki-table th {
-            @apply text-left text-label-small text-secondary-accent uppercase tracking-wider pb-2 border-b border-on-surface/20 px-3;
-        }
-        .wiki-table td {
-            @apply py-3 px-3 border-b border-on-surface/10 align-top;
-        }
-        .wiki-table tr:last-child td {
-            @apply border-b-0;
-        }
-    </style>
-    @endpush
-
-    @push('scripts')
-    <script>
-        const links = document.querySelectorAll('.wiki-nav-link');
-        const sections = document.querySelectorAll('.wiki-section');
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    links.forEach(l => l.classList.remove('active'));
-                    const active = document.querySelector(`.wiki-nav-link[href="#${entry.target.id}"]`);
-                    if (active) active.classList.add('active');
-                }
-            });
-        }, { rootMargin: '-30% 0px -60% 0px' });
-
-        sections.forEach(s => observer.observe(s));
-    </script>
-    @endpush
 </x-layouts.app>

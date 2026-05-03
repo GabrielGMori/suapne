@@ -6,12 +6,11 @@
 
     'label' => null,
     'name' => '',
-    'value' => '',
     'placeholder' => '',
-
-    'multiple' => false,
-    'options' => [],
+    'value' => '',
     'helper' => '',
+
+    'options' => [],
 ])
 
 @php
@@ -44,7 +43,7 @@
         default => 'Digite aqui',
     };
 
-    $submittedName = ($multiple || $isMultiSelect) && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
+    $submittedName = $isMultiSelect && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
 
     $initialSelected = old($name, $value);
     if (!is_array($initialSelected)) {
@@ -98,11 +97,8 @@
             <select
                 id="{{ $name }}"
                 name="{{ $submittedName }}"
-                @if ($multiple) multiple @endif
-                {{ $attributes->merge(['class' => trim($controlClass . ' ' . ($multiple ? 'form-control-multiselect' : 'form-control-select'))]) }}>
-                @unless ($multiple)
-                    <option value="" selected disabled>{{ $resolvedPlaceholder }}</option>
-                @endunless
+                {{ $attributes->merge(['class' => trim($controlClass . ' form-control-select')]) }}>
+                <option value="" selected disabled>{{ $resolvedPlaceholder }}</option>
                 @foreach ($options as $optionValue => $optionLabel)
                     <option value="{{ $optionValue }}" @selected(old($name, $value) == $optionValue)>{{ $optionLabel }}</option>
                 @endforeach

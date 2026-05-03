@@ -128,7 +128,7 @@
     }
 
     .multi-select-control {
-        @apply rounded-lg border border-[#C5C5C5] bg-white text-left cursor-pointer appearance-none pl-5 py-3;
+        @apply rounded-lg border border-on-surface bg-white text-left cursor-pointer appearance-none pl-5 py-3;
     }
 
     .multi-select-chips {
@@ -136,7 +136,7 @@
     }
 
     .multi-select-chip {
-        @apply inline-flex items-center gap-1 rounded-md border border-[#CDD3DB] bg-[#eef1f5] px-2 py-1 text-body-medium text-black;
+        @apply inline-flex items-center gap-1 rounded-md border border-secondary-accent bg-surface px-2 py-1 text-body-medium text-black;
     }
 
     .multi-select-chip-remove {
@@ -148,7 +148,7 @@
     }
 
     .multi-select-menu {
-        @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-[#C5C5C5] bg-white;
+        @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-secondary-accent bg-white text-black;
     }
 
     .multi-select-option {
