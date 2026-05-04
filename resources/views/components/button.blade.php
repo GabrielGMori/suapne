@@ -1,34 +1,24 @@
 @props([
-    'variant' => 'primary',
-    'size' => 'wide',
+    'color' => 'primary',
+    'size' => 'default',
     'icon' => null,
-    'iconPosition' => 'left',
+    'iconPos' => 'left',
     'text' => null,
     'type' => 'button',
 ])
 
-@php
-    $variantClass = [
-        'primary' => 'btn--primary',
-        'info' => 'btn--info',
-        'danger' => 'btn--danger',
-        'warning' => 'btn--warning',
-        'dark' => 'btn--dark',
-    ][$variant] ?? 'btn--primary';
+<button type="{{ $type }}" class='{{"btn btn-$size btn-$color"}}'>
+    @if ($type == 'link') <a> @endif
 
-    $sizeClass = [
-        'wide' => 'btn--wide',
-        'medium' => 'btn--medium',
-        'small' => 'btn--small',
-    ][$size] ?? 'btn--wide';
-@endphp
-
-<button type="{{ $type }}" {{ $attributes->merge(['class' => "btn {$variantClass} {$sizeClass}"]) }}>
-    @if ($icon && $iconPosition === 'left')
+    @if ($icon && $iconPos === 'left')
         <span class="material-symbols-outlined text-[22px]">{{ $icon }}</span>
     @endif
+
     <span>{{ $text ?? $slot }}</span>
-    @if ($icon && $iconPosition === 'right')
+
+    @if ($icon && $iconPos === 'right')
         <span class="material-symbols-outlined text-[22px]">{{ $icon }}</span>
     @endif
+
+    @if ($type == 'link') </a> @endif
 </button>

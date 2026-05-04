@@ -16,19 +16,7 @@
     }
 
     .form-control {
-        @apply h-11 rounded-lg px-2 text-body-medium outline-none transition duration-150;
-    }
-
-    .form-control:focus {
-        @apply border-primary ring-2 ring-primary/20;
-    }
-
-    .form-control-select {
-        @apply cursor-pointer appearance-none pr-12;
-    }
-
-    .form-control-multiselect {
-        @apply h-32 cursor-pointer appearance-auto py-2 pr-4;
+        @apply min-h-11 rounded-lg px-2 text-body-medium outline-none transition duration-150;
     }
 
     .form-control-file {
@@ -46,13 +34,23 @@
     .form-control-default::placeholder {
         @apply text-black/40;
     }
+    .form-control-default:focus {
+        @apply border-primary ring-2 ring-primary/20;
+    }
 
     .form-control-outlined {
         @apply bg-white border border-on-surface text-black;
     }
+    .form-control-outlined:focus {
+        @apply border-primary ring-2 ring-primary/20;
+    }
+
 
     .form-control-surface {
-        @apply bg-surface border-transparent;
+        @apply bg-surface border-transparent text-black;
+    }
+    .form-control-surface:focus {
+        @apply border-black ring-2 ring-black/20;
     }
 
     .form-label-outlined, .form-label-surface {
@@ -61,7 +59,7 @@
 
     /* Size */
     .form-control-tiny {
-        @apply w-11;
+        @apply w-20;
     }
 
     .form-control-small {
@@ -80,7 +78,7 @@
         @apply w-full;
     }
 
-    .form-control-tiny.form-control-select {
+    .form-control-tiny {
         @apply pr-8;
     }
 
@@ -109,26 +107,13 @@
         @apply absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-secondary hover:bg-black/5;
     }
 
-    /* Display Field */
-    .display-field {
-        @apply flex max-w-114 flex-col gap-2 border-b border-[#C5C5C5] pb-2 text-secondary;
-    }
-
-    .display-field-label {
-        @apply text-body-small text-secondary-accent;
-    }
-
-    .display-field-value {
-        @apply text-body-medium text-black;
-    }
-
     /* Multi-Select */
     .multi-select {
         @apply relative text-nowrap;
     }
 
     .multi-select-control {
-        @apply rounded-lg border border-on-surface bg-white text-left cursor-pointer appearance-none pl-5 py-3;
+        @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-3;
     }
 
     .multi-select-chips {

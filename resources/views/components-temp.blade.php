@@ -1,434 +1,117 @@
-<x-layouts.main title="components" bg="surface">
-    <div class="showcase-page">
+<x-layouts.main title="Componentes">
+    <h1>Componentes</h1>
+    <hr class="mt-3 mb-5">
 
-        <header class="showcase-header">
-            <p class="showcase-eyebrow">Component Library</p>
-            <h1 class="showcase-title">Input Types</h1>
-            <p class="showcase-subtitle">All variants of <code>&lt;x-default-input /&gt;</code></p>
-        </header>
+    <div class="flex flex-col bg-surface rounded-lg border border-black gap-5 p-5 mb-5">
+        <h2 class="text-headline-medium">Componentes Surface</h2>
 
-        <main class="showcase-grid">
+        <h3 class="text-title-large mb-3 mt-5">- Display de Dados</h3>
+        <x-display-dado label="Nome" value="Gabriel mori" />
 
-            {{-- ─── Text Inputs ──────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Text</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="text"
-                        name="text_example"
-                        label="Text"
-                        placeholder="Type something..."
-                    />
-
-                    <x-default-input
-                        type="email"
-                        name="email_example"
-                        label="Email"
-                        placeholder="you@example.com"
-                    />
-
-                    <x-default-input
-                        type="url"
-                        name="url_example"
-                        label="URL"
-                        placeholder="https://example.com"
-                    />
-
-                    <x-default-input
-                        type="tel"
-                        name="tel_example"
-                        label="Tel"
-                        placeholder="+55 (41) 00000-0000"
-                    />
-
-                    <x-default-input
-                        type="search"
-                        name="search_example"
-                        label="Search"
-                        placeholder="Search..."
-                    />
-
-                    <x-default-input
-                        type="number"
-                        name="number_example"
-                        label="Number"
-                        placeholder="0"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Password ─────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Password</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="password"
-                        name="password_example"
-                        label="Password"
-                    />
-
-                    <x-default-input
-                        type="password_forgot"
-                        name="password_forgot_example"
-                        label="Password (with forgot link)"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Date & Time ──────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Date &amp; Time</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="date"
-                        name="date_example"
-                        label="Date"
-                    />
-
-                    <x-default-input
-                        type="datetime"
-                        name="datetime_example"
-                        label="Date &amp; Time"
-                    />
-
-                    <x-default-input
-                        type="time"
-                        name="time_example"
-                        label="Time"
-                    />
-
-                    <x-default-input
-                        type="month"
-                        name="month_example"
-                        label="Month"
-                    />
-
-                    <x-default-input
-                        type="week"
-                        name="week_example"
-                        label="Week"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Pickers ──────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Pickers</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="color"
-                        name="color_example"
-                        label="Color"
-                        value="#3b82f6"
-                    />
-
-                    <x-default-input
-                        type="range"
-                        name="range_example"
-                        label="Range"
-                        value="50"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Select & Multiselect ────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Select</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="select"
-                        name="select_example"
-                        label="Select (keyboard search)"
-                        :options="[
-                            'br' => 'Brazil',
-                            'np' => 'Nepal',
-                            'ca' => 'Canada',
-                            'de' => 'Germany',
-                            'jp' => 'Japan',
-                            'au' => 'Australia',
-                            'calories' => 'Calories',
-                        ]"
-                    />
-
-                    <x-default-input
-                        type="multiselect"
-                        name="multiselect_example"
-                        label="Multiselect (keyboard search)"
-                        :options="[
-                            'php'        => 'PHP',
-                            'js'         => 'JavaScript',
-                            'ts'         => 'TypeScript',
-                            'python'     => 'Python',
-                            'rust'       => 'Rust',
-                            'go'         => 'Go',
-                            'swift'      => 'Swift',
-                            'kotlin'     => 'Kotlin',
-                        ]"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── File ────────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">File</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="file"
-                        name="file_example"
-                        label="File"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Choices ──────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Choices</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="checkbox"
-                        name="checkbox_example"
-                        label="Checkbox"
-                    />
-
-                    <x-default-input
-                        type="radio"
-                        name="radio_example"
-                        label="Radio"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Actions ──────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Actions</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="button"
-                        name="button_example"
-                        label="Button"
-                        value="Click me"
-                    />
-
-                    <x-default-input
-                        type="submit"
-                        name="submit_example"
-                        label="Submit"
-                        value="Submit form"
-                    />
-
-                    <x-default-input
-                        type="reset"
-                        name="reset_example"
-                        label="Reset"
-                        value="Reset form"
-                    />
-
-                    <x-default-input
-                        type="image"
-                        name="image_example"
-                        label="Image (submit)"
-                        src="https://placehold.co/80x32"
-                        alt="Submit"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Hidden (shown for completeness) ───────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Hidden</h2>
-
-                <div class="showcase-row showcase-row--hidden">
-                    <div class="showcase-hidden-note">
-                        <code>&lt;x-default-input type="hidden" name="csrf_token" value="abc123" /&gt;</code>
-                        <span class="showcase-hidden-badge">Not rendered — carries value silently in the DOM</span>
-                    </div>
-                    <x-default-input type="hidden" name="hidden_example" value="secret-value" />
-                </div>
-            </section>
-
-            {{-- ─── Appearances ─────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Appearances</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="text"
-                        appearance="default"
-                        name="appearance_default"
-                        label="Default"
-                        placeholder="Default appearance"
-                    />
-
-                    <x-default-input
-                        type="text"
-                        appearance="outlined"
-                        name="appearance_outlined"
-                        label="Outlined"
-                        placeholder="Outlined appearance"
-                    />
-
-                    <x-default-input
-                        type="text"
-                        appearance="surface"
-                        name="appearance_surface"
-                        label="Surface"
-                        placeholder="Surface appearance"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Sizes ───────────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Sizes</h2>
-
-                <div class="showcase-row showcase-row--align-end">
-                    <x-default-input
-                        type="text"
-                        size="small"
-                        name="size_small"
-                        label="Small"
-                        placeholder="Small"
-                    />
-
-                    <x-default-input
-                        type="text"
-                        size="medium"
-                        name="size_medium"
-                        label="Medium"
-                        placeholder="Medium"
-                    />
-
-                    <x-default-input
-                        type="text"
-                        size="full"
-                        name="size_full"
-                        label="Full width"
-                        placeholder="Full width"
-                    />
-                </div>
-            </section>
-
-            {{-- ─── Helper text ─────────────────────────────────────────────── --}}
-            <section class="showcase-section">
-                <h2 class="showcase-section-title">Helper Text</h2>
-
-                <div class="showcase-row">
-                    <x-default-input
-                        type="text"
-                        name="helper_example"
-                        label="With helper"
-                        placeholder="Enter your username"
-                        helper="Only letters, numbers and underscores."
-                    />
-                </div>
-            </section>
-
-        </main>
-
+        <h3 class="text-title-large mb-3 mt-5">- Form Inputs</h3>
+        <x-form-input type="text" label="Nome completo" appearance="outlined" />
+        <x-form-input type="select" label="Componente curricular" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+        <x-form-input type="select" size="tiny" value="20" :options="['20', '10', '5']" appearance="outlined" />
+        <x-form-input type="multiselect" label="Componentes curriculares" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+        <x-form-input type="datetime" label="Dia e hora" appearance="outlined" />
+        <x-form-input type="date" size="small" label="Dia" appearance="outlined" />
+        <x-form-input type="date" size="small" appearance="outlined" />
     </div>
 
-    <style>
-        .showcase-page {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 3rem 2rem 6rem;
-            font-family: inherit;
-        }
+    <div class="flex flex-col bg-black rounded-lg ring-2 ring-on-surface gap-5 p-5 text-white mb-5">
+        <h2 class="text-headline-medium">Componentes Black</h2>
 
-        /* ── Header ── */
-        .showcase-header {
-            margin-bottom: 3.5rem;
-            border-bottom: 1px solid rgba(0,0,0,.08);
-            padding-bottom: 2rem;
-        }
-        .showcase-eyebrow {
-            font-size: .7rem;
-            font-weight: 600;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: #6b7280;
-            margin: 0 0 .5rem;
-        }
-        .showcase-title {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin: 0 0 .4rem;
-            color: #111;
-        }
-        .showcase-subtitle {
-            margin: 0;
-            color: #6b7280;
-            font-size: .95rem;
-        }
-        .showcase-subtitle code {
-            background: #f3f4f6;
-            border-radius: 4px;
-            padding: .1em .4em;
-            font-size: .88rem;
-            color: #374151;
-        }
+        <h3 class="text-title-large mb-3 mt-5">- Form Inputs</h3>
+        <x-form-input type="text" label="Nome:" />
+        <x-form-input type="password" label="Senha:" />
+        <x-form-input type="password_forgot" label="Senha:" />
+        <x-form-input type="select" :options="['Matemática', 'Português', 'Artes']" label="Disciplina:" />
 
-        /* ── Sections ── */
-        .showcase-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-        }
-        .showcase-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-        }
-        .showcase-section-title {
-            font-size: .7rem;
-            font-weight: 600;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: #9ca3af;
-            margin: 0;
-            padding-bottom: .5rem;
-            border-bottom: 1px dashed #e5e7eb;
-        }
+        <h3 class="text-title-large mb-3 mt-5">- Botões</h3>
+        <x-button text="Size default" color="primary" />
+        <x-button text="Size dynamic" color="primary" size="dynamic" />
+        <x-button text="Size full" color="primary" size="full" />
+        <x-button text="Color secondary" color="secondary" />
+        <x-button text="Color tertiary" color="tertiary" />
+        <x-button text="Color yellow" color="yellow" />
+        <x-button text="Color red" color="red" />
+        <x-button text="IconPos left" color="secondary" icon="person" iconPos="left" />
+        <x-button text="IconPos right" color="secondary" icon="person" iconPos="right" />
+    </div>
 
-        /* ── Row ── */
-        .showcase-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            align-items: flex-start;
-        }
-        .showcase-row--align-end {
-            align-items: flex-end;
-        }
-        .showcase-row--hidden {
-            align-items: center;
-        }
+    <div class="flex flex-col bg-white rounded-lg border border-surface gap-5 p-5 text-black mb-5">
+        <h2 class="text-headline-medium">Componentes White</h2>
 
-        /* ── Hidden note ── */
-        .showcase-hidden-note {
-            display: flex;
-            flex-direction: column;
-            gap: .5rem;
-        }
-        .showcase-hidden-note code {
-            font-size: .82rem;
-            background: #f3f4f6;
-            border-radius: 6px;
-            padding: .5rem .75rem;
-            color: #374151;
-            border: 1px solid #e5e7eb;
-        }
-        .showcase-hidden-badge {
-            font-size: .75rem;
-            color: #9ca3af;
-        }
-    </style>
+        <h3 class="text-title-large mb-3 mt-5">- Form Inputs</h3>
+        <x-form-input type="select" :options="['Matemática', 'Português', 'Artes']" placeholder="Disciplina" appearance="surface" />
+
+        <h3 class="text-title-large mb-3 mt-5">- Status</h3>
+        <div class="flex gap-2">
+            <x-status text="Pendente" color="error" />
+            <x-status text="Aguardando" color="warn" />
+            <x-status text="Aprovado" color="success" />
+            <x-status text="Pré-visualização" color="info" />
+            <x-status text="Matriculado" color="dark" />
+        </div>
+        <div class="flex gap-2">
+            <x-status text="Pendente" color="error" :filled="true" />
+            <x-status text="Aguardando" color="warn" :filled="true" />
+            <x-status text="Aprovado" color="success" :filled="true" />
+            <x-status text="Pré-visualização" color="info" :filled="true" />
+            <x-status text="Matriculado" color="dark" :filled="true" />
+        </div>
+
+        <h3 class="text-title-large mb-3 mt-5">- Seção Expansível</h3>
+
+        <x-secao-expansivel title="Dados gerais" :expanded="true">
+            <div class="flex gap-8">
+                <div class="shrink-0 flex items-start justify-center">
+                    <div
+                        class="w-32 h-32 bg-[#a9a9a9] rounded-full flex items-center justify-center text-[#f4f4f4] overflow-hidden">
+                        <span class="material-symbols-outlined text-[100px] mt-6">person</span>
+                    </div>
+                </div>
+
+                <div class="grow grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                    <x-display-dado label="Nome:" value="Ricardo Borges" />
+                    <x-display-dado label="Matrícula:" value="20250000001" />
+
+                    <x-display-dado label="Ingresso:" value="2025/1" />
+                    <x-display-dado label="Período:" value="1º" />
+
+                    <x-display-dado label="Curso:" value="Técnico em Informática" />
+                    <x-display-dado label="Quant. de períodos do curso:" value="1º" />
+
+                    <x-display-dado label="E-mail pessoal:" value="Emailpessoal@email.com" />
+                    <x-display-dado label="E-mail Acadêmico:" value="Emailacademico@email.com" />
+
+                    <x-display-dado label="Telefone:" value="(41) 91234-5678" />
+                    <x-display-dado label="Data de nascimento:" value="01/01/2008" />
+                </div>
+            </div>
+
+            <x-slot:hidden>
+                <div class="flex gap-8 justify-end align-end ml-38">
+
+                    <div class="grow grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                        <x-display-dado label="Nome:" value="Ricardo Borges" />
+                        <x-display-dado label="Matrícula:" value="20250000001" />
+
+                        <x-display-dado label="Ingresso:" value="2025/1" />
+                        <x-display-dado label="Período:" value="1º" />
+
+                        <x-display-dado label="Curso:" value="Técnico em Informática" />
+                        <x-display-dado label="Quant. de períodos do curso:" value="1º" />
+
+                        <x-display-dado label="E-mail pessoal:" value="Emailpessoal@email.com" />
+                        <x-display-dado label="E-mail Acadêmico:" value="Emailacademico@email.com" />
+
+                        <x-display-dado label="Telefone:" value="(41) 91234-5678" />
+                        <x-display-dado label="Data de nascimento:" value="01/01/2008" />
+                    </div>
+                </div>
+            </x-slot:hidden>
+
+        </x-secao-expansivel>
+    </div>
 </x-layouts.main>

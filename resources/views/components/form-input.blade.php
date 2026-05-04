@@ -19,14 +19,9 @@
     $isDropdown = $isSelect || $isMultiSelect;
 
     $sizeClass = "form-control-$size";
-
-    $appearanceClass = match ($appearance) {
-        'outlined' => 'form-control-outlined',
-        'surface' => 'form-control-surface',
-        default => 'form-control-default',
-    };
-
+    $appearanceClass = "form-control-$appearance";
     $controlClass = trim("form-control {$appearanceClass} {$sizeClass}");
+
     $inputType = match (true) {
         in_array($type, ['password', 'password_forgot'], true) => 'password',
         $type === 'date' => 'date',
@@ -39,8 +34,8 @@
         $type === 'password' || $type === 'password_forgot' => 'Digite sua senha',
         $type === 'datetime' => 'DD/MM/AAAA 00:00',
         $type === 'date' => 'DD/MM/AAAA',
-        $isDropdown || $type === 'modal_select' => 'Selecionar',
-        default => 'Digite aqui',
+        $isDropdown => '',
+        default => '',
     };
 
     $submittedName = $isMultiSelect && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
@@ -68,13 +63,19 @@
         searchQuery: '',
         searchTimeout: null,
         resetNextType: false,
+        highlightedIndex: 0, // NOVO: Controle de navegação por teclado
 
         init() {
             this.$watch('isOpen', value => {
                 if (!value) {
                     this.searchQuery = '';
                     this.resetNextType = false;
+                    this.highlightedIndex = 0;
                 }
+            });
+            // NOVO: Reseta o índice de navegação ao buscar
+            this.$watch('searchQuery', () => {
+                this.highlightedIndex = 0;
             });
         },
         get displayOptions() {
@@ -115,14 +116,55 @@
         clearSelections() {
             this.selectedItems = [];
         },
-        selectFirstOption() {
-            if (this.isOpen && this.displayOptions.length > 0) {
-                this.toggleOption(this.displayOptions[0].value);
-                this.searchQuery = '';
-                this.resetNextType = false;
-            }
+        scrollToHighlighted() {
+            this.$nextTick(() => {
+                if (!this.$refs.menu) return;
+                const optionNodes = this.$refs.menu.querySelectorAll('.multi-select-option:not(.cursor-not-allowed)');
+                if (optionNodes[this.highlightedIndex]) {
+                    optionNodes[this.highlightedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            });
         },
         handleKeydown(e) {
+            // NOVO: Controle de Setas, Enter e Esc
+            if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
+                if (e.key === 'Escape') {
+                    this.isOpen = false;
+                    return;
+                }
+
+                // Abre o menu com Enter ou Setas caso esteja fechado
+                if (!this.isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter')) {
+                    e.preventDefault();
+                    this.isOpen = true;
+                    return;
+                }
+
+                if (this.isOpen) {
+                    e.preventDefault();
+                    
+                    if (e.key === 'ArrowDown') {
+                        if (this.displayOptions.length > 0) {
+                            this.highlightedIndex = (this.highlightedIndex + 1) % this.displayOptions.length;
+                            this.scrollToHighlighted();
+                        }
+                    }
+                    
+                    if (e.key === 'ArrowUp') {
+                        if (this.displayOptions.length > 0) {
+                            this.highlightedIndex = this.highlightedIndex - 1 < 0 ? this.displayOptions.length - 1 : this.highlightedIndex - 1;
+                            this.scrollToHighlighted();
+                        }
+                    }
+                    
+                    if (e.key === 'Enter' && this.displayOptions.length > 0) {
+                        this.toggleOption(this.displayOptions[this.highlightedIndex].value);
+                    }
+                }
+                return;
+            }
+
+            // Lógica existente de Type-ahead
             if (e.key.length !== 1 || e.ctrlKey || e.altKey || e.metaKey) return;
 
             if (this.resetNextType) {
@@ -151,15 +193,13 @@
             <div 
                 class="multi-select {{ $sizeClass }}" 
                 tabindex="0" 
-                @keydown="handleKeydown" 
-                @keydown.enter.prevent="selectFirstOption()"
+                @keydown="handleKeydown"
                 @focusout="if (!$el.contains($event.relatedTarget)) isOpen = false"
             >
                 <button
                     type="button"
-                    class="multi-select-control {{ $sizeClass }}"
+                    class="multi-select-control {{ $controlClass }}"
                     @click="isOpen = !isOpen"
-                    {{ $attributes->merge(['class' => trim($controlClass . 'form-control-select')]) }}
                 >
                     <div x-show="selectedItems.length" class="w-full text-left">
                         <template x-if="isMultiple">
@@ -183,18 +223,25 @@
 
                 <button type="button" x-show="selectedItems.length && isMultiple" class="multi-select-clear" @click="clearSelections()" aria-label="Limpar seleção">&times;</button>
 
-                <div x-show="isOpen" x-cloak class="multi-select-menu">
+                {{-- Adicionado x-ref="menu" para referenciar no Auto-Scroll --}}
+                <div x-show="isOpen" x-cloak x-ref="menu" class="multi-select-menu">
                     <template x-if="displayOptions.length === 0">
                         <div class="multi-select-option text-black/50 cursor-not-allowed">
                             Sem resultados
                         </div>
                     </template>
-                    <template x-for="option in displayOptions" :key="option.value">
+                    
+                    {{-- O loop agora rastreia o index para o highlight visual --}}
+                    <template x-for="(option, index) in displayOptions" :key="option.value">
                         <button
                             type="button"
                             class="multi-select-option"
-                            :class="{ 'multi-select-option-selected': isSelected(option.value) }"
+                            :class="{ 
+                                'multi-select-option-selected': isSelected(option.value),
+                                'bg-black/5': highlightedIndex === index // Troque 'bg-black/5' pela classe de hover que você usa no seu projeto (ex: bg-gray-100)
+                            }"
                             @click="toggleOption(option.value)"
+                            @mouseenter="highlightedIndex = index" 
                         >
                             <span x-text="option.label"></span>
                             @if ($isMultiSelect) <span x-show="isSelected(option.value)">&times;</span> @endif
@@ -203,7 +250,8 @@
                 </div>
 
                 @if ($isMultiSelect)
-                    <input type="hidden" name="{{ $name }}" value="" />
+                    {{-- Correção do Issue 1 (Ghost input array bug) --}}
+                    <input type="hidden" name="{{ str_replace('[]', '', $name) }}" value="" />
                 @endif
 
                 <template x-if="isMultiple">
@@ -241,12 +289,14 @@
                 {{ $attributes->merge(['class' => $controlClass]) }}
             />
         @else
+            {{-- Resolvido o conflito duplo de type="{{ $inputType }}" nas senhas --}}
             <input
                 id="{{ $name }}"
                 name="{{ $name }}"
-                type="{{ $inputType }}"
                 @if (in_array($type, ['password', 'password_forgot'], true))
                     :type="showPassword ? 'text' : 'password'"
+                @else
+                    type="{{ $inputType }}"
                 @endif
                 value="{{ old($name, $value) }}"
                 placeholder="{{ $resolvedPlaceholder }}"

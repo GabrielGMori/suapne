@@ -1,57 +1,29 @@
 @layer components {
     .btn {
-        @apply inline-flex h-12 cursor-pointer items-center justify-center gap-2 rounded-full px-8 text-body-large transition duration-150 disabled:pointer-events-none disabled:opacity-60;
+        @apply min-w-50 w-max inline-flex items-center justify-center gap-1 px-5 py-2 bg-primary-accent cursor-pointer text-body-large rounded-3xl hover:bg-primary-accent/80 transition-colors text-black;
     }
 
-    .btn--wide {
-        @apply min-w-90;
+    .btn-secondary {
+        @apply bg-secondary hover:bg-secondary/80 text-white
     }
 
-    .btn--medium {
-        @apply min-w-56;
+    .btn-tertiary {
+        @apply bg-tertiary hover:bg-tertiary/80
     }
 
-    .btn--small {
-        @apply h-11 min-w-38 px-6;
+    .btn-yellow {
+        @apply bg-yellow hover:bg-yellow/80
     }
 
-    .btn--primary {
-        @apply bg-primary-accent text-black hover:brightness-105;
+    .btn-red {
+        @apply bg-red hover:bg-red/80
     }
 
-    .btn--info {
-        @apply bg-tertiary text-black hover:brightness-105;
+    .btn-dynamic {
+        @apply min-w-max
     }
 
-    .btn--danger {
-        @apply bg-red text-black hover:brightness-105;
-    }
-
-    .btn--warning {
-        @apply bg-warn text-black hover:brightness-105;
-    }
-
-    .btn--dark {
-        @apply bg-[#27282d] text-[#d8d8d8] hover:bg-[#2e2f35];
-    }
-
-    .icon-btn {
-        @apply inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl text-black transition duration-150;
-    }
-
-    .icon-btn--md {
-        @apply h-11 w-11;
-    }
-
-    .icon-btn--primary {
-        @apply bg-primary-accent;
-    }
-
-    .icon-btn--danger {
-        @apply bg-red text-white;
-    }
-
-    .icon-btn--dark {
-        @apply bg-secondary text-white;
+    .btn-full {
+        @apply w-full
     }
 }

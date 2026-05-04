@@ -1,0 +1,45 @@
+@layer components {
+    .badge {
+        @apply min-h-8 w-max rounded-lg text-center;
+    }
+
+    .badge-filled {
+        @apply rounded-md text-black px-3 py-1 bg-info text-body-medium
+    }
+
+    .badge-unfilled {
+        @apply rounded-3xl text-tertiary px-5 py-1.5 bg-transparent ring-tertiary ring-2 text-label-medium
+    }
+
+    .badge-filled-error {
+        @apply bg-error 
+    }
+
+    .badge-filled-warn {
+        @apply bg-warn 
+    }
+
+    .badge-filled-success {
+        @apply bg-success 
+    }
+
+    .badge-filled-dark {
+        @apply bg-secondary text-white 
+    }
+
+    .badge-unfilled-error {
+        @apply ring-red text-red 
+    }
+
+    .badge-unfilled-warn {
+        @apply ring-orange text-orange
+    }
+
+    .badge-unfilled-success {
+        @apply ring-primary-accent text-primary-accent
+    }
+
+    .badge-unfilled-dark {
+        @apply ring-secondary text-secondary 
+    }
+}
