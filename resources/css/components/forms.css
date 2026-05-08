@@ -59,27 +59,23 @@
 
     /* Size */
     .form-control-tiny {
-        @apply w-20;
+        @apply w-20 pr-8;
     }
 
     .form-control-small {
-        @apply w-40;
-    }
-
-    .form-control-medium {
         @apply w-75;
     }
 
+    .form-control-medium {
+        @apply w-87.5;
+    }
+
     .form-control-large {
-        @apply w-100;
+        @apply w-112.5;
     }
 
     .form-control-full {
         @apply w-full;
-    }
-
-    .form-control-tiny {
-        @apply pr-8;
     }
 
     /* Icons */

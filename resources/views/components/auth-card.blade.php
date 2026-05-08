@@ -1,19 +1,12 @@
 @props([
-    'title' => '',
-    'size' => 'md',
+    'title' => null,
+    'titleMargin' => "0",
+    'width' => 'max',
 ])
 
-@php
-    $sizeClass = [
-        'sm' => 'auth-card--sm',
-        'md' => 'auth-card--md',
-        'lg' => 'auth-card--lg',
-    ][$size] ?? 'auth-card--md';
-@endphp
-
-<section {{ $attributes->merge(['class' => "auth-card {$sizeClass}"]) }}>
-    <h2 class="auth-card__title">{{ $title }}</h2>
-    <div class="mt-8 w-full">
-        {{ $slot }}
-    </div>
+<section class="flex flex-col min-w-{{ $width }} gap-5 items-center justify-stretch rounded-3xl bg-primary-container px-17 py-17.5" >
+    @if (isset($title))
+        <h2 class="text-display-medium text-white mb-{{ $titleMargin }}">{{ $title }}</h2>
+    @endif
+    {{ $slot }}
 </section>

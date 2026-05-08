@@ -1,6 +1,6 @@
 @layer components {
     .btn {
-        @apply min-w-50 w-max inline-flex items-center justify-center gap-1 px-5 py-2 bg-primary-accent cursor-pointer text-body-large rounded-3xl hover:bg-primary-accent/80 transition-colors text-black;
+        @apply min-w-50 w-max inline-flex items-center justify-center gap-1 px-5 py-3 bg-primary-accent cursor-pointer text-body-large rounded-full hover:bg-primary-accent/80 transition-colors text-black;
     }
 
     .btn-secondary {
@@ -25,5 +25,9 @@
 
     .btn-full {
         @apply w-full
+    }
+
+    .btn-icon {
+        @apply min-w-max p-2 rounded-lg
     }
 }
