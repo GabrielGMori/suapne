@@ -15,7 +15,7 @@ Você pode executar o arquivo `QuickSetup.bat` na raíz do projeto para instalar
 
 Caso você deseje realizar o processo manualmente, abaixo estão todas as dependências necessárias.
 
-#### Requisitos
+### Requisitos
 
 - PHP ≥ v8.2.12
 - Composer ≥ v2.9.4
@@ -23,7 +23,7 @@ Caso você deseje realizar o processo manualmente, abaixo estão todas as depend
 - NPM ≥ v11.6.2
 - MySQL ≥ v9.5
 
-#### Preparar ambiente
+### Preparar ambiente
 
 Abra um terminal e execute os comandos na raíz do projeto:
 ```
@@ -36,9 +36,13 @@ php artisan storage:link # Cria symlink de 'storage/app/public' para 'public/sto
 
 Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário. 
 
-Primeiro, crie a database. Você pode fazer isso manualmente com o MySQL Workbench ou, caso o `mysql.exe` (Normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) estiver em seu PATH, utilize o comando modificando as váriaveis em "<>":
+Primeiro, crie a database. Você pode fazer isso com o seguinte comando modificando as váriaveis em "<>", mas apenas caso o `mysql.exe` (Normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) estiver em seu PATH:
 ```
 mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE <DB_DATABASE>;" # Cria a database no servidor MySQL
+```
+Ou manualmente com o MySQL Workbench:
+```
+CREATE DATABASE <DB_DATABASE> # Cria a database no servidor com nome igual a DB_DATABASE
 ```
 Depois, execute:
 ```
@@ -47,7 +51,7 @@ php artisan migrate:fresh --seed # Realiza as migrations e cria usuário primár
 - E-mail do usuário primário: admin@admin.com
 - Senha do usuário primário: 12345
 
-#### Iniciar Aplicação
+### Iniciar Aplicação
 
 Abra um terminal e execute os comandos na raíz do projeto:
 ```

@@ -5,6 +5,9 @@
         <x-menu-lateral />
 
         <main class="flex-1 px-10 py-5 bg-{{$bg}}">
+            <h1>{{ $title }}</h1>
+            <hr class="mt-3 mb-5">
+
             {{ $slot }}
         </main>
     </div>
