@@ -35,7 +35,7 @@
 <aside
     class="bg-secondary-container text-white w-64 sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0">
     <a href="#" class="flex items-center justify-center gap-2 px-4 pt-5 pb-3">
-        <img src="{{ asset('storage/img/logo-cnapne.png') }}" alt="CNAPNE" class="h-16 object-contain">
+        <img src="{{ asset('storage/img/logo-cnapne.png') }}" alt="CNAPNE" class="h-16">
     </a>
 
     <div class="px-4 py-2">

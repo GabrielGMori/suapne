@@ -3,7 +3,7 @@
 ])
 
 <footer class="bg-secondary-container text-white w-full">
-    <div class="pl-35 pr-60 py-10 ">
+    <div class="pl-35 pr-60 pt-10 pb-15 ">
         <div class="flex flex-col md:flex-row justify-between items-start gap-15">
             <img src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}"
                 alt="CNAPNE" class="h-35">

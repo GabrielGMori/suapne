@@ -5,6 +5,8 @@
 @import './components/header.css';
 
 @layer components {
+    [x-cloak] { display: none !important; }
+
     h1 {
         @apply text-display-large;
     }
@@ -18,6 +20,10 @@
     }
 
     p, span {
-        @apply text-body-medium
+        @apply text-body-medium;
+    }
+
+    img {
+        @apply object-contain;
     }
 }

@@ -1,7 +1,4 @@
 <x-layouts.main title="Componentes">
-    <h1>Componentes</h1>
-    <hr class="mt-3 mb-5">
-
     <div class="flex flex-col bg-surface rounded-lg border border-black gap-5 p-5 mb-5">
         <h2 class="text-headline-medium">Componentes Surface</h2>
 

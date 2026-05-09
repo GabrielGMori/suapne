@@ -6,6 +6,7 @@
     --color-primary: #32643B;
     --color-primary-container: #244429;
     --color-primary-accent: #76B729;
+    --color-primary-gradient: linear-gradient(135deg, #32643D 0%, #26452C 100%);
 
     --color-secondary: #262626;
     --color-secondary-container: #181818;
