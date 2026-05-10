@@ -5,6 +5,7 @@
     'iconPos' => 'left',
     'text' => null,
     'type' => 'button',
+    'href' => null,
 ])
 
 @php
@@ -16,7 +17,7 @@
 @endphp
 
 <button type="{{ $type }}" class='{{"btn btn-$size btn-$color"}}'>
-    @if ($type == 'link') <a> @endif
+    @if ($type == 'link') <a href="{{ $href }}"> @endif
 
     @if ($icon && $iconPos === 'left')
         <span class="material-symbols-outlined" style="font-size: {{ $iconSize }};">{{ $icon }}</span>
