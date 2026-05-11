@@ -1,6 +1,7 @@
 @props([
     'icon' => 'description',
     'title' => '',
+    'buttonIcon' => 'description',
     'metadata' => [],
     'actions' => [],
 ])

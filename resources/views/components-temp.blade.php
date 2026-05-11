@@ -47,15 +47,15 @@
                 Botões
             </summary>
             <div class="flex flex-col gap-5">
-                <x-button text="Size default" />
-                <x-button text="Size dynamic" size="dynamic" />
-                <x-button text="Size full" size="full" />
-                <x-button text="Color secondary" color="secondary" />
-                <x-button text="Color tertiary" color="tertiary" />
-                <x-button text="Color yellow" color="yellow" />
-                <x-button text="Color red" color="red" />
-                <x-button text="IconPos left" color="secondary" icon="add" iconPos="left" />
-                <x-button text="IconPos right" color="secondary" icon="file_export" iconPos="right" />
+                <x-button label="Size default" />
+                <x-button label="Size dynamic" size="dynamic" />
+                <x-button label="Size full" size="full" />
+                <x-button label="Color secondary" color="secondary" />
+                <x-button label="Color tertiary" color="tertiary" />
+                <x-button label="Color yellow" color="yellow" />
+                <x-button label="Color red" color="red" />
+                <x-button label="IconPos left" color="secondary" icon="add" iconPos="left" />
+                <x-button label="IconPos right" color="secondary" icon="file_export" iconPos="right" />
                 <x-button icon="person_add" />
                 <x-button icon="person_remove" color="red" />
             </div>
@@ -69,20 +69,20 @@
                 <x-auth-card title="Login" titleMargin="10" width="125">
                     <x-form-input type="text" label="Nome:" />
                     <x-form-input type="password_forgot" label="Senha:" />
-                    <x-button text="Acessar" type="submit" size="full" />
+                    <x-button label="Acessar" type="submit" size="full" />
                     <div class="flex flex-col w-full">
                         <p class="text-body-small">Não possui uma conta?</p>
-                        <x-button text="Solicitar cadastro" type="link" href="#" size="full" />
+                        <x-button label="Solicitar cadastro" type="link" href="#" size="full" />
                     </div>
                 </x-auth-card>
 
                 <x-auth-card title="Solicitar Cadastro" titleMargin="2" width="125">
-                    <x-button text="Sou um professor de ensino regular" type="link" href="#" size="full" />
-                    <x-button text="Sou um técnicos de educação especial" type="link" href="#" size="full" />
-                    <x-button text="Sou um docente de educação especial" type="link" href="#" size="full" />
+                    <x-button label="Sou um professor de ensino regular" type="link" href="#" size="full" />
+                    <x-button label="Sou um técnicos de educação especial" type="link" href="#" size="full" />
+                    <x-button label="Sou um docente de educação especial" type="link" href="#" size="full" />
                     <div class="flex flex-col w-full">
                         <p class="text-body-small">Já possui uma conta?</p>
-                        <x-button text="Fazer login" type="link" href="#" size="full" />
+                        <x-button label="Fazer login" type="link" href="#" size="full" />
                     </div>
                 </x-auth-card>
             </div>
@@ -107,18 +107,18 @@
             </summary>
             <div class="flex flex-col gap-5 mt-2">
                 <div class="flex gap-2">
-                    <x-status text="Pendente" color="error" />
-                    <x-status text="Aguardando" color="warn" />
-                    <x-status text="Aprovado" color="success" />
-                    <x-status text="Pré-visualização" color="info" />
-                    <x-status text="Matriculado" color="dark" />
+                    <x-status label="Pendente" color="error" />
+                    <x-status label="Aguardando" color="warn" />
+                    <x-status label="Aprovado" color="success" />
+                    <x-status label="Pré-visualização" color="info" />
+                    <x-status label="Matriculado" color="dark" />
                 </div>
                 <div class="flex gap-2">
-                    <x-status text="Pendente" color="error" :filled="true" />
-                    <x-status text="Aguardando" color="warn" :filled="true" />
-                    <x-status text="Aprovado" color="success" :filled="true" />
-                    <x-status text="Pré-visualização" color="info" :filled="true" />
-                    <x-status text="Matriculado" color="dark" :filled="true" />
+                    <x-status label="Pendente" color="error" :filled="true" />
+                    <x-status label="Aguardando" color="warn" :filled="true" />
+                    <x-status label="Aprovado" color="success" :filled="true" />
+                    <x-status label="Pré-visualização" color="info" :filled="true" />
+                    <x-status label="Matriculado" color="dark" :filled="true" />
                 </div>
             </div>
         </details>
@@ -178,6 +178,21 @@
                     </x-slot:hidden>
 
                 </x-secao-expansivel>
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
+                List View
+            </summary>
+            <div class="flex flex-col gap-5">
+                <x-list-view title="Estudantes" createUrl="#" createLabel="Cadastrar novo" 
+                    :columns="[['key' => 'nome', 'label' => 'Nome'], 
+                               ['key' => 'curso', 'label' => 'Curso'],
+                               ['key' => 'periodo', 'label' => 'Período', 'size' => 'tiny'],
+                               ['key' => 'situacao', 'label' => 'Situação'], 
+                              ]"
+                />
             </div>
         </details>
     </div>
