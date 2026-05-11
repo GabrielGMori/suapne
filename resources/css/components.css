@@ -2,10 +2,9 @@
 @import './components/buttons.css';
 @import './components/status.css';
 @import './components/lists.css';
-@import './components/header.css';
 
 @layer components {
-    [x-cloak] { display: none !important; }
+    [x-cloak] { visibility: hidden !important; }
 
     h1 {
         @apply text-display-large;

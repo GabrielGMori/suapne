@@ -34,8 +34,8 @@
 
 <aside
     x-data="{
-        collapsed: window.matchMedia('(max-width: 767px)').matches,
-        compact: window.matchMedia('(max-width: 767px)').matches,
+        collapsed: window.matchMedia('(max-width: 1200px)').matches,
+        compact: window.matchMedia('(max-width: 1200px)').matches,
         collapseTimer: null,
         toggleMenu() {
             clearTimeout(this.collapseTimer);
@@ -50,30 +50,25 @@
             this.collapseTimer = setTimeout(() => this.compact = true, 300);
         },
     }"
-    :class="collapsed ? 'w-14 px-2' : 'w-64 px-3'"
-    class="bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out">
+    data-expanded="true"
+    :data-expanded="!collapsed ? 'true' : 'false'"
+    data-compact="false"
+    :data-compact="compact ? 'true' : 'false'"
+    class="group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out">
 
     <a href="#"
-       :class="collapsed ? 'h-[72px]' : 'h-[100px]'"
-       class="flex items-center justify-center py-3 transition-[height] duration-300">
-        <div :class="collapsed ? 'w-10' : 'w-full'"
-             class="relative flex items-center justify-center h-16 transition-[width] duration-300 ease-in-out">
-            <img :class="collapsed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'"
-                class="absolute h-16 max-w-none shrink-0 transition-all duration-300 object-contain"
+       class="h-[100px] group-data-[expanded=false]/sidebar:h-[72px] flex items-center justify-center py-3 transition-[height] duration-300">
+        <div class="w-full group-data-[expanded=false]/sidebar:w-10 relative flex items-center justify-center h-16 transition-[width] duration-300 ease-in-out">
+            <img class="opacity-100 scale-100 group-data-[expanded=false]/sidebar:opacity-0 group-data-[expanded=false]/sidebar:scale-75 group-data-[expanded=false]/sidebar:pointer-events-none absolute h-16 max-w-none shrink-0 transition-all duration-300 object-contain"
                 src="{{ asset('storage/img/logo-cnapne.png') }}" alt="CNAPNE">
-            <img :class="collapsed ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'"
-                class="absolute h-10 w-10 shrink-0 transition-all duration-300 object-contain"
+            <img class="opacity-0 scale-75 pointer-events-none group-data-[expanded=false]/sidebar:opacity-100 group-data-[expanded=false]/sidebar:scale-100 group-data-[expanded=false]/sidebar:pointer-events-auto absolute h-10 w-10 shrink-0 transition-all duration-300 object-contain"
                 src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}" alt="CNAPNE">
         </div>
     </a>
 
     <div class="flex justify-center py-2">
         <a href="#"
-            :class="[
-                collapsed ? 'w-10 aspect-square justify-start p-0' : 'w-full justify-start gap-3 pr-3',
-                collapsed ? 'bg-transparent hover:bg-transparent' : 'bg-secondary hover:bg-white/5',
-            ]"
-            class="flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
+            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
             title="{{ $user ?? 'Minha conta' }}">
             <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
                 class="h-10 w-10 object-cover rounded-full shrink-0">
@@ -90,8 +85,7 @@
             @else
                 <a href="{{ $item['href'] ?? '#' }}" draggable="false"
                     title="{{ $item['label'] }}"
-                    :class="compact ? 'w-10 aspect-square justify-center px-0 mx-auto' : (collapsed ? 'w-full justify-start px-[10px]' : 'w-full justify-start px-2')"
-                    class="flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap">
+                    class="w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-[10px] group-data-[compact=true]/sidebar:!w-10 group-data-[compact=true]/sidebar:!aspect-square group-data-[compact=true]/sidebar:!justify-center group-data-[compact=true]/sidebar:!px-0 group-data-[compact=true]/sidebar:!mx-auto flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap">
                     @if (isset($item['icon']))
                         <span class="material-symbols-outlined text-[20px] text-primary group-hover:text-primary-accent shrink-0">
                             {{ $item['icon'] }}
@@ -107,9 +101,8 @@
         <div class="my-2 mx-1 border-t border-white/10"></div>
 
         <a href="#" draggable="false"
-            :class="compact ? 'w-10 aspect-square justify-center px-0 mx-auto' : (collapsed ? 'w-full justify-start px-[10px]' : 'w-full justify-start px-2')"
             :title="collapsed ? 'Sair' : ''"
-            class="flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap">
+            class="w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-[10px] group-data-[compact=true]/sidebar:!w-10 group-data-[compact=true]/sidebar:!aspect-square group-data-[compact=true]/sidebar:!justify-center group-data-[compact=true]/sidebar:!px-0 group-data-[compact=true]/sidebar:!mx-auto flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap">
             <span class="material-symbols-outlined text-[20px] text-red group-hover:text-error shrink-0">logout</span>
             <span x-show="!collapsed" class="truncate">Sair</span>
         </a>
@@ -117,8 +110,7 @@
 
     <div class="mt-auto flex justify-center py-2">
         <button @click="toggleMenu()"
-            :class="compact ? 'w-10 aspect-square justify-center px-0' : (collapsed ? 'w-full justify-start px-[10px]' : 'w-full justify-start px-2')"
-            class="cursor-pointer flex items-center h-10 gap-3 rounded-lg text-white hover:bg-white/5 transition-[width,padding,background-color] duration-300 ease-in-out overflow-hidden whitespace-nowrap">
+            class="w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-[10px] group-data-[compact=true]/sidebar:!w-10 group-data-[compact=true]/sidebar:!aspect-square group-data-[compact=true]/sidebar:!justify-center group-data-[compact=true]/sidebar:!px-0 cursor-pointer flex items-center h-10 gap-3 rounded-lg text-white hover:bg-white/5 transition-[width,padding,background-color] duration-300 ease-in-out overflow-hidden whitespace-nowrap">
             <span class="material-symbols-outlined text-[20px] shrink-0"
                   x-text="collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'">
             </span>
