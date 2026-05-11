@@ -25,4 +25,8 @@
     img {
         @apply object-contain;
     }
+
+    .material-symbols-outlined {
+        @apply select-none;
+    }
 }

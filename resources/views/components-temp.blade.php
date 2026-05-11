@@ -1,4 +1,23 @@
 <x-layouts.main title="Componentes">
+    <x-list-view 
+                    title="Estudantes"
+                    :item="App\Models\Estudante::factory()->count(3)->make()"
+                    :columns="[
+                        ['label' => 'Nome do Estudante', 'key' => 'nome', 'size' => 'large'],
+                        ['label' => 'Curso do Estudante', 'key' => 'curso', 'size' => 'large'],
+                        ['label' => 'Período', 'key' => 'periodo', 'size' => 'small', 'format' => fn($value) => $value.'°'],
+                        ['label' => 'Situação', 'key' => 'situacao', 'class' => 'badge-filled badge-filled-dark'],
+                    ]"
+                    create-url="#"
+                    
+                    :actions="[
+                        ['url' => '/', 'method' => 'POST']
+                    ]"
+                    empty-message="Nenhum estudante foi encontrado"
+                />
+
+    <hr class="my-20">
+
     <div class="flex flex-col bg-surface rounded-lg border border-black gap-5 p-5 mb-5">
         <h2 class="text-headline-medium">Componentes Surface</h2>
 
@@ -54,8 +73,8 @@
                 <x-button label="Color tertiary" color="tertiary" />
                 <x-button label="Color yellow" color="yellow" />
                 <x-button label="Color red" color="red" />
-                <x-button label="IconPos left" color="secondary" icon="add" iconPos="left" />
-                <x-button label="IconPos right" color="secondary" icon="file_export" iconPos="right" />
+                <x-button label="IconPos left" color="secondary" icon="add" icon-pos="left" />
+                <x-button label="IconPos right" color="secondary" icon="file_export" icon-pos="right" />
                 <x-button icon="person_add" />
                 <x-button icon="person_remove" color="red" />
             </div>
@@ -66,7 +85,7 @@
                 Auth Card
             </summary>
             <div class="flex items-start gap-5 mt-2">
-                <x-auth-card title="Login" titleMargin="10" width="125">
+                <x-auth-card title="Login" width="125">
                     <x-form-input type="text" label="Nome:" />
                     <x-form-input type="password_forgot" label="Senha:" />
                     <x-button label="Acessar" type="submit" size="full" />
@@ -76,7 +95,7 @@
                     </div>
                 </x-auth-card>
 
-                <x-auth-card title="Solicitar Cadastro" titleMargin="2" width="125">
+                <x-auth-card title="Solicitar Cadastro" width="125">
                     <x-button label="Sou um professor de ensino regular" type="link" href="#" size="full" />
                     <x-button label="Sou um técnicos de educação especial" type="link" href="#" size="full" />
                     <x-button label="Sou um docente de educação especial" type="link" href="#" size="full" />
@@ -186,13 +205,7 @@
                 List View
             </summary>
             <div class="flex flex-col gap-5">
-                <x-list-view title="Estudantes" createUrl="#" createLabel="Cadastrar novo" 
-                    :columns="[['key' => 'nome', 'label' => 'Nome'], 
-                               ['key' => 'curso', 'label' => 'Curso'],
-                               ['key' => 'periodo', 'label' => 'Período', 'size' => 'tiny'],
-                               ['key' => 'situacao', 'label' => 'Situação'], 
-                              ]"
-                />
+                
             </div>
         </details>
     </div>

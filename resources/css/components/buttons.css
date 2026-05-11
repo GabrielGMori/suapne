@@ -23,6 +23,10 @@
         @apply bg-red hover:bg-red/80
     }
 
+    .btn-transparent {
+        @apply bg-transparent hover:bg-white/20 text-secondary
+    }
+
     .btn-dynamic {
         @apply min-w-max
     }

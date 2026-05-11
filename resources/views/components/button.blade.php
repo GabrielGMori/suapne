@@ -10,7 +10,7 @@
 
 @php
     $iconSize = "26px";
-    if (isset($icon) && !isset($label)) {
+    if (isset($icon) && !isset($label) && !empty($label) && !$label) {
         $size = "icon";
         $iconSize = "32px";
     }
