@@ -1,6 +1,10 @@
 @layer components {
     .btn {
-        @apply min-w-50 w-max inline-flex items-center justify-center gap-1 px-5 py-3 bg-primary-accent cursor-pointer text-body-large rounded-full hover:bg-primary-accent/80 transition-colors text-black;
+        @apply min-w-50 w-max h-12 inline-flex items-center justify-center gap-1 px-5 py-3 bg-primary-accent cursor-pointer text-body-large rounded-full hover:bg-primary-accent/80 transition-colors text-black;
+    }
+
+    .btn a {
+        @apply w-full h-full flex items-center justify-center gap-1;
     }
 
     .btn-secondary {
@@ -17,6 +21,10 @@
 
     .btn-red {
         @apply bg-red hover:bg-red/80
+    }
+
+    .btn-transparent {
+        @apply bg-transparent hover:bg-white/20 text-secondary
     }
 
     .btn-dynamic {

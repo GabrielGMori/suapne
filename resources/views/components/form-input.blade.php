@@ -305,7 +305,7 @@
 
             @if (in_array($type, ['password', 'password_forgot'], true))
                 <button type="button" class="form-password-toggle" aria-label="Mostrar senha" @click="showPassword = !showPassword">
-                    <span class="material-symbols-outlined text-[22px]" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
+                    <span class="material-symbols-outlined" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
                 </button>
             @endif
         @endif

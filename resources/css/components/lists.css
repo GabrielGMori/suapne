@@ -1,29 +1,39 @@
 @layer components {
-    .list-item {
-        @apply rounded-md bg-on-surface px-4 py-3 text-secondary;
+    .list-view-card {
+        @apply bg-surface rounded-xl p-5 flex flex-col;
     }
 
-    .list-item__row {
-        @apply flex items-center justify-between gap-4;
+    .list-view-header {
+        @apply flex items-center justify-between mb-7;
     }
 
-    .list-item__main {
-        @apply flex min-w-0 items-center gap-2;
+    .list-view-columns {
+        @apply flex items-center w-full mb-5 px-30;
     }
 
-    .list-item__title {
-        @apply truncate text-title-small;
+    .list-view-columns>p {
+        @apply border-secondary-accent text-label-medium border-r-2 text-center;
     }
 
-    .list-item__meta {
-        @apply flex shrink-0 items-center gap-4 text-body-large;
+    .list-view-items {
+        @apply flex flex-col w-full gap-3 h-max;
     }
 
-    .list-item__action {
-        @apply flex h-8 w-8 cursor-pointer items-center justify-center rounded text-secondary hover:bg-black/5;
+    .list-view-item {
+        @apply bg-on-surface text-secondary flex items-center w-full rounded-3xl py-5;
     }
 
-    li:has(> .list-item) {
-        list-style: none;
+    .list-view-item-data {
+        @apply flex items-center w-full;
     }
+
+    .list-view-item-data>p {
+        @apply text-center;
+    }
+
+    .list-view-size-tiny   { width: calc(2 / 20 * 100%) }
+    .list-view-size-small  { width: calc(2 / 16 * 100%) }
+    .list-view-size-medium { width: calc(4 / 16 * 100%) }
+    .list-view-size-large  { width: calc(8 / 16 * 100%) }
+    .list-view-size-full   { width: 100% }
 }

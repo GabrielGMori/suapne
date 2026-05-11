@@ -1,6 +1,6 @@
 @props([
     'filled' => false,
-    'text' => '',
+    'label' => '',
     'color' => 'info',
 ])
 
@@ -9,5 +9,5 @@
 @endphp
 
 <span class='{{"badge badge-$variant badge-$variant-$color"}}'>
-    {{ $text ?? $slot }}
+    {{ $label ?? $slot }}
 </span>

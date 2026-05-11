@@ -3,14 +3,14 @@
     'size' => 'default',
     'icon' => null,
     'iconPos' => 'left',
-    'text' => null,
+    'label' => null,
     'type' => 'button',
     'href' => null,
 ])
 
 @php
     $iconSize = "26px";
-    if (isset($icon) && !isset($text)) {
+    if (isset($icon) && !isset($label) && !empty($label) && !$label) {
         $size = "icon";
         $iconSize = "32px";
     }
@@ -23,8 +23,8 @@
         <span class="material-symbols-outlined" style="font-size: {{ $iconSize }};">{{ $icon }}</span>
     @endif
 
-    @if ($text || $slot->isNotEmpty())
-        <span>{{ $text ?? $slot }}</span>
+    @if ($label || $slot->isNotEmpty())
+        <span>{{ $label ?? $slot }}</span>
     @endif
 
     @if ($icon && $iconPos === 'right')
