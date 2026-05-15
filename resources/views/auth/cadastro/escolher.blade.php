@@ -1,3 +1,5 @@
-<div>
-    <!-- It is quality rather than quantity that matters. - Lucius Annaeus Seneca -->
-</div>
+<x-layouts.auth>
+    <div>
+        <!-- Choose Registration Type -->
+    </div>
+</x-layouts.auth>

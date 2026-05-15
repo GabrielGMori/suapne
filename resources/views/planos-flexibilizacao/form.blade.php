@@ -1,3 +1,5 @@
-<div>
-    <!-- Smile, breathe, and go slowly. - Thich Nhat Hanh -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Form Plano Flexibilizacao -->
+    </div>
+</x-layouts.main>

@@ -8,6 +8,6 @@
     $variant = $filled == true ? 'filled' : 'unfilled';
 @endphp
 
-<span class='{{"badge badge-$variant badge-$variant-$color"}}'>
+<span {{ $attributes->merge(['class' => "badge badge-$variant badge-$variant-$color"]) }}>
     {{ $label ?? $slot }}
 </span>

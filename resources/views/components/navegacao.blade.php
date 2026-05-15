@@ -1,4 +1,4 @@
-<nav class="flex items-center text-sm text-gray-500 gap-2">
+<nav {{ $attributes->merge(['class' => 'flex items-center text-sm text-gray-500 gap-2']) }}>
     @foreach ($breadcrumbs as $breadcrumb)
         @if (!$loop->first)
             <span>&lt</span>

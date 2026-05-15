@@ -1,3 +1,5 @@
-<div>
-    <!-- Simplicity is the ultimate sophistication. - Leonardo da Vinci -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Show Atendimento -->
+    </div>
+</x-layouts.main>

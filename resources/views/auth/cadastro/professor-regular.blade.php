@@ -1,3 +1,5 @@
-<div>
-    <!-- Simplicity is the consequence of refined emotions. - Jean D'Alembert -->
-</div>
+<x-layouts.auth>
+    <div>
+        <!-- Professor Regular Registration -->
+    </div>
+</x-layouts.auth>

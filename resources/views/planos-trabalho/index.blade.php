@@ -1,3 +1,5 @@
-<div>
-    <!-- It is never too late to be what you might have been. - George Eliot -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Index Planos Trabalho -->
+    </div>
+</x-layouts.main>

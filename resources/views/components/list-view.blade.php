@@ -1,4 +1,4 @@
-<div class="list-view-wrapper">
+<div {{ $attributes->merge(['class' => 'list-view-wrapper']) }}>
     <div class="list-view-card">
         <div class="list-view-header">
             @if($title) <h3>{{ $title }}</h3> @endif
@@ -33,7 +33,7 @@
                         @if ($imageIcon)
                             <img class="min-w-30 text-center h-15" src="{{ $formattedIcon }}">
                         @else
-                            <span class="material-symbols-outlined min-w-30 text-center" style="font-size: 2.5rem">{{ $formattedIcon }}</span>
+                            <x-icon class="min-w-30 text-center" size="40">{{ $formattedIcon }}</x-icon>
                         @endif
 
                         <div class="list-view-item-data">

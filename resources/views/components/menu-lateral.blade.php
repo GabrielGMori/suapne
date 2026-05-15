@@ -5,32 +5,32 @@
     $sidebarStorageKey = 'cnapne.sidebar.collapsed';
 
     $navItems = [
-        ['label' => 'Início', 'href' => '#', 'icon' => 'home'],
-        ['label' => 'Estudantes', 'href' => '#', 'icon' => 'school'],
+        ['label' => 'Início', 'href' => route('dashboard.index'), 'icon' => 'home'],
+        ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'],
     ];
 
     if ($role === 'professor_regular') {
-        $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => '#', 'icon' => 'assignment']];
+        $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment']];
     }
 
     if ($role === 'tecnico') {
-        $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => '#', 'icon' => 'history']];
+        $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history']];
     }
 
     if ($role === 'docente_especial') {
         $navItems = [
             ...$navItems,
-            ['label' => 'Planos de flexibilização', 'href' => '#', 'icon' => 'tune'],
-            ['label' => 'Planos de trabalho', 'href' => '#', 'icon' => 'assignment'],
-            ['label' => 'Atendimentos', 'href' => '#', 'icon' => 'article_person'],
+            ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'],
+            ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment'],
+            ['label' => 'Atendimentos', 'href' => route('atendimentos.index'), 'icon' => 'article_person'],
             $divider,
-            ['label' => 'Registro de auditoria', 'href' => '#', 'icon' => 'history'],
-            ['label' => 'Contas da CNAPNE', 'href' => '#', 'icon' => 'server_person'],
-            ['label' => 'Contas de professores', 'href' => '#', 'icon' => 'person'],
-            ['label' => 'Solicitações de registro', 'href' => '#', 'icon' => 'pending_actions'],
+            ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history'],
+            ['label' => 'Contas da CNAPNE', 'href' => route('contas.cnapne.index'), 'icon' => 'server_person'],
+            ['label' => 'Contas de professores', 'href' => route('contas.professor.index'), 'icon' => 'person'],
+            ['label' => 'Solicitações de registro', 'href' => route('solicitacoes-registro.index'), 'icon' => 'pending_actions'],
             $divider,
-            ['label' => 'Cursos', 'href' => '#', 'icon' => 'backpack'],
-            ['label' => 'Disciplinas', 'href' => '#', 'icon' => 'book'],
+            ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'],
+            ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'],
         ];
     }
 
@@ -161,7 +161,7 @@
     :data-expanded="!collapsed ? 'true' : 'false'"
     data-compact="false"
     :data-compact="compact ? 'true' : 'false'"
-    class="group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out">
+    {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
 
     <a href="#"
        data-sidebar-logo-link
@@ -202,9 +202,7 @@
                 title="{{ $item['label'] }}"
                 class="{{ $navLinkClasses }}">
                 @if (isset($item['icon']))
-                    <span class="material-symbols-outlined text-[20px] text-primary group-hover:text-primary-accent shrink-0">
-                        {{ $item['icon'] }}
-                    </span>
+                    <x-icon class="text-primary group-hover:text-primary-accent shrink-0" size="24">{{ $item['icon'] }}</x-icon>
                 @endif
                 <span data-sidebar-label x-show="!collapsed" class="truncate">
                     {{ $item['label'] }}
@@ -218,7 +216,7 @@
             data-sidebar-compact-link
             :title="collapsed ? 'Sair' : ''"
             class="{{ $navLinkClasses }}">
-            <span class="material-symbols-outlined text-[20px] text-red group-hover:text-error shrink-0">logout</span>
+            <x-icon class="text-red group-hover:text-error shrink-0 pl-1" size="24">logout</x-icon>
             <span data-sidebar-label x-show="!collapsed" class="truncate">Sair</span>
         </a>
     </nav>

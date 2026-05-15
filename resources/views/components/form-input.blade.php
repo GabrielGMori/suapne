@@ -53,7 +53,7 @@
 @endphp
 
 <div
-    class="form-field {{ $size == 'full' ? '' : 'w-max' }}"
+    {{ $attributes->merge(['class' => "form-field " . ($size == 'full' ? '' : 'w-max')]) }}
     x-data="{
         showPassword: false,
         isOpen: false,

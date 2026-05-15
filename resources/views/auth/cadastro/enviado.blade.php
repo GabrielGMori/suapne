@@ -1,3 +1,5 @@
-<div>
-    <!-- Smile, breathe, and go slowly. - Thich Nhat Hanh -->
-</div>
+<x-layouts.auth>
+    <div>
+        <!-- Sent Confirmation -->
+    </div>
+</x-layouts.auth>

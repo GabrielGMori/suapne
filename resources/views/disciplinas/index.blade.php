@@ -1,3 +1,5 @@
-<div>
-    <!-- An unexamined life is not worth living. - Socrates -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Index Disciplinas -->
+    </div>
+</x-layouts.main>

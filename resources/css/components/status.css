@@ -12,23 +12,23 @@
     }
 
     .badge-filled-error {
-        @apply bg-error 
+        @apply bg-error
     }
 
     .badge-filled-warn {
-        @apply bg-warn 
+        @apply bg-warn
     }
 
     .badge-filled-success {
-        @apply bg-success 
+        @apply bg-success
     }
 
     .badge-filled-dark {
-        @apply bg-secondary text-white 
+        @apply bg-secondary text-white
     }
 
     .badge-unfilled-error {
-        @apply ring-red text-red 
+        @apply ring-red text-red
     }
 
     .badge-unfilled-warn {
@@ -40,6 +40,6 @@
     }
 
     .badge-unfilled-dark {
-        @apply ring-secondary text-secondary 
+        @apply ring-secondary text-secondary
     }
 }

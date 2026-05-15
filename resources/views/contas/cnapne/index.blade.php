@@ -1,3 +1,5 @@
-<div>
-    <!-- Knowing is not enough; we must apply. Being willing is not enough; we must do. - Leonardo da Vinci -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Index CNAPNE Accounts -->
+    </div>
+</x-layouts.main>

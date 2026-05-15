@@ -16,7 +16,7 @@
     }
 @endphp
 
-<button type="{{ $type }}" class='{{"btn btn-$size btn-$color"}}'>
+<button type="{{ $type }}" {{ $attributes->merge(['class' => "btn btn-$size btn-$color"]) }}>
     @if ($type == 'link') <a href="{{ $href }}"> @endif
 
     @if ($icon && $iconPos === 'left')

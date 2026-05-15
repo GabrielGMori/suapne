@@ -1,3 +1,5 @@
-<div>
-    <!-- Always remember that you are absolutely unique. Just like everyone else. - Margaret Mead -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Show Plano Flexibilizacao -->
+    </div>
+</x-layouts.main>

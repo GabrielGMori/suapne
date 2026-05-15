@@ -1,3 +1,5 @@
-<div>
-    <!-- No surplus words or unnecessary actions. - Marcus Aurelius -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Index Estudantes -->
+    </div>
+</x-layouts.main>

@@ -1,3 +1,5 @@
-<div>
-    <!-- Very little is needed to make a happy life. - Marcus Aurelius -->
-</div>
+<x-layouts.main>
+    <div>
+        <!-- Add Document to Student -->
+    </div>
+</x-layouts.main>

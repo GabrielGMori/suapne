@@ -22,9 +22,7 @@
                     <a href="{{ $action['href'] ?? '#' }}"
                        title="{{ $action['label'] ?? '' }}"
                        class="list-item__action">
-                        <span class="material-symbols-outlined text-[28px]">
-                            {{ $action['icon'] ?? 'open_in_new' }}
-                        </span>
+                        <x-icon size="28">{{ $action['icon'] ?? 'open_in_new' }}</x-icon>
                     </a>
                 @endforeach
             </div>
