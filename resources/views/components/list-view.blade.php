@@ -2,11 +2,11 @@
     <div class="list-view-card">
         <div class="list-view-header">
             @if($title) <h3>{{ $title }}</h3> @endif
-            @if ($createUrl) 
-                <x-button type="link" color="tertiary" 
+            @if ($createUrl)
+                <x-button type="link" color="tertiary"
                     href="{{ $createUrl }}"
                     label="{{ $createLabel }}"
-                    icon="add" size="dynamic" /> 
+                    icon="add" size="dynamic" />
             @endif
         </div>
 
@@ -22,14 +22,18 @@
                 @endforeach
             </div>
 
-        
+
             <div class="list-view-items">
                 @foreach($items as $i => $item)
                     <div class="list-view-item">
-                        @if ($iconType == 'image') 
-                            <img src="{{ $icon }}">
+                        @php
+                            $formattedIcon = is_callable($icon) ? $icon($item) : $icon;
+                        @endphp
+
+                        @if ($imageIcon)
+                            <img class="min-w-30 text-center h-15" src="{{ $formattedIcon }}">
                         @else
-                            <span class="material-symbols-outlined min-w-30 text-center" style="font-size: 2.5rem">{{ $icon }}</span>
+                            <span class="material-symbols-outlined min-w-30 text-center" style="font-size: 2.5rem">{{ $formattedIcon }}</span>
                         @endif
 
                         <div class="list-view-item-data">
@@ -41,7 +45,9 @@
                                     if ($format) $value = $format($value);
                                 @endphp
 
-                                <p class="list-view-size-{{ $column['size'] ?? 'medium' }}">{{ $value }}</p>
+                                <p class="list-view-size-{{ $column['size'] ?? 'medium' }}">
+                                    {!! $value !!}
+                                </p>
                             @endforeach
                         </div>
 
@@ -49,19 +55,19 @@
                             <div class="min-w-30 text-center">
                                 @foreach ($actions as $action)
                                     @php
-                                        $url = $action['url'];
-                                        $method = $action['method'] ?? null;
-                                        $confirm = $action['confirm'] ?? false;
-                                        $icon = $action['icon'] ?? null;
-                                        $color = $action['color'] ?? null;
+                                        $actionUrl = $action['url'];
+                                        $actionMethod = $action['method'] ?? null;
+                                        $actionConfirm = $action['confirm'] ?? false;
+                                        $actionIcon = $action['icon'] ?? null;
+                                        $actionColor = $action['color'] ?? null;
                                     @endphp
 
-                                    <form action="{{ $url }}">
-                                        @if($method && $method !== 'GET' && $method !== 'POST')
+                                    <form action="{{ $actionUrl }}">
+                                        @if($actionMethod && $actionMethod !== 'GET' && $actionMethod !== 'POST')
                                             @csrf
-                                            @method($method)
+                                            @method($actionMethod)
                                         @endif
-                                        <x-button :type="$method ? 'submit' : 'link'" :href="$method ? null : $url" :icon="$icon ?? 'open_in_new'" :color="$color ?? 'transparent'" size="dynamic"></x-button>
+                                        <x-button :type="$actionMethod ? 'submit' : 'link'" :href="$actionMethod ? null : $actionUrl" :icon="$actionIcon ?? 'open_in_new'" :color="$actionColor ?? 'transparent'" size="dynamic"></x-button>
                                     </form>
                                 @endforeach
                             </div>

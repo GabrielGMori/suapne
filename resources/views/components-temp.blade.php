@@ -1,21 +1,4 @@
 <x-layouts.main title="Componentes">
-    <x-list-view 
-                    title="Estudantes"
-                    :item="App\Models\Estudante::factory()->count(3)->make()"
-                    :columns="[
-                        ['label' => 'Nome do Estudante', 'key' => 'nome', 'size' => 'large'],
-                        ['label' => 'Curso do Estudante', 'key' => 'curso', 'size' => 'large'],
-                        ['label' => 'Período', 'key' => 'periodo', 'size' => 'small', 'format' => fn($value) => $value.'°'],
-                        ['label' => 'Situação', 'key' => 'situacao', 'class' => 'badge-filled badge-filled-dark'],
-                    ]"
-                    create-url="#"
-                    
-                    :actions="[
-                        ['url' => '/', 'method' => 'POST']
-                    ]"
-                    empty-message="Nenhum estudante foi encontrado"
-                />
-
     <hr class="my-20">
 
     <div class="flex flex-col bg-surface rounded-lg border border-black gap-5 p-5 mb-5">
@@ -152,7 +135,7 @@
                         <div class="shrink-0 flex items-start justify-center">
                             <div
                                 class="w-32 h-32 bg-[#a9a9a9] rounded-full flex items-center justify-center text-[#f4f4f4] overflow-hidden">
-                                <span class="material-symbols-outlined text-[100px] mt-6">person</span>
+                                <x-icon color="white" size="80">person</x-icon>
                             </div>
                         </div>
 
@@ -205,7 +188,43 @@
                 List View
             </summary>
             <div class="flex flex-col gap-5">
-                
+                <x-list-view
+                    title="Estudantes"
+                    :items="App\Models\Estudante::factory()->count(3)->make()"
+                    :columns="[
+                        ['label' => 'Nome do Estudante', 'key' => 'nome', 'size' => 'large'],
+                        ['label' => 'Curso do Estudante', 'key' => 'curso', 'size' => 'large'],
+                        ['label' => 'Período', 'key' => 'periodo', 'size' => 'small', 'format' => fn($value) => $value.'°'],
+                        ['label' => 'Situação', 'key' => 'situacao',
+                        'format' => function($value) {
+                            $colors = [
+                                'Matriculado' => 'success',
+                                'Formado' => 'warn',
+                                'Evadido' => 'error',
+                            ];
+                            $color = $colors[$value] ?? 'dark';
+                            return view('components.status', ['label' => $value, 'color' => $color])->render();
+                        }],
+                    ]"
+                    create-url="#"
+                    create-label="Novo Estudante"
+
+                    :icon="function($item) {
+                        match($item->curso) {
+                            'Arquitetura' => $icon = 'architecture',
+                            'Medicina' => $icon = 'medical_services',
+                            'Engenharia' => $icon = 'engineering',
+                            default => $icon = 'school',
+                        };
+                        return $icon;
+                    }"
+                    :image-icon="false"
+
+                    :actions="[
+                        ['url' => '/', 'method' => 'POST']
+                    ]"
+                    empty-message="Nenhum estudante foi encontrado"
+                />
             </div>
         </details>
     </div>

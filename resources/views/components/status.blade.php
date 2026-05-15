@@ -1,5 +1,5 @@
 @props([
-    'filled' => false,
+    'filled' => true,
     'label' => '',
     'color' => 'info',
 ])

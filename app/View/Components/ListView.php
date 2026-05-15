@@ -17,14 +17,14 @@ class ListView extends Component
         public array|Collection $items = [],
         public array $columns = [],
 
-        public string $iconType = "icon",
-        public string $icon = "description",
+        public string|Closure $icon = "description",
+        public bool $imageIcon = false,
 
         public string $emptyMessage = "Nada foi encontrado",
 
         public ?string $createUrl = null,
         public ?string $createLabel = null,
-        
+
         public ?array $actions = null,
     ) {}
 

@@ -142,21 +142,21 @@
 
                 if (this.isOpen) {
                     e.preventDefault();
-                    
+
                     if (e.key === 'ArrowDown') {
                         if (this.displayOptions.length > 0) {
                             this.highlightedIndex = (this.highlightedIndex + 1) % this.displayOptions.length;
                             this.scrollToHighlighted();
                         }
                     }
-                    
+
                     if (e.key === 'ArrowUp') {
                         if (this.displayOptions.length > 0) {
                             this.highlightedIndex = this.highlightedIndex - 1 < 0 ? this.displayOptions.length - 1 : this.highlightedIndex - 1;
                             this.scrollToHighlighted();
                         }
                     }
-                    
+
                     if (e.key === 'Enter' && this.displayOptions.length > 0) {
                         this.toggleOption(this.displayOptions[this.highlightedIndex].value);
                     }
@@ -173,7 +173,7 @@
             } else {
                 this.searchQuery += e.key;
             }
-            
+
             this.isOpen = true;
 
             clearTimeout(this.searchTimeout);
@@ -190,9 +190,9 @@
 
     <div class="form-control-wrap">
         @if ($isDropdown)
-            <div 
-                class="multi-select {{ $sizeClass }}" 
-                tabindex="0" 
+            <div
+                class="multi-select {{ $sizeClass }}"
+                tabindex="0"
                 @keydown="handleKeydown"
                 @focusout="if (!$el.contains($event.relatedTarget)) isOpen = false"
             >
@@ -230,18 +230,18 @@
                             Sem resultados
                         </div>
                     </template>
-                    
+
                     {{-- O loop agora rastreia o index para o highlight visual --}}
                     <template x-for="(option, index) in displayOptions" :key="option.value">
                         <button
                             type="button"
                             class="multi-select-option"
-                            :class="{ 
+                            :class="{
                                 'multi-select-option-selected': isSelected(option.value),
                                 'bg-black/5': highlightedIndex === index // Troque 'bg-black/5' pela classe de hover que você usa no seu projeto (ex: bg-gray-100)
                             }"
                             @click="toggleOption(option.value)"
-                            @mouseenter="highlightedIndex = index" 
+                            @mouseenter="highlightedIndex = index"
                         >
                             <span x-text="option.label"></span>
                             @if ($isMultiSelect) <span x-show="isSelected(option.value)">&times;</span> @endif

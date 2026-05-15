@@ -9,12 +9,10 @@
 <article {{ $attributes->merge(['class' => 'list-item']) }}>
     <div class="list-item__row">
         <div class="list-item__main">
-            <span class="material-symbols-outlined text-[24px] shrink-0">
-                {{ $icon }}
-            </span>
+            <x-icon class="shrink-0">{{ $icon }}</x-icon>
             <span class="list-item__title">{{ $title }}</span>
             <button type="button" class="list-item__action" aria-label="Mais opções">
-                <span class="material-symbols-outlined text-[20px]">more_horiz</span>
+                <x-icon size="20">more_horiz</x-icon>
             </button>
         </div>
 

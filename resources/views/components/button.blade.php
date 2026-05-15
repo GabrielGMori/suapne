@@ -9,10 +9,10 @@
 ])
 
 @php
-    $iconSize = "26px";
-    if (isset($icon) && !isset($label) && !empty($label) && !$label) {
+    $iconSize = "26";
+    if (isset($icon) && (!isset($label) || empty($label) || !$label)) {
         $size = "icon";
-        $iconSize = "32px";
+        $iconSize = "32";
     }
 @endphp
 
@@ -20,7 +20,7 @@
     @if ($type == 'link') <a href="{{ $href }}"> @endif
 
     @if ($icon && $iconPos === 'left')
-        <span class="material-symbols-outlined" style="font-size: {{ $iconSize }};">{{ $icon }}</span>
+        <x-icon size="{{ $iconSize }}">{{ $icon }}</x-icon>
     @endif
 
     @if ($label || $slot->isNotEmpty())
@@ -28,7 +28,7 @@
     @endif
 
     @if ($icon && $iconPos === 'right')
-        <span class="material-symbols-outlined" style="font-size: {{ $iconSize }};">{{ $icon }}</span>
+        <x-icon size="{{ $iconSize }}">{{ $icon }}</x-icon>
     @endif
 
     @if ($type == 'link') </a> @endif
