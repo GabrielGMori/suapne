@@ -1,4 +1,4 @@
-@props(['title' => 'SUAPNE', 'cardTitle' => ''])
+@props(['title' => 'SUAPNE'])
 
 <x-layouts.app :title="$title">
     <main class="flex flex-col items-center justify-center bg-linear-to-br from-primary to-primary-container h-screen">

@@ -1,7 +1,7 @@
 @props([
-    'filled' => true,
-    'label' => '',
-    'color' => 'info',
+    'filled' => true, // Se o status é preenchido ou não. Pode ser: true|false
+    'label' => '', // Texto dentro do status. Se não for fornecido, o texto do slot entre x-status será usado.
+    'color' => 'info', // Cor do status. Pode ser: info|success|danger|warning|dark
 ])
 
 @php

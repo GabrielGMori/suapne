@@ -1,3 +1,5 @@
+{{-- Esse é um componente mais complexo, por isso, ele utiliza uma classe PHP em app/View/Components/ListView.php --}}
+
 <div {{ $attributes->merge(['class' => 'list-view-wrapper']) }}>
     @if($filters)
         <x-secao-expansivel class="mb-20" title="Filtros">
@@ -83,17 +85,21 @@
                                         $actionUrl = $action['url'];
                                         $actionMethod = $action['method'] ?? null;
                                         $actionConfirm = $action['confirm'] ?? false;
-                                        $actionIcon = $action['icon'] ?? null;
-                                        $actionColor = $action['color'] ?? null;
+                                        $actionIcon = $action['icon'] ?? 'open_in_new';
+                                        $actionColor = $action['color'] ?? 'transparent';
                                     @endphp
 
-                                    <form action="{{ $actionUrl }}">
-                                        @if($actionMethod && $actionMethod !== 'GET' && $actionMethod !== 'POST')
-                                            @csrf
-                                            @method($actionMethod)
-                                        @endif
-                                        <x-button :type="$actionMethod ? 'submit' : 'link'" :href="$actionMethod ? null : $actionUrl" :icon="$actionIcon ?? 'open_in_new'" :color="$actionColor ?? 'transparent'" size="dynamic"></x-button>
-                                    </form>
+                                    @if($actionMethod)
+                                        <form action="{{ $actionUrl }}" method="{{ $actionMethod === 'GET' ? 'GET' : 'POST' }}">
+                                            @if($actionMethod && $actionMethod !== 'GET' && $actionMethod !== 'POST')
+                                                @csrf
+                                                @method($actionMethod)
+                                            @endif
+                                            <x-button type="submit" :icon="$actionIcon" :color="$actionColor" size="dynamic"></x-button>
+                                        </form>
+                                    @else
+                                        <x-button type="link" :href="$actionUrl" :icon="$actionIcon" :color="$actionColor" size="dynamic"></x-button>
+                                    @endif
                                 @endforeach
                             </div>
                         @endif

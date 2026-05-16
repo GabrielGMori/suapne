@@ -11,12 +11,12 @@
         @apply rounded-3xl text-tertiary px-5 py-1.5 bg-transparent ring-tertiary ring-2 text-label-medium
     }
 
-    .badge-filled-error {
-        @apply bg-error
+    .badge-filled-danger {
+        @apply bg-danger
     }
 
-    .badge-filled-warn {
-        @apply bg-warn
+    .badge-filled-warning {
+        @apply bg-warning
     }
 
     .badge-filled-success {
@@ -27,11 +27,11 @@
         @apply bg-secondary text-white
     }
 
-    .badge-unfilled-error {
+    .badge-unfilled-danger {
         @apply ring-red text-red
     }
 
-    .badge-unfilled-warn {
+    .badge-unfilled-warning {
         @apply ring-orange text-orange
     }
 

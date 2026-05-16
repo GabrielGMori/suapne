@@ -1,16 +1,16 @@
 @props([
-    'type' => 'text',
+    'type' => 'text', // Tipo do input. Pode ser: text|password|password_forgot|date|datetime|select|multiselect|textarea|file
 
-    'appearance' => 'default',
-    'size' => 'medium',
+    'appearance' => 'default', // Aparência do input. Pode ser: default|outlined|surface
+    'size' => 'medium', // Tamanho do input. Pode ser: tiny|small|medium|large|full
 
-    'label' => null,
-    'name' => '',
-    'placeholder' => '',
-    'value' => '',
-    'helper' => '',
+    'label' => null, // Texto do label associado ao input
+    'name' => '', // Nome do campo, usado para o atributo name do input. É o nome passado para o controller
+    'placeholder' => '', // Texto do placeholder do input
+    'value' => '', // Valor padrão do input. Normalmente usado para preencher o campo com um valor existente
+    'helper' => '', // Texto de ajuda em baixo do input
 
-    'options' => [],
+    'options' => [], // Opções para os tipos select e multiselect. Deve ser um array de strings
 ])
 
 @php
@@ -48,7 +48,8 @@
 
     $submittedName = $isMultiSelect && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
     $emptyMultiSelectName = str_replace('[]', '', $name);
-    $currentValue = old($name, $value);
+    $oldInputName = $emptyMultiSelectName ?: $name;
+    $currentValue = $oldInputName !== '' ? old($oldInputName, $value) : $value;
 
     $initialSelected = $currentValue;
     if (!is_array($initialSelected)) {
@@ -57,32 +58,39 @@
     $initialSelected = array_values(array_map('strval', $initialSelected));
 
     $optionsForJs = [];
-    foreach ($options as $optionValue => $optionLabel) {
-        $optionsForJs[] = ['value' => (string) $optionValue, 'label' => (string) $optionLabel];
+    foreach ($options as $optionIndex => $optionValue) {
+        $optionsForJs[] = ['index' => (string) $optionIndex, 'value' => (string) $optionValue];
     }
-
-    $selectionStorageId = $name !== ''
-        ? $name
-        : sha1(json_encode([$type, $appearance, $size, $label, $placeholder, $optionsForJs], JSON_UNESCAPED_UNICODE));
 @endphp
 
 <div
     {{ $attributes->merge(['class' => $fieldClass]) }}
+    data-is-multiple="{{ $isMultiSelect ? 'true' : 'false' }}"
+    data-options='@json($optionsForJs)'
+    data-selected-items='@json($initialSelected)'
     x-data="{
+        storageKey: 'form-input-selected_{{ $name }}',
         showPassword: false,
         isOpen: false,
-        isMultiple: @js($isMultiSelect),
-        options: @js($optionsForJs),
-        selectedItems: @js($initialSelected),
+        isMultiple: $el.dataset.isMultiple === 'true',
+        options: JSON.parse($el.dataset.options),
+        selectedItems: JSON.parse($el.dataset.selectedItems),
         searchQuery: '',
         searchTimeout: null,
         resetNextType: false,
         highlightedIndex: 0,
-        shouldPersistSelection: @js($isDropdown),
-        selectionStorageKey: ['cnapne.form-input', window.location.pathname, @js($selectionStorageId)].join('.'),
 
         init() {
-            this.restoreSelection();
+            const stored = sessionStorage.getItem(this.storageKey);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed)) {
+                    this.selectedItems = parsed;
+                } else if (typeof parsed === 'string') {
+                    this.selectedItems = [parsed];
+                }
+                sessionStorage.removeItem(this.storageKey);
+            }
 
             this.$watch('isOpen', value => {
                 if (!value) {
@@ -95,66 +103,45 @@
             this.$watch('searchQuery', () => {
                 this.highlightedIndex = 0;
             });
-
-            this.$watch('selectedItems', () => {
-                this.saveSelection();
-            });
         },
         get displayOptions() {
             if (!this.searchQuery) return this.options;
 
             const query = this.searchQuery.toLowerCase();
             return [...this.options]
-                .filter(opt => opt.label.toLowerCase().includes(query))
+                .filter(opt => opt.value.toLowerCase().includes(query))
                 .sort((a, b) => {
-                    const indexA = a.label.toLowerCase().indexOf(query);
-                    const indexB = b.label.toLowerCase().indexOf(query);
+                    const indexA = a.value.toLowerCase().indexOf(query);
+                    const indexB = b.value.toLowerCase().indexOf(query);
                     return indexA - indexB;
                 });
         },
         selectedOptions() {
             return this.options.filter((option) => this.selectedItems.includes(String(option.value)));
         },
-        isSelected(optionValue) {
-            return this.selectedItems.includes(String(optionValue));
+        isSelected(optionIndex) {
+            return this.selectedItems.includes(String(this.options[optionIndex].value));
         },
         resetSearch() {
             this.resetNextType = true;
             clearTimeout(this.searchTimeout);
             this.searchTimeout = null;
         },
-        validSelectedItems(items) {
-            const optionValues = this.options.map((option) => String(option.value));
-            return items
-                .map((item) => String(item))
-                .filter((item) => optionValues.includes(item));
+        storeSelectedInSession() {
+            console.log(this.storageKey);
+            sessionStorage.setItem(
+                this.storageKey,
+                JSON.stringify(this.selectedItems)
+            );
+            console.log(JSON.stringify(this.selectedItems));
         },
-        restoreSelection() {
-            if (!this.shouldPersistSelection) return;
-
-            try {
-                const savedValue = localStorage.getItem(this.selectionStorageKey);
-                if (savedValue === null) return;
-
-                const savedSelection = JSON.parse(savedValue);
-                const selectedItems = Array.isArray(savedSelection) ? this.validSelectedItems(savedSelection) : [];
-
-                this.selectedItems = this.isMultiple ? selectedItems : selectedItems.slice(0, 1);
-            } catch (error) {}
-        },
-        saveSelection() {
-            if (!this.shouldPersistSelection) return;
-
-            try {
-                localStorage.setItem(this.selectionStorageKey, JSON.stringify(this.selectedItems));
-            } catch (error) {}
-        },
-        toggleOption(optionValue) {
-            const normalized = String(optionValue);
+        toggleOption(optionIndex) {
+            const normalized = String(this.options[optionIndex].value);
             if (this.isMultiple) {
-                if (this.isSelected(normalized)) {
+                if (this.isSelected(optionIndex)) {
                     this.selectedItems = this.selectedItems.filter((item) => item !== normalized);
                     this.resetSearch();
+                    this.storeSelectedInSession();
                     return;
                 }
                 this.selectedItems = [...this.selectedItems, normalized];
@@ -164,13 +151,16 @@
                 this.resetSearch();
                 this.isOpen = false;
             }
+            this.storeSelectedInSession();
         },
-        removeOption(optionValue) {
-            const normalized = String(optionValue);
+        removeOption(optionIndex) {
+            const normalized = String(this.options[optionIndex].value);
             this.selectedItems = this.selectedItems.filter((item) => item !== normalized);
+            this.storeSelectedInSession();
         },
         clearSelections() {
             this.selectedItems = [];
+            this.storeSelectedInSession();
         },
         scrollToHighlighted() {
             this.$nextTick(() => {
@@ -212,7 +202,7 @@
                     }
 
                     if (e.key === 'Enter' && this.displayOptions.length > 0) {
-                        this.toggleOption(this.displayOptions[this.highlightedIndex].value);
+                        this.toggleOption(this.displayOptions[this.highlightedIndex].index);
                     }
                 }
                 return;
@@ -235,46 +225,53 @@
             }, 1000);
         }
     }"
-    @click.outside="isOpen = false"
+    x-on:click.outside="isOpen = false"
 >
     @if ($label)
         <label for="{{ $name }}" class="{{ $labelClass }}">{{ $label }}</label>
     @endif
+
+    <p>Input name: {{ $name }}</p>
+    <p>Old name: {{ $oldInputName }}</p>
+    <p>Value: {{ $value }}</p>
+    <p>Old value: {{ old($name) }}</p>
+    <p>Current value: {{ $currentValue }}</p>
+    <p>Selected items: <span x-text="selectedItems"></span></p>
 
     <div class="form-control-wrap">
         @if ($isDropdown)
             <div
                 class="multi-select {{ $sizeClass }}"
                 tabindex="0"
-                @keydown="handleKeydown"
-                @focusout="if (!$el.contains($event.relatedTarget)) isOpen = false"
+                x-on:keydown="handleKeydown"
+                x-on:focusout="if (!$el.contains($event.relatedTarget)) isOpen = false"
             >
                 <button
                     type="button"
                     class="multi-select-control {{ $controlClass }}"
-                    @click="isOpen = !isOpen"
+                    x-on:click="isOpen = !isOpen"
                 >
                     <div x-show="selectedItems.length" class="w-full text-left">
                         <template x-if="isMultiple">
                             <div class="multi-select-chips">
-                                <template x-for="option in selectedOptions()" :key="option.value">
+                                <template x-for="option in selectedOptions()" x-bind:key="option.index">
                                     <span class="multi-select-chip">
-                                        <button type="button" class="multi-select-chip-remove" @click.stop="removeOption(option.value)">&times;</button>
-                                        <span x-text="option.label"></span>
+                                        <button type="button" class="multi-select-chip-remove" x-on:click.stop="removeOption(option.index)">&times;</button>
+                                        <span x-text="option.value"></span>
                                     </span>
                                 </template>
                             </div>
                         </template>
 
                         <template x-if="!isMultiple">
-                            <span class="block truncate" x-text="selectedOptions()[0]?.label"></span>
+                            <span class="block truncate" x-text="selectedOptions()[0]?.value"></span>
                         </template>
                     </div>
 
                     <span x-show="!selectedItems.length" class="text-black/40">{{ $resolvedPlaceholder }}</span>
                 </button>
 
-                <button type="button" x-show="selectedItems.length && isMultiple" class="multi-select-clear" @click="clearSelections()" aria-label="Limpar seleção">&times;</button>
+                <button type="button" x-show="selectedItems.length && isMultiple" class="multi-select-clear" x-on:click="clearSelections()" aria-label="Limpar seleção">&times;</button>
 
                 <div x-show="isOpen" x-cloak x-ref="menu" class="multi-select-menu">
                     <template x-if="displayOptions.length === 0">
@@ -283,36 +280,36 @@
                         </div>
                     </template>
 
-                    <template x-for="(option, index) in displayOptions" :key="option.value">
+                    <template x-for="(option, index) in displayOptions" x-bind:key="option.index">
                         <button
                             type="button"
                             class="multi-select-option"
-                            :class="{
-                                'multi-select-option-selected': isSelected(option.value),
+                            x-bind:class="{
+                                'multi-select-option-selected': isSelected(option.index),
                                 'bg-black/5': highlightedIndex === index
                             }"
-                            @click="toggleOption(option.value)"
-                            @mouseenter="highlightedIndex = index"
+                            x-on:click="toggleOption(option.index)"
+                            x-on:mouseenter="highlightedIndex = index"
                         >
-                            <span x-text="option.label"></span>
-                            @if ($isMultiSelect) <span x-show="isSelected(option.value)">&times;</span> @endif
+                            <span x-text="option.value"></span>
+                            @if ($isMultiSelect) <span x-show="isSelected(option.index)">&times;</span> @endif
                         </button>
                     </template>
                 </div>
 
-                @if ($isMultiSelect)
-                    <input type="hidden" name="{{ $emptyMultiSelectName }}" value="" />
+                @if ($submittedName !== '')
+                    <template x-if="isMultiple">
+                        <template x-for="selectedItem in selectedItems" x-bind:key="selectedItem">
+                            <input type="hidden" name="{{ $submittedName }}" x-bind:value="selectedItem" />
+                        </template>
+                    </template>
                 @endif
 
-                <template x-if="isMultiple">
-                    <template x-for="selectedItem in selectedItems" :key="selectedItem">
-                        <input type="hidden" name="{{ $submittedName }}" :value="selectedItem" />
+                @if ($name !== '')
+                    <template x-if="!isMultiple && selectedItems.length">
+                        <input type="hidden" name="{{ $name }}" x-bind:value="selectedItems[0]" />
                     </template>
-                </template>
-
-                <template x-if="!isMultiple">
-                    <input type="hidden" name="{{ $name }}" :value="selectedItems.length ? selectedItems[0] : ''" />
-                </template>
+                @endif
 
                 <span x-show="!selectedItems.length || !isMultiple" class="{{ $caretClass }}"></span>
             </div>
@@ -328,7 +325,7 @@
                 id="{{ $name }}"
                 name="{{ $name }}"
                 @if ($isPassword)
-                    :type="showPassword ? 'text' : 'password'"
+                    x-bind:type="showPassword ? 'text' : 'password'"
                 @else
                     type="{{ $inputType }}"
                 @endif
@@ -340,7 +337,7 @@
             />
 
             @if ($isPassword)
-                <button type="button" class="form-password-toggle" aria-label="Mostrar senha" @click="showPassword = !showPassword">
+                <button type="button" class="form-password-toggle" aria-label="Mostrar senha" x-on:click="showPassword = !showPassword">
                     <span class="material-symbols-outlined" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
                 </button>
             @endif

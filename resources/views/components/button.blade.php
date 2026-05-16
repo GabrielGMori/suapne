@@ -1,11 +1,11 @@
 @props([
-    'color' => 'primary',
-    'size' => 'default',
-    'icon' => null,
-    'iconPos' => 'left',
-    'label' => null,
-    'type' => 'button',
-    'href' => null,
+    'color' => 'primary', // Cor do botão. Pode ser: primary|secondary|tertiary|red|yellow|transparent
+    'size' => 'default', // Tamanho do botão. Pode ser: default|dynamic|full|icon
+    'icon' => null, // Ícone do botão (usando Google Material Icons)
+    'iconPos' => 'left', // Posição do ícone. Pode ser: left|right
+    'label' => null, // Texto do botão
+    'type' => 'button', // Tipo do botão. Pode ser: button|submit|link
+    'href' => null, // URL para o tipo 'link'
 ])
 
 @php

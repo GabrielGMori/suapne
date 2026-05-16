@@ -18,9 +18,10 @@
 
     --color-surface: #EEEEEE;
     --color-on-surface: #D9D9D9;
+
     --color-success: #ADF59A;
-    --color-warn: #F5E39A;
-    --color-error: #F59A9A;
+    --color-warning: #F5E39A;
+    --color-danger: #F59A9A;
     --color-info: #71cdf8;
 
     --color-black: #000000;

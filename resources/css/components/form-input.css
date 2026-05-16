@@ -45,7 +45,6 @@
         @apply border-primary ring-2 ring-primary/20;
     }
 
-
     .form-control-surface {
         @apply bg-surface border-transparent text-black;
     }

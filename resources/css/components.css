@@ -1,5 +1,5 @@
-@import './components/forms.css';
-@import './components/buttons.css';
+@import './components/form-input.css';
+@import './components/button.css';
 @import './components/status.css';
 @import './components/list-view.css';
 

@@ -1,5 +1,5 @@
 @props([
-    'full' => true,
+    'full' => true, // Exibe ou oculta a seção de "Links úteis". Pode ser: true|false
 ])
 
 <footer {{ $attributes->merge(['class' => 'bg-secondary-container text-white w-full']) }}>

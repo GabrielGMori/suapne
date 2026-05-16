@@ -7,13 +7,14 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form-input type="text" label="Nome completo" appearance="outlined" />
-                <x-form-input type="select" label="Componente curricular" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
-                <x-form-input type="select" size="tiny" value="20" :options="['20', '10', '5']" appearance="outlined" />
-                <x-form-input type="multiselect" label="Componentes curriculares" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
-                <x-form-input type="datetime" label="Dia e hora" appearance="outlined" />
-                <x-form-input type="date" size="small" label="Dia" appearance="outlined" />
-                <x-form-input type="date" size="small" appearance="outlined" />
+                <x-form-input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" value="dsfasfsd" />
+                <x-form-input type="select" label="Componente curricular" name="componente-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" placeholder="Selecionar" />
+                <x-form-input type="select" size="tiny" value="20" name="number-outlined" :options="['20', '10', '5']" appearance="outlined" />
+                <x-form-input type="multiselect" label="Componentes curriculares" name="componentes-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                <x-form-input type="datetime" label="Dia e hora" name="datetime-outlined" appearance="outlined" />
+                <x-form-input type="date" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
+                <x-form-input type="date" size="small" name="date-outlined" appearance="outlined" />
+                <x-form-input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" value="Texto grande" />
             </div>
         </details>
 
@@ -108,14 +109,14 @@
             <div class="flex flex-col gap-5 mt-2">
                 <div class="flex gap-2">
                     <x-status label="Pendente" color="error" />
-                    <x-status label="Aguardando" color="warn" />
+                    <x-status label="Aguardando" color="warning" />
                     <x-status label="Aprovado" color="success" />
                     <x-status label="Pré-visualização" color="info" />
                     <x-status label="Matriculado" color="dark" />
                 </div>
                 <div class="flex gap-2">
                     <x-status label="Pendente" color="error" :filled="true" />
-                    <x-status label="Aguardando" color="warn" :filled="true" />
+                    <x-status label="Aguardando" color="warning" :filled="true" />
                     <x-status label="Aprovado" color="success" :filled="true" />
                     <x-status label="Pré-visualização" color="info" :filled="true" />
                     <x-status label="Matriculado" color="dark" :filled="true" />
@@ -197,7 +198,7 @@
                         'format' => function($value) {
                             $colors = [
                                 'Matriculado' => 'success',
-                                'Formado' => 'warn',
+                                'Formado' => 'warning',
                                 'Evadido' => 'error',
                             ];
                             $color = $colors[$value] ?? 'dark';

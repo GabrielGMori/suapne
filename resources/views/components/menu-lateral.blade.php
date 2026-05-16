@@ -1,4 +1,6 @@
-@props(['role' => 'docente_especial'])
+@props([
+    'role' => 'docente_especial' // Define o role do usuário para mostrar os itens de navegação corretos. Pode ser: professor_regular|tecnico|docente_especial
+])
 
 @php
     $divider = ['divider' => true];
@@ -33,6 +35,9 @@
             ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'],
         ];
     }
+
+    // Remover depois
+    $navItems = [...$navItems, $divider, $divider, ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings']];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
     $navLinkClasses = 'w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap';
@@ -107,8 +112,9 @@
 
 <aside
     data-sidebar-menu
+    data-sidebar-storage-key="{{ $sidebarStorageKey }}"
     x-data="(() => {
-        const storageKey = '{{ $sidebarStorageKey }}';
+        const storageKey = $el.dataset.sidebarStorageKey;
         const defaultCollapsed = window.matchMedia('(max-width: 1200px)').matches;
         const getSavedCollapsed = () => {
             try {
@@ -158,9 +164,9 @@
     })()"
     x-init="$nextTick(() => document.documentElement.dataset.sidebarReady = 'true')"
     data-expanded="true"
-    :data-expanded="!collapsed ? 'true' : 'false'"
+    x-bind:data-expanded="!collapsed ? 'true' : 'false'"
     data-compact="false"
-    :data-compact="compact ? 'true' : 'false'"
+    x-bind:data-compact="compact ? 'true' : 'false'"
     {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
 
     <a href="#"
@@ -214,7 +220,7 @@
 
         <a href="#" draggable="false"
             data-sidebar-compact-link
-            :title="collapsed ? 'Sair' : ''"
+            x-bind:title="collapsed ? 'Sair' : ''"
             class="{{ $navLinkClasses }}">
             <x-icon class="text-red group-hover:text-error shrink-0 pl-1" size="24">logout</x-icon>
             <span data-sidebar-label x-show="!collapsed" class="truncate">Sair</span>
@@ -222,7 +228,7 @@
     </nav>
 
     <div class="mt-auto flex justify-center py-2">
-        <button @click="toggleMenu()"
+        <button x-on:click="toggleMenu()"
             data-sidebar-compact-link
             class="w-full cursor-pointer justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 rounded-lg text-white hover:bg-white/5 transition-[width,padding,background-color] duration-300 ease-in-out overflow-hidden whitespace-nowrap">
             <span class="material-symbols-outlined text-[20px] shrink-0"
