@@ -4,10 +4,10 @@
 ])
 
 <section x-data="{ expanded: {{ filter_var($expanded, FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false' }} }" 
-         {{ $attributes->merge(['class' => 'flex flex-col bg-surface rounded-xl overflow-hidden']) }}>
+         {{ $attributes->merge(['class' => 'flex flex-col bg-surface rounded-xl overflow-visible']) }}>
     
     @if($title)
-        <header class="bg-primary text-white px-5 py-3 text-title-small">
+        <header class="bg-primary text-white px-5 py-3 text-title-small rounded-t-xl">
             {{ $title }}
         </header>
     @endif
@@ -21,7 +21,7 @@
             class="grid transition-[grid-template-rows] duration-300 ease-out"
             :class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'"
         >
-            <div class="overflow-hidden min-h-0">
+            <div class="min-h-0" :class="expanded ? 'overflow-visible' : 'overflow-hidden'">
                 <div class="px-6 pb-6 pt-4 mt-2">
                     {{ $hidden }}
                 </div>

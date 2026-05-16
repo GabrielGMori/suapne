@@ -84,11 +84,11 @@
     }
 
     .form-caret {
-        @apply pointer-events-none absolute right-4 top-1/2 h-0 w-0 -translate-y-1/2 border-l-[8px] border-r-[8px] border-t-[11px] border-l-transparent border-r-transparent border-t-black;
+        @apply pointer-events-none absolute right-4 top-1/2 h-0 w-0 -translate-y-1/2 border-l-8 border-r-8 border-t-11 border-l-transparent border-r-transparent border-t-black;
     }
 
     .form-caret-small {
-        @apply right-2 border-l-[6px] border-r-[6px] border-t-[8px];
+        @apply right-2 border-l-[6px] border-r-[6px] border-t-8;
     }
 
     .form-icon-button {
@@ -133,7 +133,7 @@
     }
 
     .multi-select-option {
-        @apply flex w-full items-center justify-between px-3 py-2 text-left text-body-medium hover:bg-surface;
+        @apply flex w-full items-center justify-between px-3 py-2 text-left text-body-medium hover:bg-surface cursor-pointer;
     }
 
     .multi-select-option-selected {

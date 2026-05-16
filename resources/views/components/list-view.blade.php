@@ -1,4 +1,27 @@
 <div {{ $attributes->merge(['class' => 'list-view-wrapper']) }}>
+    @if($filters)
+        <x-secao-expansivel class="mb-20" title="Filtros">
+            <div class="flex gap-4">
+                @foreach ($filters['visible'] as $filter)
+                    @php
+                        $label = $filter['label'];
+                        $type = $filter['type'];
+                        $default = $filter['default'] ?? '';
+                        $options = $filter['options'] ?? [];
+                        $size = $filter['size'] ?? 'medium';
+                        $placeholder = $filter['placeholder'] ?? null;
+                    @endphp
+
+                    <x-form-input :label="$label" :type="$type" :value="$default" :options="$options" :size="$size" :placeholder="$placeholder" appearance="outlined" />
+                @endforeach
+            </div>
+
+            <x-slot:hidden>
+
+            </x-slot:hidden>
+        </x-secao-expansivel>
+    @endif
+
     <div class="list-view-card">
         <div class="list-view-header">
             @if($title) <h3>{{ $title }}</h3> @endif
@@ -12,6 +35,8 @@
 
         @if (isset($items) && !empty($items))
             <div class="list-view-columns">
+                <div class="min-w-30 shrink-0"></div>
+
                 @foreach($columns as $i => $column)
                     @php
                         $label = $column['label'];
@@ -31,9 +56,9 @@
                         @endphp
 
                         @if ($imageIcon)
-                            <img class="min-w-30 text-center h-15" src="{{ $formattedIcon }}">
+                            <img class="min-w-30 text-center h-15 shrink-0" src="{{ $formattedIcon }}">
                         @else
-                            <x-icon class="min-w-30 text-center" size="40">{{ $formattedIcon }}</x-icon>
+                            <x-icon class="min-w-30 text-center shrink-0" size="40">{{ $formattedIcon }}</x-icon>
                         @endif
 
                         <div class="list-view-item-data">
@@ -80,7 +105,9 @@
         @endif
     </div>
 
-    <div class="list-view-pagination">
-
-    </div>
+    @if($hasPagination() && $items->hasPages())
+        <div class="list-view-pagination">
+            {{ $items->links('components.paginacao') }}
+        </div>
+    @endif
 </div>

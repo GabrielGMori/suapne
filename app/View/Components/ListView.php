@@ -4,6 +4,7 @@ namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
@@ -14,19 +15,26 @@ class ListView extends Component
      */
     public function __construct(
         public ?string $title = null,
-        public array|Collection $items = [],
+        public array|Collection|Paginator $items = [],
         public array $columns = [],
 
-        public string|Closure $icon = "description",
+        public string|Closure $icon = 'description',
         public bool $imageIcon = false,
 
-        public string $emptyMessage = "Nada foi encontrado",
+        public string $emptyMessage = 'Nada foi encontrado',
 
         public ?string $createUrl = null,
         public ?string $createLabel = null,
 
         public ?array $actions = null,
+
+        public ?array $filters = null,
     ) {}
+
+    public function hasPagination(): bool
+    {
+        return $this->items instanceof Paginator;
+    }
 
     /**
      * Get the view / contents that represent the component.

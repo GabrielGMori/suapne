@@ -1,7 +1,7 @@
 @import './components/forms.css';
 @import './components/buttons.css';
 @import './components/status.css';
-@import './components/lists.css';
+@import './components/list-view.css';
 
 @layer components {
     [x-cloak] { visibility: hidden !important; }

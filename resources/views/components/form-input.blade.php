@@ -17,13 +17,21 @@
     $isSelect = $type === 'select';
     $isMultiSelect = $type === 'multiselect';
     $isDropdown = $isSelect || $isMultiSelect;
+    $isPassword = in_array($type, ['password', 'password_forgot'], true);
+    $isTextarea = $type === 'textarea';
+    $isFile = $type === 'file';
 
     $sizeClass = "form-control-$size";
-    $appearanceClass = "form-control-$appearance";
-    $controlClass = trim("form-control {$appearanceClass} {$sizeClass}");
+    $controlClass = trim("form-control form-control-{$appearance} {$sizeClass}");
+    $fieldClass = trim('form-field ' . ($size === 'full' ? '' : 'w-max'));
+    $labelClass = "form-label form-label-{$appearance}";
+    $textareaClass = "{$controlClass} form-control-textarea";
+    $fileClass = "{$controlClass} form-control-file";
+    $nativeInputClass = $isFile ? $fileClass : $controlClass;
+    $caretClass = trim('form-caret ' . ($size === 'small' ? 'form-caret-small' : ''));
 
     $inputType = match (true) {
-        in_array($type, ['password', 'password_forgot'], true) => 'password',
+        $isPassword => 'password',
         $type === 'date' => 'date',
         $type === 'datetime' => 'datetime-local',
         default => $type,
@@ -31,7 +39,7 @@
 
     $resolvedPlaceholder = match (true) {
         $placeholder !== '' => $placeholder,
-        $type === 'password' || $type === 'password_forgot' => 'Digite sua senha',
+        $isPassword => 'Digite sua senha',
         $type === 'datetime' => 'DD/MM/AAAA 00:00',
         $type === 'date' => 'DD/MM/AAAA',
         $isDropdown => '',
@@ -39,8 +47,10 @@
     };
 
     $submittedName = $isMultiSelect && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
+    $emptyMultiSelectName = str_replace('[]', '', $name);
+    $currentValue = old($name, $value);
 
-    $initialSelected = old($name, $value);
+    $initialSelected = $currentValue;
     if (!is_array($initialSelected)) {
         $initialSelected = ($initialSelected === '' || $initialSelected === null) ? [] : [$initialSelected];
     }
@@ -50,10 +60,14 @@
     foreach ($options as $optionValue => $optionLabel) {
         $optionsForJs[] = ['value' => (string) $optionValue, 'label' => (string) $optionLabel];
     }
+
+    $selectionStorageId = $name !== ''
+        ? $name
+        : sha1(json_encode([$type, $appearance, $size, $label, $placeholder, $optionsForJs], JSON_UNESCAPED_UNICODE));
 @endphp
 
 <div
-    {{ $attributes->merge(['class' => "form-field " . ($size == 'full' ? '' : 'w-max')]) }}
+    {{ $attributes->merge(['class' => $fieldClass]) }}
     x-data="{
         showPassword: false,
         isOpen: false,
@@ -63,9 +77,13 @@
         searchQuery: '',
         searchTimeout: null,
         resetNextType: false,
-        highlightedIndex: 0, // NOVO: Controle de navegação por teclado
+        highlightedIndex: 0,
+        shouldPersistSelection: @js($isDropdown),
+        selectionStorageKey: ['cnapne.form-input', window.location.pathname, @js($selectionStorageId)].join('.'),
 
         init() {
+            this.restoreSelection();
+
             this.$watch('isOpen', value => {
                 if (!value) {
                     this.searchQuery = '';
@@ -73,9 +91,13 @@
                     this.highlightedIndex = 0;
                 }
             });
-            // NOVO: Reseta o índice de navegação ao buscar
+
             this.$watch('searchQuery', () => {
                 this.highlightedIndex = 0;
+            });
+
+            this.$watch('selectedItems', () => {
+                this.saveSelection();
             });
         },
         get displayOptions() {
@@ -96,16 +118,50 @@
         isSelected(optionValue) {
             return this.selectedItems.includes(String(optionValue));
         },
+        resetSearch() {
+            this.resetNextType = true;
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = null;
+        },
+        validSelectedItems(items) {
+            const optionValues = this.options.map((option) => String(option.value));
+            return items
+                .map((item) => String(item))
+                .filter((item) => optionValues.includes(item));
+        },
+        restoreSelection() {
+            if (!this.shouldPersistSelection) return;
+
+            try {
+                const savedValue = localStorage.getItem(this.selectionStorageKey);
+                if (savedValue === null) return;
+
+                const savedSelection = JSON.parse(savedValue);
+                const selectedItems = Array.isArray(savedSelection) ? this.validSelectedItems(savedSelection) : [];
+
+                this.selectedItems = this.isMultiple ? selectedItems : selectedItems.slice(0, 1);
+            } catch (error) {}
+        },
+        saveSelection() {
+            if (!this.shouldPersistSelection) return;
+
+            try {
+                localStorage.setItem(this.selectionStorageKey, JSON.stringify(this.selectedItems));
+            } catch (error) {}
+        },
         toggleOption(optionValue) {
             const normalized = String(optionValue);
             if (this.isMultiple) {
                 if (this.isSelected(normalized)) {
                     this.selectedItems = this.selectedItems.filter((item) => item !== normalized);
+                    this.resetSearch();
                     return;
                 }
-                this.selectedItems.push(normalized);
+                this.selectedItems = [...this.selectedItems, normalized];
+                this.resetSearch();
             } else {
                 this.selectedItems = [normalized];
+                this.resetSearch();
                 this.isOpen = false;
             }
         },
@@ -126,14 +182,12 @@
             });
         },
         handleKeydown(e) {
-            // NOVO: Controle de Setas, Enter e Esc
             if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
                 if (e.key === 'Escape') {
                     this.isOpen = false;
                     return;
                 }
 
-                // Abre o menu com Enter ou Setas caso esteja fechado
                 if (!this.isOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter')) {
                     e.preventDefault();
                     this.isOpen = true;
@@ -164,7 +218,6 @@
                 return;
             }
 
-            // Lógica existente de Type-ahead
             if (e.key.length !== 1 || e.ctrlKey || e.altKey || e.metaKey) return;
 
             if (this.resetNextType) {
@@ -185,7 +238,7 @@
     @click.outside="isOpen = false"
 >
     @if ($label)
-        <label for="{{ $name }}" class="form-label {{ 'form-label-' . $appearance }}">{{ $label }}</label>
+        <label for="{{ $name }}" class="{{ $labelClass }}">{{ $label }}</label>
     @endif
 
     <div class="form-control-wrap">
@@ -223,7 +276,6 @@
 
                 <button type="button" x-show="selectedItems.length && isMultiple" class="multi-select-clear" @click="clearSelections()" aria-label="Limpar seleção">&times;</button>
 
-                {{-- Adicionado x-ref="menu" para referenciar no Auto-Scroll --}}
                 <div x-show="isOpen" x-cloak x-ref="menu" class="multi-select-menu">
                     <template x-if="displayOptions.length === 0">
                         <div class="multi-select-option text-black/50 cursor-not-allowed">
@@ -231,14 +283,13 @@
                         </div>
                     </template>
 
-                    {{-- O loop agora rastreia o index para o highlight visual --}}
                     <template x-for="(option, index) in displayOptions" :key="option.value">
                         <button
                             type="button"
                             class="multi-select-option"
                             :class="{
                                 'multi-select-option-selected': isSelected(option.value),
-                                'bg-black/5': highlightedIndex === index // Troque 'bg-black/5' pela classe de hover que você usa no seu projeto (ex: bg-gray-100)
+                                'bg-black/5': highlightedIndex === index
                             }"
                             @click="toggleOption(option.value)"
                             @mouseenter="highlightedIndex = index"
@@ -250,8 +301,7 @@
                 </div>
 
                 @if ($isMultiSelect)
-                    {{-- Correção do Issue 1 (Ghost input array bug) --}}
-                    <input type="hidden" name="{{ str_replace('[]', '', $name) }}" value="" />
+                    <input type="hidden" name="{{ $emptyMultiSelectName }}" value="" />
                 @endif
 
                 <template x-if="isMultiple">
@@ -264,46 +314,32 @@
                     <input type="hidden" name="{{ $name }}" :value="selectedItems.length ? selectedItems[0] : ''" />
                 </template>
 
-                <span x-show="!selectedItems.length || !isMultiple" class="form-caret {{ $size === 'small' ? 'form-caret-small' : '' }}"></span>
+                <span x-show="!selectedItems.length || !isMultiple" class="{{ $caretClass }}"></span>
             </div>
 
-        @elseif ($type === 'textarea')
+        @elseif ($isTextarea)
             <textarea
                 id="{{ $name }}"
                 name="{{ $name }}"
                 placeholder="{{ $resolvedPlaceholder }}"
-                {{ $attributes->merge(['class' => $controlClass . ' form-control-textarea']) }}>{{ old($name, $value) }}</textarea>
-        @elseif ($type === 'file')
-            <input
-                id="{{ $name }}"
-                name="{{ $name }}"
-                type="file"
-                {{ $attributes->merge(['class' => $controlClass . ' form-control-file']) }} />
-        @elseif (in_array($type, ['date', 'datetime'], true))
-            <input
-                id="{{ $name }}"
-                name="{{ $name }}"
-                type="{{ $inputType }}"
-                value="{{ old($name, $value) }}"
-               placeholder="{{ $resolvedPlaceholder }}"
-                {{ $attributes->merge(['class' => $controlClass]) }}
-            />
+                {{ $attributes->merge(['class' => $textareaClass]) }}>{{ $currentValue }}</textarea>
         @else
-            {{-- Resolvido o conflito duplo de type="{{ $inputType }}" nas senhas --}}
             <input
                 id="{{ $name }}"
                 name="{{ $name }}"
-                @if (in_array($type, ['password', 'password_forgot'], true))
+                @if ($isPassword)
                     :type="showPassword ? 'text' : 'password'"
                 @else
                     type="{{ $inputType }}"
                 @endif
-                value="{{ old($name, $value) }}"
-                placeholder="{{ $resolvedPlaceholder }}"
-                {{ $attributes->merge(['class' => $controlClass]) }}
+                @unless ($isFile)
+                    value="{{ $currentValue }}"
+                    placeholder="{{ $resolvedPlaceholder }}"
+                @endunless
+                {{ $attributes->merge(['class' => $nativeInputClass]) }}
             />
 
-            @if (in_array($type, ['password', 'password_forgot'], true))
+            @if ($isPassword)
                 <button type="button" class="form-password-toggle" aria-label="Mostrar senha" @click="showPassword = !showPassword">
                     <span class="material-symbols-outlined" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
                 </button>
