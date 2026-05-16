@@ -1,34 +1,3 @@
 <x-layouts.main title="Estudantes">
-    @php
-        $items = App\Models\Estudante::paginate(10);
-    @endphp
-
-    <div class="flex flex-col">
-        <x-list-view title="Estudantes registrados" :items="$items" :columns="[
-        ['label' => 'Nome do estudante', 'key' => 'nome', 'size' => 'large'],
-        ['label' => 'Curso do estudante', 'key' => 'curso', 'size' => 'large'],
-        ['label' => 'Período', 'key' => 'periodo', 'size' => 'small', 'format' => fn($value) => $value . 'º'],
-        ['label' => 'Situação', 'key' => 'situacao', 'size' => 'small',
-        'format' => function($value) use (&$cache) {
-            if (isset($cache[$value])) return $cache[$value];
-            return $cache[$value] = Blade::render("<x-status color='dark' label='$value' />");
-        }
-    ]" create-label="Cadastrar novo"
-            create-url="{{ route('estudantes.form') }}" icon="{{ asset('storage/img/placeholder-user.png') }}"
-            :image-icon="true" :actions="[['url' => '/', 'method' => 'POST']]" empty-message="Nenhum estudante encontrado"
-            :filters="[
-        'visible' => [
-            ['label' => 'Nome do estudante', 'key' => 'nome', 'type' => 'text', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Curso do estudante', 'key' => 'curso', 'type' => 'text', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Período', 'key' => 'periodo', 'type' => 'number', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Situação', 'key' => 'situacao', 'type' => 'select', 'options' => ['Matriculado', 'Formado', 'Evadido'], 'filter' => fn($key, $value) => $key->contains($value)],
-        ],
-        'hidden' => [
-            ['label' => 'Nome do estudante', 'key' => 'nome', 'type' => 'text', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Curso do estudante', 'key' => 'curso', 'type' => 'text', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Período', 'key' => 'periodo', 'type' => 'number', 'filter' => fn($key, $value) => $key->contains($value)],
-            ['label' => 'Situação', 'key' => 'situacao', 'type' => 'select', 'options' => ['Matriculado', 'Formado', 'Evadido'], 'filter' => fn($key, $value) => $key->contains($value)],
-        ]
-    ]" />
-    </div>
+    <livewire:list-view config="App\Tables\EstudanteTable" />
 </x-layouts.main>

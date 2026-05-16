@@ -82,7 +82,34 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
+    public function applyUsing(\Closure $closure): static
+    {
+        $this->applyUsing = $closure;
+        return $this;
+    }
+
+    public function apply($query, mixed $value): void
+    {
+        if (isset($this->applyUsing)) {
+            ($this->applyUsing)($query, $value);
+            return;
+        }
+
+        if (is_array($value)) {
+            if (empty($value)) return;
+            $query->whereIn($this->key, $value);
+            return;
+        }
+
+        match ($this->filterType) {
+            'includes' => $query->where($this->key, 'like', "%{$value}%"),
+            'equals'   => $query->where($this->key, $value),
+            default    => null,
+        };
+    }
+
     public function isHidden() : bool { return $this->hidden; }
+    public function getFilterType(): string { return $this->filterType; }
 
     public function getKey(): string        { return $this->key; }
     public function getLabel(): string      { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }

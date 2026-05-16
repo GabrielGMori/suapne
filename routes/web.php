@@ -2,8 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'temp')->name('temp');
-Route::view('/temp', 'components-temp')->name('components-temp');
+Route::view('/', 'home-temp')->name('home-temp');
+Route::view('/components-temp', 'components-temp')->name('components-temp');
+Route::view('/temp', 'temp')->name('temp');
+Route::post('/temp', function () {
+    return redirect()->back()->withInput();
+});
+Route::livewire('/posts/create', 'pages::post.create');
 
 Route::name('dashboard.')->group(function () {
     Route::view('/dashboard', 'dashboard.index')->name('index');

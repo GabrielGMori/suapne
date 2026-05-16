@@ -102,40 +102,40 @@
         @apply absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-secondary hover:bg-black/5;
     }
 
-    /* Multi-Select */
-    .multi-select {
+    /* Select */
+    .select {
         @apply relative text-nowrap;
     }
 
-    .multi-select-control {
+    .select-control {
         @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-3;
     }
 
-    .multi-select-chips {
+    .select-chips {
         @apply flex flex-wrap gap-2 pr-8;
     }
 
-    .multi-select-chip {
+    .select-chip {
         @apply inline-flex items-center gap-1 rounded-md border border-secondary-accent bg-surface px-2 py-1 text-body-medium text-black;
     }
 
-    .multi-select-chip-remove {
+    .select-chip-remove {
         @apply inline-flex h-4 w-4 items-center justify-center text-secondary-accent hover:text-secondary cursor-pointer text-lg;
     }
 
-    .multi-select-clear {
+    .select-clear {
         @apply absolute right-3.5 top-3.5 text-secondary-accent hover:text-secondary cursor-pointer text-xl;
     }
 
-    .multi-select-menu {
+    .select-menu {
         @apply absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-52 overflow-y-auto rounded-md border border-secondary-accent bg-white text-black;
     }
 
-    .multi-select-option {
+    .select-option {
         @apply flex w-full items-center justify-between px-3 py-2 text-left text-body-medium hover:bg-surface cursor-pointer;
     }
 
-    .multi-select-option-selected {
+    .select-option-selected {
         @apply bg-surface;
     }
 }

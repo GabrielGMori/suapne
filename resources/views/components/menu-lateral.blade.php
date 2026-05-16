@@ -37,7 +37,10 @@
     }
 
     // Remover depois
-    $navItems = [...$navItems, $divider, $divider, ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings']];
+    $navItems = [...$navItems, $divider, $divider, 
+        ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings'],
+        ['label' => 'Temp', 'href' => route('temp'), 'icon' => 'design_services']
+    ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
     $navLinkClasses = 'w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap';

@@ -1,59 +1,18 @@
 <x-layouts.main title="Componentes">
     <div class="flex flex-col bg-white rounded-lg border border-surface gap-5 p-5 text-black mb-5">
         <h2 class="text-headline-medium">Componentes White</h2>
+
         <details class="group">
             <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
                 List View
             </summary>
             <div class="flex flex-col gap-5">
-                @php
-                    $cache = [];
-                    $columns = [
-                        App\View\Components\ListViewColumn::make('nome')->label('Nome do estudante')->size('large'),
-                        App\View\Components\ListViewColumn::make('curso')->label('Curso do estudante')->size('large'),
-                        App\View\Components\ListViewColumn::make('periodo')->label('Período')->size('small')->format(fn($value) => $value.'°'),
-                        App\View\Components\ListViewColumn::make('situacao')->label('Situação')->format(function($value) use (&$cache) {
-                            if (isset($cache[$value])) return $cache[$value];
-                            $colors = [
-                                'Matriculado' => 'success',
-                                'Formado' => 'warning',
-                                'Evadido' => 'danger',
-                            ];
-                            $color = $colors[$value] ?? 'dark';
-                            return $cache[$value] = view('components.status', ['color' => $color, 'label' => $value])->render();
-                        }),
-                    ];
-                @endphp
-
-                <x-list-view
+                <livewire:list-view
+                    config="App\Tables\EstudanteTable"
                     title="Estudantes"
-                    :items="App\Models\Estudante::paginate(10)"
-                    :columns="$columns"
                     create-url="#"
                     create-label="Novo Estudante"
-
-                    :icon="fn($item) => match($item->curso) {
-                        'Arquitetura' => 'architecture',
-                        'Medicina' => 'medical_services',
-                        'Engenharia' => 'engineering',
-                        default => 'school',
-                    }"
-                    :image-icon="false"
-
-                    :actions="[
-                        App\View\Components\ListViewAction::make('#')->icon('person_add')->color('primary'),
-                        App\View\Components\ListViewAction::make('#')->icon('person_remove')->color('red'),
-                    ]"
                     empty-message="Nenhum estudante foi encontrado"
-
-                    :filters="[
-                        App\View\Components\ListViewFilter::make('nome')->label('Nome do estudante')->size('large')
-                        ->filterType('includes'),
-                        App\View\Components\ListViewFilter::make('curso')->label('Curso do estudante')->size('large'),
-                        App\View\Components\ListViewFilter::make('periodo')->label('Período')->size('tiny'),
-                        App\View\Components\ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(['Matriculado', 'Formado', 'Evadido']),
-                        App\View\Components\ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
-                    ]"
                 />
             </div>
         </details>
@@ -63,7 +22,7 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form-input type="select" :options="['Matemática', 'Português', 'Artes']" placeholder="Disciplina" appearance="surface" />
+                <livewire:form.select type="select" :options="['Matemática', 'Português', 'Artes']" placeholder="Disciplina" appearance="surface" />
             </div>
         </details>
 
@@ -156,14 +115,14 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form-input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" />
-                <x-form-input type="select" label="Componente curricular" name="componente-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" placeholder="Selecionar" />
-                <x-form-input type="select" size="tiny" value="20" name="number-outlined" :options="['20', '10', '5']" appearance="outlined" />
-                <x-form-input type="multiselect" label="Componentes curriculares" name="componentes-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
-                <x-form-input type="datetime" label="Dia e hora" name="datetime-outlined" appearance="outlined" />
-                <x-form-input type="date" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
-                <x-form-input type="date" size="small" name="date-outlined" appearance="outlined" />
-                <x-form-input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" />
+                <livewire:form.input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" />
+                <livewire:form.select type="select" label="Componente curricular" name="componente-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" placeholder="Selecionar" />
+                <livewire:form.select type="select" size="tiny" value="20" name="number-outlined" :options="['20', '10', '5']" appearance="outlined" />
+                <livewire:form.select type="multiselect" label="Componentes curriculares" name="componentes-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                <livewire:form.input type="datetime" label="Dia e hora" name="datetime-outlined" appearance="outlined" />
+                <livewire:form.input type="date" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
+                <livewire:form.input type="date" size="small" name="date-outlined" appearance="outlined" />
+                <livewire:form.input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" />
             </div>
         </details>
 
@@ -185,10 +144,10 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form-input type="text" label="Nome:" />
-                <x-form-input type="password" label="Senha:" />
-                <x-form-input type="password_forgot" label="Senha:" />
-                <x-form-input type="select" :options="['Matemática', 'Português', 'Artes']" label="Disciplina:" />
+                <livewire:form.input type="text" label="Nome:" />
+                <livewire:form.input type="password" label="Senha:" />
+                <livewire:form.input type="password_forgot" label="Senha:" />
+                <livewire:form.select :options="['Matemática', 'Português', 'Artes']" label="Disciplina:" />
             </div>
         </details>
 
@@ -217,8 +176,8 @@
             </summary>
             <div class="flex items-start gap-5 mt-2">
                 <x-auth-card title="Login" width="125">
-                    <x-form-input type="text" label="Nome:" />
-                    <x-form-input type="password_forgot" label="Senha:" />
+                    <livewire:form.input type="text" label="Nome:" />
+                    <livewire:form.input type="password_forgot" label="Senha:" />
                     <x-button label="Acessar" type="submit" size="full" />
                     <div class="flex flex-col w-full">
                         <p class="text-body-small">Não possui uma conta?</p>

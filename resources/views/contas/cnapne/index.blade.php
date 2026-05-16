@@ -1,5 +1,5 @@
-<x-layouts.main>
-    <div>
-        <!-- Index CNAPNE Accounts -->
+<x-layouts.main title="Contas da CNAPNE">
+    <div class="flex flex-col">
+        <livewire:list-view config="App\Tables\ContasCnapneTable" />
     </div>
 </x-layouts.main>

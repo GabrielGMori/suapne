@@ -29,12 +29,22 @@
                 </div>
             </div>
         </div>
+    @endif
 
-        <div class="flex justify-end px-4 pb-3">
-            <button type="button" class="flex items-center gap-1 text-black font-medium hover:opacity-70 transition-opacity cursor-pointer" x-on:click="expanded = !expanded">
-                <span x-text="expanded ? 'Recolher' : 'Expandir'"></span>
-                <span class="material-symbols-outlined transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''">keyboard_arrow_down</span>
-            </button>
+    @if ((isset($hidden) && $hidden->isNotEmpty()) || isset($actions))
+        <div class="flex justify-between items-center px-4 py-3">
+            <div class="relative z-10">
+                @if(isset($actions))
+                    {{ $actions }}
+                @endif
+            </div>
+
+            @if (isset($hidden) && $hidden->isNotEmpty())
+                <button type="button" class="flex items-center gap-1 text-black font-medium hover:opacity-70 transition-opacity cursor-pointer" x-on:click="expanded = !expanded">
+                    <span x-text="expanded ? 'Recolher' : 'Expandir'"></span>
+                    <span class="material-symbols-outlined transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''">keyboard_arrow_down</span>
+                </button>
+            @endif
         </div>
     @endif
 </section>

@@ -1,0 +1,48 @@
+<div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">
+    @if ($label)
+        <label for="{{ $name }}" class="form-label form-label-{{ $appearance }}">{{ $label }}</label>
+    @endif
+
+    <div class="form-control-wrap"
+        x-data="{ showPassword: false }"
+    >
+        @if ($this->isTextarea())
+            <textarea
+                {{ $attributes->merge(['class' => $this->resolvedClass()]) }}
+                id="{{ $name }}"
+                name="{{ $name }}"
+                placeholder="{{ $this->resolvedPlaceholder() }}"
+                wire:model.blur="value"
+            ></textarea>
+
+        @else
+            <input
+                {{ $attributes->merge(['class' => $this->resolvedClass()]) }}
+                id="{{ $name }}"
+                name="{{ $name }}"
+                type="{{ $this->isTypePassword() ? '' : $this->resolvedType() }}"
+
+                @if ($this->isTypePassword())
+                    x-bind:type="showPassword ? 'text' : 'password'"
+                @endif
+
+                @unless ($this->isFile())
+                    placeholder="{{ $this->resolvedPlaceholder() }}"
+                    wire:model.blur="value"
+                @endunless
+            />
+
+            @if ($this->isTypePassword())
+                <button type="button" class="form-password-toggle" aria-label="Mostrar senha" x-on:click="showPassword = !showPassword">
+                    <span class="material-symbols-outlined" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
+                </button>
+            @endif
+        @endif
+    </div>
+
+    @if ($type === 'password_forgot' && !$helper)
+        <a href="#" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
+    @elseif ($helper)
+        <p class="form-helper">{{ $helper }}</p>
+    @endif
+</div>
