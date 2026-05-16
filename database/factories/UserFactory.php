@@ -29,6 +29,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'funcao' => fake()->randomElement(['Professor de Ensino Regular', 'Docente de Ed. Especial', 'Técnico de Ed. Especial']),
+            'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode(fake()->name()) . '&color=7F9CF5&background=EBF4FF',
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];

@@ -10,7 +10,7 @@
 
 <div class="list-view-wrapper">
     @if(count($filters) > 0)
-        <x-secao-expansivel class="mb-20" title="Filtros">
+        <x-secao-expansivel class="mb-10" title="Filtros">
             <div class="flex flex-col gap-4">
                 <div class="flex flex-wrap gap-4">
                 @foreach(collect($filters)->filter(fn($f) => !$f->isHidden()) as $filter)
