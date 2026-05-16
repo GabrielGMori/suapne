@@ -7,14 +7,14 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form-input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" value="dsfasfsd" />
+                <x-form-input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" />
                 <x-form-input type="select" label="Componente curricular" name="componente-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" placeholder="Selecionar" />
                 <x-form-input type="select" size="tiny" value="20" name="number-outlined" :options="['20', '10', '5']" appearance="outlined" />
                 <x-form-input type="multiselect" label="Componentes curriculares" name="componentes-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
                 <x-form-input type="datetime" label="Dia e hora" name="datetime-outlined" appearance="outlined" />
                 <x-form-input type="date" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
                 <x-form-input type="date" size="small" name="date-outlined" appearance="outlined" />
-                <x-form-input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" value="Texto grande" />
+                <x-form-input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" />
             </div>
         </details>
 

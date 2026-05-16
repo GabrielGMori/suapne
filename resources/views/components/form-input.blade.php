@@ -128,12 +128,10 @@
             this.searchTimeout = null;
         },
         storeSelectedInSession() {
-            console.log(this.storageKey);
             sessionStorage.setItem(
                 this.storageKey,
                 JSON.stringify(this.selectedItems)
             );
-            console.log(JSON.stringify(this.selectedItems));
         },
         toggleOption(optionIndex) {
             const normalized = String(this.options[optionIndex].value);
@@ -230,13 +228,6 @@
     @if ($label)
         <label for="{{ $name }}" class="{{ $labelClass }}">{{ $label }}</label>
     @endif
-
-    <p>Input name: {{ $name }}</p>
-    <p>Old name: {{ $oldInputName }}</p>
-    <p>Value: {{ $value }}</p>
-    <p>Old value: {{ old($name) }}</p>
-    <p>Current value: {{ $currentValue }}</p>
-    <p>Selected items: <span x-text="selectedItems"></span></p>
 
     <div class="form-control-wrap">
         @if ($isDropdown)
