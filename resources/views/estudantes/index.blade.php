@@ -1,8 +1,5 @@
 <x-layouts.main title="Estudantes">
     @php
-        if (App\Models\Estudante::count() === 0) {
-            App\Models\Estudante::factory()->count(20)->create();
-        }
         $items = App\Models\Estudante::paginate(10);
     @endphp
 

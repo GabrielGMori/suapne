@@ -30,12 +30,12 @@ Route::prefix('contas')->group(function () {
         Route::view('/', 'contas.cnapne.index')->name('index');
         Route::view('/editar', 'contas.cnapne.editar')->name('editar');
     });
-    
+
     Route::name('contas.professor.')->prefix('professor')->group(function () {
         Route::view('/', 'contas.professor.index')->name('index');
         Route::view('/editar', 'contas.professor.editar')->name('editar');
     });
-    
+
     Route::view('/contasprofessor', 'contas.professor.editar');
 });
 
@@ -58,7 +58,7 @@ Route::name('entrevistas-familiares.')->prefix('entrevistas-familiares')->group(
 
 Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::view('/', 'estudantes.index')->name('index');
-    Route::view('/novo', 'estudantes.form')->name('form');
+    Route::view('/form', 'estudantes.form')->name('form');
     Route::view('/visualizar', 'estudantes.show')->name('show');
     Route::view('/adicionar-documento', 'estudantes.add-documento')->name('add-documento');
 });

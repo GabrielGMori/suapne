@@ -35,7 +35,7 @@
             @endif
         </div>
 
-        @if (isset($items) && !empty($items))
+        @if (isset($items) && !empty($items) && count($items) > 0)
             <div class="list-view-columns">
                 <div class="min-w-30 shrink-0"></div>
 
@@ -47,6 +47,8 @@
 
                     <p class="{{ $i == 0 ? 'border-l-2' : '' }} list-view-size-{{ $size }}">{{ $label }}</p>
                 @endforeach
+
+                @if(isset($actions)) <div class="min-w-30 shrink-0"></div> @endif
             </div>
 
 
@@ -107,7 +109,7 @@
                 @endforeach
             </div>
         @else
-            <p class="text-body-large">{{ $emptyMessage }}</p class="text-body-large">
+            <p class="text-body-large">{{ $emptyMessage }}</p>
         @endif
     </div>
 
