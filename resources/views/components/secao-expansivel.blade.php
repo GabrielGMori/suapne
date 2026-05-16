@@ -14,7 +14,7 @@
         </header>
     @endif
 
-    <div class="px-6 pt-6 pb-5">
+    <div class="px-6 pt-6 pb-1">
         {{ $slot }}
     </div>
 
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="flex justify-end px-4 py-3">
+        <div class="flex justify-end px-4 pb-3">
             <button type="button" class="flex items-center gap-1 text-black font-medium hover:opacity-70 transition-opacity cursor-pointer" x-on:click="expanded = !expanded">
                 <span x-text="expanded ? 'Recolher' : 'Expandir'"></span>
                 <span class="material-symbols-outlined transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''">keyboard_arrow_down</span>

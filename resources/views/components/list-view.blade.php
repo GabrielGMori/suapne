@@ -1,27 +1,27 @@
 {{-- Esse é um componente mais complexo, por isso, ele utiliza uma classe PHP em app/View/Components/ListView.php --}}
 
-<div {{ $attributes->merge(['class' => 'list-view-wrapper']) }}>
+<div {{ $attributes->merge(['class' => 'list-view-wrapper']) }}
+    x-data="listView({items: @js($items), filters: @js($filters)})">
     @if($filters)
-        <x-secao-expansivel class="mb-20" title="Filtros">
-            <div class="flex gap-4">
-                @foreach ($filters['visible'] as $filter)
-                    @php
-                        $label = $filter['label'];
-                        $type = $filter['type'];
-                        $default = $filter['default'] ?? '';
-                        $options = $filter['options'] ?? [];
-                        $size = $filter['size'] ?? 'medium';
-                        $placeholder = $filter['placeholder'] ?? null;
-                    @endphp
+        <form method="GET" action="{{ url()->current() }}" x-ref="filterForm">
+            <x-secao-expansivel class="mb-20" title="Filtros">
+                <div class="flex items-center justify-end gap-3">
+                    <x-button type="button" label="Limpar filtros" color="tertiary" size="dynamic" onClick="clearFilters()"></x-button>
+                    <x-button type="submit" label="Filtrar" color="primary" size="dynamic"></x-button>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                    {{ $renderFilters() }}
+                </div>
 
-                    <x-form-input :label="$label" :type="$type" :value="$default" :options="$options" :size="$size" :placeholder="$placeholder" appearance="outlined" />
-                @endforeach
-            </div>
-
-            <x-slot:hidden>
-
-            </x-slot:hidden>
-        </x-secao-expansivel>
+                @if($hasHiddenFilters())
+                    <x-slot:hidden>
+                        <div class="flex flex-wrap gap-4">
+                            {{ $renderFilters(true) }}
+                        </div>
+                    </x-slot:hidden>
+                @endif
+            </x-secao-expansivel>
+        </form>
     @endif
 
     <div class="list-view-card">
@@ -35,72 +35,53 @@
             @endif
         </div>
 
-        @if (isset($items) && !empty($items) && count($items) > 0)
+        @if (count($items) > 0 && $items->isNotEmpty())
             <div class="list-view-columns">
                 <div class="min-w-30 shrink-0"></div>
 
                 @foreach($columns as $i => $column)
-                    @php
-                        $label = $column['label'];
-                        $size = $column['size'] ?? 'medium';
-                    @endphp
-
-                    <p class="{{ $i == 0 ? 'border-l-2' : '' }} list-view-size-{{ $size }}">{{ $label }}</p>
+                    <p class="{{ $i == 0 ? 'border-l-2' : '' }} list-view-size-{{ $column->getSize() }}">{{ $column->getLabel() }}</p>
                 @endforeach
 
-                @if(isset($actions)) <div class="min-w-30 shrink-0"></div> @endif
+                @if(isset($actions)) <div class="min-w-40 shrink-0"></div> @endif
             </div>
-
 
             <div class="list-view-items">
                 @foreach($items as $i => $item)
                     <div class="list-view-item">
-                        @php
-                            $formattedIcon = is_callable($icon) ? $icon($item) : $icon;
-                        @endphp
+                        <div class="min-w-30 text-center shrink-0">
+                            @php
+                                $resolvedIcon = is_callable($icon) ? $icon($item) : $icon;
+                            @endphp
 
-                        @if ($imageIcon)
-                            <img class="min-w-30 text-center h-15 shrink-0" src="{{ $formattedIcon }}">
-                        @else
-                            <x-icon class="min-w-30 text-center shrink-0" size="40">{{ $formattedIcon }}</x-icon>
-                        @endif
+                            @if ($imageIcon)
+                                <img class="h-15 w-full object-contain" src="{{ $resolvedIcon }}">
+                            @else
+                                <x-icon class="w-full" size="40">{{ $resolvedIcon }}</x-icon>
+                            @endif
+                        </div>
 
                         <div class="list-view-item-data">
                             @foreach ($columns as $column)
-                                @php
-                                    $key = $column['key'];
-                                    $format = $column['format'] ?? null;
-                                    $value = data_get($item, $column['key']);
-                                    if ($format) $value = $format($value);
-                                @endphp
-
-                                <p class="list-view-size-{{ $column['size'] ?? 'medium' }}">
-                                    {!! $value !!}
+                                <p class="list-view-size-{{ $column->getSize() }}">
+                                    {{ $column->getFormattedValue($item) }}
                                 </p>
                             @endforeach
                         </div>
 
                         @if(isset($actions))
-                            <div class="min-w-30 text-center">
+                            <div class="min-w-40 text-center flex items-center justify-center gap-2">
                                 @foreach ($actions as $action)
-                                    @php
-                                        $actionUrl = $action['url'];
-                                        $actionMethod = $action['method'] ?? null;
-                                        $actionConfirm = $action['confirm'] ?? false;
-                                        $actionIcon = $action['icon'] ?? 'open_in_new';
-                                        $actionColor = $action['color'] ?? 'transparent';
-                                    @endphp
-
-                                    @if($actionMethod)
-                                        <form action="{{ $actionUrl }}" method="{{ $actionMethod === 'GET' ? 'GET' : 'POST' }}">
-                                            @if($actionMethod && $actionMethod !== 'GET' && $actionMethod !== 'POST')
-                                                @csrf
-                                                @method($actionMethod)
+                                    @if(!$action->isLink())
+                                        <form action="{{ $action->getUrl() }}" method="{{ $action->getMethod() === 'GET' ? 'GET' : 'POST' }}">
+                                            @csrf
+                                            @if($action->needsDirective())
+                                                @method($action->getMethod())
                                             @endif
-                                            <x-button type="submit" :icon="$actionIcon" :color="$actionColor" size="dynamic"></x-button>
+                                            <x-button type="submit" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
                                         </form>
                                     @else
-                                        <x-button type="link" :href="$actionUrl" :icon="$actionIcon" :color="$actionColor" size="dynamic"></x-button>
+                                        <x-button type="link" :href="$action->getUrl()" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
                                     @endif
                                 @endforeach
                             </div>
@@ -108,14 +89,28 @@
                     </div>
                 @endforeach
             </div>
+
         @else
-            <p class="text-body-large">{{ $emptyMessage }}</p>
+            <p class="text-body-large mt-5">{{ $emptyMessage }}</p>
         @endif
     </div>
 
     @if($hasPagination() && $items->hasPages())
         <div class="list-view-pagination">
-            {{ $items->links('components.paginacao') }}
+            {{ $items->appends(request()->query())->links('components.paginacao') }}
         </div>
     @endif
 </div>
+
+@once
+<script>
+    function listView() {
+        return {
+            clearFilters() {
+                window.dispatchEvent(new CustomEvent('clear-all-filters'));
+                window.location.href = window.location.pathname;
+            }
+        };
+    }
+</script>
+@endonce

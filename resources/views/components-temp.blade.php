@@ -6,39 +6,54 @@
                 List View
             </summary>
             <div class="flex flex-col gap-5">
-                <x-list-view
-                    title="Estudantes"
-                    :items="App\Models\Estudante::paginate(10)"
-                    :columns="[
-                        ['label' => 'Nome do Estudante', 'key' => 'nome', 'size' => 'large'],
-                        ['label' => 'Curso do Estudante', 'key' => 'curso', 'size' => 'large'],
-                        ['label' => 'Período', 'key' => 'periodo', 'size' => 'small', 'format' => fn($value) => $value.'°'],
-                        ['label' => 'Situação', 'key' => 'situacao',
-                        'format' => function($value) {
+                @php
+                    $cache = [];
+                    $columns = [
+                        App\View\Components\ListViewColumn::make('nome')->label('Nome do estudante')->size('large'),
+                        App\View\Components\ListViewColumn::make('curso')->label('Curso do estudante')->size('large'),
+                        App\View\Components\ListViewColumn::make('periodo')->label('Período')->size('small')->format(fn($value) => $value.'°'),
+                        App\View\Components\ListViewColumn::make('situacao')->label('Situação')->format(function($value) use (&$cache) {
+                            if (isset($cache[$value])) return $cache[$value];
                             $colors = [
                                 'Matriculado' => 'success',
                                 'Formado' => 'warning',
                                 'Evadido' => 'danger',
                             ];
                             $color = $colors[$value] ?? 'dark';
-                            return view('components.status', ['label' => $value, 'color' => $color])->render();
-                        }],
-                    ]"
+                            return $cache[$value] = view('components.status', ['color' => $color, 'label' => $value])->render();
+                        }),
+                    ];
+                @endphp
+
+                <x-list-view
+                    title="Estudantes"
+                    :items="App\Models\Estudante::paginate(10)"
+                    :columns="$columns"
                     create-url="#"
                     create-label="Novo Estudante"
 
                     :icon="fn($item) => match($item->curso) {
-                        'Arquitetura' => $icon = 'architecture',
-                        'Medicina' => $icon = 'medical_services',
-                        'Engenharia' => $icon = 'engineering',
-                        default => $icon = 'school',
+                        'Arquitetura' => 'architecture',
+                        'Medicina' => 'medical_services',
+                        'Engenharia' => 'engineering',
+                        default => 'school',
                     }"
                     :image-icon="false"
 
                     :actions="[
-                        ['url' => '/', 'method' => 'POST']
+                        App\View\Components\ListViewAction::make('#')->icon('person_add')->color('primary'),
+                        App\View\Components\ListViewAction::make('#')->icon('person_remove')->color('red'),
                     ]"
                     empty-message="Nenhum estudante foi encontrado"
+
+                    :filters="[
+                        App\View\Components\ListViewFilter::make('nome')->label('Nome do estudante')->size('large')
+                        ->filterType('includes'),
+                        App\View\Components\ListViewFilter::make('curso')->label('Curso do estudante')->size('large'),
+                        App\View\Components\ListViewFilter::make('periodo')->label('Período')->size('tiny'),
+                        App\View\Components\ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(['Matriculado', 'Formado', 'Evadido']),
+                        App\View\Components\ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
+                    ]"
                 />
             </div>
         </details>
@@ -191,8 +206,8 @@
                 <x-button label="Color red" color="red" />
                 <x-button label="IconPos left" color="secondary" icon="add" icon-pos="left" />
                 <x-button label="IconPos right" color="secondary" icon="file_export" icon-pos="right" />
-                <x-button icon="person_add" />
-                <x-button icon="person_remove" color="red" />
+                <x-button icon="person_add" icon-color="white" />
+                <x-button icon="person_remove" color="red" icon-color="white" />
             </div>
         </details>
 

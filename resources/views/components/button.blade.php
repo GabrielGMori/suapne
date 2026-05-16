@@ -6,6 +6,7 @@
     'label' => null, // Texto do botão
     'type' => 'button', // Tipo do botão. Pode ser: button|submit|link
     'href' => null, // URL para o tipo 'link'
+    'onClick' => null // Função a ser chamada quando o botão for clicado
 ])
 
 @php
@@ -16,7 +17,11 @@
     }
 @endphp
 
-<button type="{{ $type }}" {{ $attributes->merge(['class' => "btn btn-$size btn-$color"]) }}>
+<button
+    type="{{ $type === 'link' ? 'button' : $type }}"
+    {{ $attributes->merge(['class' => "btn btn-$size btn-$color"]) }}
+    @if($onClick) x-on:click="{{ $onClick }}" @endif
+>
     @if ($type == 'link') <a href="{{ $href }}"> @endif
 
     @if ($icon && $iconPos === 'left')
