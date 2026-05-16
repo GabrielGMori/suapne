@@ -32,18 +32,18 @@
             </summary>
             <div class="flex flex-col gap-5 mt-2">
                 <div class="flex gap-2">
-                    <x-status label="Pendente" color="error" />
+                    <x-status label="Pendente" color="danger" />
                     <x-status label="Aguardando" color="warning" />
                     <x-status label="Aprovado" color="success" />
                     <x-status label="Pré-visualização" color="info" />
                     <x-status label="Matriculado" color="dark" />
                 </div>
                 <div class="flex gap-2">
-                    <x-status label="Pendente" color="error" :filled="true" />
-                    <x-status label="Aguardando" color="warning" :filled="true" />
-                    <x-status label="Aprovado" color="success" :filled="true" />
-                    <x-status label="Pré-visualização" color="info" :filled="true" />
-                    <x-status label="Matriculado" color="dark" :filled="true" />
+                    <x-status label="Pendente" color="danger" :filled="false" />
+                    <x-status label="Aguardando" color="warning" :filled="false" />
+                    <x-status label="Aprovado" color="success" :filled="false" />
+                    <x-status label="Pré-visualização" color="info" :filled="false" />
+                    <x-status label="Matriculado" color="dark" :filled="false" />
                 </div>
             </div>
         </details>
