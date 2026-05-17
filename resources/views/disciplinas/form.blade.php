@@ -4,14 +4,14 @@
         <hr>
             <div class="grid grid-cols-2">
                 <div>
-                    <livewire:form.input type="text" label="Nome do componente curricular" appearance="outlined"/>
+                    <livewire:form.input label="Nome do componente curricular" appearance="outlined"/>
                 </div>
                 <div>
-                    <livewire:form.select type="select" label="Curso" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                    <livewire:form.select label="Curso" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
                 </div>
             </div>
                 <div>
-                    <livewire:form.input type="textarea" label="Ementa" appearance="outlined" size="full"/>
+                    <livewire:form.input type="textarea" label="Ementa" appearance="outlined" size="full" class="resize-none"/>
                 </div>
             </div>
             <div class="flex justify-end">
