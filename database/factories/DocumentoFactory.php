@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Documento;
+use App\Models\Estudante;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,14 @@ class DocumentoFactory extends Factory
      */
     public function definition(): array
     {
+        $estudante = Estudante::query()->inRandomOrder('')->first()
+            ?? Estudante::factory()->create();
+
         return [
-            //
+            'tipo' => $this->faker->randomElement(['Documento', 'Entrevista_Estudante', 'Ficha_CPAE']),
+            'nome' => $this->faker->words(3, true) . '.pdf',
+            'path' => 'documentos/' . $this->faker->uuid() . '.pdf',
+            'estudante_id' => $estudante->id,
         ];
     }
 }

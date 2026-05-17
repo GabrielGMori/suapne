@@ -3,7 +3,7 @@
     'expanded' => false
 ])
 
-<x-secao-expansivel title="Disciplinas Associadas" :expanded="$expanded">
+<x-secao-expansivel.bottom title="Disciplinas Associadas" :expanded="$expanded">
     @if(empty($disciplinas))
         <div class="text-secondary text-center py-4">
             Nenhuma disciplina associada a este usuário.
@@ -25,4 +25,4 @@
             @endforeach
         </div>
     @endif
-</x-secao-expansivel>
+</x-secao-expansivel.bottom>

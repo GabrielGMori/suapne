@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Curso;
 use App\Models\Disciplina;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,9 @@ class DisciplinaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'nome' => $this->faker->words(3, true),
+            'ementa' => $this->faker->paragraph(),
+            'curso_id' => Curso::factory(),
         ];
     }
 }

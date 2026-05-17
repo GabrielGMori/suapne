@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('solicitacao_registros', function (Blueprint $table) {
+        Schema::create('disciplinas', function (Blueprint $table) {
             $table->id();
+
+            $table->string('nome', 50);
+            $table->text('ementa');
+
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreignId('curso_id')
+                ->constrained('cursos')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('solicitacao_registros');
+        Schema::dropIfExists('disciplinas');
     }
 };

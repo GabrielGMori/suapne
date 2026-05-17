@@ -17,12 +17,13 @@ class CursoTable extends ListViewConfig
     {
         return Curso::query();
     }
+    
     public function title(): ?string { return 'Cursos'; }
     public function createUrl(): ?string { return route('cursos.form'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum curso foi encontrado'; }
     public function icon(): string|\Closure { return "backpack"; }
-    
+
     public function columns(): array
     {
         $cache = [];

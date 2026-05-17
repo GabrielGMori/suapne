@@ -19,11 +19,9 @@ new class extends Component
     public int $perPage = 15;
     public array $filtersState = [];
 
-    private ?ListViewConfig $configInstance = null;
-
     protected function getConfigInstance(): ListViewConfig
     {
-        return $this->configInstance ??= new ($this->config);
+        return new ($this->config);
     }
 
     public function mount(): void
@@ -46,6 +44,11 @@ new class extends Component
     }
 
     public function updatedFiltersState(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
     {
         $this->resetPage();
     }

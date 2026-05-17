@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\AtendimentoSemanal;
+use App\Models\Estudante;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,12 @@ class AtendimentoSemanalFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'estudante_id' => Estudante::factory(),
+            'campos' => [
+                'data_atendimento' => $this->faker->date(),
+                'descricao' => $this->faker->paragraph(),
+                'encaminhamentos' => $this->faker->paragraph(),
+            ],
         ];
     }
 }

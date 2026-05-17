@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Disciplina;
+use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +20,23 @@ class PlanoTrabalhoEstudanteFactory extends Factory
      */
     public function definition(): array
     {
+        $estudante = Estudante::query()->inRandomOrder('')->first()
+            ?? Estudante::factory()->create();
+        $user = User::query()->inRandomOrder('')->first()
+            ?? User::factory()->create();
+        $disciplina = Disciplina::query()->inRandomOrder('')->first()
+            ?? Disciplina::factory()->create();
+
         return [
-            //
+            'status' => $this->faker->randomElement(['Pendente', 'Aguardando_revisao', 'Devolvido', 'Aprovado']),
+            'campos' => [
+                'objetivos' => $this->faker->paragraph(),
+                'metodologia' => $this->faker->paragraph(),
+                'avaliacao' => $this->faker->paragraph(),
+            ],
+            'estudante_id' => $estudante->id,
+            'disciplina_id' => $disciplina->id,
+            'user_professor_id' => $user->id,
         ];
     }
 }

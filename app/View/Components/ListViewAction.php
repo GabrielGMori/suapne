@@ -1,21 +1,22 @@
 <?php
 
 namespace App\View\Components;
+use Closure;
 
 class ListViewAction
 {
-    private string $url;
+    private string|Closure $url;
     private ?string $method = null;
     private string $icon    = 'open_in_new';
     private string $color   = 'transparent';
     private bool $confirm   = false;
 
-    private function __construct(string $url)
+    private function __construct(string|Closure $url)
     {
         $this->url = $url;
     }
 
-    public static function make(string $url): static
+    public static function make(string|Closure $url): static
     {
         return new static($url);
     }
@@ -47,9 +48,9 @@ class ListViewAction
     public function isLink(): bool        { return $this->method === null; }
     public function needsDirective(): bool { return !in_array($this->method, ['GET', 'POST', null]); }
 
-    public function getUrl(): string      { return $this->url; }
-    public function getMethod(): ?string  { return $this->method; }
-    public function getIcon(): string     { return $this->icon; }
-    public function getColor(): string    { return $this->color; }
-    public function getConfirm(): bool    { return $this->confirm; }
+    public function getUrl(object $item): string { return is_callable($this->url) ? ($this->url)($item) : $this->url; }
+    public function getMethod(): ?string        { return $this->method; }
+    public function getIcon(): string           { return $this->icon; }
+    public function getColor(): string          { return $this->color; }
+    public function getConfirm(): bool          { return $this->confirm; }
 }

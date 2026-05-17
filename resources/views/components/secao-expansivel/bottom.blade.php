@@ -9,8 +9,11 @@
          {{ $attributes->merge(['class' => 'flex flex-col bg-surface rounded-xl overflow-visible']) }}>
 
     @if($title)
-        <header class="bg-primary text-white px-5 py-3 text-title-small rounded-t-xl">
-            {{ $title }}
+        <header class="flex justify-between items-center bg-primary text-white px-5 py-3 text-title-small rounded-t-xl">
+            <div>{{ $title }}</div>
+            @if(isset($topActions))
+                <div class="grow flex justify-end">{{ $topActions }}</div>
+            @endif
         </header>
     @endif
 
@@ -31,11 +34,11 @@
         </div>
     @endif
 
-    @if ((isset($hidden) && $hidden->isNotEmpty()) || isset($actions))
+    @if ((isset($hidden) && $hidden->isNotEmpty()) || isset($bottomActions))
         <div class="flex justify-between items-center px-4 py-3">
             <div class="relative z-10">
-                @if(isset($actions))
-                    {{ $actions }}
+                @if(isset($bottomActions))
+                    {{ $bottomActions }}
                 @endif
             </div>
 

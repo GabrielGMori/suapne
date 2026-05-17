@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plano_flexibilizacaos', function (Blueprint $table) {
+        Schema::create('cursos', function (Blueprint $table) {
             $table->id();
-            $table->string('nomeEstudante');
-            $table->string('disciplina');
-            $table->string('curso');
-            $table->integer('ano');
+
+            $table->string('nome', 50);
+            $table->integer('quantidade_periodos');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plano_flexibilizacaos');
+        Schema::dropIfExists('cursos');
     }
 };

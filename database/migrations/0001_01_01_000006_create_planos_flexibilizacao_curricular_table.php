@@ -11,9 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entrevista_responsavels', function (Blueprint $table) {
+        Schema::create('planos_flexibilizacao_curricular', function (Blueprint $table) {
             $table->id();
+
+            $table->json('campos');
+
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreignId('estudante_id')
+                ->constrained('estudantes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -22,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entrevista_responsavels');
+        Schema::dropIfExists('planos_flexibilizacao_curricular');
     }
 };

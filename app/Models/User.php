@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'avatar',
     ];
 
     /**
@@ -45,6 +46,22 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'role' => \App\Enums\RoleEnum::class,
         ];
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ?: ('https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode($this->email ?? 'user'));
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->nome;
+    }
+
+    public function getFuncaoAttribute()
+    {
+        return $this->role instanceof \App\Enums\RoleEnum ? $this->role->label() : $this->role;
     }
 }

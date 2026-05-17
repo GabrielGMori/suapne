@@ -56,7 +56,6 @@ new class extends Component
 
     public function updatedSelectedItems(): void
     {
-        $this->selectedItems = $this->normalize($this->selectedItems);
         $this->emitChange();
     }
 

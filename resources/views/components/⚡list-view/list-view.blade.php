@@ -10,7 +10,7 @@
 
 <div class="list-view-wrapper">
     @if(count($filters) > 0)
-        <x-secao-expansivel class="mb-10" title="Filtros">
+        <x-secao-expansivel.bottom class="mb-10" title="Filtros">
             <div class="flex flex-col gap-4">
                 <div class="flex flex-wrap gap-4">
                 @foreach(collect($filters)->filter(fn($f) => !$f->isHidden()) as $filter)
@@ -77,10 +77,10 @@
                 </x-slot:hidden>
             @endif
 
-            <x-slot:actions>
+            <x-slot:bottomActions>
                 <x-button type="button" label="Limpar filtros" icon="filter_alt_off" color="secondary" size="dynamic" wire:click="clearFilters" />
-            </x-slot:actions>
-        </x-secao-expansivel>
+            </x-slot:bottomActions>
+        </x-secao-expansivel.bottom>
     @endif
 
     <div class="list-view-card" wire:loading.class="opacity-50 transition-opacity duration-200">
@@ -108,13 +108,13 @@
             <div class="list-view-items">
                 @foreach($items as $item)
                     <div class="list-view-item">
-                        <div class="min-w-30 text-center shrink-0">
+                        <div class="min-w-30 text-center shrink-0 flex justify-center">
                             @php
                                 $resolvedIcon = is_callable($icon) ? $icon($item) : $icon;
                             @endphp
 
                             @if ($imageIcon)
-                                <img class="h-15 w-full object-contain" src="{{ $resolvedIcon }}">
+                                <img class="h-16 rounded-[100%]" src="{{ $resolvedIcon }}">
                             @else
                                 <x-icon class="w-full" size="40">{{ $resolvedIcon }}</x-icon>
                             @endif
@@ -132,7 +132,7 @@
                             <div class="min-w-40 text-center flex items-center justify-center gap-2">
                                 @foreach ($actions as $action)
                                     @if(!$action->isLink())
-                                        <form action="{{ $action->getUrl() }}" method="{{ $action->getMethod() === 'GET' ? 'GET' : 'POST' }}">
+                                        <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod() === 'GET' ? 'GET' : 'POST' }}">
                                             @csrf
                                             @if($action->needsDirective())
                                                 @method($action->getMethod())
@@ -140,7 +140,7 @@
                                             <x-button type="submit" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
                                         </form>
                                     @else
-                                        <x-button type="link" :href="$action->getUrl()" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
+                                        <x-button type="link" :href="$action->getUrl($item)" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
                                     @endif
                                 @endforeach
                             </div>

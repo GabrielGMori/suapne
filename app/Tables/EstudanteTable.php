@@ -3,7 +3,6 @@
 namespace App\Tables;
 
 use App\Models\Estudante;
-use App\Support\FakeBuilder;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewConfig;
@@ -12,15 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EstudanteTable extends ListViewConfig
 {
-    private const SEED = [
-        ['id' => 1, 'nome' => 'Ana Carolina Lima', 'curso' => 'Engenharia de Software', 'periodo' => 6, 'situacao' => 'Matriculado', 'matricula' => '2021001', 'avatar' => null, 'email_pessoal' => 'ana@gmail.com', 'email_academico' => 'ana@uni.edu', 'cpf' => '111.111.111-11'],
-        ['id' => 2, 'nome' => 'Bruno Henrique Melo', 'curso' => 'Ciência da Computação', 'periodo' => 4, 'situacao' => 'Matriculado', 'matricula' => '2022045', 'avatar' => null, 'email_pessoal' => 'bruno@gmail.com', 'email_academico' => 'bruno@uni.edu', 'cpf' => '222.222.222-22'],
-        ['id' => 3, 'nome' => 'Carla Beatriz Souza', 'curso' => 'Sistemas de Informação', 'periodo' => 8, 'situacao' => 'Formado', 'matricula' => '2018033', 'avatar' => null, 'email_pessoal' => 'carla@gmail.com', 'email_academico' => 'carla@uni.edu', 'cpf' => '333.333.333-33'],
-    ];
-
     public function query(): Builder
     {
-        return FakeBuilder::make(Estudante::class, self::SEED);
+        return Estudante::query();
     }
 
     public function title(): ?string { return 'Estudantes registrados'; }
@@ -52,9 +45,10 @@ class EstudanteTable extends ListViewConfig
             ),
             ListViewColumn::make('situacao')->label('Situação')->format(
                 function ($value) use (&$statusCache) {
-                    return $statusCache[$value] ??= view('components.status', [
+                    $label = $value instanceof \App\Enums\SituacaoEstudanteEnum ? $value->label() : $value;
+                    return $statusCache[$label] ??= view('components.status', [
                         'color' => 'dark',
-                        'label' => $value,
+                        'label' => $label,
                     ])->render();
                 }
             ),
@@ -78,7 +72,7 @@ class EstudanteTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#'),
+            ListViewAction::make(fn(Estudante $item) => route('estudantes.show', ['id' => $item->id])),
         ];
     }
 }
