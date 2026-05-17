@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('curso');
             $table->integer('periodo');
             $table->string('situacao');
+            $table->string('avatar');
             $table->timestamps();
         });
     }

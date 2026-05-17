@@ -12,6 +12,7 @@ class Estudante extends Model
         'curso',
         'periodo',
         'situacao',
+        'avatar',
     ];
 
     /** @use HasFactory<\Database\Factories\EstudanteFactory> */
