@@ -9,11 +9,11 @@
                     <x-button label="Remover imagem" color="red"/>    
                 </div>
                 <div class="gap-4"> 
-                    <x-form-input type="text" label="Nome" appearance="outlined"/>
-                    <x-form-input type="multiselect" label="Disciplinas" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                    <livewire:form.input type="text" label="Nome" appearance="outlined"/>
+                    <livewire:form.select type="multiselect" label="Disciplinas" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
                 </div>
                 <div>
-                    <x-form-input type="email" label="E-mail" appearance="outlined"/>
+                    <livewire:form.input type="email" label="E-mail" appearance="outlined"/>
                 </div>
             </div>
         </div>

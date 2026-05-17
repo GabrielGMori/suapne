@@ -2,8 +2,8 @@
     <x-auth-card title="Login" titleMargin="10" width="125">
 
         <div class="flex flex-col gap-1 mb-3">
-            <x-form-input type="text" label="Nome:" />
-            <x-form-input type="password_forgot" label="Senha:" />
+            <livewire:form.input type="text" label="Nome:" />
+            <livewire:form.input type="password_forgot" label="Senha:" />
         </div>
 
         <x-button text="Acessar" type="submit" size="full" />

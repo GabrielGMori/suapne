@@ -6,6 +6,8 @@ use App\Models\Estudante;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\PlanoFlexibilizacao;
+use App\Models\Curso;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +20,8 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(50)->create();
         Estudante::factory(50)->create();
+        PlanoFlexibilizacao::factory(50)->create();
+        Curso::factory(50)->create();
 
         User::factory()->create([
             'name' => 'Test User',
