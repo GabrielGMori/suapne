@@ -57,7 +57,7 @@
                         </p>
 
                         <div style="display: flex; gap: 10px;">
-                            <x-form-input type="text" label="Estudante" appearance="outlined" />
+                            <livewire:form.input label="Estudante" appearance="outlined" />
                            <x-button label="Size default" />
                         </div>
 
