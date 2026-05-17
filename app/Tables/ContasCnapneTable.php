@@ -3,6 +3,7 @@
 namespace App\Tables;
 
 use App\Models\User;
+use App\Support\FakeBuilder;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
@@ -11,10 +12,27 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ContasCnapneTable extends ListViewConfig
 {
+    private const SEED = [
+        ['id' => 1, 'name' => 'Ana Carolina', 'email' => 'ana.carolina@exemplo.com', 'funcao' => 'Docente de Ed. Especial'],
+        ['id' => 2, 'name' => 'Bruno Henrique Melo', 'email' => 'bruno.henrique@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+        ['id' => 3, 'name' => 'Carla Beatriz Souza', 'email' => 'carla.beatriz@exemplo.com', 'funcao' => 'Docente de Ed. Especial'],
+        ['id' => 4, 'name' => 'José Silva', 'email' => 'jose.silva@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+        ['id' => 5, 'name' => 'Maria Souza', 'email' => 'maria.souza@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+        ['id' => 6, 'name' => 'Pedro Santos', 'email' => 'pedro.santos@exemplo.com', 'funcao' => 'Docente de Ed. Especial'],
+        ['id' => 7, 'name' => 'Maria Clara', 'email' => 'maria.clara@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+        ['id' => 8, 'name' => 'João Pedro', 'email' => 'joao.pedro@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+        ['id' => 9, 'name' => 'Pedro Santos', 'email' => 'pedro.santos@exemplo.com', 'funcao' => 'Técnico de Ed. Especial'],
+    ];
+
     public function query(): Builder
     {
-        return User::query()->whereIn('funcao', ['Docente de Ed. Especial', 'Técnico de Ed. Especial']);
+        return FakeBuilder::make(User::class, self::SEED);
     }
+
+    // public function query(): Builder
+    // {
+    //     return User::query()->whereIn('funcao', ['Docente de Ed. Especial', 'Técnico de Ed. Especial']);
+    // }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
     public function createUrl(): ?string { return null; }
