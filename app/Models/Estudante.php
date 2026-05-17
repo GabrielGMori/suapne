@@ -7,14 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Estudante extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'nome',
         'curso',
         'periodo',
         'situacao',
         'avatar',
+        'matricula',
+        'email_pessoal',
+        'email_academico',
+        'cpf',
     ];
 
-    /** @use HasFactory<\Database\Factories\EstudanteFactory> */
-    use HasFactory;
+    protected $casts = [
+        'periodo' => 'integer',
+    ];
 }

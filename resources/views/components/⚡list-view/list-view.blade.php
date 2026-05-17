@@ -154,7 +154,7 @@
         @endif
     </div>
 
-    @if($items->total() > 0)
+    @if(method_exists($items, 'total') && $items->total() > 0)
         <div class="list-view-pagination">
             {{ $items->links('components.paginacao') }}
         </div>
