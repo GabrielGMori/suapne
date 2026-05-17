@@ -18,6 +18,8 @@ class ListViewFilter implements \JsonSerializable
     private bool $hidden = false;
     private string $filterType = 'includes';
 
+    private ?Closure $applyUsing = null;
+
     private function __construct(string $key)
     {
         $this->key = $key;
@@ -82,7 +84,7 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
-    public function applyUsing(\Closure $closure): static
+    public function applyUsing(Closure $closure): static
     {
         $this->applyUsing = $closure;
         return $this;
