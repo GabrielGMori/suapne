@@ -25,7 +25,7 @@
                 @if ($this->isTypePassword())
                     x-bind:type="showPassword ? 'text' : 'password'"
                 @endif
-                
+
                 placeholder="{{ $this->resolvedPlaceholder() }}"
                 wire:model.live="value"
             />
@@ -39,7 +39,7 @@
     </div>
 
     @if ($type === 'password_forgot' && !$helper)
-        <a href="#" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
+        <a href="{{ route('auth.cadastro.enviado') }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
     @elseif ($helper)
         <p class="form-helper">{{ $helper }}</p>
     @endif

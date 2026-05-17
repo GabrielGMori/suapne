@@ -2,17 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home-temp')->name('home-temp');
-Route::view('/components-temp', 'components-temp')->name('components-temp');
-Route::view('/temp', 'temp')->name('temp');
-Route::post('/temp', function () {
-    return redirect()->back()->withInput();
-});
-Route::livewire('/posts/create', 'pages::post.create');
-
-Route::name('dashboard.')->group(function () {
-    Route::view('/dashboard', 'dashboard.index')->name('index');
-});
+Route::redirect('/', '/login');
 
 Route::view('/login', 'auth.login')->name('auth.login');
 
@@ -22,6 +12,12 @@ Route::name('auth.cadastro.')->prefix('cadastro')->group(function () {
     Route::view('/docente', 'auth.cadastro.docente-especial')->name('docente');
     Route::view('/tecnico', 'auth.cadastro.tecnico')->name('tecnico');
     Route::view('/enviado', 'auth.cadastro.enviado')->name('enviado');
+});
+
+Route::view('/components-temp', 'components-temp')->name('components-temp');
+
+Route::name('dashboard.')->group(function () {
+    Route::view('/dashboard', 'dashboard.index')->name('index');
 });
 
 Route::name('atendimentos.')->prefix('atendimentos')->group(function () {

@@ -37,9 +37,8 @@
     }
 
     // Remover depois
-    $navItems = [...$navItems, $divider, $divider, 
+    $navItems = [...$navItems, $divider, $divider,
         ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings'],
-        ['label' => 'Temp', 'href' => route('temp'), 'icon' => 'design_services']
     ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
