@@ -18,4 +18,13 @@ enum StatusPlanoTrabalhoEnum: string
             self::Aprovado => 'Aprovado',
         };
     }
+
+    public static function options(): array
+    {
+        $options = [];
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+        return $options;
+    }
 }

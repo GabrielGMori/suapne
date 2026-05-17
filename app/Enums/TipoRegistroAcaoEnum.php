@@ -16,4 +16,13 @@ enum TipoRegistroAcaoEnum: string
             self::Exclusao => 'Exclusão',
         };
     }
+
+    public static function options(): array
+    {
+        $options = [];
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+        return $options;
+    }
 }

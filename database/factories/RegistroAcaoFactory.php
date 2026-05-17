@@ -18,8 +18,7 @@ class RegistroAcaoFactory extends Factory
      */
     public function definition(): array
     {
-        $user = User::query()->inRandomOrder('')->first()
-            ?? User::factory()->create();
+        $user = User::query()->inRandomOrder('')->first();
 
         return [
             'tipo' => $this->faker->randomElement(['Criacao', 'Edicao', 'Exclusao']),

@@ -20,12 +20,9 @@ class PlanoTrabalhoEstudanteFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first()
-            ?? Estudante::factory()->create();
-        $user = User::query()->inRandomOrder('')->first()
-            ?? User::factory()->create();
-        $disciplina = Disciplina::query()->inRandomOrder('')->first()
-            ?? Disciplina::factory()->create();
+        $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder('')->first();
+        $disciplina = Disciplina::query()->inRandomOrder('')->first();
 
         return [
             'status' => $this->faker->randomElement(['Pendente', 'Aguardando_revisao', 'Devolvido', 'Aprovado']),

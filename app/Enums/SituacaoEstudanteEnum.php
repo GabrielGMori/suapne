@@ -16,4 +16,13 @@ enum SituacaoEstudanteEnum: string
             self::Cancelado => 'Cancelado',
         };
     }
+
+    public static function options(): array
+    {
+        $options = [];
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+        return $options;
+    }
 }

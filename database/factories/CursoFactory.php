@@ -18,7 +18,7 @@ class CursoFactory extends Factory
     public function definition(): array
     {
         return [
-            'nome' => $this->faker->randomElement(['Técnico em Informática', 'Técnico em Enfermagem', 'Técnico em Eletrônica', 'Técnico em Mêcanica']),
+            'nome' => "Curso em " . $this->faker->unique()->word(),
             'quantidade_periodos' => $this->faker->numberBetween(1, 4),
         ];
     }

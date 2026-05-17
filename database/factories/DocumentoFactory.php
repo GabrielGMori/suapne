@@ -18,8 +18,7 @@ class DocumentoFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first()
-            ?? Estudante::factory()->create();
+        $estudante = Estudante::query()->inRandomOrder('')->first();
 
         return [
             'tipo' => $this->faker->randomElement(['Documento', 'Entrevista_Estudante', 'Ficha_CPAE']),

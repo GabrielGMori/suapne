@@ -18,8 +18,10 @@ class AtendimentoSemanalFactory extends Factory
      */
     public function definition(): array
     {
+        $estudante = Estudante::query()->inRandomOrder('')->first();
+
         return [
-            'estudante_id' => Estudante::factory(),
+            'estudante_id' => $estudante->id,
             'campos' => [
                 'data_atendimento' => $this->faker->date(),
                 'descricao' => $this->faker->paragraph(),

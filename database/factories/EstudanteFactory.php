@@ -13,8 +13,7 @@ class EstudanteFactory extends Factory
 {
     public function definition(): array
     {
-        $curso = Curso::query()->inRandomOrder('')->first()
-            ?? Curso::factory()->create();
+        $curso = Curso::query()->inRandomOrder('')->first();
 
         return [
             'nome' => fake()->name(),

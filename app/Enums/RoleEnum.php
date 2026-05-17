@@ -16,4 +16,13 @@ enum RoleEnum: string
             self::TECNICO => 'Técnico de Ed. Especial',
         };
     }
+
+    public static function options(): array
+    {
+        $options = [];
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+        return $options;
+    }
 }

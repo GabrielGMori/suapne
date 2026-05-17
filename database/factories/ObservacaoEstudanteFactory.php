@@ -19,10 +19,8 @@ class ObservacaoEstudanteFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first()
-            ?? Estudante::factory()->create();
-        $user = User::query()->inRandomOrder('')->first()
-            ?? User::factory()->create();
+        $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder('')->first();
 
         return [
             'observacao' => $this->faker->realText(),

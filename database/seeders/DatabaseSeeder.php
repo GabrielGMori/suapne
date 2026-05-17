@@ -10,6 +10,7 @@ use App\Models\PlanoFlexibilizacao;
 use App\Models\Curso;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\AtendimentoSemanal;
+use App\Models\Disciplina;
 use App\Models\RegistroAcao;
 use App\Models\SolicitacaoRegistro;
 use App\Models\Documento;
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(5)->create();
         Curso::factory(20)->create();
+        Disciplina::factory(40)->create();
         Estudante::factory(7)->create();
         PlanoFlexibilizacao::factory(30)->create();
         PlanoTrabalhoEstudante::factory(30)->create();

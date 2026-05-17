@@ -22,4 +22,13 @@ enum EtniaEnum: string
             self::Nao_declarada => 'Não declarada',
         };
     }
+
+    public static function options(): array
+    {
+        $options = [];
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->label();
+        }
+        return $options;
+    }
 }
