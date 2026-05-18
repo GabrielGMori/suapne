@@ -2,12 +2,11 @@
 
 namespace App\View\Components;
 
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class ListViewConfig
 {
-    abstract public function query(): QueryBuilder|EloquentBuilder;
+    abstract public function query(): Builder;
     abstract public function columns(): array;
 
     public function filters(): array { return []; }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Curso;
 use App\Models\Estudante;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,19 +11,55 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class EstudanteFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
+        $curso = Curso::query()->inRandomOrder('')->first();
+
         return [
-            'nome' => $this->faker->name(),
-            'curso' => $this->faker->randomElement(['Engenharia', 'Medicina', 'Direito', 'Arquitetura']),
-            'periodo' => $this->faker->numberBetween(1, 4),
-            'situacao' => $this->faker->randomElement(['Matriculado', 'Formado', 'Evadido']),
-            'avatar' => 'https://ui-avatars.com/api/?name=' . urlencode(fake()->name()) . '&color=7F9CF5&background=EBF4FF',
+            'nome' => fake()->name(),
+            'matricula' => fake()->unique()->numerify('202#####'),
+            'ingresso_ano' => fake()->numberBetween(2020, 2026),
+            'ingresso_periodo' => fake()->numberBetween(1, 2),
+            'periodo' => fake()->numberBetween(
+                1,
+                $curso->quantidade_periodos
+            ),
+            'email_pessoal' => fake()->unique()->safeEmail(),
+            'email_academico' => fake()->unique()->safeEmail(),
+            'data_nascimento' => fake()->date('Y-m-d', '2008-01-01'),
+            'telefone' => fake()->numerify('(##) 9####-####'),
+            'necessidades' => fake()->paragraph(),
+            'cpf' => fake()->unique()->numerify('###.###.###-##'),
+            'situacao' => fake()->randomElement([
+                'Matriculado',
+                'Formado',
+                'Cancelado'
+            ]),
+            'sexo' => fake()->randomElement([
+                'Masculino',
+                'Feminino'
+            ]),
+            'etnia' => fake()->randomElement([
+                'Branca',
+                'Preta',
+                'Parda',
+                'Amarela',
+                'Indigena',
+                'Nao_declarada'
+            ]),
+            'nacionalidade' => 'Brasileira',
+            'naturalidade' => fake()->city(),
+            'nome_pai' => fake()->name('male'),
+            'telefone_pai' => fake()->numerify('(##) 9####-####'),
+            'nome_mae' => fake()->name('female'),
+            'telefone_mae' => fake()->numerify('(##) 9####-####'),
+            'nome_responsavel' => fake()->name(),
+            'telefone_responsavel' => fake()->numerify('(##) 9####-####'),
+            'email_responsavel' => fake()->safeEmail(),
+            'curso_id' => $curso->id,
+            'avatar' =>
+                'https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' .
+                urlencode(fake()->userName()),
         ];
     }
 }

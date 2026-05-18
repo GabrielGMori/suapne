@@ -1,7 +1,7 @@
 @php
-    $baseClass = trim("form-control form-control-{$appearance} form-control-{$size}");
-    $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
-    $caretClass = trim('form-caret ' . ($size === 'small' ? 'form-caret-small' : ''));
+    $baseClass     = "form-control form-control-{$appearance} form-control-{$size}";
+    $submittedName = $isMultiple && $name && ! str_ends_with($name, '[]') ? "{$name}[]" : $name;
+    $caretClass    = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '');
 @endphp
 
 <div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">
@@ -12,6 +12,8 @@
     <div class="form-control-wrap">
         <div
             class="select form-control-{{ $size }}"
+            role="combobox"
+            aria-haspopup="listbox"
             tabindex="0"
             x-data="{
                 isOpen: false,
@@ -23,8 +25,13 @@
                 options: @js($options),
                 isMultiple: @js($isMultiple),
 
+                // Pre-computed Set for O(1) lookups instead of O(n) Array.includes().
+                get selectedSet() {
+                    return new Set(this.selected);
+                },
+
                 get displayOptions() {
-                    if (!this.searchQuery) return this.options;
+                    if (! this.searchQuery) return this.options;
                     const q = this.searchQuery.toLowerCase();
                     return [...this.options]
                         .filter(opt => opt.toLowerCase().includes(q))
@@ -32,8 +39,9 @@
                 },
 
                 isSelected(val) {
-                    return this.selected.includes(val);
+                    return this.selectedSet.has(val);
                 },
+
                 toggleOption(val) {
                     if (this.isMultiple) {
                         this.selected = this.isSelected(val)
@@ -45,37 +53,44 @@
                     }
                     this.resetSearch();
                 },
+
                 removeOption(val) {
                     this.selected = this.selected.filter(i => i !== val);
                 },
+
                 clearSelections() {
                     this.selected = [];
                 },
+
                 resetSearch() {
                     this.resetNextType = true;
                     clearTimeout(this.searchTimeout);
                     this.searchTimeout = null;
                 },
+
                 scrollToHighlighted() {
                     this.$nextTick(() => {
-                        if (!this.$refs.menu) return;
+                        if (! this.$refs.menu) return;
                         const nodes = this.$refs.menu.querySelectorAll('.select-option:not(.cursor-not-allowed)');
                         if (nodes[this.highlightedIndex]) {
                             nodes[this.highlightedIndex].scrollIntoView({ block: 'nearest' });
                         }
                     });
                 },
+
                 handleKeydown(e) {
                     if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
                         if (e.key === 'Escape') { this.isOpen = false; return; }
-                        if (!this.isOpen) { e.preventDefault(); this.isOpen = true; return; }
+                        if (! this.isOpen) { e.preventDefault(); this.isOpen = true; return; }
                         e.preventDefault();
                         if (e.key === 'ArrowDown' && this.displayOptions.length > 0) {
                             this.highlightedIndex = (this.highlightedIndex + 1) % this.displayOptions.length;
                             this.scrollToHighlighted();
                         }
                         if (e.key === 'ArrowUp' && this.displayOptions.length > 0) {
-                            this.highlightedIndex = this.highlightedIndex - 1 < 0 ? this.displayOptions.length - 1 : this.highlightedIndex - 1;
+                            this.highlightedIndex = this.highlightedIndex - 1 < 0
+                                ? this.displayOptions.length - 1
+                                : this.highlightedIndex - 1;
                             this.scrollToHighlighted();
                         }
                         if (e.key === 'Enter' && this.displayOptions.length > 0) {
@@ -92,9 +107,12 @@
                 }
             }"
             x-init="
-                $watch('isOpen', v => { if (!v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; } });
+                $watch('isOpen', v => {
+                    if (! v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; }
+                });
                 $watch('searchQuery', () => { highlightedIndex = 0; });
             "
+            x-bind:aria-expanded="isOpen"
             x-on:keydown="handleKeydown"
             x-on:click.outside="isOpen = false"
         >
@@ -108,8 +126,13 @@
                         <div class="select-chips">
                             <template x-for="val in selected" :key="val">
                                 <span class="select-chip">
-                                    <button type="button" class="select-chip-remove" x-on:click.stop="removeOption(val)">&times;</button>
-                                    <span x-text="val"></span>
+                                    <button
+                                        type="button"
+                                        class="select-chip-remove"
+                                        x-on:click.stop="removeOption(val)"
+                                        :aria-label="'Remover ' + val"
+                                    >&times;</button>
+                                    <span x-text="val" :title="val"></span>
                                 </span>
                             </template>
                         </div>
@@ -131,9 +154,16 @@
                 aria-label="Limpar seleção"
             >&times;</button>
 
-            <div x-show="isOpen" x-cloak x-ref="menu" class="select-menu">
+            <div
+                x-show="isOpen"
+                x-cloak
+                x-ref="menu"
+                class="select-menu"
+                role="listbox"
+                :aria-multiselectable="isMultiple"
+            >
                 <template x-if="displayOptions.length === 0">
-                    <div class="select-option text-black/50 cursor-not-allowed">
+                    <div class="select-option text-black/50 cursor-not-allowed" role="option" aria-disabled="true">
                         Sem resultados
                     </div>
                 </template>
@@ -142,6 +172,8 @@
                     <button
                         type="button"
                         class="select-option"
+                        role="option"
+                        :aria-selected="isSelected(option)"
                         x-bind:class="{
                             'select-option-selected': isSelected(option),
                             'bg-black/5': highlightedIndex === index
@@ -150,7 +182,7 @@
                         x-on:mouseenter="highlightedIndex = index"
                     >
                         <span x-text="option"></span>
-                        @if ($isMultiple) <span x-show="isSelected(option)">&times;</span> @endif
+                        @if ($isMultiple) <span x-show="isSelected(option)" aria-hidden="true">&times;</span> @endif
                     </button>
                 </template>
             </div>
@@ -172,6 +204,7 @@
             <span
                 x-show="selected.length === 0 || (!isMultiple && !{{ $clearable ? 'true' : 'false' }})"
                 class="{{ $caretClass }}"
+                aria-hidden="true"
             ></span>
         </div>
     </div>

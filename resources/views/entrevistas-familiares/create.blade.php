@@ -1,5 +1,5 @@
 <x-layouts.main>
     <div>
-        <!-- Create Entrevista Familiar -->
+        <!-- Create Entrevistas Familiares -->
     </div>
 </x-layouts.main>

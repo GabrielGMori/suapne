@@ -8,59 +8,74 @@ new class extends Component
     #[Modelable]
     public string|array $selectedItems = [];
 
-    public array   $options     = [];
-    public bool    $isMultiple  = false;
-    public bool    $clearable   = false;
-    public string  $name        = '';
-    public ?string $label       = null;
-    public string  $appearance  = 'default';
-    public string  $size        = 'medium';
-    public ?string  $placeholder = '';
+    public array   $options       = [];
+    public bool    $isMultiple    = false;
+    public bool    $clearable     = false;
+    public string  $name          = '';
+    public ?string $label         = null;
+    public string  $appearance    = 'default';
+    public string  $size          = 'medium';
+    public ?string $placeholder   = '';
+    public bool    $dispatchEvent = true;
 
     public function mount(
-        string  $type        = 'select',
-        array   $options     = [],
-        mixed   $value       = null,
-        string  $name        = '',
-        ?string $label       = null,
-        string  $appearance  = 'default',
-        string  $size        = 'medium',
-        ?string  $placeholder = '',
-        bool    $clearable   = false,
+        string  $type          = 'select',
+        array   $options       = [],
+        mixed   $value         = null,
+        string  $name          = '',
+        ?string $label         = null,
+        string  $appearance    = 'default',
+        string  $size          = 'medium',
+        ?string $placeholder   = '',
+        bool    $clearable     = false,
+        bool    $dispatchEvent = true,
     ): void {
-        $this->isMultiple  = $type === 'multiselect';
-        $this->options     = array_values(array_map('strval', $options));
-        $this->name        = $name;
-        $this->label       = $label;
-        $this->appearance  = $appearance;
-        $this->size        = $size;
-        $this->placeholder = $placeholder;
-        $this->clearable   = $clearable;
+        $this->isMultiple    = $type === 'multiselect';
+        $this->options       = array_values(array_map('strval', $options));
+        $this->name          = $name;
+        $this->label         = $label;
+        $this->appearance    = $appearance;
+        $this->size          = $size;
+        $this->placeholder   = $placeholder;
+        $this->clearable     = $clearable;
+        $this->dispatchEvent = $dispatchEvent;
 
-        $oldName  = $this->isMultiple ? rtrim($name, '[]') : $name;
-        $resolved = ($oldName !== '') ? old($oldName, $value) : $value;
+        $baseName = rtrim($name, '[]');
+        $resolved = ($value !== null && $value !== '')
+            ? $value
+            : (($baseName !== '') ? old($baseName) : null);
 
-        if (is_array($resolved)) {
-            $this->selectedItems = array_values(array_map('strval', $resolved));
-        } elseif ($resolved !== null && $resolved !== '') {
-            $this->selectedItems = [(string) $resolved];
-        } else {
-            $this->selectedItems = [];
-        }
+        $this->selectedItems = $this->normalize($resolved);
     }
-
-
 
     public function clear(): void
     {
         $this->selectedItems = [];
-        $this->dispatch('form-input-updated', name: $this->name, value: $this->isMultiple ? [] : '');
+        $this->emitChange();
     }
 
     public function updatedSelectedItems(): void
     {
-        if (is_string($this->selectedItems)) {
-            $this->selectedItems = $this->selectedItems !== '' ? [$this->selectedItems] : [];
+        $this->emitChange();
+    }
+
+    private function normalize(mixed $value): array
+    {
+        if (is_array($value)) {
+            return array_values(array_map('strval', $value));
+        }
+
+        if (is_string($value) && $value !== '') {
+            return [$value];
+        }
+
+        return [];
+    }
+
+    private function emitChange(): void
+    {
+        if (! $this->dispatchEvent) {
+            return;
         }
 
         $value = $this->isMultiple
