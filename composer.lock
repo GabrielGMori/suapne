@@ -5454,6 +5454,7 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/string/zipball/39be2ad058a3c0bd558edca23e65f009865d75ff",
                 "reference": "39be2ad058a3c0bd558edca23e65f009865d75ff",
+
                 "shasum": ""
             },
             "require": {
