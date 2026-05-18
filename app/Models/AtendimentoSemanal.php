@@ -13,6 +13,7 @@ class AtendimentoSemanal extends Model
     protected $table = 'atendimentos_semanais';
 
     protected $fillable = [
+        'local',
         'campos',
         'estudante_id',
     ];

@@ -22,6 +22,7 @@ class AtendimentoSemanalFactory extends Factory
 
         return [
             'estudante_id' => $estudante->id,
+            'local' => $this->faker->company(),
             'campos' => [
                 'data_atendimento' => $this->faker->date(),
                 'descricao' => $this->faker->paragraph(),

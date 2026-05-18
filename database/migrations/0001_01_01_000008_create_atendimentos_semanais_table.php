@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('atendimentos_semanais', function (Blueprint $table) {
             $table->id();
 
+            $table->string('local', 100);
             $table->json('campos');
 
             $table->timestamps();
