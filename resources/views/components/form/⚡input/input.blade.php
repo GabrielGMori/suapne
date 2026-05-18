@@ -12,7 +12,7 @@
                 id="{{ $name }}"
                 name="{{ $name }}"
                 placeholder="{{ $this->resolvedPlaceholder() }}"
-                wire:model.blur="value"
+                wire:model.live="value"
             ></textarea>
 
         @else
@@ -20,16 +20,14 @@
                 {{ $attributes->merge(['class' => $this->resolvedClass()]) }}
                 id="{{ $name }}"
                 name="{{ $name }}"
-                type="{{ $this->isTypePassword() ? '' : $this->resolvedType() }}"
+                type="{{ $this->isTypePassword() ? 'password' : $this->resolvedType() }}"
 
                 @if ($this->isTypePassword())
                     x-bind:type="showPassword ? 'text' : 'password'"
                 @endif
 
-                @unless ($this->isFile())
-                    placeholder="{{ $this->resolvedPlaceholder() }}"
-                    wire:model.blur="value"
-                @endunless
+                placeholder="{{ $this->resolvedPlaceholder() }}"
+                wire:model.live="value"
             />
 
             @if ($this->isTypePassword())
@@ -41,7 +39,7 @@
     </div>
 
     @if ($type === 'password_forgot' && !$helper)
-        <a href="#" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
+        <a href="{{ route('auth.cadastro.enviado') }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
     @elseif ($helper)
         <p class="form-helper">{{ $helper }}</p>
     @endif

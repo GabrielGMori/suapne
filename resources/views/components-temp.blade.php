@@ -9,7 +9,7 @@
             <div class="flex flex-col gap-5">
                 <livewire:list-view
                     config="App\Tables\EstudanteTable"
-                    title="Estudantes"
+                    title="Estudantes teste"
                     create-url="#"
                     create-label="Novo Estudante"
                     empty-message="Nenhum estudante foi encontrado"
@@ -53,7 +53,7 @@
                 Seção Expansível
             </summary>
             <div class="mt-2">
-                <x-secao-expansivel title="Dados gerais">
+                <x-secao-expansivel.bottom title="Dados gerais">
                     <div class="flex gap-8">
                         <div class="shrink-0 flex items-start justify-center">
                             <div
@@ -102,7 +102,7 @@
                         </div>
                     </x-slot:hidden>
 
-                </x-secao-expansivel>
+                </x-secao-expansivel.bottom>
             </div>
         </details>
 

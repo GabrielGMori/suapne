@@ -13,7 +13,7 @@ class ContasCnapneTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->whereIn('funcao', ['Docente de Ed. Especial', 'Técnico de Ed. Especial']);
+        return User::query()->whereIn('role', ['DOCENTE_ESPECIAL', 'TECNICO']);
     }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
@@ -36,12 +36,13 @@ class ContasCnapneTable extends ListViewConfig
     public function filters(): array
     {
         return [
-            ListViewFilter::make('name')->label('Nome')->size('large')->filterType('includes'),
+            ListViewFilter::make('nome')->label('Nome')->size('large')->filterType('includes'),
             ListViewFilter::make('email')->label('E-mail')->size('large')->filterType('includes'),
             ListViewFilter::make('funcao')->label('Função')->type('select')
                 ->options(['Docente de Ed. Especial', 'Técnico de Ed. Especial'])
                 ->applyUsing(function($query, $value) {
-                    $query->where('funcao', $value);
+                    $role = $value === 'Docente de Ed. Especial' ? 'DOCENTE_ESPECIAL' : 'TECNICO';
+                    $query->where('role', $role);
                 }),
         ];
     }

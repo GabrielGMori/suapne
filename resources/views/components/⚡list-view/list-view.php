@@ -12,13 +12,11 @@ new class extends Component
     public string $config;
 
     public ?string $title = null;
-    public string $emptyMessage = 'Nada foi encontrado';
+    public ?string $emptyMessage = null;
     public ?string $createUrl = null;
     public ?string $createLabel = null;
 
     public int $perPage = 15;
-
-    #[Url(as: 'f')]
     public array $filtersState = [];
 
     protected function getConfigInstance(): ListViewConfig
@@ -32,12 +30,10 @@ new class extends Component
 
         $this->perPage = $config->perPage();
 
-        $this->title = $this->title ?? $config->title();
-        $this->createUrl = $this->createUrl ?? $config->createUrl();
-        $this->createLabel = $this->createLabel ?? $config->createLabel();
-        $this->emptyMessage = ($this->emptyMessage !== 'Nada foi encontrado') 
-            ? $this->emptyMessage 
-            : $config->emptyMessage();
+        $this->title ??= $config->title();
+        $this->createUrl ??= $config->createUrl();
+        $this->createLabel ??= $config->createLabel();
+        $this->emptyMessage ??= $config->emptyMessage();
 
         foreach ($config->filters() as $filter) {
             if (!isset($this->filtersState[$filter->getKey()])) {
@@ -48,6 +44,11 @@ new class extends Component
     }
 
     public function updatedFiltersState(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
     {
         $this->resetPage();
     }

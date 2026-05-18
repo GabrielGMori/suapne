@@ -6,14 +6,14 @@
                 <div class="grid grid-cols-1 gap-4">
                     <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário" class="h-50 w-50 object-cover rounded-full shrink-0">
                     <x-button label="Enviar arquivo" color="tertiary" icon="upload_file" iconPos="left"/>
-                    <x-button label="Remover imagem" color="red"/>    
+                    <x-button label="Remover imagem" color="red"/>
                 </div>
-                <div class="gap-4"> 
-                    <x-form-input type="text" label="Nome" appearance="outlined"/>
-                    <x-form-input type="multiselect" label="Disciplinas" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                <div class="gap-4">
+                    <livewire:form.input label="Nome" appearance="outlined"/>
+                    <livewire:form.select type="multiselect" label="Disciplinas" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
                 </div>
                 <div>
-                    <x-form-input type="email" label="E-mail" appearance="outlined"/>
+                    <livewire:form.input type="email" label="E-mail" appearance="outlined"/>
                 </div>
             </div>
         </div>

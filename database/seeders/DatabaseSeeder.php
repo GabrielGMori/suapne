@@ -6,6 +6,16 @@ use App\Models\Estudante;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\PlanoFlexibilizacao;
+use App\Models\Curso;
+use App\Models\PlanoTrabalhoEstudante;
+use App\Models\AtendimentoSemanal;
+use App\Models\Disciplina;
+use App\Models\RegistroAcao;
+use App\Models\SolicitacaoRegistro;
+use App\Models\Documento;
+use App\Models\EntrevistaResponsavel;
+use App\Models\ObservacaoEstudante;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,13 +26,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(50)->create();
-        Estudante::factory(50)->create();
+        User::factory(5)->create();
+        Curso::factory(20)->create();
+        Disciplina::factory(40)->create();
+        Estudante::factory(7)->create();
+        PlanoFlexibilizacao::factory(30)->create();
+        PlanoTrabalhoEstudante::factory(30)->create();
+        AtendimentoSemanal::factory(30)->create();
+        RegistroAcao::factory(30)->create();
+        SolicitacaoRegistro::factory(30)->create();
+        Documento::factory(30)->create();
+        EntrevistaResponsavel::factory(30)->create();
+        ObservacaoEstudante::factory(30)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
+            'nome' => 'Test User',
             'email' => 'test@example.com',
-            'funcao' => 'Docente de Ed. Especial',
+            'role' => 'DOCENTE_ESPECIAL',
         ]);
     }
 }
