@@ -24,23 +24,35 @@ new class extends Component
         return new ($this->config);
     }
 
+    private function buildDefaultFiltersState(): array
+    {
+        return collect($this->getConfigInstance()->filters())
+            ->mapWithKeys(fn($filter) => [
+                $filter->getKey() => $filter->getDefault()
+                    ?? (in_array($filter->getType(), ['select', 'multiselect']) ? [] : ''),
+            ])
+            ->toArray();
+    }
+
     public function mount(): void
     {
         $config = $this->getConfigInstance();
-
-        $this->perPage = $config->perPage();
-
-        $this->title ??= $config->title();
-        $this->createUrl ??= $config->createUrl();
-        $this->createLabel ??= $config->createLabel();
+        $this->perPage      = $config->perPage();
+        $this->title        ??= $config->title();
+        $this->createUrl    ??= $config->createUrl();
+        $this->createLabel  ??= $config->createLabel();
         $this->emptyMessage ??= $config->emptyMessage();
 
-        foreach ($config->filters() as $filter) {
-            if (!isset($this->filtersState[$filter->getKey()])) {
-                $isSelect = in_array($filter->getType(), ['select', 'multiselect']);
-                $this->filtersState[$filter->getKey()] = $filter->getDefault() ?? ($isSelect ? [] : '');
-            }
-        }
+        $this->filtersState = array_merge(
+            $this->buildDefaultFiltersState(),
+            $this->filtersState,
+        );
+    }
+
+    public function clearFilters(): void
+    {
+        $this->filtersState = $this->buildDefaultFiltersState();
+        $this->resetPage();
     }
 
     public function updatedFiltersState(): void
@@ -50,18 +62,6 @@ new class extends Component
 
     public function updatedPerPage(): void
     {
-        $this->resetPage();
-    }
-
-    public function clearFilters(): void
-    {
-        $config = $this->getConfigInstance();
-
-        foreach ($config->filters() as $filter) {
-            $isSelect = in_array($filter->getType(), ['select', 'multiselect']);
-            $this->filtersState[$filter->getKey()] = $filter->getDefault() ?? ($isSelect ? [] : '');
-        }
-
         $this->resetPage();
     }
 

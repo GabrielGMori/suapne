@@ -25,37 +25,44 @@
                 options: @js($options),
                 isMultiple: @js($isMultiple),
 
-                // Pre-computed Set for O(1) lookups instead of O(n) Array.includes().
                 get selectedSet() {
                     return new Set(this.selected);
+                },
+
+                get labelMap() {
+                    return Object.fromEntries(this.options.map(o => [o.value, o.label]));
+                },
+
+                get selectedWithLabels() {
+                    return this.selected.map(v => ({ value: v, label: this.labelMap[v] ?? v }));
                 },
 
                 get displayOptions() {
                     if (! this.searchQuery) return this.options;
                     const q = this.searchQuery.toLowerCase();
-                    return [...this.options]
-                        .filter(opt => opt.toLowerCase().includes(q))
-                        .sort((a, b) => a.toLowerCase().indexOf(q) - b.toLowerCase().indexOf(q));
+                    return this.options
+                        .filter(o => o.label.toLowerCase().includes(q))
+                        .sort((a, b) => a.label.toLowerCase().indexOf(q) - b.label.toLowerCase().indexOf(q));
                 },
 
-                isSelected(val) {
-                    return this.selectedSet.has(val);
+                isSelected(value) {
+                    return this.selectedSet.has(value);
                 },
 
-                toggleOption(val) {
+                toggleOption(opt) {
                     if (this.isMultiple) {
-                        this.selected = this.isSelected(val)
-                            ? this.selected.filter(i => i !== val)
-                            : [...this.selected, val];
+                        this.selected = this.isSelected(opt.value)
+                            ? this.selected.filter(v => v !== opt.value)
+                            : [...this.selected, opt.value];
                     } else {
-                        this.selected = [val];
+                        this.selected = [opt.value];
                         this.isOpen = false;
                     }
                     this.resetSearch();
                 },
 
-                removeOption(val) {
-                    this.selected = this.selected.filter(i => i !== val);
+                removeOption(value) {
+                    this.selected = this.selected.filter(v => v !== value);
                 },
 
                 clearSelections() {
@@ -124,22 +131,20 @@
                 <div x-show="selected.length > 0" class="w-full text-left">
                     <template x-if="isMultiple">
                         <div class="select-chips">
-                            <template x-for="val in selected" :key="val">
+                            <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
-                                    <button
-                                        type="button"
-                                        class="select-chip-remove"
-                                        x-on:click.stop="removeOption(val)"
-                                        :aria-label="'Remover ' + val"
+                                    <button type="button" class="select-chip-remove"
+                                        x-on:click.stop="removeOption(item.value)"
+                                        :aria-label="'Remover ' + item.label"
                                     >&times;</button>
-                                    <span x-text="val" :title="val"></span>
+                                    <span x-text="item.label" :title="item.label"></span>
                                 </span>
                             </template>
                         </div>
                     </template>
 
                     <template x-if="!isMultiple">
-                        <span class="block truncate" x-text="selected[0]"></span>
+                        <span class="block truncate" x-text="labelMap[selected[0]] ?? selected[0]"></span>
                     </template>
                 </div>
 
@@ -168,29 +173,31 @@
                     </div>
                 </template>
 
-                <template x-for="(option, index) in displayOptions" :key="option">
+                <template x-for="(option, index) in displayOptions" :key="option.value">
                     <button
                         type="button"
                         class="select-option"
                         role="option"
-                        :aria-selected="isSelected(option)"
+                        :aria-selected="isSelected(option.value)"
                         x-bind:class="{
-                            'select-option-selected': isSelected(option),
+                            'select-option-selected': isSelected(option.value),
                             'bg-black/5': highlightedIndex === index
                         }"
                         x-on:click="toggleOption(option)"
                         x-on:mouseenter="highlightedIndex = index"
                     >
-                        <span x-text="option"></span>
-                        @if ($isMultiple) <span x-show="isSelected(option)" aria-hidden="true">&times;</span> @endif
+                        <span x-text="option.label"></span>
+                        @if ($isMultiple)
+                            <span x-show="isSelected(option.value)" aria-hidden="true">&times;</span>
+                        @endif
                     </button>
                 </template>
             </div>
 
             @if ($submittedName !== '')
                 <template x-if="isMultiple">
-                    <template x-for="item in selected" :key="item">
-                        <input type="hidden" name="{{ $submittedName }}" x-bind:value="item" />
+                    <template x-for="val in selected" :key="val">
+                        <input type="hidden" name="{{ $submittedName }}" :value="val" />
                     </template>
                 </template>
             @endif

@@ -9,79 +9,9 @@
 @endphp
 
 <div class="list-view-wrapper">
-    @if(count($filters) > 0)
-        <x-secao-expansivel.bottom class="mb-10" title="Filtros">
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-wrap gap-4">
-                @foreach(collect($filters)->filter(fn($f) => !$f->isHidden()) as $filter)
-                    @if(in_array($filter->getType(), ['select', 'multiselect']))
-                        <livewire:form.select
-                            :key="'filter-'.$filter->getKey()"
-                            :type="$filter->getType()"
-                            :name="$filter->getKey()"
-                            :label="$filter->getLabel()"
-                            :options="$filter->getOptions()"
-                            :placeholder="$filter->getPlaceholder()"
-                            :clearable="$filter->isClearable()"
-                            :size="$filter->getSize()"
-                            appearance="outlined"
-                            wire:model.live="filtersState.{{ $filter->getKey() }}"
-                        />
-                    @else
-                        <livewire:form.input
-                            :key="'filter-'.$filter->getKey()"
-                            :type="$filter->getType()"
-                            :name="$filter->getKey()"
-                            :label="$filter->getLabel()"
-                            :placeholder="$filter->getPlaceholder()"
-                            :size="$filter->getSize()"
-                            appearance="outlined"
-                            wire:model.live.debounce.300ms="filtersState.{{ $filter->getKey() }}"
-                        />
-                    @endif
-                @endforeach
-                </div>
-            </div>
-
-            @if(collect($filters)->contains(fn($f) => $f->isHidden()))
-                <x-slot:hidden>
-                    <div class="flex flex-wrap gap-4">
-                        @foreach(collect($filters)->filter(fn($f) => $f->isHidden()) as $filter)
-                            @if(in_array($filter->getType(), ['select', 'multiselect']))
-                                <livewire:form.select
-                                    :key="'filter-hidden-'.$filter->getKey()"
-                                    :type="$filter->getType()"
-                                    :name="$filter->getKey()"
-                                    :label="$filter->getLabel()"
-                                    :options="$filter->getOptions()"
-                                    :placeholder="$filter->getPlaceholder()"
-                                    :clearable="$filter->isClearable()"
-                                    :size="$filter->getSize()"
-                                    appearance="outlined"
-                                    wire:model.live="filtersState.{{ $filter->getKey() }}"
-                                />
-                            @else
-                                <livewire:form.input
-                                    :key="'filter-hidden-'.$filter->getKey()"
-                                    :type="$filter->getType()"
-                                    :name="$filter->getKey()"
-                                    :label="$filter->getLabel()"
-                                    :placeholder="$filter->getPlaceholder()"
-                                    :size="$filter->getSize()"
-                                    appearance="outlined"
-                                    wire:model.live.debounce.300ms="filtersState.{{ $filter->getKey() }}"
-                                />
-                            @endif
-                        @endforeach
-                    </div>
-                </x-slot:hidden>
-            @endif
-
-            <x-slot:bottomActions>
-                <x-button type="button" label="Limpar filtros" icon="filter_alt_off" color="secondary" size="dynamic" wire:click="clearFilters" />
-            </x-slot:bottomActions>
-        </x-secao-expansivel.bottom>
-    @endif
+    @include('components.⚡list-view.filters', [
+        'filters' => $filters,
+    ])
 
     <div class="list-view-card" wire:loading.class="opacity-50 transition-opacity duration-200">
         <div class="list-view-header">

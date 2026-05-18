@@ -6,17 +6,17 @@ use Livewire\Attributes\Modelable;
 new class extends Component
 {
     #[Modelable]
-    public string|array $selectedItems = [];
+    public array|string $selectedItems = [];
 
-    public array   $options       = [];
-    public bool    $isMultiple    = false;
-    public bool    $clearable     = false;
-    public string  $name          = '';
-    public ?string $label         = null;
-    public string  $appearance    = 'default';
-    public string  $size          = 'medium';
-    public ?string $placeholder   = '';
-    public bool    $dispatchEvent = true;
+    public array  $options       = [];
+    public bool   $isMultiple    = false;
+    public bool   $clearable     = false;
+    public string $name          = '';
+    public ?string $label        = null;
+    public string $appearance    = 'default';
+    public string $size          = 'medium';
+    public ?string $placeholder  = '';
+    public bool   $dispatchEvent = true;
 
     public function mount(
         string  $type          = 'select',
@@ -31,7 +31,6 @@ new class extends Component
         bool    $dispatchEvent = true,
     ): void {
         $this->isMultiple    = $type === 'multiselect';
-        $this->options       = array_values(array_map('strval', $options));
         $this->name          = $name;
         $this->label         = $label;
         $this->appearance    = $appearance;
@@ -39,6 +38,12 @@ new class extends Component
         $this->placeholder   = $placeholder;
         $this->clearable     = $clearable;
         $this->dispatchEvent = $dispatchEvent;
+
+        // Preserve key => label pairs as [{value, label}] objects for Alpine
+        $this->options = collect($options)
+            ->map(fn($label, $key) => ['value' => (string) $key, 'label' => (string) $label])
+            ->values()
+            ->all();
 
         $baseName = rtrim($name, '[]');
         $resolved = ($value !== null && $value !== '')
@@ -48,35 +53,32 @@ new class extends Component
         $this->selectedItems = $this->normalize($resolved);
     }
 
+    public function updatedSelectedItems(): void
+    {
+        $this->selectedItems = $this->normalize($this->selectedItems);
+        $this->emitChange();
+    }
+
     public function clear(): void
     {
         $this->selectedItems = [];
         $this->emitChange();
     }
 
-    public function updatedSelectedItems(): void
-    {
-        $this->emitChange();
-    }
-
     private function normalize(mixed $value): array
     {
         if (is_array($value)) {
-            return array_values(array_map('strval', $value));
+            return array_values(array_map('strval', array_filter($value, fn($v) => $v !== '')));
         }
-
         if (is_string($value) && $value !== '') {
             return [$value];
         }
-
         return [];
     }
 
     private function emitChange(): void
     {
-        if (! $this->dispatchEvent) {
-            return;
-        }
+        if (! $this->dispatchEvent) return;
 
         $value = $this->isMultiple
             ? $this->selectedItems

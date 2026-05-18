@@ -2,6 +2,8 @@
 
 namespace App\Tables;
 
+use App\Enums\SituacaoEstudanteEnum;
+use App\Models\Curso;
 use App\Models\Estudante;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewColumn;
@@ -45,7 +47,7 @@ class EstudanteTable extends ListViewConfig
             ),
             ListViewColumn::make('situacao')->label('Situação')->format(
                 function ($value) use (&$statusCache) {
-                    $label = $value instanceof \App\Enums\SituacaoEstudanteEnum ? $value->label() : $value;
+                    $label = $value instanceof SituacaoEstudanteEnum ? $value->label() : $value;
                     return $statusCache[$label] ??= view('components.status', [
                         'color' => 'dark',
                         'label' => $label,
@@ -59,13 +61,15 @@ class EstudanteTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('curso')->label('Curso do estudante')->size('large'),
+            ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::all()->pluck('nome', 'id')->toArray())
+            ->applyUsing(fn($query, $value) => $query->whereIn('curso_id', $value)),
             ListViewFilter::make('periodo')->label('Período')->size('tiny'),
             ListViewFilter::make('situacao')
                 ->label('Situação')
                 ->type('multiselect')
-                ->options(['Matriculado', 'Formado', 'Evadido']),
+                ->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
+
         ];
     }
 

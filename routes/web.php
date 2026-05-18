@@ -4,6 +4,7 @@ use App\Models\Estudante;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/components-temp', 'components-temp')->name('components-temp');
+Route::view('/temp', 'temp')->name('temp');
 
 Route::redirect('/', '/login');
 
