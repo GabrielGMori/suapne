@@ -5,7 +5,7 @@ namespace App\Tables;
 use App\Models\Curso;
 use App\Models\Disciplina;
 use App\Models\Estudante;
-use App\Models\PlanoFlexibilizacao;
+use App\Models\PlanoFlexibilizacaoCurricular;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;

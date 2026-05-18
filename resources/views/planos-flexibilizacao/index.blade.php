@@ -4,5 +4,5 @@
         <x-button type="link" href="#" color="tertiary">Criar Planos de Flexibilização</x-button>
     </div>
     <hr class="my-10 text-on-surface">
-    <livewire:list-view :config="App\Tables\PlanoFlexibilizacaoTable::class"/>
+    <livewire:list-view :config="App\Tables\PlanoFlexibilizacaoCurricularTable::class"/>
 </x-layouts.main>

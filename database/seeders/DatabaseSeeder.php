@@ -6,7 +6,7 @@ use App\Models\Estudante;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\PlanoFlexibilizacao;
+use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Models\Curso;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\AtendimentoSemanal;
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         Disciplina::factory(40)->create();
         User::factory(15)->create();
         Estudante::factory(7)->create();
-        PlanoFlexibilizacao::factory(5)->create();
+        PlanoFlexibilizacaoCurricular::factory(5)->create();
         PlanoTrabalhoEstudante::factory(30)->create();
         AtendimentoSemanal::factory(30)->create();
         RegistroAcao::factory(30)->create();
