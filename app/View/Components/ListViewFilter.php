@@ -5,6 +5,8 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Support\Facades\Blade;
 
+use function PHPUnit\Framework\isArray;
+
 class ListViewFilter implements \JsonSerializable
 {
     private string $key;
@@ -16,14 +18,14 @@ class ListViewFilter implements \JsonSerializable
     private bool $clearable = true;
     private ?string $placeholder = null;
     private bool $hidden = false;
-    private string $filterType = 'includes';
-    private ?string $identifier = null;
 
     private ?Closure $applyUsing = null;
+    private ?string $foreignKey = null;
 
     private function __construct(string $key)
     {
         $this->key = $key;
+        $this->includes();
     }
 
     public static function make(string $key): static
@@ -79,25 +81,53 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
-    public function filterType(string $filterType): static
-    {
-        $this->filterType = $filterType;
-        return $this;
-    }
-
-    public function identifier(string $identifier): static
-    {
-        $this->identifier = $identifier;
-        return $this;
-    }
-
     public function applyUsing(Closure $closure): static
     {
         $this->applyUsing = $closure;
         return $this;
     }
 
-    public function apply($query, mixed $value): void
+    public function foreignKey(string $key): static
+    {
+        $this->foreignKey = $key;
+        return $this;
+    }
+
+    public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null) : static
+    {
+        return $this->applyUsing(function ($query, $value) use ($useKey, $operation, $transform) {
+            $isArray = is_array($value);
+            $value = ($transform && !$isArray) ? $transform($value) : $value;
+
+            if ($this->foreignKey) {
+                $query->whereHas($useKey, fn($q) => $isArray
+                    ? $q->whereIn($this->foreignKey, $value)
+                    : $q->where($this->foreignKey, $operation, $value)
+                );
+            } else {
+                $isArray
+                    ? $query->whereIn($useKey, $value)
+                    : $query->where($useKey, $operation, $value);
+            }
+        });
+    }
+
+    public function applyOperation(string $operation, ?Closure $transform = null): static
+    {
+        return $this->applyOperationWithKey($this->key, $operation, $transform);
+    }
+
+    public function equals(): static
+    {
+        return $this->applyOperation('=');
+    }
+
+    public function includes(): static
+    {
+        return $this->applyOperation('like', fn($value) => "%{$value}%");
+    }
+
+    public function apply(mixed $query, mixed $value): void
     {
         if (isset($this->applyUsing)) {
             ($this->applyUsing)($query, $value);
@@ -109,17 +139,9 @@ class ListViewFilter implements \JsonSerializable
             $query->whereIn($this->key, $value);
             return;
         }
-
-        match ($this->filterType) {
-            'includes' => $query->where($this->key, 'like', "%{$value}%"),
-            'equals'   => $query->where($this->key, $value),
-            default    => null,
-        };
     }
 
     public function isHidden() : bool { return $this->hidden; }
-    public function getFilterType(): string { return $this->filterType; }
-    public function getIdentifier(): ?string { return $this->identifier; }
     public function getKey(): string        { return $this->key; }
     public function getLabel(): string      { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }
     public function getType(): string       { return $this->type; }
@@ -133,9 +155,7 @@ class ListViewFilter implements \JsonSerializable
     {
         return [
             'key' => $this->key,
-            'identifier' => $this->identifier,
             'default' => $this->default,
-            'filterType' => $this->filterType,
         ];
     }
 }

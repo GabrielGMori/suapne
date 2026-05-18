@@ -57,22 +57,11 @@ class RegistroAcaoTable extends ListViewConfig
     public function filters(): array
     {
         return [
-            ListViewFilter::make('user')->label('Nome do autor')
-            ->applyUsing(function ($query, $value) {
-                $query->whereHas('user', fn($q) => $q->where('nome', 'like', "%{$value}%"));
-            }),
-            ListViewFilter::make('estudante')->label('Nome do estudante')->applyUsing(function ($query, $value) {
-                $query->whereHas('estudante', fn($q) => $q->where('nome', 'like', "%{$value}%"));
-            }),
-            ListViewFilter::make('created_at_start')->label('Data inicial')->size('small')->type('datetime')->applyUsing(function ($query, $value) {
-                $query->where('created_at', '>=', $value);
-            }),
-            ListViewFilter::make('created_at_end')->label('Data final')->size('small')->type('datetime')->applyUsing(function ($query, $value) {
-                $query->where('created_at', '<=', $value);
-            }),
-            ListViewFilter::make('tipo')->label('Tipo de ação')->size('small')->type('multiselect')->options(TipoRegistroAcaoEnum::options())->applyUsing(function ($query, $value) {
-                $query->whereIn('tipo', $value, 'and', false);
-            }),
+            ListViewFilter::make('user')->foreignKey('nome')->label('Nome do autor'),
+            ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante'),
+            ListViewFilter::make('created_at_start')->label('Data inicial')->size('small')->type('date')->applyOperationWithKey('created_at', '>='),
+            ListViewFilter::make('created_at_end')->label('Data final')->size('small')->type('date')->applyOperationWithKey('created_at', '<='),
+            ListViewFilter::make('tipo')->label('Tipo de ação')->size('small')->type('multiselect')->options(TipoRegistroAcaoEnum::options()),
         ];
     }
 

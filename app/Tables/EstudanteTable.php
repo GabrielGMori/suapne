@@ -61,13 +61,9 @@ class EstudanteTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::all()->pluck('nome', 'id')->toArray())
-            ->applyUsing(fn($query, $value) => $query->whereIn('curso_id', $value, 'and', false)),
+            ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::all()->pluck('nome', 'id')->toArray()),
             ListViewFilter::make('periodo')->label('Período')->size('tiny'),
-            ListViewFilter::make('situacao')
-                ->label('Situação')
-                ->type('multiselect')
-                ->options(SituacaoEstudanteEnum::options()),
+            ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
 
         ];

@@ -23,7 +23,7 @@ class PlanoFlexibilizacaoTable extends ListViewConfig
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }
     public function icon(): string|\Closure { return "tune"; }
-    
+
     public function columns(): array
     {
         $cache = [];
@@ -40,9 +40,8 @@ class PlanoFlexibilizacaoTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nomeEstudante')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')
-            ->options(Disciplina::all()->pluck('nome', 'id')->toArray()),
-            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')->options(Disciplina::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny'),
         ];
     }

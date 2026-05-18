@@ -2,6 +2,7 @@
 
 namespace App\Tables;
 
+use App\Models\Curso;
 use App\Models\Disciplina;
 use App\Models\Estudante;
 use App\Models\PlanoFlexibilizacao;
@@ -17,7 +18,7 @@ class DisciplinaTable extends ListViewConfig
     {
         return Disciplina::query();
     }
-    
+
     public function title(): ?string { return 'Disciplinas registradas'; }
     public function createUrl(): ?string { return route('disciplinas.form'); }
     public function createLabel(): ?string { return 'Cadastrar Novo'; }
@@ -38,9 +39,8 @@ class DisciplinaTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do componente curricular')->size('large'),
-            ListViewFilter::make('curso')->label('Nome do curso')->size('large')->applyUsing(function ($query, $value) {
-                $query->whereHas('curso', fn($q) => $q->where('nome', 'like', "%{$value}%"));
-            }),
+            ListViewFilter::make('curso')->foreignKey('id')->label('Nome do curso')->size('large')->type('multiselect')
+            ->options(Curso::all()->pluck('nome', 'id')->toArray())
         ];
     }
 
