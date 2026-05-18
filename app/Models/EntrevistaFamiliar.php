@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class EntrevistaResponsavel extends Model
+class EntrevistaFamiliar extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'entrevistas_responsavel';
+    protected $table = 'entrevistas_familiar';
 
     protected $fillable = [
         'campos',
@@ -24,5 +24,10 @@ class EntrevistaResponsavel extends Model
     public function estudante()
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function enviadoPor()
+    {
+        return $this->belongsTo(User::class, 'enviado_por_user_id');
     }
 }

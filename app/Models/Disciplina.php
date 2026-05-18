@@ -21,4 +21,14 @@ class Disciplina extends Model
     {
         return $this->belongsTo(Curso::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function solicitacoesRegistro()
+    {
+        return $this->belongsToMany(SolicitacaoRegistro::class);
+    }
 }

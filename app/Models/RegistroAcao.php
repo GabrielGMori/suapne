@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipoRegistroAcaoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,8 +15,7 @@ class RegistroAcao extends Model
 
     protected $fillable = [
         'tipo',
-        'entidade',
-        'entidade_id',
+        'estudante_id',
         'atributo',
         'atributo_valor',
         'atributo_antigo_valor',
@@ -24,11 +24,25 @@ class RegistroAcao extends Model
     ];
 
     protected $casts = [
-        'tipo' => \App\Enums\TipoRegistroAcaoEnum::class,
+        'tipo' => TipoRegistroAcaoEnum::class,
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function estudante()
+    {
+        return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function getAcaoAttribute()
+    {
+        return match($this->tipo) {
+            TipoRegistroAcaoEnum::Criacao => "Registrou o estudante",
+            TipoRegistroAcaoEnum::Edicao => "Editou o campo $this->atributo",
+            TipoRegistroAcaoEnum::Exclusao => "Excluiu o estudante",
+        };
     }
 }

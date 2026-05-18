@@ -49,6 +49,10 @@ class User extends Authenticatable
             'role' => \App\Enums\RoleEnum::class,
         ];
     }
+    public function disciplinas()
+    {
+        return $this->belongsToMany(Disciplina::class);
+    }
 
     public function getAvatarAttribute($value)
     {
@@ -64,4 +68,5 @@ class User extends Authenticatable
     {
         return $this->role instanceof \App\Enums\RoleEnum ? $this->role->label() : $this->role;
     }
+
 }

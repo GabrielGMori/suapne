@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Curso;
+use App\Models\Disciplina;
 use App\Models\Estudante;
 use Illuminate\Support\Facades\Route;
 
@@ -23,8 +25,7 @@ Route::view('/dashboard', 'dashboard.index')->name('dashboard.index');
 Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::view('/', 'estudantes.index')->name('index');
     Route::view('/form', 'estudantes.form')->name('form');
-    Route::get("/{id}/visualizar", 
-        fn(int $id) => view("estudantes.show", ['estudante' => Estudante::findOrFail($id)]))->name('show');
+    Route::get("/{id}/visualizar", fn(int $id) => view("estudantes.show", ['estudante' => Estudante::findOrFail($id)]))->name('show');
     Route::view("/adicionar-documento", 'estudantes.add-documento')->name('add-documento');
 });
 
@@ -46,18 +47,6 @@ Route::prefix('contas')->group(function () {
     });
 
     Route::view('/contasprofessor', 'contas.professor.editar');
-});
-
-Route::name('cursos.')->prefix('cursos')->group(function () {
-    Route::view('/', 'cursos.index')->name('index');
-    Route::view('/novo', 'cursos.form')->name('form');
-    Route::view('/curso', 'cursos.form');
-});
-
-Route::name('disciplinas.')->prefix('disciplinas')->group(function () {
-    Route::view('/', 'disciplinas.index')->name('index');
-    Route::view('/novo', 'disciplinas.form')->name('form');
-    Route::view('/disciplina', 'disciplinas.form');
 });
 
 Route::name('entrevistas-familiares.')->prefix('entrevistas-familiares')->group(function () {
@@ -86,4 +75,16 @@ Route::name('registro-auditoria.')->group(function () {
 
 Route::name('solicitacoes-registro.')->group(function () {
     Route::view('/solicitacoes-registro', 'solicitacoes-registro.index')->name('index');
+});
+
+Route::name('cursos.')->prefix('cursos')->group(function () {
+    Route::view('/', 'cursos.index')->name('index');
+    Route::view('/novo', 'cursos.form')->name('form');
+    Route::get("/{id}/editar", fn(int $id) => view("cursos.form", ['curso' => Curso::findOrFail($id)]))->name('edit');
+});
+
+Route::name('disciplinas.')->prefix('disciplinas')->group(function () {
+    Route::view('/', 'disciplinas.index')->name('index');
+    Route::view('/novo', 'disciplinas.form')->name('form');
+    Route::get('/{id}/editar', fn(int $id) => view("disciplinas.form", ['disciplina' => Disciplina::findOrFail($id)]))->name('edit');
 });

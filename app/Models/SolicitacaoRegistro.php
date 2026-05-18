@@ -39,9 +39,14 @@ class SolicitacaoRegistro extends Model
     {
         return $this->belongsTo(User::class, 'user_aprovador_id');
     }
-
+    
     public function usuarioCriado()
     {
         return $this->belongsTo(User::class, 'user_criado_id');
+    }
+    
+    public function disciplinas()
+    {
+        return $this->belongsToMany(Disciplina::class);
     }
 }

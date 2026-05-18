@@ -14,7 +14,7 @@ use App\Models\Disciplina;
 use App\Models\RegistroAcao;
 use App\Models\SolicitacaoRegistro;
 use App\Models\Documento;
-use App\Models\EntrevistaResponsavel;
+use App\Models\EntrevistaFamiliar;
 use App\Models\ObservacaoEstudante;
 
 class DatabaseSeeder extends Seeder
@@ -26,17 +26,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(5)->create();
         Curso::factory(20)->create();
         Disciplina::factory(40)->create();
+        User::factory(15)->create();
         Estudante::factory(7)->create();
-        PlanoFlexibilizacao::factory(30)->create();
+        PlanoFlexibilizacao::factory(5)->create();
         PlanoTrabalhoEstudante::factory(30)->create();
         AtendimentoSemanal::factory(30)->create();
         RegistroAcao::factory(30)->create();
         SolicitacaoRegistro::factory(30)->create();
         Documento::factory(30)->create();
-        EntrevistaResponsavel::factory(30)->create();
+        EntrevistaFamiliar::factory(30)->create();
         ObservacaoEstudante::factory(30)->create();
 
         User::factory()->create([

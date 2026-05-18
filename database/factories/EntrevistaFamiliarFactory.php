@@ -2,14 +2,14 @@
 
 namespace Database\Factories;
 
-use App\Models\EntrevistaResponsavel;
+use App\Models\EntrevistaFamiliar;
 use App\Models\Estudante;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<EntrevistaResponsavel>
+ * @extends Factory<EntrevistaFamiliar>
  */
-class EntrevistaResponsavelFactory extends Factory
+class EntrevistaFamiliarFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -24,7 +24,7 @@ class EntrevistaResponsavelFactory extends Factory
             'estudante_id' => $estudante->id,
             'campos' => [
                 'data_entrevista' => $this->faker->date(),
-                'responsavel_entrevistado' => $this->faker->name(),
+                'familiar_entrevistado' => $this->faker->name(),
                 'parentesco' => $this->faker->randomElement(['Pai', 'Mãe', 'Tio', 'Avô', 'Avó']),
                 'relato' => $this->faker->paragraph(),
             ],

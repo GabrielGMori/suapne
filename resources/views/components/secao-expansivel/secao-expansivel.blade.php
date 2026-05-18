@@ -6,6 +6,7 @@
 <section
          data-initial-expanded="{{ filter_var($expanded, FILTER_VALIDATE_BOOLEAN) ? 'true' : 'false' }}"
          x-data="{ expanded: $el.dataset.initialExpanded === 'true' }"
+         x-on:toggle-collapse.window="expanded = $event.detail.expand"
          {{ $attributes->merge(['class' => 'flex flex-col bg-surface rounded-xl overflow-visible']) }}>
 
 

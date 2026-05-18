@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleEnum;
+use App\Enums\StatusSolicitacaoRegistroEnum;
+use App\Models\Disciplina;
 use App\Models\SolicitacaoRegistro;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,10 +28,26 @@ class SolicitacaoRegistroFactory extends Factory
             'nome' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => $this->faker->randomElement(['PROFESSOR_REGULAR', 'DOCENTE_ESPECIAL', 'TECNICO']),
-            'status' => $this->faker->randomElement(['PENDENTE', 'ACEITA', 'RECUSADA']),
+            'role' => $this->faker->randomElement([RoleEnum::PROFESSOR_REGULAR, RoleEnum::TECNICO]),
+            'status' => $this->faker->randomElement(StatusSolicitacaoRegistroEnum::cases()),
             'user_aprovador_id' => null,
             'user_criado_id' => null,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (SolicitacaoRegistro $solicitacaoRegistro) {
+
+            if ($solicitacaoRegistro->role !== RoleEnum::PROFESSOR_REGULAR) {
+                return;
+            }
+
+            $disciplinas = Disciplina::inRandomOrder()
+                ->limit(rand(1, 5))
+                ->pluck('id');
+
+            $solicitacaoRegistro->disciplinas()->attach($disciplinas);
+        });
     }
 }

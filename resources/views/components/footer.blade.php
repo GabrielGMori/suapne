@@ -21,9 +21,9 @@
                 <div>
                     <h4 class="text-title-medium text-white mb-2">Links úteis</h4>
                     <ul class="space-y-1">
-                        <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Início</a></li>
-                        <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Estudantes</a></li>
-                        <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Planos de Trabalho</a></li>
+                        <li><a href="{{ route('dashboard.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Início</a></li>
+                        <li><a href="{{ route('estudantes.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Estudantes</a></li>
+                        <li><a href="{{ route('planos-trabalho.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Planos de Trabalho</a></li>
                         <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Minha Conta</a></li>
                     </ul>
                 </div>

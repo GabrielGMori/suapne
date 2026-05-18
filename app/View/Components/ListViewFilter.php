@@ -17,6 +17,7 @@ class ListViewFilter implements \JsonSerializable
     private ?string $placeholder = null;
     private bool $hidden = false;
     private string $filterType = 'includes';
+    private ?string $identifier = null;
 
     private ?Closure $applyUsing = null;
 
@@ -84,6 +85,12 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
+    public function identifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
+        return $this;
+    }
+
     public function applyUsing(Closure $closure): static
     {
         $this->applyUsing = $closure;
@@ -112,7 +119,7 @@ class ListViewFilter implements \JsonSerializable
 
     public function isHidden() : bool { return $this->hidden; }
     public function getFilterType(): string { return $this->filterType; }
-
+    public function getIdentifier(): ?string { return $this->identifier; }
     public function getKey(): string        { return $this->key; }
     public function getLabel(): string      { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }
     public function getType(): string       { return $this->type; }
@@ -126,6 +133,7 @@ class ListViewFilter implements \JsonSerializable
     {
         return [
             'key' => $this->key,
+            'identifier' => $this->identifier,
             'default' => $this->default,
             'filterType' => $this->filterType,
         ];

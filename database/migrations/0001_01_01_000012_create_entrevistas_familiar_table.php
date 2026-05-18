@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entrevistas_responsavel', function (Blueprint $table) {
+        Schema::create('entrevistas_familiar', function (Blueprint $table) {
             $table->id();
 
             $table->json('campos');
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entrevistas_responsavel');
+        Schema::dropIfExists('entrevistas_familiar');
     }
 };

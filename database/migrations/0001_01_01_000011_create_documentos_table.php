@@ -14,11 +14,7 @@ return new class extends Migration
         Schema::create('documentos', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('tipo', [
-                'Documento',
-                'Entrevista_Estudante',
-                'Ficha_CPAE',
-            ]);
+            $table->enum('tipo', \App\Enums\TipoDocumentoEnum::values());
 
             $table->string('nome', 200);
             $table->string('path', 200);

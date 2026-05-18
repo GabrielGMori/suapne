@@ -18,7 +18,10 @@ class PlanoFlexibilizacaoCurricularFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first();
+        $estudante = Estudante::query()
+            ->whereDoesntHave('planosFlexibilizacaoCurricular')
+            ->inRandomOrder()
+            ->first() ?? Estudante::query()->inRandomOrder('')->first();
 
         return [
             'estudante_id' => $estudante->id,

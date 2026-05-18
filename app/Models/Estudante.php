@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TipoDocumentoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -77,14 +78,37 @@ class Estudante extends Model
     {
         return $this->hasMany(Documento::class, 'estudante_id');
     }
-
-    public function entrevistasResponsavel()
+    
+    public function entrevistaFamiliar()
     {
-        return $this->hasMany(EntrevistaResponsavel::class, 'estudante_id');
+        return $this->hasOne(EntrevistaFamiliar::class, 'estudante_id');
     }
-
+    
     public function observacoes()
     {
         return $this->hasMany(ObservacaoEstudante::class, 'estudante_id');
+    }
+    public function getEntrevistaEstudanteAttribute()
+    {
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::Entrevista_Estudante)->first();
+    }
+    public function getLaudoAttribute()
+    {
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::Laudo)->first();
+    }
+
+    public function getEstudoDeCasoAttribute()
+    {
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::Estudo_de_Caso)->first();
+    }
+
+    public function getFichaCpaeAttribute()
+    {
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::Ficha_CPAE)->first();
+    }
+
+    public function getOutrosDocumentosAttribute()
+    {
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::Documento)->get();
     }
 }

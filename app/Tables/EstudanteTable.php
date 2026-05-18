@@ -20,7 +20,7 @@ class EstudanteTable extends ListViewConfig
 
     public function title(): ?string { return 'Estudantes registrados'; }
 
-    public function createUrl(): ?string { return '#'; }
+    public function createUrl(): ?string { return route('estudantes.form'); }
 
     public function createLabel(): ?string { return 'Registrar Novo'; }
 
@@ -62,7 +62,7 @@ class EstudanteTable extends ListViewConfig
         return [
             ListViewFilter::make('nome')->label('Nome do estudante')->size('large'),
             ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::all()->pluck('nome', 'id')->toArray())
-            ->applyUsing(fn($query, $value) => $query->whereIn('curso_id', $value)),
+            ->applyUsing(fn($query, $value) => $query->whereIn('curso_id', $value, 'and', false)),
             ListViewFilter::make('periodo')->label('Período')->size('tiny'),
             ListViewFilter::make('situacao')
                 ->label('Situação')

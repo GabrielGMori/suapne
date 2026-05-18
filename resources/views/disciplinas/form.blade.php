@@ -14,7 +14,10 @@
                     <livewire:form.input type="textarea" label="Ementa" appearance="outlined" size="full" class="resize-none"/>
                 </div>
             </div>
-            <div class="flex justify-end">
-                <x-button label="Registrar"/>
+            <div class="flex justify-end gap-2">
+                <x-button label="Cancelar" type="link" href="{{ route('disciplinas.index') }}" color="red"/>
+                <x-button label="Registrar (Em breve)" disabled/>
             </div>
+        </div>
+    </div>
 </x-layouts.main>

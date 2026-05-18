@@ -1,5 +1,3 @@
 <x-layouts.main>
-    <div>
-        <!-- Index Professor Accounts -->
-    </div>
+    <livewire:list-view :config="App\Tables\ContasProfessorTable::class" />
 </x-layouts.main>

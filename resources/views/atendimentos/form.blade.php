@@ -18,7 +18,8 @@
         <h2 class="text-display-small">4. Observações adicionais</h2>
         <livewire:form.input type="textarea" name="observacoes-outlined" appearance="outlined" size="full"/>
     </div>
-    <div class="flex justify-end">
-        <x-button label="Registrar"/>
+    <div class="flex justify-end gap-2">
+        <x-button label="Cancelar" type="link" href="{{ route('atendimentos.index') }}" color="red"/>
+        <x-button label="Registrar (Em breve)" disabled/>
     </div>
 </x-layouts.main>

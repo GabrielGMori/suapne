@@ -2,6 +2,7 @@
 
 namespace App\Tables;
 
+use App\Enums\RoleEnum;
 use App\Models\User;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
@@ -13,12 +14,10 @@ class ContasCnapneTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->whereIn('role', ['DOCENTE_ESPECIAL', 'TECNICO']);
+        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO], 'and', false);
     }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
-    public function createUrl(): ?string { return null; }
-    public function createLabel(): ?string { return null; }
     public function emptyMessage(): string { return 'Nenhuma conta da CNAPNE foi encontrada.'; }
     public function perPage(): int { return 20; }
     public function imageIcon(): bool { return true; }
@@ -29,21 +28,21 @@ class ContasCnapneTable extends ListViewConfig
         return [
             ListViewColumn::make('name')->label('Nome')->size('large'),
             ListViewColumn::make('email')->label('E-mail')->size('large'),
-            ListViewColumn::make('funcao')->label('Função'),
+            ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label()),
         ];
     }
 
     public function filters(): array
     {
         return [
-            ListViewFilter::make('nome')->label('Nome')->size('large')->filterType('includes'),
-            ListViewFilter::make('email')->label('E-mail')->size('large')->filterType('includes'),
-            ListViewFilter::make('funcao')->label('Função')->type('select')
-                ->options(['Docente de Ed. Especial', 'Técnico de Ed. Especial'])
-                ->applyUsing(function($query, $value) {
-                    $role = $value === 'Docente de Ed. Especial' ? 'DOCENTE_ESPECIAL' : 'TECNICO';
-                    $query->where('role', $role);
-                }),
+            ListViewFilter::make('nome')->label('Nome')->size('large'),
+            ListViewFilter::make('email')->label('E-mail')->size('large'),
+            ListViewFilter::make('role')->label('Função')->type('select')
+                ->options([
+                    RoleEnum::DOCENTE_ESPECIAL->value => RoleEnum::DOCENTE_ESPECIAL->label(), 
+                    RoleEnum::TECNICO->value => RoleEnum::TECNICO->label()
+                ])
+                ->applyUsing(fn($query, $value) => $query->where('role', $value)),
         ];
     }
 

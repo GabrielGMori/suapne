@@ -41,7 +41,20 @@
         </x-slot:hidden>
     </x-secao-expansivel.bottom>
 
-    <x-secao-expansivel title="Necessidades" class="mt-10">
+    <div class="w-full flex justify-end my-4" x-data="{ expandAll: true }">
+        <x-button 
+            type="button" 
+            x-on:click="expandAll = !expandAll; $dispatch('toggle-collapse', { expand: expandAll })"
+            color="secondary" 
+        >
+            <span class="flex items-center gap-1 cursor-pointer">
+                <span x-text="expandAll ? 'Recolher Tudo' : 'Expandir Tudo'">Recolher Tudo</span>
+                <span class="material-symbols-outlined" x-text="expandAll ? 'unfold_less' : 'unfold_more'">unfold_less</span>
+            </span>
+        </x-button>
+    </div>
+
+    <x-secao-expansivel title="Necessidades" class="mt-5">
         <p class="p-5">{{ $estudante->necessidades }}</p>
         <header class="flex justify-between items-center px-5 py-3">
             <p class="text-display-small">Observações</p>
@@ -66,15 +79,168 @@
         @endif
     </x-secao-expansivel>
 
-    <x-secao-expansivel title="Entrevistas" class="mt-10">
+    <x-secao-expansivel title="Entrevistas" class="mt-5">
         <div class="p-5">
             <p class="text-title-medium mb-2">Estudante</p>
-            <x-documento name="Documento do estudante" date="Data" actionIcon="open_in_new" actionUrl="">
-                <x-slot:metadata>
-                    <p>Enviada por: Julio</p>
-                </x-slot:metadata>
-            </x-documento>
-            <p class="text-title-medium mb-2">Familiar</p>
+            @if ($estudante->entrevistaEstudante)
+                <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="#" icon="edit_note">
+                    <x-slot:metadata>
+                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
+                    </x-slot:metadata>
+                </x-documento>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
+            <p class="text-title-medium my-2">Familiar</p>
+            @if ($estudante->entrevistaFamiliar)
+                <x-documento name="Entrevista com familiar" actionUrl="#" icon="edit_note">
+                    <x-slot:metadata>
+                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
+                    </x-slot:metadata>
+                </x-documento>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
         </div>
+    </x-secao-expansivel>
+
+    <x-secao-expansivel title="Documentos" class="mt-5">
+        <div class="p-5">
+            <p class="text-title-medium mb-2">Laudo</p>
+            @if ($estudante->laudo)
+                <x-documento name="Laudo" actionIcon="download" actionUrl="#">
+                    <x-slot:metadata>
+                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
+                    </x-slot:metadata>
+                </x-documento>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
+            <p class="text-title-medium my-2">Estudo de Caso</p>
+            @if ($estudante->estudoDeCaso)
+                <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="#">
+                    <x-slot:metadata>
+                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
+                    </x-slot:metadata>
+                </x-documento>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
+            <p class="text-title-medium my-2">Ficha CPAE</p>
+            @if ($estudante->fichaCpae)
+                <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="#">
+                    <x-slot:metadata>
+                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
+                    </x-slot:metadata>
+                </x-documento>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
+            <p class="text-title-medium my-2">Outros</p>
+            @if (count($estudante->outrosDocumentos) > 0)
+                <div class="flex flex-col gap-2">
+                    @foreach ($estudante->outrosDocumentos as $documento)
+                        <x-documento name="{{ $documento->nome }}" actionIcon="download" actionUrl="#">
+                            <x-slot:metadata>
+                                <p>Enviada  por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                                <p>Data de envio: {{ $documento->created_at->format('d/m/Y') }}</p>
+                            </x-slot:metadata>
+                        </x-documento>
+                    @endforeach
+                </div>
+            @else
+                <x-button label="Adicionar" icon="add" color="tertiary" />
+            @endif
+        </div>
+    </x-secao-expansivel>
+
+    <x-secao-expansivel title="Planos de Flexibilização Curricular" class="mt-5">
+        <div class="p-5 flex flex-col gap-2">
+            @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
+                @foreach ($estudante->planosFlexibilizacaoCurricular as $plano)
+                    <x-documento name="Plano de Flexibilização Curricular {{ $estudante->nome }} - {{ $plano->ano }}" 
+                        icon="tune" actionUrl="#">
+                        <x-slot:metadata>
+                            <p>Criado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
+                        </x-slot:metadata>
+                    </x-documento>
+                @endforeach
+            @else
+                <p>Nenhum plano foi criado no momento</p>
+            @endif
+        </div>
+
+        <x-slot:topActions>
+            <x-button icon="search" color="transparent"></x-button>
+            <x-button icon="add" color="transparent"></x-button>
+        </x-slot:topActions>
+    </x-secao-expansivel>
+
+    <x-secao-expansivel title="Planos de Trabalho" class="mt-5">
+        <div class="p-5 flex flex-col gap-4">
+            @if (count($estudante->planosTrabalho) > 0)
+                @php
+                    $planosPorAno = $estudante->planosTrabalho->groupBy(fn($plano) => $plano->created_at->format('Y'))->sortKeysDesc();
+                @endphp
+                @foreach ($planosPorAno as $ano => $planos)
+                    <div x-data="{ yearExpanded: true }" x-on:toggle-collapse.window="yearExpanded = $event.detail.expand" class="p-2">
+                        <header class="flex justify-between items-center cursor-pointer select-none" x-on:click="yearExpanded = !yearExpanded">
+                            <p class="text-title-medium">{{ $ano }}</p>
+                            <button type="button" class="flex items-center text-black hover:opacity-70 transition-opacity cursor-pointer">
+                                <x-icon icon="keyboard_arrow_down" size="30" class="transition-transform duration-200" x-bind:class="yearExpanded ? 'rotate-180' : ''" />
+                            </button>
+                        </header>
+                        <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="yearExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+                            <div class="min-h-0 overflow-hidden flex flex-col gap-2 pt-3">
+                                @foreach ($planos as $plano)
+                                    <x-documento name="PTE {{ $estudante->nome }} - {{ $plano->disciplina->nome }} - {{ $plano->created_at->format('Y') }}" 
+                                        icon="assignment" actionUrl="#">
+                                        <x-slot:metadata>
+                                            <p>Status: {{ $plano->status->label() }}</p>
+                                            <p>Criado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
+                                        </x-slot:metadata>
+                                    </x-documento>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <p>Nenhum plano foi criado no momento</p>
+            @endif
+        </div>
+
+        <x-slot:topActions>
+            <x-button icon="search" color="transparent"></x-button>
+            <x-button icon="add" color="transparent"></x-button>
+        </x-slot:topActions>
+    </x-secao-expansivel>
+
+    <x-secao-expansivel title="Atendimentos Semanais" class="mt-5">
+        <div class="p-5 flex flex-col gap-4">
+            @if (count($estudante->atendimentosSemanais) > 0)
+                @foreach ($estudante->atendimentosSemanais as $atendimento)                
+                    <x-documento name="Atendimento Semanal com {{ $estudante->nome }} - {{ $atendimento->created_at->format('d/m/Y') }}" 
+                        icon="article_person" actionUrl="#">
+                        <x-slot:metadata>
+                            <p>Realizado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                            <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
+                        </x-slot:metadata>
+                    </x-documento>
+                @endforeach
+            @endif
+        </div>
+
+        <x-slot:topActions>
+            <x-button icon="search" color="transparent"></x-button>
+            <x-button icon="add" color="transparent"></x-button>
+        </x-slot:topActions>
     </x-secao-expansivel>
 </x-layouts.main>

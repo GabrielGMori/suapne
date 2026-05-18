@@ -20,8 +20,10 @@ return new class extends Migration
                 'Exclusao',
             ]);
 
-            $table->string('entidade', 200);
-            $table->integer('entidade_id');
+            $table->foreignId('estudante_id')
+                ->constrained('estudantes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->string('atributo', 200);
             $table->string('atributo_valor', 200);

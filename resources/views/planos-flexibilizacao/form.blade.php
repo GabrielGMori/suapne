@@ -31,8 +31,9 @@
             <h2 class="text-display-small">6. Informações adicionais</h2>
             <livewire:form.input type="textarea" name="atendimentomultiprofissional_outlined" appearance="outlined" size="full"/>
         </div>
-        <div class="flex justify-end">
-            <x-button label="Registrar"/>
-        </div>
+        <div class="flex justify-end gap-2">
+            <x-button label="Cancelar" type="link" href="{{ route('planos-flexibilizacao.index') }}" color="red"/>
+            <x-button label="Registrar (Em breve)" disabled/>
+        </div>  
     </div>
 </x-layouts.main>

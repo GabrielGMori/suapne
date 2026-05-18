@@ -2,6 +2,8 @@
 
 namespace App\Tables;
 
+use App\Models\Curso;
+use App\Models\Disciplina;
 use App\Models\Estudante;
 use App\Models\PlanoFlexibilizacao;
 use App\View\Components\ListViewColumn;
@@ -20,7 +22,7 @@ class PlanoFlexibilizacaoTable extends ListViewConfig
     public function createUrl(): ?string { return route('planos-flexibilizacao.form'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }
-    public function icon(): string|\Closure { return "assignment"; }
+    public function icon(): string|\Closure { return "tune"; }
     
     public function columns(): array
     {
@@ -39,8 +41,8 @@ class PlanoFlexibilizacaoTable extends ListViewConfig
         return [
             ListViewFilter::make('nomeEstudante')->label('Nome do estudante')->size('large'),
             ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')
-            ->options(['Português', 'Matemática', "Artes", "Física", "História"]),
-            ListViewFilter::make('curso')->label('Curso')->size('large'),
+            ->options(Disciplina::all()->pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray()),
             ListViewFilter::make('ano')->label('Ano')->size('tiny'),
         ];
     }

@@ -1,7 +1,7 @@
 <x-layouts.main title="Cadastro de estudante">
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">Dados do estudante</h2>
-        <hr class="mb-5">
+        <hr class="mb-5 text-on-surface">
         <div class="grid grid-cols-3">
             <div class="flex flex-col gap-5 place-items-center">
                 <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
@@ -33,8 +33,9 @@
             </div>
         </div>
     </div>
-    <div class="flex justify-end">
-        <x-button label="Cadastrar"/>
+    <div class="flex justify-end gap-2">
+        <x-button label="Cancelar" type="link" href="{{ route('cursos.index') }}" color="red"/>
+        <x-button label="Registrar (Em breve)" disabled/>
     </div>
 </x-layouts.main>
 

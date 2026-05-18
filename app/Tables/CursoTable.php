@@ -18,25 +18,30 @@ class CursoTable extends ListViewConfig
         return Curso::query();
     }
     
-    public function title(): ?string { return 'Cursos'; }
+    public function title(): ?string { return 'Cursos registrados'; }
     public function createUrl(): ?string { return route('cursos.form'); }
-    public function createLabel(): ?string { return 'Criar Novo'; }
+    public function createLabel(): ?string { return 'Cadastrar Novo'; }
     public function emptyMessage(): string { return 'Nenhum curso foi encontrado'; }
     public function icon(): string|\Closure { return "backpack"; }
 
     public function columns(): array
     {
-        $cache = [];
-
         return [
-            ListViewColumn::make('nomeCurso')->label('Nome do curso')->size("full"),
+            ListViewColumn::make('nome')->label('Nome do curso')->size("full"),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            ListViewFilter::make('nome')->label('Nome do curso')->size('large'),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make('#'),
+            ListViewAction::make(fn(Curso $item) => route('cursos.edit', ['id' => $item->id]))->icon('edit'),
         ];
     }
 
