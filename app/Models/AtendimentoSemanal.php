@@ -16,6 +16,7 @@ class AtendimentoSemanal extends Model
         'local',
         'campos',
         'estudante_id',
+        'user_id',
     ];
 
     protected $casts = [
@@ -25,5 +26,10 @@ class AtendimentoSemanal extends Model
     public function estudante()
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\AtendimentoSemanal;
 use App\Models\Estudante;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,9 +20,11 @@ class AtendimentoSemanalFactory extends Factory
     public function definition(): array
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder('')->first();
 
         return [
             'estudante_id' => $estudante->id,
+            'user_id' => $user->id,
             'local' => $this->faker->company(),
             'campos' => [
                 'data_atendimento' => $this->faker->date(),
