@@ -33,7 +33,7 @@ class SolicitacaoRegistroTable extends ListViewConfig
             ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label()),
             ListViewColumn::make('disciplinas')->label('Disciplinas')
             ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
-                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(), 
+                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
                 'label' => 'Disciplinas'
             ]) : '---'),
         ];
@@ -46,9 +46,9 @@ class SolicitacaoRegistroTable extends ListViewConfig
             ListViewFilter::make('email')->label('E-mail'),
             ListViewFilter::make('role')->label('Função')->type('select')
             ->options([
-                RoleEnum::PROFESSOR_REGULAR->value => RoleEnum::PROFESSOR_REGULAR->label(), 
+                RoleEnum::PROFESSOR_REGULAR->value => RoleEnum::PROFESSOR_REGULAR->label(),
                 RoleEnum::TECNICO->value => RoleEnum::TECNICO->label()
-            ]),
+            ])->equals(),
         ];
     }
 

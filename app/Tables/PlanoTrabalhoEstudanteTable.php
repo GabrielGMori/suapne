@@ -17,10 +17,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
 
 
-public function getCursoAttribute()
-    {
-        return $this->estudante ? $this->estudante->curso : 'Sem Curso';
-    }
+
     public function query(): Builder
     {
         return PlanoTrabalhoEstudante::query();

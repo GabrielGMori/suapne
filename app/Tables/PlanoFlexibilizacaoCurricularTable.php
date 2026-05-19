@@ -5,25 +5,25 @@ namespace App\Tables;
 use App\Models\Curso;
 use App\Models\Disciplina;
 use App\Models\Estudante;
-use App\Models\PlanoFlexibilizacao;
+use App\Models\PlanoFlexibilizacaoCurricular;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
 
-class PlanoFlexibilizacaoTable extends ListViewConfig
+class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoFlexibilizacao::query();
+        return PlanoFlexibilizacaoCurricular::query();
     }
     public function title(): ?string { return 'Planos de Flexibilização Curricular'; }
     public function createUrl(): ?string { return route('planos-flexibilizacao.form'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }
     public function icon(): string|\Closure { return "tune"; }
-    
+
     public function columns(): array
     {
         $cache = [];
@@ -40,9 +40,8 @@ class PlanoFlexibilizacaoTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nomeEstudante')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')
-            ->options(Disciplina::all()->pluck('nome', 'id')->toArray()),
-            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')->options(Disciplina::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny'),
         ];
     }

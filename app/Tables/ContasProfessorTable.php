@@ -24,7 +24,7 @@ class ContasProfessorTable extends ListViewConfig
     public function imageIcon(): bool { return true; }
     public function icon(): string|\Closure { return fn($item) => $item->avatar
             ? asset($item->avatar)
-            : asset('storage/img/placeholder-user.png'); 
+            : asset('storage/img/placeholder-user.png');
     }
 
     public function columns(): array
@@ -34,7 +34,7 @@ class ContasProfessorTable extends ListViewConfig
             ListViewColumn::make('email')->label('E-mail do professor')->size('large'),
             ListViewColumn::make('disciplinas')->label('Disciplinas')
             ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
-                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(), 
+                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
                 'label' => 'Disciplinas'
             ]) : '---'),
         ];
@@ -45,8 +45,8 @@ class ContasProfessorTable extends ListViewConfig
         return [
             ListViewFilter::make('nome')->label('Nome do professor')->size('large'),
             ListViewFilter::make('email')->label('E-mail do professor')->size('large'),
-            ListViewFilter::make('disciplinas')->label('Disciplinas')->size('large')->type('multiselect')->options(Disciplina::all()->pluck('nome', 'id')->toArray())
-                ->applyUsing(fn($query, $value) => $query->whereHas('disciplinas', fn($q) => $q->whereIn('disciplinas.id', $value))),
+            ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('large')->type('multiselect')
+            ->options(Disciplina::all()->pluck('nome', 'id')->toArray())
         ];
     }
 

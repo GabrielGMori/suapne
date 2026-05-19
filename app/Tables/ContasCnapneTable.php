@@ -39,10 +39,9 @@ class ContasCnapneTable extends ListViewConfig
             ListViewFilter::make('email')->label('E-mail')->size('large'),
             ListViewFilter::make('role')->label('Função')->type('select')
                 ->options([
-                    RoleEnum::DOCENTE_ESPECIAL->value => RoleEnum::DOCENTE_ESPECIAL->label(), 
+                    RoleEnum::DOCENTE_ESPECIAL->value => RoleEnum::DOCENTE_ESPECIAL->label(),
                     RoleEnum::TECNICO->value => RoleEnum::TECNICO->label()
-                ])
-                ->applyUsing(fn($query, $value) => $query->where('role', $value)),
+                ])->equals()
         ];
     }
 
