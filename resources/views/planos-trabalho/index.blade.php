@@ -1,5 +1,5 @@
 <x-layouts.main>
     <div>
-        <!-- Index Planos Trabalho -->
+      <livewire:list-view :config="App\Tables\PlanoTrabalhoEstudanteTable::class"/>
     </div>
 </x-layouts.main>
