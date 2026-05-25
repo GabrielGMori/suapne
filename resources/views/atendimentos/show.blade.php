@@ -14,30 +14,27 @@
         <p>Curso/Turma: Informática 4</p>
         <p>Idade: 17 anos</p>
         <p class="mb-5">Local: CNAPNE-IFPR Campus Curitiba</p>
-        <livewire:form.input type="textarea" label="Perfil do Estudante" appearance="surface" name="perfildoestudante-outlined" size="full" disabled value="Perfil do Estudante
-...
-...
-..."/>
+        <p>Perfil do Estudante:</p>
+        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5 mt-5">
+            <p>Perfil do estudante<br>...<br>... <br>...</p>
+        </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do atendimento</h2>
-        <livewire:form.input type="textarea" appearance="surface" name="perfildoestudante-outlined" size="full" disabled value="Registro do atendimento
-...
-...
-..."/>
+        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+            <p>Registro do atendimento<br>...<br>... <br>...</p>
+        </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Encaminhamentos</h2>
-        <livewire:form.input type="textarea" appearance="surface" name="perfildoestudante-outlined" size="full" disabled value="Encaminhamentos referentes ao estudante
-...
-...
-..."/>
+        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+            <p>Encaminhamentos referentes ao estudante<br>...<br>... <br>...</p>
+        </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">4. Observações</h2>
-        <livewire:form.input type="textarea" appearance="surface" name="perfildoestudante-outlined" size="full" disabled value="Observações do atendimento
-...
-...
-..."/>
+        <h2 class="text-display-small">4. Observações adicionais</h2>
+        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+            <p>Observações do atendimento<br>...<br>... <br>...</p>
+        </div>
     </div>
 </x-layouts.main>
