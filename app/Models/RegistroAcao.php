@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\TipoRegistroAcaoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RegistroAcao extends Model
@@ -27,17 +28,17 @@ class RegistroAcao extends Model
         'tipo' => TipoRegistroAcaoEnum::class,
     ];
 
-    public function user()
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function estudante()
+    public function estudante() : BelongsTo
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
     }
 
-    public function getAcaoAttribute()
+    public function getAcaoAttribute() : string
     {
         return match($this->tipo) {
             TipoRegistroAcaoEnum::Criacao => "Registrou o estudante",

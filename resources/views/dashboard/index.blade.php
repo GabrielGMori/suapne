@@ -1,147 +1,69 @@
-<x-layouts.main title="Olá, nome do Docente!">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<x-layouts.main title="Olá, seja bem-vindo(a)!">
+    <div class="grid grid-cols-2 gap-8 w-full">
+        <div class="col-span-2 space-y-1">
+            <div class="flex items-center gap-1">
+                @php($solicitacoes = \App\Models\SolicitacaoRegistro::count())
+                @if($solicitacoes === 0)
+                    <x-icon icon="check" class="text-primary-accent" size="50" label="Não há solicitações de cadastro no momento" />
+                @else
+                    <x-icon icon="person_alert" class="ml-1" size="60" label="Existem {{$solicitacoes}} solicitaç{{$solicitacoes === 1 ? 'ão' : 'ões'}} de cadastro aguardando aprovação" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" />
+                @endif
+            </div>
+        </div>
 
-        <div class="lg:col-span-2 space-y-10">
-
-            <div class="flex items-start gap-4">
-                <i class="material-symbols-outlined shrink-0 text-black-800"
-                    style="font-size: 5rem; margin-top: -10px;">
-                    person_alert
-                </i>
-                <div class="flex-1 space-y-3">
-                    <p class="text-display-medium">
-                        Existe 1 solicitação de cadastro aguardando aprovação
-                    </p>
-                    <x-button label="ver solicitações" color="tertiary" />
-                </div>
+        <div class="col-span-2 space-y-1">
+            <div class="flex items-center gap-1">
+                @php($planos = \App\Models\PlanoTrabalhoEstudante::where('status', \App\Enums\StatusPlanoTrabalhoEnum::Pendente)->count())
+                @if($planos === 0)
+                    <x-icon icon="check" class="text-primary-accent" size="50" label="Não há PTEs aguardando revisão no momento" />
+                @else
+                    <x-icon icon="notification_important" size="60" label="Existem {{$planos}} PTE{{$planos === 1 ? '' : 's'}} aguardando revisão" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" />
+                @endif
             </div>
 
-            <hr class="border-t border-gray-200">
+            <hr class="text-on-surface my-5">
+        </div>
 
-            <div class="flex items-start gap-4">
-                <i class="material-symbols-outlined shrink-0 text-black-800"
-                    style="font-size: 5rem; margin-top: -10px;">
-                    notification_important
-                </i>
-                <div class="flex-1 space-y-3">
-                    <p class="text-display-medium">
-                        Existem 4 PTEs aguardando revisão
-                    </p>
-                    <x-button label="ver PTEs" color="tertiary" />
+        <div class="space-y-5 col-span-2 xl:col-span-1">
+            <x-icon icon="article_person" size="50" label="Iniciar atendimento semanal" />
+
+            <div class="flex items-end gap-4 mb-15">
+                <div class="w-full max-w-sm">
+                    <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
+                <x-button label="Iniciar atendimento" />
             </div>
 
-            <hr class="border-t border-gray-200">
+            <x-icon icon="assignment_add" size="50" label="Criar plano de trabalho do estudante" />
 
-            <div class="flex items-start gap-4">
-                <i class="material-symbols-outlined shrink-0 text-black-800"
-                    style="font-size: 5rem; margin-top: -10px;">
-                    article_person
-                </i>
-                <div class="flex-1 space-y-3">
-                    <p class="text-display-medium">
-                        Iniciar atendimento semanal
-                    </p>
-                    <div class="flex items-end gap-4">
-                        <div class="w-full max-w-sm">
-                            <livewire:form.input label="Estudante" appearance="outlined" />
-                        </div>
-                        <x-button label="Iniciar atendimento" />
-                    </div>
+            <div class="flex items-end gap-4">
+                <div class="w-full max-w-sm">
+                    <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
+                <x-button label="Criar PTE" />
             </div>
+        </div>
 
-            <hr class="border-t border-gray-200">
-
-            <div class="flex items-start gap-4">
-                <i class="material-symbols-outlined shrink-0 text-black-800"
-                    style="font-size: 5rem; margin-top: -10px;">
-                    add_notes
-                </i>
-                <div class="flex-1 space-y-3">
-                    <p class="text-display-medium">
-                        Criar Plano de Trabalho do Estudante
-                    </p>
-                    <div class="flex items-end gap-4">
-                        <div class="w-full max-w-sm">
-                            <livewire:form.input label="Estudante" appearance="outlined" />
+        <div class="space-y-2 row-span-2 col-span-2 xl:col-span-1">
+            <h3>Últimas alterações</h3>
+            @php($acoes = \App\Models\RegistroAcao::count())
+            <div class="bg-surface rounded-xl flex flex-col items-center h-max p-5 gap-1">
+                @if($acoes === 0)
+                    <p class="grow flex items-center">Nenhuma ação encontrada</p>
+                @else
+                    @foreach(\App\Models\RegistroAcao::take(5)->get() as $registroAcao)
+                        <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
+                            <img src="{{asset($registroAcao->user->avatar)}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
+                            <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
+                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::Edicao ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
+                            <x-button icon="open_in_new" color="transparent" class="grow flex justify-end" />
                         </div>
-                        <x-button label="Criar PTE" />
-                    </div>
-                </div>
+                    @endforeach
+                    <x-button label="Ver mais" height="small" color="tertiary" />
+                @endif
             </div>
-
-            <div class="lg:col-span-2 space-y-10">
-            </div>
-
-
-            <div class="lg:col-span-1 space-y-4">
-
-                <h3 class="text-2xl font-normal text-gray-800">
-                    Últimas alterações
-                </h3>
-
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3 shadow-sm">
-
-                    <div
-                        class="flex items-center justify-between gap-3 p-2 hover:bg-white rounded-lg transition duration-200">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shrink-0">
-                                <i class="material-symbols-outlined text-gray-600 text-xl">person</i>
-                            </div>
-
-                            <div class="text-sm text-gray-700">
-                                <span class="font-medium text-gray-900">Maria Silva</span> editou o campo "nome" da
-                                estudante <span class="font-medium text-gray-900">Joana Carvalho</span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-2 text-xs text-gray-400 whitespace-nowrap shrink-0">
-                            <span>2 horas atrás</span>
-                            <i
-                                class="material-symbols-outlined text-sm cursor-pointer hover:text-gray-600">open_in_new</i>
-                        </div>
-                    </div>
-
-                    <div
-                        class="flex items-center justify-between gap-3 p-2 hover:bg-white rounded-lg transition duration-200">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shrink-0">
-                                <i class="material-symbols-outlined text-gray-600 text-xl">person</i>
-                            </div>
-                            <div class="text-sm text-gray-700">
-                                <span class="font-medium text-gray-900">Maria Silva</span> editou o campo "nome" da
-                                estudante <span class="font-medium text-gray-900">Joana Carvalho</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs text-gray-400 whitespace-nowrap shrink-0">
-                            <span>2 horas atrás</span>
-                            <i
-                                class="material-symbols-outlined text-sm cursor-pointer hover:text-gray-600">open_in_new</i>
-                        </div>
-                    </div>
-
-                    <div
-                        class="flex items-center justify-between gap-3 p-2 hover:bg-white rounded-lg transition duration-200">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center shrink-0">
-                                <i class="material-symbols-outlined text-gray-600 text-xl">person</i>
-                            </div>
-                            <div class="text-sm text-gray-700">
-                                <span class="font-medium text-gray-900">Maria Silva</span> editou o campo "nome" da
-                                estudante <span class="font-medium text-gray-900">Joana Carvalho</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs text-gray-400 whitespace-nowrap shrink-0">
-                            <span>2 horas atrás</span>
-                            <i
-                                class="material-symbols-outlined text-sm cursor-pointer hover:text-gray-600">open_in_new</i>
-                        </div>
-                    </div>
-
-
-
-
-
-                </div>
+        </div>
+    </div>
 </x-layouts.main>

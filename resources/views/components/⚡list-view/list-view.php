@@ -28,8 +28,8 @@ new class extends Component
     {
         return collect($this->getConfigInstance()->filters())
             ->mapWithKeys(fn($filter) => [
-                ($filter->getKey()) => $filter->getDefault()
-                    ?? (in_array($filter->getType(), ['select', 'multiselect']) ? [] : ''),
+                ($filter->getKey()) => $filter->getDefault() ??
+                (in_array($filter->getType(), ['select', 'multiselect']) ? [] : ''),
             ])
             ->toArray();
     }
@@ -69,7 +69,7 @@ new class extends Component
     {
         $config = $this->getConfigInstance();
         $query = $config->query();
-        
+
         foreach ($config->filters() as $filter) {
             $value = $this->filtersState[$filter->getKey()] ?? null;
 

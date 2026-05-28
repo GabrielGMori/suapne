@@ -1,6 +1,7 @@
 @props([
     'color' => 'primary', // Cor do botão. Pode ser: primary|secondary|tertiary|red|yellow|transparent
     'size' => 'default', // Tamanho do botão. Pode ser: default|dynamic|full|icon
+    'height' => 'medium', // Altura do botão. Pode ser: small|medium
     'icon' => null, // Ícone do botão (usando Google Material Icons)
     'iconPos' => 'left', // Posição do ícone. Pode ser: left|right
     'label' => null, // Texto do botão
@@ -19,7 +20,7 @@
 
 <button
     type="{{ $type === 'link' ? 'button' : $type }}"
-    {{ $attributes->merge(['class' => "btn btn-$size btn-$color"]) }}
+    {{ $attributes->merge(['class' => "btn btn-$size btn-$color btn-$height"]) }}
     @if($onClick) x-on:click="{{ $onClick }}" @endif
 >
     @if ($type == 'link') <a href="{{ $href }}"> @endif

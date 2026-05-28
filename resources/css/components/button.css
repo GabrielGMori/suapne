@@ -38,4 +38,8 @@
     .btn-icon {
         @apply min-w-max p-2 rounded-lg
     }
+
+    .btn-small {
+        @apply h-10 px-4
+    }
 }
