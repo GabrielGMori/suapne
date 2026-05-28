@@ -1,4 +1,4 @@
-<nav role="navigation" aria-label="{{ __('Pagination Navigation') }}"
+<nav role="navigation"
     class="flex items-center justify-between mt-8 text-label-medium text-secondary">
 
     <div class="flex items-center gap-2 flex-1 justify-start">
@@ -23,8 +23,7 @@
         @if ($paginator->hasPages())
             @if (!$paginator->onFirstPage())
                 <button wire:click="previousPage" wire:loading.attr="disabled"
-                    class="flex items-center justify-center w-8 h-8 rounded-full text-secondary hover:text-primary transition-colors cursor-pointer"
-                    aria-label="{{ __('pagination.previous') }}">
+                    class="flex items-center justify-center w-8 h-8 rounded-full text-secondary hover:text-primary transition-colors cursor-pointer">
                     <x-icon size="20">chevron_left</x-icon>
                 </button>
             @endif
@@ -43,8 +42,7 @@
                             </span>
                         @else
                             <button wire:click="gotoPage({{ $page }})" wire:loading.attr="disabled"
-                                class="flex items-center justify-center min-w-8 h-8 px-2 text-secondary hover:text-primary transition-colors cursor-pointer"
-                                aria-label="{{ __('Go to page :page', ['page' => $page]) }}">
+                                class="flex items-center justify-center min-w-8 h-8 px-2 text-secondary hover:text-primary transition-colors cursor-pointer">
                                 {{ $page }}
                             </button>
                         @endif
@@ -54,8 +52,7 @@
 
             @if ($paginator->hasMorePages())
                 <button wire:click="nextPage" wire:loading.attr="disabled"
-                    class="flex items-center justify-center w-8 h-8 rounded-full text-secondary hover:text-primary transition-colors cursor-pointer"
-                    aria-label="{{ __('pagination.next') }}">
+                    class="flex items-center justify-center w-8 h-8 rounded-full text-secondary hover:text-primary transition-colors cursor-pointer">
                     <x-icon size="20">chevron_right</x-icon>
                 </button>
             @endif

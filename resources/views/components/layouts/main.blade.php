@@ -5,7 +5,7 @@
         <x-menu-lateral />
 
         <main class="flex-1 px-20 py-5 bg-{{$bg}} mb-20">
-            <h1>{{ $title }}</h1>
+            <h2>{{ $title }}</h2>
             <hr class="mt-3 mb-5 text-on-surface">
 
             {{ $slot }}

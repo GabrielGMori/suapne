@@ -13,7 +13,7 @@ class ListViewFilter implements \JsonSerializable
     private ?string $label = null;
     private string $type = 'text';
     private string $size = 'medium';
-    private mixed $default = '';
+    private mixed $default = null;
     private array $options = [];
     private bool $clearable = true;
     private ?string $placeholder = null;

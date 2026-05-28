@@ -42,24 +42,29 @@
     ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
-    $navLinkClasses = 'w-full justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 overflow-hidden rounded-lg text-label-small text-on-surface hover:bg-white/5 hover:text-white transition-[width,padding,color,background-color] duration-300 ease-in-out group whitespace-nowrap';
+    $navLinkClasses = 'w-full justify-start px-2
+    flex items-center min-h-10 gap-3 overflow-hidden rounded-lg
+    text-label-small text-on-surface
+    hover:bg-white/5 hover:text-white
+    transition-[width,padding,color,background-color] duration-300
+    group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square!
+    group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto!
+    ease-in-out group whitespace-nowrap';
 @endphp
 
 <script>
-    (() => {
-        const storageKey = '{{ $sidebarStorageKey }}';
-        const defaultCollapsed = window.matchMedia('(max-width: 1200px)').matches;
+    const storageKey = '{{ $sidebarStorageKey }}';
+    const defaultCollapsed = window.matchMedia('(max-width: 1200px)').matches;
 
-        try {
-            const savedCollapsed = localStorage.getItem(storageKey);
-            const shouldStartCollapsed = savedCollapsed === 'true'
-                || (savedCollapsed !== 'false' && defaultCollapsed);
+    try {
+        const savedCollapsed = localStorage.getItem(storageKey);
+        const shouldStartCollapsed = savedCollapsed === 'true'
+            || (savedCollapsed !== 'false' && defaultCollapsed);
 
-            document.documentElement.dataset.sidebarCollapsed = String(shouldStartCollapsed);
-        } catch (error) {
-            document.documentElement.dataset.sidebarCollapsed = String(defaultCollapsed);
-        }
-    })();
+        document.documentElement.dataset.sidebarCollapsed = String(shouldStartCollapsed);
+    } catch (error) {
+        document.documentElement.dataset.sidebarCollapsed = String(defaultCollapsed);
+    }
 </script>
 
 <style>
@@ -198,7 +203,7 @@
 
     <div class="{{ $dividerClasses }}"></div>
 
-    <nav class="flex flex-1 flex-col items-stretch overflow-y-auto overflow-x-hidden py-2 custom-scrollbar">
+    <nav class="flex flex-1 flex-col items-stretch overflow-y-scroll overflow-x-hidden py-2">
         @foreach ($navItems as $item)
             @if ($item['divider'] ?? false)
                 <div class="{{ $dividerClasses }}"></div>
