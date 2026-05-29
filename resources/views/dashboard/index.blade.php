@@ -4,10 +4,10 @@
             <div class="flex items-center gap-1">
                 @php($solicitacoes = \App\Models\SolicitacaoRegistro::count())
                 @if($solicitacoes === 0)
-                    <x-icon icon="check" class="text-primary-accent" size="50" label="Não há solicitações de cadastro no momento" />
+                    <x-icon icon="check" class="text-primary-accent" size="45" label="Não há solicitações de cadastro no momento" />
                 @else
-                    <x-icon icon="person_alert" class="ml-1" size="60" label="Existem {{$solicitacoes}} solicitaç{{$solicitacoes === 1 ? 'ão' : 'ões'}} de cadastro aguardando aprovação" />
-                    <x-button icon="open_in_new" size="dynamic" color="transparent" />
+                    <x-icon icon="person_alert" class="ml-1" size="45" label="Existem {{$solicitacoes}} solicitaç{{$solicitacoes === 1 ? 'ão' : 'ões'}} de cadastro aguardando aprovação" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link" href="{{route('solicitacoes-registro.index')}}" />
                 @endif
             </div>
         </div>
@@ -16,10 +16,10 @@
             <div class="flex items-center gap-1">
                 @php($planos = \App\Models\PlanoTrabalhoEstudante::where('status', \App\Enums\StatusPlanoTrabalhoEnum::Pendente)->count())
                 @if($planos === 0)
-                    <x-icon icon="check" class="text-primary-accent" size="50" label="Não há PTEs aguardando revisão no momento" />
+                    <x-icon icon="check" class="text-primary-accent" size="45" label="Não há PTEs aguardando revisão no momento" />
                 @else
-                    <x-icon icon="notification_important" size="60" label="Existem {{$planos}} PTE{{$planos === 1 ? '' : 's'}} aguardando revisão" />
-                    <x-button icon="open_in_new" size="dynamic" color="transparent" />
+                    <x-icon icon="notification_important" size="45" label="Existem {{$planos}} PTE{{$planos === 1 ? '' : 's'}} aguardando revisão" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link" href="{{route('planos-trabalho.index')}}" />
                 @endif
             </div>
 
@@ -27,22 +27,22 @@
         </div>
 
         <div class="space-y-5 col-span-2 xl:col-span-1">
-            <x-icon icon="article_person" size="50" label="Iniciar atendimento semanal" />
+            <x-icon icon="article_person" size="40" label="Iniciar atendimento semanal" />
 
             <div class="flex items-end gap-4 mb-15">
                 <div class="w-full max-w-sm">
                     <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
-                <x-button label="Iniciar atendimento" />
+                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.form')}}" />
             </div>
 
-            <x-icon icon="assignment_add" size="50" label="Criar plano de trabalho do estudante" />
+            <x-icon icon="assignment_add" size="40" label="Criar plano de trabalho do estudante" />
 
             <div class="flex items-end gap-4">
                 <div class="w-full max-w-sm">
                     <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
-                <x-button label="Criar PTE" />
+                <x-button label="Criar PTE" type="link" href="{{route('planos-trabalho.form')}}" />
             </div>
         </div>
 
@@ -58,10 +58,10 @@
                             <img src="{{asset($registroAcao->user->avatar)}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
                             <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
                                 {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::Edicao ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
-                            <x-button icon="open_in_new" color="transparent" class="grow flex justify-end" />
+                            <x-button icon="open_in_new" color="transparent" class="grow flex justify-end" type="link" href="{{route('registro-auditoria.index')}}" />
                         </div>
                     @endforeach
-                    <x-button label="Ver mais" height="small" color="tertiary" />
+                    <x-button label="Ver mais" height="small" color="tertiary" type="link" href="{{route('registro-auditoria.index')}}" />
                 @endif
             </div>
         </div>

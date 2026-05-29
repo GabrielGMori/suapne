@@ -53,7 +53,7 @@ class ContasProfessorTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#')->icon('edit'),
+            ListViewAction::make(static fn(User $item) => route('contas.professor.form', ['id' => $item->id]))->icon('edit'),
         ];
     }
 }

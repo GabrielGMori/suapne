@@ -1,13 +1,14 @@
-<x-layouts.main title="Atendimento Semanal com Ricardo Borges - 30/03/2026">
+<x-layouts.main title="Atendimento Semanal com {{$atendimento->estudante->nome}} - {{$atendimento->data->format('d/m/Y')}}">
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h3 class="text-title-large">Data do atendimento: 30/03/2026</h3>
-            <h3 class="text-title-large">Feito por: Rosiane Carvalho</h3>
+            <h3 class="text-title-large">Data do atendimento: {{$atendimento->data->format('d/m/Y H:i')}}</h3>
+            <h3 class="text-title-large">Feito por: {{$atendimento->user->nome}}</h3>
         </div>
         <div class="flex justify-end">
-            <x-button label="Exportar como PDF" color="tertiary" icon="file_export"/> 
+            <x-button label="Exportar como PDF" color="tertiary" icon="file_export"/>
         </div>
     </div>
+
     <div class="flex flex-col bg-surface rounded-lg p-5 mb-5 mt-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
         <p>Nome: Ricardo Borges</p>

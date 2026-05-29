@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('local', 100);
+            $table->dateTime('data');
             $table->json('campos');
 
             $table->timestamps();

@@ -21,7 +21,9 @@ class ContasCnapneTable extends ListViewConfig
     public function emptyMessage(): string { return 'Nenhuma conta da CNAPNE foi encontrada.'; }
     public function perPage(): int { return 20; }
     public function imageIcon(): bool { return true; }
-    public function icon(): string|\Closure { return asset('storage/img/placeholder-user.png'); }
+    public function icon(): string|\Closure { return fn($item) => $item->avatar
+        ? asset($item->avatar)
+        : asset('storage/img/placeholder-user.png'); }
 
     public function columns(): array
     {
@@ -48,7 +50,7 @@ class ContasCnapneTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#')->icon('edit'),
+            ListViewAction::make(static fn(User $item) => route('contas.cnapne.form', ['id' => $item->id]))->icon('edit'),
         ];
     }
 }

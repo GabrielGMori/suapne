@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Estudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
+use Carbon\Traits\Date;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,9 +26,9 @@ class PlanoFlexibilizacaoCurricularFactory extends Factory
 
         return [
             'estudante_id' => $estudante->id,
+            'periodo_inicio' => $this->faker->dateTimeBetween('2026-01-01', '2026-05-20'),
+            'periodo_fim' => $this->faker->date('2025-10-01', '2025-12-31'),
             'campos' => [
-                'disciplina' => $this->faker->randomElement(['Português', 'Matemática', "Artes", "Física", "História"]),
-                'ano' => $this->faker->numberBetween(2020, 2026),
                 'necessidades' => $this->faker->paragraph(),
             ],
         ];

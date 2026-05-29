@@ -72,7 +72,7 @@ class EstudanteTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(fn(Estudante $item) => route('estudantes.show', ['id' => $item->id])),
+            ListViewAction::make(static fn(Estudante $item) => route('estudantes.show', ['id' => $item->id])),
         ];
     }
 }

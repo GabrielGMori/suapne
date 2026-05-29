@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('planos_flexibilizacao_curricular', function (Blueprint $table) {
             $table->id();
 
+            $table->date('periodo_inicio');
+            $table->date('periodo_fim');
+
             $table->json('campos');
 
             $table->timestamps();

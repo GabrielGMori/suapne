@@ -23,7 +23,7 @@ class AtendimentoSemanalTable extends ListViewConfig
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum atendimento semanal foi encontrado'; }
     public function icon(): string|\Closure { return "article_person"; }
-    
+
     public function columns(): array
     {
         $cache = [];
@@ -50,7 +50,7 @@ class AtendimentoSemanalTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#'),
+        ListViewAction::make(static fn(AtendimentoSemanal $item) => route('atendimentos.show', ['id' => $item->id])),
         ];
     }
 

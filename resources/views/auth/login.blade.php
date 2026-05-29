@@ -2,8 +2,8 @@
     <x-auth-card title="Login" titleMargin="10" class="pb-13">
 
         <div class="flex flex-col gap-1 mb-3">
-            <livewire:form.input label="Nome:" />
-            <livewire:form.input type="password_forgot" label="Senha:" />
+            <livewire:form.input label="Nome:" disabled />
+            <livewire:form.input type="password_forgot" label="Senha:" disabled />
         </div>
 
         <x-button label="Acessar" type="link" href="{{ route('dashboard.index') }}" size="full" />

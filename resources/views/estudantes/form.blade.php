@@ -10,31 +10,31 @@
                 <x-button label="Remover imagem" color="red" />
             </div>
             <div class="flex flex-col gap-5">
-                <livewire:form.input type="text" label="Nome completo" appearance="outlined" />
-                <livewire:form.input type="tel" label="CPF" appearance="outlined" />
-                <livewire:form.input type="email" label="E-mail Acadêmico" appearance="outlined" />
-                <livewire:form.input type="text" label="Naturalidade" appearance="outlined" />
-                <livewire:form.input type="date" label="Data de nascimento" appearance="outlined" />
-                <livewire:form.input type="text" label="Ingresso" appearance="outlined" />
-                <livewire:form.input type="text" label="Curso" appearance="outlined" />
-                
+                <livewire:form.input label="Nome completo" appearance="outlined" disabled />
+                <livewire:form.input type="tel" label="CPF" appearance="outlined" disabled />
+                <livewire:form.input type="email" label="E-mail Acadêmico" appearance="outlined" disabled />
+                <livewire:form.input type="select" label="Naturalidade" appearance="outlined" disabled />
+                <livewire:form.input label="Data de nascimento" appearance="outlined" disabled />
+                <livewire:form.input label="Ingresso" appearance="outlined" disabled />
+                <livewire:form.input label="Curso" appearance="outlined" disabled />
+
             </div>
             <div class="flex flex-col gap-5">
-                <livewire:form.input type="text" label="Matrícula" appearance="outlined" />
-                <livewire:form.input type="tel" label="Telefone" appearance="outlined" />
-                <livewire:form.input type="email" label="E-mail Pessoal" appearance="outlined" />
-                <livewire:form.input type="text" label="Nacionalidade" appearance="outlined" />           
-                <livewire:form.input type="text" label="Etnia" appearance="outlined" />           
-                <livewire:form.input type="number" label="Período" appearance="outlined" />
-                <livewire:form.input type="text" label="Situação" appearance="outlined" />
+                <livewire:form.input label="Matrícula" appearance="outlined" disabled />
+                <livewire:form.input type="tel" label="Telefone" appearance="outlined" disabled />
+                <livewire:form.input type="email" label="E-mail Pessoal" appearance="outlined" disabled />
+                <livewire:form.input label="Nacionalidade" appearance="outlined" disabled />
+                <livewire:form.input label="Etnia" appearance="outlined" disabled />
+                <livewire:form.input label="Período" appearance="outlined" disabled />
+                <livewire:form.input label="Situação" appearance="outlined" disabled />
             </div>
             <div class="col-start-2 col-span-2">
-                <livewire:form.input type="textarea" label="Necessidades" appearance="outlined" size="full"/>
+                <livewire:form.input type="textarea" label="Necessidades" appearance="outlined" disabled size="full"/>
             </div>
         </div>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ route('cursos.index') }}" color="red"/>
+        <x-button label="Cancelar" type="link" href="{{ route('estudantes.index') }}" color="red"/>
         <x-button label="Registrar (Em breve)" disabled/>
     </div>
 </x-layouts.main>

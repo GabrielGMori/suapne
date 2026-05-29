@@ -225,7 +225,7 @@
 
         <div class="{{ $dividerClasses }}"></div>
 
-        <a href="#" draggable="false"
+        <a href="{{ route('auth.login') }}" draggable="false"
             data-sidebar-compact-link
             x-bind:title="collapsed ? 'Sair' : ''"
             class="{{ $navLinkClasses }}">

@@ -137,7 +137,6 @@ class ListViewFilter implements \JsonSerializable
         if (is_array($value)) {
             if (empty($value)) return;
             $query->whereIn($this->key, $value);
-            return;
         }
     }
 

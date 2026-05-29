@@ -3,6 +3,9 @@
 use App\Models\Curso;
 use App\Models\Disciplina;
 use App\Models\Estudante;
+use App\Models\EntrevistaFamiliar;
+use App\Models\PlanoFlexibilizacaoCurricular;
+use App\Models\PlanoTrabalhoEstudante;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/components-temp', 'components-temp')->name('components-temp');
@@ -25,39 +28,22 @@ Route::view('/dashboard', 'dashboard.index')->name('dashboard.index');
 Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::view('/', 'estudantes.index')->name('index');
     Route::view('/form', 'estudantes.form')->name('form');
-    Route::get("/{id}/visualizar", fn(int $id) => view("estudantes.show", ['estudante' => Estudante::findOrFail($id)]))->name('show');
-    Route::view("/adicionar-documento", 'estudantes.add-documento')->name('add-documento');
-});
+    Route::get("/{id}/visualizar", static fn(int $id) => view("estudantes.show", ['estudante' => Estudante::find($id)]))->name('show');
 
-Route::name('atendimentos.')->prefix('atendimentos')->group(function () {
-    Route::view('/', 'atendimentos.index')->name('index');
-    Route::view('/novo', 'atendimentos.form')->name('form');
-    Route::view('/visualizar', 'atendimentos.show')->name('show');
-});
-
-Route::prefix('contas')->group(function () {
-    Route::name('contas.cnapne.')->prefix('cnapne')->group(function () {
-        Route::view('/', 'contas.cnapne.index')->name('index');
-        Route::view('/editar', 'contas.cnapne.editar')->name('editar');
+    Route::name('documentos.')->prefix('documentos')->group(function () {
+        Route::view("/adicionar", 'estudantes.add-documento')->name('add');
     });
 
-    Route::name('contas.professor.')->prefix('professor')->group(function () {
-        Route::view('/', 'contas.professor.index')->name('index');
-        Route::view('/editar', 'contas.professor.editar')->name('editar');
+    Route::name('entrevistas-familiares.')->prefix('/entrevista-familiar')->group(function () {
+        Route::view('/novo', 'entrevistas-familiares.form')->name('form');
+        Route::get('/{id}/visualizar', static fn(int $id) => view('entrevistas-familiares.show', ['entrevista-familiar' => EntrevistaFamiliar::find($id)]))->name('show');
     });
-
-    Route::view('/contasprofessor', 'contas.professor.editar');
-});
-
-Route::name('entrevistas-familiares.')->prefix('entrevistas-familiares')->group(function () {
-    Route::view('/', 'entrevistas-familiares.index')->name('index');
-    Route::view('/novo', 'entrevistas-familiares.create')->name('create');
 });
 
 Route::name('planos-flexibilizacao.')->prefix('planos-flexibilizacao')->group(function () {
     Route::view('/', 'planos-flexibilizacao.index')->name('index');
     Route::view('/novo', 'planos-flexibilizacao.form')->name('form');
-    Route::view('/visualizar', 'planos-flexibilizacao.show')->name('show');
+    Route::get('/{id}/visualizar', static fn(int $id) => view("planos-flexibilizacao.show", ['plano-flexibilizacao' => PlanoFlexibilizacaoCurricular::find($id)]))->name('show');
 });
 
 Route::name('planos-trabalho.')->prefix('planos-trabalho')->group(function () {
@@ -66,11 +52,29 @@ Route::name('planos-trabalho.')->prefix('planos-trabalho')->group(function () {
     Route::view('/preenchimento', 'planos-trabalho.preenchimento')->name('preenchimento');
     Route::view('/previsualizacao', 'planos-trabalho.previsualizacao')->name('previsualizacao');
     Route::view('/revisao', 'planos-trabalho.revisao')->name('revisao');
-    Route::view('/visualizar', 'planos-trabalho.show')->name('show');
+    Route::get('/{id}/visualizar', static fn(int $id) => view("planos-trabalho.show", ['plano-trabalho' => PlanoTrabalhoEstudante::find($id)]))->name('show');
+});
+
+Route::name('atendimentos.')->prefix('atendimentos')->group(function () {
+    Route::view('/', 'atendimentos.index')->name('index');
+    Route::view('/novo', 'atendimentos.form')->name('form');
+    Route::get('/{id}/visualizar', static fn(int $id) => view("atendimentos.show", ['atendimento' => \App\Models\AtendimentoSemanal::find($id)]))->name('show');
 });
 
 Route::name('registro-auditoria.')->group(function () {
     Route::view('/registro-auditoria', 'registro-auditoria.index')->name('index');
+});
+
+Route::name('contas.')->prefix('contas')->group(function () {
+    Route::name('cnapne.')->prefix('cnapne')->group(function () {
+        Route::view('/', 'contas.cnapne.index')->name('index');
+        Route::view('/editar', 'contas.cnapne.form')->name('form');
+    });
+
+    Route::name('professor.')->prefix('professor')->group(function () {
+        Route::view('/', 'contas.professor.index')->name('index');
+        Route::view('/editar', 'contas.professor.form')->name('form');
+    });
 });
 
 Route::name('solicitacoes-registro.')->group(function () {

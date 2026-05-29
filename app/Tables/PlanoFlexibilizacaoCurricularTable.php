@@ -30,8 +30,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
 
         return [
             ListViewColumn::make('nomeEstudante')->label('Nome do estudante')->size("large"),
-            ListViewColumn::make('disciplina')->label('Componente curricular'),
-            ListViewColumn::make('curso')->label('Curso')->size('large'),
+            ListViewColumn::make('estudante.curso')->label('Curso')->size('large'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
         ];
     }
@@ -40,8 +39,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nomeEstudante')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('disciplina')->label('Componente curricular')->type('select')->options(Disciplina::all()->pluck('nome', 'id')->toArray())->equals(),
-            ListViewFilter::make('curso')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('estudante')->foreignKey('curso_id')->label('Curso')->size('large')->type('select')->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny'),
         ];
     }

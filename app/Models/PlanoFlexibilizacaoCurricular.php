@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PlanoFlexibilizacaoCurricular extends Model
@@ -13,37 +14,34 @@ class PlanoFlexibilizacaoCurricular extends Model
     protected $table = 'planos_flexibilizacao_curricular';
 
     protected $fillable = [
+        'periodo_inicio',
+        'periodo_fim',
         'campos',
         'estudante_id',
     ];
 
     protected $casts = [
         'campos' => 'array',
+        'periodo_inicio' => 'date',
+        'periodo_fim' => 'date',
     ];
+
+    public function getAnoAttribute(): string
+    {
+        return $this->periodo_inicio->format('Y');
+    }
 
     public function getNomeEstudanteAttribute()
     {
-        return $this->estudante ? $this->estudante->nome : 'Estudante Exemplo';
+        return $this->estudante->nome ?? 'Estudante Exemplo';
     }
 
-    public function getCursoAttribute()
+    public function getCursoAttribute() : string
     {
-        return $this->estudante && $this->estudante->cursoRelation ? $this->estudante->cursoRelation->nome : 'Engenharia de Software';
+        return $this->estudante->curso->nome;
     }
 
-    public function getDisciplinaAttribute()
-    {
-        $campos = is_string($this->campos) ? json_decode($this->campos, true) : $this->campos;
-        return $campos['disciplina'] ?? 'Português';
-    }
-
-    public function getAnoAttribute()
-    {
-        $campos = is_string($this->campos) ? json_decode($this->campos, true) : $this->campos;
-        return $campos['ano'] ?? 2026;
-    }
-
-    public function estudante()
+    public function estudante() : BelongsTo
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
     }

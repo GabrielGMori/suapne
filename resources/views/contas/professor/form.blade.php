@@ -8,12 +8,12 @@
                     <x-button label="Enviar arquivo" color="tertiary" icon="upload_file" iconPos="left"/>
                     <x-button label="Remover imagem" color="red"/>
                 </div>
-                <div class="gap-4">
-                    <livewire:form.input label="Nome" appearance="outlined"/>
-                    <livewire:form.select type="multiselect" label="Disciplinas" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
+                <div class="flex flex-col gap-4">
+                    <livewire:form.input label="Nome" appearance="outlined" disabled/>
+                    <livewire:form.input type="multiselect" label="Disciplinas" appearance="outlined" disabled />
                 </div>
                 <div>
-                    <livewire:form.input type="email" label="E-mail" appearance="outlined"/>
+                    <livewire:form.input type="email" label="E-mail" appearance="outlined" disabled/>
                 </div>
             </div>
         </div>
