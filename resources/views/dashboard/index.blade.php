@@ -1,4 +1,4 @@
-<x-layouts.main title="Olá, seja bem-vindo(a)!">
+<x-layouts.main title="Início" header="Olá, seja bem-vindo(a)!">
     <div class="grid grid-cols-2 gap-8 w-full">
         <div class="col-span-2 space-y-1">
             <div class="flex items-center gap-1">
@@ -14,7 +14,7 @@
 
         <div class="col-span-2 space-y-1">
             <div class="flex items-center gap-1">
-                @php($planos = \App\Models\PlanoTrabalhoEstudante::where('status', \App\Enums\StatusPlanoTrabalhoEnum::Pendente)->count())
+                @php($planos = \App\Models\PlanoTrabalhoEstudante::where('status', \App\Enums\StatusPlanoTrabalhoEnum::PENDENTE)->count())
                 @if($planos === 0)
                     <x-icon icon="check" class="text-primary-accent" size="45" label="Não há PTEs aguardando revisão no momento" />
                 @else
@@ -57,7 +57,7 @@
                         <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
                             <img src="{{asset($registroAcao->user->avatar)}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
                             <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
-                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::Edicao ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
+                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::EDICAO ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
                             <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link" href="{{route('registro-auditoria.index')}}" /></div>
                         </div>
                     @endforeach

@@ -44,9 +44,9 @@ class RegistroAcaoTable extends ListViewConfig
                     return $statusCache[$label] ??= view('components.status', [
                         'label' => $label,
                         'color' => match($item->tipo) {
-                            TipoRegistroAcaoEnum::Criacao => 'success',
-                            TipoRegistroAcaoEnum::Edicao => 'warning',
-                            TipoRegistroAcaoEnum::Exclusao => 'danger',
+                            TipoRegistroAcaoEnum::CRIACAO => 'success',
+                            TipoRegistroAcaoEnum::EDICAO => 'warning',
+                            TipoRegistroAcaoEnum::EXCLUSAO => 'danger',
                         },
                     ])->render();
                 }

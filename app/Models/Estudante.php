@@ -78,37 +78,37 @@ class Estudante extends Model
     {
         return $this->hasMany(Documento::class, 'estudante_id');
     }
-    
+
     public function entrevistaFamiliar()
     {
         return $this->hasOne(EntrevistaFamiliar::class, 'estudante_id');
     }
-    
+
     public function observacoes()
     {
         return $this->hasMany(ObservacaoEstudante::class, 'estudante_id');
     }
     public function getEntrevistaEstudanteAttribute()
     {
-        return $this->documentos()->where('tipo', TipoDocumentoEnum::Entrevista_Estudante)->first();
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::ENTREVISTA_ESTUDANTE)->first();
     }
     public function getLaudoAttribute()
     {
-        return $this->documentos()->where('tipo', TipoDocumentoEnum::Laudo)->first();
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->first();
     }
 
     public function getEstudoDeCasoAttribute()
     {
-        return $this->documentos()->where('tipo', TipoDocumentoEnum::Estudo_de_Caso)->first();
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::ESTUDO_DE_CASO)->first();
     }
 
     public function getFichaCpaeAttribute()
     {
-        return $this->documentos()->where('tipo', TipoDocumentoEnum::Ficha_CPAE)->first();
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::FICHA_CPAE)->first();
     }
 
     public function getOutrosDocumentosAttribute()
     {
-        return $this->documentos()->where('tipo', TipoDocumentoEnum::Documento)->get();
+        return $this->documentos()->where('tipo', TipoDocumentoEnum::DOCUMENTO)->get();
     }
 }

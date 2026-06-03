@@ -4,20 +4,20 @@ namespace App\Enums;
 
 enum TipoDocumentoEnum: string
 {
-    case Documento = 'Documento';
-    case Entrevista_Estudante = 'Entrevista_Estudante';
-    case Laudo = 'Laudo';
-    case Estudo_de_Caso = 'Estudo_de_Caso';
-    case Ficha_CPAE = 'Ficha_CPAE';
+    case DOCUMENTO = 'DOCUMENTO';
+    case ENTREVISTA_ESTUDANTE = 'ENTREVISTA_ESTUDANTE';
+    case LAUDO = 'LAUDO';
+    case ESTUDO_DE_CASO = 'ESTUDO_DE_CASO';
+    case FICHA_CPAE = 'FICHA_CPAE';
 
     public function label(): string
     {
         return match ($this) {
-            self::Documento => 'Documento',
-            self::Entrevista_Estudante => 'Entrevista do Estudante',
-            self::Laudo => 'Laudo',
-            self::Estudo_de_Caso => 'Estudo de Caso',
-            self::Ficha_CPAE => 'Ficha CPAE',
+            self::DOCUMENTO => 'Documento',
+            self::ENTREVISTA_ESTUDANTE => 'Entrevista do Estudante',
+            self::LAUDO => 'Laudo',
+            self::ESTUDO_DE_CASO => 'Estudo de Caso',
+            self::FICHA_CPAE => 'Ficha CPAE',
         };
     }
 

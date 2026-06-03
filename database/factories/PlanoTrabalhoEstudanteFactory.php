@@ -6,6 +6,7 @@ use App\Models\Disciplina;
 use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\User;
+use App\Enums\StatusPlanoTrabalhoEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -25,7 +26,7 @@ class PlanoTrabalhoEstudanteFactory extends Factory
         $disciplina = Disciplina::query()->inRandomOrder('')->first();
 
         return [
-            'status' => $this->faker->randomElement(['Pendente', 'Aguardando_revisao', 'Devolvido', 'Aprovado']),
+            'status' => $this->faker->randomElement([StatusPlanoTrabalhoEnum::PENDENTE->value, StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO->value, StatusPlanoTrabalhoEnum::DEVOLVIDO->value, StatusPlanoTrabalhoEnum::APROVADO->value]),
             'periodo_inicio' => $this->faker->date('2026-01-01', '2026-05-20'),
             'periodo_fim' => $this->faker->date('2025-10-01', '2025-12-31'),
             'campos' => [

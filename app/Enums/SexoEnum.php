@@ -4,14 +4,14 @@ namespace App\Enums;
 
 enum SexoEnum: string
 {
-    case Masculino = 'Masculino';
-    case Feminino = 'Feminino';
+    case MASCULINO = 'MASCULINO';
+    case FEMININO = 'FEMININO';
 
     public function label(): string
     {
         return match ($this) {
-            self::Masculino => 'Masculino',
-            self::Feminino => 'Feminino',
+            self::MASCULINO => 'Masculino',
+            self::FEMININO => 'Feminino',
         };
     }
 

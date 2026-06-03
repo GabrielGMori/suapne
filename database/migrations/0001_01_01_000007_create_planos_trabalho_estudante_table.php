@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
 
             $table->enum('status', [
-                'Pendente',
-                'Aguardando_revisao',
-                'Devolvido',
-                'Aprovado',
+                'PENDENTE',
+                'AGUARDANDO_REVISAO',
+                'DEVOLVIDO',
+                'APROVADO',
             ]);
 
             $table->date('periodo_inicio');

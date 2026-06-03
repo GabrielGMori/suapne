@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Estudante;
 use App\Models\RegistroAcao;
 use App\Models\User;
+use App\Enums\TipoRegistroAcaoEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,7 +24,7 @@ class RegistroAcaoFactory extends Factory
         $estudante = Estudante::query()->inRandomOrder('')->first();
 
         return [
-            'tipo' => $this->faker->randomElement(['Criacao', 'Edicao', 'Exclusao']),
+            'tipo' => $this->faker->randomElement([TipoRegistroAcaoEnum::CRIACAO->value, TipoRegistroAcaoEnum::EDICAO->value, TipoRegistroAcaoEnum::EXCLUSAO->value]),
             'estudante_id' => $estudante->id,
             'atributo' => 'situacao',
             'atributo_valor' => 'Formado',

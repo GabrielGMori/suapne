@@ -4,25 +4,25 @@ namespace App\Enums;
 
 enum TipoRegistroAcaoEnum: string
 {
-    case Criacao = 'Criacao';
-    case Edicao = 'Edicao';
-    case Exclusao = 'Exclusao';
+    case CRIACAO = 'CRIACAO';
+    case EDICAO = 'EDICAO';
+    case EXCLUSAO = 'EXCLUSAO';
 
     public function label(): string
     {
         return match ($this) {
-            self::Criacao => 'Criação',
-            self::Edicao => 'Edição',
-            self::Exclusao => 'Exclusão',
+            self::CRIACAO => 'Criação',
+            self::EDICAO => 'Edição',
+            self::EXCLUSAO => 'Exclusão',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::Criacao => 'primary',
-            self::Edicao => 'secondary',
-            self::Exclusao => 'danger',
+            self::CRIACAO => 'primary',
+            self::EDICAO => 'secondary',
+            self::EXCLUSAO => 'danger',
         };
     }
 

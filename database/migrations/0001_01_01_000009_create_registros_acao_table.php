@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
 
             $table->enum('tipo', [
-                'Criacao',
-                'Edicao',
-                'Exclusao',
+                'CRIACAO',
+                'EDICAO',
+                'EXCLUSAO',
             ]);
 
             $table->foreignId('estudante_id')

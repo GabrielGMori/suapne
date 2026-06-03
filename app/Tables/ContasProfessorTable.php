@@ -32,7 +32,7 @@ class ContasProfessorTable extends ListViewConfig
         return [
             ListViewColumn::make('name')->label('Nome do professor')->size('large'),
             ListViewColumn::make('email')->label('E-mail do professor')->size('large'),
-            ListViewColumn::make('disciplinas')->label('Disciplinas')
+            ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
             ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
                 'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
                 'label' => 'Disciplinas'

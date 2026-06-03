@@ -34,23 +34,23 @@ return new class extends Migration
             $table->string('cpf', 20);
 
             $table->enum('situacao', [
-                'Matriculado',
-                'Formado',
-                'Cancelado',
+                'MATRICULADO',
+                'FORMADO',
+                'CANCELADO',
             ]);
 
             $table->enum('sexo', [
-                'Masculino',
-                'Feminino',
+                'MASCULINO',
+                'FEMININO',
             ]);
 
             $table->enum('etnia', [
-                'Branca',
-                'Preta',
-                'Parda',
-                'Amarela',
-                'Indigena',
-                'Nao_declarada',
+                'BRANCA',
+                'PRETA',
+                'PARDA',
+                'AMARELA',
+                'INDIGENA',
+                'NAO_DECLARADA',
             ]);
 
             $table->string('nacionalidade', 45)->nullable();

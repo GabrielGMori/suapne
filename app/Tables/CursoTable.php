@@ -28,6 +28,7 @@ class CursoTable extends ListViewConfig
     {
         return [
             ListViewColumn::make('nome')->label('Nome do curso')->size("full"),
+            ListViewColumn::make('quantidade_periodos')->label('Quantidade de períodos')->size("medium"),
         ];
     }
 
@@ -35,6 +36,7 @@ class CursoTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do curso')->size('large'),
+            ListViewFilter::make('quantidade_periodos')->label('Quantidade de períodos')->size('small'),
         ];
     }
 

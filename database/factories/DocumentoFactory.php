@@ -21,18 +21,18 @@ class DocumentoFactory extends Factory
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
 
-        $disponiveis = [TipoDocumentoEnum::Documento];
-        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::Laudo)->exists()) {
-            $disponiveis[] = TipoDocumentoEnum::Laudo;
+        $disponiveis = [TipoDocumentoEnum::DOCUMENTO];
+        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->exists()) {
+            $disponiveis[] = TipoDocumentoEnum::LAUDO;
         }
-        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::Estudo_de_Caso)->exists()) {
-            $disponiveis[] = TipoDocumentoEnum::Estudo_de_Caso;
+        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::ESTUDO_DE_CASO)->exists()) {
+            $disponiveis[] = TipoDocumentoEnum::ESTUDO_DE_CASO;
         }
-        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::Entrevista_Estudante)->exists()) {
-            $disponiveis[] = TipoDocumentoEnum::Entrevista_Estudante;
+        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::ENTREVISTA_ESTUDANTE)->exists()) {
+            $disponiveis[] = TipoDocumentoEnum::ENTREVISTA_ESTUDANTE;
         }
-        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::Ficha_CPAE)->exists()) {
-            $disponiveis[] = TipoDocumentoEnum::Ficha_CPAE;
+        if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::FICHA_CPAE)->exists()) {
+            $disponiveis[] = TipoDocumentoEnum::FICHA_CPAE;
         }
 
         $tipo = $this->faker->randomElement($disponiveis);

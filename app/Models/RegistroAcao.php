@@ -41,9 +41,9 @@ class RegistroAcao extends Model
     public function getAcaoAttribute() : string
     {
         return match($this->tipo) {
-            TipoRegistroAcaoEnum::Criacao => "Registrou o estudante",
-            TipoRegistroAcaoEnum::Edicao => "Editou o campo $this->atributo",
-            TipoRegistroAcaoEnum::Exclusao => "Excluiu o estudante",
+            TipoRegistroAcaoEnum::CRIACAO => "Registrou o estudante",
+            TipoRegistroAcaoEnum::EDICAO => "Editou o campo $this->atributo",
+            TipoRegistroAcaoEnum::EXCLUSAO => "Excluiu o estudante",
         };
     }
 }

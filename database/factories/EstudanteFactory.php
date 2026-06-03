@@ -4,6 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Curso;
 use App\Models\Estudante;
+use App\Enums\SituacaoEstudanteEnum;
+use App\Enums\SexoEnum;
+use App\Enums\EtniaEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -31,21 +34,21 @@ class EstudanteFactory extends Factory
             'necessidades' => fake()->paragraph(),
             'cpf' => fake()->unique()->numerify('###.###.###-##'),
             'situacao' => fake()->randomElement([
-                'Matriculado',
-                'Formado',
-                'Cancelado'
+                SituacaoEstudanteEnum::MATRICULADO->value,
+                SituacaoEstudanteEnum::FORMADO->value,
+                SituacaoEstudanteEnum::CANCELADO->value
             ]),
             'sexo' => fake()->randomElement([
-                'Masculino',
-                'Feminino'
+                SexoEnum::MASCULINO->value,
+                SexoEnum::FEMININO->value
             ]),
             'etnia' => fake()->randomElement([
-                'Branca',
-                'Preta',
-                'Parda',
-                'Amarela',
-                'Indigena',
-                'Nao_declarada'
+                EtniaEnum::BRANCA->value,
+                EtniaEnum::PRETA->value,
+                EtniaEnum::PARDA->value,
+                EtniaEnum::AMARELA->value,
+                EtniaEnum::INDIGENA->value,
+                EtniaEnum::NAO_DECLARADA->value
             ]),
             'nacionalidade' => 'Brasileira',
             'naturalidade' => fake()->city(),

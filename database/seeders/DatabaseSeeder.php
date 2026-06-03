@@ -26,10 +26,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Curso::factory(20)->create();
-        Disciplina::factory(40)->create();
-        User::factory(15)->create();
-        Estudante::factory(7)->create();
+        $this->call([
+            CursoSeeder::class,
+            DisciplinaSeeder::class,
+            UserSeeder::class,
+            EstudanteSeeder::class,
+        ]);
+
         PlanoFlexibilizacaoCurricular::factory(5)->create();
         PlanoTrabalhoEstudante::factory(30)->create();
         AtendimentoSemanal::factory(30)->create();
@@ -38,11 +41,5 @@ class DatabaseSeeder extends Seeder
         Documento::factory(30)->create();
         EntrevistaFamiliar::factory(30)->create();
         ObservacaoEstudante::factory(30)->create();
-
-        User::factory()->create([
-            'nome' => 'Test User',
-            'email' => 'test@example.com',
-            'role' => 'DOCENTE_ESPECIAL',
-        ]);
     }
 }

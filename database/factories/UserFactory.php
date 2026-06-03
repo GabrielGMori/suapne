@@ -26,9 +26,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $nome = fake()->name();
+
         return [
-            'nome' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'nome' => $nome,
+            'email' => str_replace(' ', '.', trim(str_replace('.', '', strtolower($nome)))) . '@exemplo.com',
             'role' => fake()->randomElement(RoleEnum::cases()),
             'password' => static::$password ??= Hash::make('password'),
             'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode(fake()->userName()),
@@ -38,7 +40,6 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-
             if ($user->role !== RoleEnum::PROFESSOR_REGULAR) {
                 return;
             }

@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum SituacaoEstudanteEnum: string
 {
-    case Matriculado = 'Matriculado';
-    case Formado = 'Formado';
-    case Cancelado = 'Cancelado';
+    case MATRICULADO = 'MATRICULADO';
+    case FORMADO = 'FORMADO';
+    case CANCELADO = 'CANCELADO';
 
     public function label(): string
     {
         return match ($this) {
-            self::Matriculado => 'Matriculado',
-            self::Formado => 'Formado',
-            self::Cancelado => 'Cancelado',
+            self::MATRICULADO => 'Matriculado',
+            self::FORMADO => 'Formado',
+            self::CANCELADO => 'Cancelado',
         };
     }
 

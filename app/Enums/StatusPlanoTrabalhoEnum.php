@@ -4,38 +4,38 @@ namespace App\Enums;
 
 enum StatusPlanoTrabalhoEnum: string
 {
-    case Pendente = 'Pendente';
-    case Aguardando_revisao = 'Aguardando_revisao';
-    case Devolvido = 'Devolvido';
-    case Aprovado = 'Aprovado';
+    case PENDENTE = 'PENDENTE';
+    case AGUARDANDO_REVISAO = 'AGUARDANDO_REVISAO';
+    case DEVOLVIDO = 'DEVOLVIDO';
+    case APROVADO = 'APROVADO';
 
     public function label(): string
     {
         return match ($this) {
-            self::Pendente => 'Pendente',
-            self::Aguardando_revisao => 'Aguardando revisão',
-            self::Devolvido => 'Devolvido',
-            self::Aprovado => 'Aprovado',
+            self::PENDENTE => 'Pendente',
+            self::AGUARDANDO_REVISAO => 'Aguardando revisão',
+            self::DEVOLVIDO => 'Devolvido',
+            self::APROVADO => 'Aprovado',
         };
     }
 
     public function color() : string
     {
         return match ($this) {
-            self::Pendente => 'danger',
-            self::Aguardando_revisao => 'warning',
-            self::Devolvido => 'danger',
-            self::Aprovado => 'success',
+            self::PENDENTE => 'danger',
+            self::AGUARDANDO_REVISAO => 'warning',
+            self::DEVOLVIDO => 'danger',
+            self::APROVADO => 'success',
         };
     }
 
     public function badgeLabel() : string
     {
         return match ($this) {
-            self::Pendente => 'Pendente',
-            self::Aguardando_revisao => 'Aguardando',
-            self::Devolvido => 'Devolvido',
-            self::Aprovado => 'Aprovado',
+            self::PENDENTE => 'Pendente',
+            self::AGUARDANDO_REVISAO => 'Aguardando',
+            self::DEVOLVIDO => 'Devolvido',
+            self::APROVADO => 'Aprovado',
         };
     }
 
