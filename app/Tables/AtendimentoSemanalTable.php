@@ -41,8 +41,8 @@ class AtendimentoSemanalTable extends ListViewConfig
         return [
             ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante'),
             ListViewFilter::make('user')->foreignKey('nome')->label('Feito por')->size('small'),
-            ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('datetime')->size('small')->applyOperationWithKey('created_at','>='),
-            ListViewFilter::make('created_at_final')->label('Data final')->type('datetime')->size('small')->applyOperationWithKey('created_at','<='),
+            ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('created_at'),
+            ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('created_at'),
             ListViewFilter::make('local')->label('Local do atendimento')->size('small'),
         ];
     }

@@ -58,7 +58,7 @@
                             <img src="{{asset($registroAcao->user->avatar)}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
                             <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
                                 {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::Edicao ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
-                            <x-button icon="open_in_new" color="transparent" class="grow flex justify-end" type="link" href="{{route('registro-auditoria.index')}}" />
+                            <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link" href="{{route('registro-auditoria.index')}}" /></div>
                         </div>
                     @endforeach
                     <x-button label="Ver mais" height="small" color="tertiary" type="link" href="{{route('registro-auditoria.index')}}" />

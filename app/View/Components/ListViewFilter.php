@@ -3,9 +3,7 @@
 namespace App\View\Components;
 
 use Closure;
-use Illuminate\Support\Facades\Blade;
-
-use function PHPUnit\Framework\isArray;
+use Illuminate\Support\Carbon;
 
 class ListViewFilter implements \JsonSerializable
 {
@@ -125,6 +123,16 @@ class ListViewFilter implements \JsonSerializable
     public function includes(): static
     {
         return $this->applyOperation('like', fn($value) => "%{$value}%");
+    }
+
+    public function startingDateInterval(string $useKey)
+    {
+        return $this->applyOperationWithKey($useKey, '>=', fn($value) => Carbon::parse($value)->startOfDay());
+    }
+
+    public function endingDateInterval(string $useKey)
+    {
+        return $this->applyOperationWithKey($useKey, '<=', fn($value) => Carbon::parse($value)->endOfDay());
     }
 
     public function apply(mixed $query, mixed $value): void

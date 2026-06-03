@@ -83,14 +83,14 @@
         <div class="p-5">
             <p class="text-title-medium mb-2">Estudante</p>
             @if ($estudante->entrevistaEstudante)
-                <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="" icon="edit_note">
+                <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="#" icon="edit_note">
                     <x-slot:metadata>
                         <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                         <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add', ['id' => $estudante->id])}}" />
             @endif
             <p class="text-title-medium my-2">Familiar</p>
             @if ($estudante->entrevistaFamiliar)
@@ -110,48 +110,48 @@
         <div class="p-5">
             <p class="text-title-medium mb-2">Laudo</p>
             @if ($estudante->laudo)
-                <x-documento name="Laudo" actionIcon="download" actionUrl="">
+                <x-documento name="Laudo" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
                         <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                         <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add', ['id' => $estudante->id])}}" />
             @endif
             <p class="text-title-medium my-2">Estudo de Caso</p>
             @if ($estudante->estudoDeCaso)
-                <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="">
+                <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
                         <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                         <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add', ['id' => $estudante->id])}}" />
             @endif
             <p class="text-title-medium my-2">Ficha CPAE</p>
             @if ($estudante->fichaCpae)
-                <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="">
+                <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
                         <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                         <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add', ['id' => $estudante->id])}}" />
             @endif
             <p class="text-title-medium my-2">Outros</p>
                 <div class="flex flex-col gap-2">
                     @foreach ($estudante->outrosDocumentos as $documento)
-                        <x-documento name="{{ $documento->nome }}" actionIcon="download" actionUrl="">
+                        <x-documento name="{{ $documento->nome }}" actionIcon="download" actionUrl="#">
                             <x-slot:metadata>
                                 <p>Enviada  por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                                 <p>Data de envio: {{ $documento->created_at->format('d/m/Y') }}</p>
                             </x-slot:metadata>
                         </x-documento>
                     @endforeach
-                    <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add')}}" />
+                    <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.documentos.add', ['id' => $estudante->id])}}" />
                 </div>
         </div>
     </x-secao-expansivel>
