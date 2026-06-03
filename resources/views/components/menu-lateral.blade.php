@@ -36,10 +36,9 @@
         ];
     }
 
-    // Remover depois
-    $navItems = [...$navItems, $divider, $divider,
-        ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings'],
-    ];
+    // $navItems = [...$navItems, $divider, $divider,
+    //     ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings'],
+    // ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
     $navLinkClasses = 'w-full justify-start px-2

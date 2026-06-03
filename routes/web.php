@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/components-temp', 'components-temp')->name('components-temp');
-Route::view('/temp', 'temp')->name('temp');
+// Route::view('/components-temp', 'components-temp')->name('components-temp');
 
 Route::middleware('guest')->group(base_path('routes/auth.php'));
 
