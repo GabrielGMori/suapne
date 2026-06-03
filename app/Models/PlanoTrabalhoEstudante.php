@@ -15,6 +15,8 @@ class PlanoTrabalhoEstudante extends Model
 
     protected $fillable = [
         'status',
+        'periodo_inicio',
+        'periodo_fim',
         'campos',
         'estudante_id',
         'disciplina_id',
@@ -23,7 +25,9 @@ class PlanoTrabalhoEstudante extends Model
 
     protected $casts = [
         'campos' => 'array',
-        'status' => \App\Enums\StatusPlanoTrabalhoEnum::class,
+        'periodo_inicio' => 'date',
+        'periodo_fim' => 'date',
+        'status' => StatusPlanoTrabalhoEnum::class,
     ];
 
     public function estudante()
@@ -43,20 +47,13 @@ class PlanoTrabalhoEstudante extends Model
     }
 
     public function getCursoAttribute()
-{
-    return $this->estudante->curso;
-}
-
-/*
-public function getStatusAttribute()
     {
-        return match($this->tipo) {
-    StatusPlanoTrabalhoEnum::Pendente => "Registrou o estudante",
-    StatusPlanoTrabalhoEnum::Aprovado => "Aprovado",
-    StatusPlanoTrabalhoEnum::Aguardando_revisao => "Aguardando",
-    StatusPlanoTrabalhoEnum::Devolvido => "Devolvido",
-    default => "Não definido", 
-    };
-}*/
+        return $this->estudante->curso;
+    }
+
+    public function getAnoAttribute()
+    {
+        return $this->created_at->format('Y');
+    }
 }
 

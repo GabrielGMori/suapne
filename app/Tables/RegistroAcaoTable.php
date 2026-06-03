@@ -59,8 +59,8 @@ class RegistroAcaoTable extends ListViewConfig
         return [
             ListViewFilter::make('user')->foreignKey('nome')->label('Nome do autor'),
             ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante'),
-            ListViewFilter::make('created_at_start')->label('Data inicial')->size('small')->type('date')->applyOperationWithKey('created_at', '>='),
-            ListViewFilter::make('created_at_end')->label('Data final')->size('small')->type('date')->applyOperationWithKey('created_at', '<='),
+            ListViewFilter::make('created_at_start')->label('Data inicial')->size('small')->type('date')->startingDateInterval('created_at'),
+            ListViewFilter::make('created_at_end')->label('Data final')->size('small')->type('date')->endingDateInterval('created_at'),
             ListViewFilter::make('tipo')->label('Tipo de ação')->size('small')->type('multiselect')->options(TipoRegistroAcaoEnum::options()),
         ];
     }

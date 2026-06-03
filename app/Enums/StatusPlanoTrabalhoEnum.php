@@ -19,6 +19,26 @@ enum StatusPlanoTrabalhoEnum: string
         };
     }
 
+    public function color() : string
+    {
+        return match ($this) {
+            self::Pendente => 'danger',
+            self::Aguardando_revisao => 'warning',
+            self::Devolvido => 'danger',
+            self::Aprovado => 'success',
+        };
+    }
+
+    public function badgeLabel() : string
+    {
+        return match ($this) {
+            self::Pendente => 'Pendente',
+            self::Aguardando_revisao => 'Aguardando',
+            self::Devolvido => 'Devolvido',
+            self::Aprovado => 'Aprovado',
+        };
+    }
+
     public static function options(): array
     {
         $options = [];

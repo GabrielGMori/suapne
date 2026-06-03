@@ -31,16 +31,6 @@ class PlanoFlexibilizacaoCurricular extends Model
         return $this->periodo_inicio->format('Y');
     }
 
-    public function getNomeEstudanteAttribute()
-    {
-        return $this->estudante->nome ?? 'Estudante Exemplo';
-    }
-
-    public function getCursoAttribute() : string
-    {
-        return $this->estudante->curso->nome;
-    }
-
     public function estudante() : BelongsTo
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');

@@ -17,6 +17,15 @@ enum TipoRegistroAcaoEnum: string
         };
     }
 
+    public function color(): string
+    {
+        return match ($this) {
+            self::Criacao => 'primary',
+            self::Edicao => 'secondary',
+            self::Exclusao => 'danger',
+        };
+    }
+
     public static function options(): array
     {
         $options = [];

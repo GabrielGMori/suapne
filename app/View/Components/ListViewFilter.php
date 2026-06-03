@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 class ListViewFilter implements \JsonSerializable
 {
     private string $key;
+    private ?string $identifier = null;
     private ?string $label = null;
     private string $type = 'text';
     private string $size = 'medium';
@@ -79,17 +80,24 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
+    public function foreignKey(string $newKey): static
+    {
+        $this->foreignKey = $newKey;
+        return $this;
+    }
+
+    public function identifier(string $identifier): static
+    {
+        $this->identifier = $identifier;
+        return $this;
+    }
+
     public function applyUsing(Closure $closure): static
     {
         $this->applyUsing = $closure;
         return $this;
     }
 
-    public function foreignKey(string $key): static
-    {
-        $this->foreignKey = $key;
-        return $this;
-    }
 
     public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null) : static
     {
@@ -148,15 +156,16 @@ class ListViewFilter implements \JsonSerializable
         }
     }
 
-    public function isHidden() : bool { return $this->hidden; }
-    public function getKey(): string        { return $this->key; }
-    public function getLabel(): string      { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }
-    public function getType(): string       { return $this->type; }
-    public function getSize(): string       { return $this->size; }
-    public function getDefault(): mixed     { return $this->default; }
-    public function getOptions(): array     { return $this->options; }
+    public function isHidden() : bool         { return $this->hidden; }
+    public function getKey(): string          { return $this->key; }
+    public function getLabel(): string        { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }
+    public function getType(): string         { return $this->type; }
+    public function getSize(): string         { return $this->size; }
+    public function getDefault(): mixed       { return $this->default; }
+    public function getOptions(): array       { return $this->options; }
     public function getPlaceholder(): ?string { return $this->placeholder; }
-    public function isClearable(): bool { return $this->clearable; }
+    public function getIdentifier(): ?string  { return $this->identifier; }
+    public function isClearable(): bool       { return $this->clearable; }
 
     public function jsonSerialize(): array
     {

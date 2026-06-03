@@ -26,6 +26,8 @@ class PlanoTrabalhoEstudanteFactory extends Factory
 
         return [
             'status' => $this->faker->randomElement(['Pendente', 'Aguardando_revisao', 'Devolvido', 'Aprovado']),
+            'periodo_inicio' => $this->faker->date('2026-01-01', '2026-05-20'),
+            'periodo_fim' => $this->faker->date('2025-10-01', '2025-12-31'),
             'campos' => [
                 'objetivos' => $this->faker->paragraph(),
                 'metodologia' => $this->faker->paragraph(),

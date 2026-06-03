@@ -1,25 +1,27 @@
+@php($id = $filter->getIdentifier() ?? $filter->getKey())
+
 @if(in_array($filter->getType(), ['select', 'multiselect']))
     <livewire:form.select
-        :key="$prefix.$filter->getKey()"
+        :key="$prefix.$id"
         :type="$filter->getType()"
-        :name="$filter->getKey()"
+        :name="$id"
         :label="$filter->getLabel()"
         :options="$filter->getOptions()"
         :placeholder="$filter->getPlaceholder()"
         :clearable="$filter->isClearable()"
         :size="$filter->getSize()"
         appearance="outlined"
-        wire:model.live="filtersState.{{ $filter->getKey() }}"
+        wire:model.live.debounce.300ms="filtersStates.{{ $id }}"
     />
 @else
     <livewire:form.input
-        :key="$prefix.$filter->getKey()"
+        :key="$prefix.$id"
         :type="$filter->getType()"
-        :name="$filter->getKey()"
+        :name="$id"
         :label="$filter->getLabel()"
         :placeholder="$filter->getPlaceholder()"
         :size="$filter->getSize()"
         appearance="outlined"
-        wire:model.live.debounce.300ms="filtersState.{{ $filter->getKey() }}"
+        wire:model.live.debounce.300ms="filtersStates.{{ $id }}"
     />
 @endif

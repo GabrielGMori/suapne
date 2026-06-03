@@ -23,43 +23,42 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
     public function createUrl(): ?string { return route('planos-trabalho.form'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de trabalho do estudante foi encontrado'; }
-    public function icon(): string|\Closure { return "tune"; }
+    public function icon(): string|\Closure { return "assignment"; }
 
     public function columns(): array
     {
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large"),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante'),
             ListViewColumn::make('disciplina.nome')->label('Componente curricular'),
-            ListViewColumn::make('estudante.curso')->label('Curso')->size('large'),
+            ListViewColumn::make('estudante.curso')->label('Curso'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
-
-           /* ListViewColumn::make('status')->label('Status')->format(
-                function ($value, $item) use (&$statusCache) {
+            ListViewColumn::make('status')->label('Status')->size('small')->format(
+                function ($value) use (&$statusCache) {
                     $label = gettype($value) === 'string' ? $value : $value->label();
                     return $statusCache[$label] ??= view('components.status', [
-                        'label' => $label,
-                        'color' => match($item->tipo) {
-                            StatusPlanoTrabalhoEnum::Pendente => 'danger',
-                            StatusPlanoTrabalhoEnum::Aguardando_revisao => 'warning',
-                            StatusPlanoTrabalhoEnum::Aprovado => 'sucess',
-                            StatusPlanoTrabalhoEnum::Devolvido => 'warning',
-        
-                        },
+                        'label' => $value->badgeLabel(),
+                        'color' => $value->color(),
                     ])->render();
-                    }),*/
+                }
+            ),
         ];
 
-        
+
     }
 
     public function filters(): array
     {
         return [
-            ListViewFilter::make('estudante.nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('ano')->label('Ano')->size('tiny'),
-            
+            ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante')->size('large'),
+            ListViewFilter::make('disciplina_id')->label('Componente curricular')->size('large')->type('multiselect')
+                ->options(Disciplina::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('estudante')->foreignKey('curso_id')->identifier('estudanteCurso')->label('Curso')->size('large')->type('select')
+                ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('ano')->label('Ano')->size('tiny')
+                ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
+            ListViewFilter::make('status')->label('Status')->size('small')->type('select')->options(StatusPlanoTrabalhoEnum::options())->equals(),
         ];
     }
 
@@ -69,9 +68,9 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
             ListViewAction::make('#'),
         ];
 
-        
+
     }
 
-    
+
 
 }

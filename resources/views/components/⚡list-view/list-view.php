@@ -17,18 +17,18 @@ new class extends Component
     public ?string $createLabel = null;
 
     public int $perPage = 15;
-    public array $filtersState = [];
+    public array $filtersStates = [];
 
     protected function getConfigInstance(): ListViewConfig
     {
         return new ($this->config);
     }
 
-    private function buildDefaultFiltersState(): array
+    private function buildDefaultFiltersStates(): array
     {
         return collect($this->getConfigInstance()->filters())
             ->mapWithKeys(fn($filter) => [
-                ($filter->getKey()) => $filter->getDefault() ??
+                ($filter->getIdentifier() ?? $filter->getKey()) => $filter->getDefault() ??
                 (in_array($filter->getType(), ['select', 'multiselect']) ? [] : ''),
             ])
             ->toArray();
@@ -43,15 +43,15 @@ new class extends Component
         $this->createLabel  ??= $config->createLabel();
         $this->emptyMessage ??= $config->emptyMessage();
 
-        $this->filtersState = array_merge(
-            $this->buildDefaultFiltersState(),
-            $this->filtersState,
+        $this->filtersStates = array_merge(
+            $this->buildDefaultFiltersStates(),
+            $this->filtersStates,
         );
     }
 
     public function clearFilters(): void
     {
-        $this->filtersState = $this->buildDefaultFiltersState();
+        $this->filtersStates = $this->buildDefaultFiltersStates();
         $this->resetPage();
     }
 
@@ -71,7 +71,7 @@ new class extends Component
         $query = $config->query();
 
         foreach ($config->filters() as $filter) {
-            $value = $this->filtersState[$filter->getKey()] ?? null;
+            $value = $this->filtersStates[$filter->getIdentifier() ?? $filter->getKey()] ?? null;
 
             if ($value === null || $value === '' || (is_array($value) && empty($value))) {
                 continue;

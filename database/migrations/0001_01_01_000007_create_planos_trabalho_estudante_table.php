@@ -21,6 +21,9 @@ return new class extends Migration
                 'Aprovado',
             ]);
 
+            $table->date('periodo_inicio');
+            $table->date('periodo_fim');
+
             $table->json('campos');
 
             $table->timestamps();

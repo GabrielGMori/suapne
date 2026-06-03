@@ -17,6 +17,15 @@ enum StatusSolicitacaoRegistroEnum: string
         };
     }
 
+    public function color(): string
+    {
+        return match ($this) {
+            self::PENDENTE => 'warning',
+            self::ACEITA => 'success',
+            self::RECUSADA => 'danger',
+        };
+    }
+
     public static function options(): array
     {
         $options = [];
