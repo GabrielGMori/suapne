@@ -73,6 +73,10 @@
         @apply w-112.5;
     }
 
+    .form-control-xlarge {
+        @apply w-150;
+    }
+
     .form-control-full {
         @apply w-full;
     }

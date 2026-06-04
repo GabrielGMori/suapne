@@ -5,6 +5,7 @@ namespace App\Tables;
 use App\Enums\RoleEnum;
 use App\Models\Disciplina;
 use App\Models\User;
+use App\Models\Curso;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
@@ -45,8 +46,8 @@ class ContasProfessorTable extends ListViewConfig
         return [
             ListViewFilter::make('nome')->label('Nome do professor')->size('large'),
             ListViewFilter::make('email')->label('E-mail do professor')->size('large'),
-            ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('large')->type('multiselect')
-            ->options(Disciplina::all()->pluck('nome', 'id')->toArray())
+            ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('xlarge')->type('multiselect')
+            ->options(Disciplina::all()->pluck('nome', 'id')->mapWithKeys(fn($value, $key) => [$key => "$value - " . Disciplina::find($key)->curso->nome])->toArray()),
         ];
     }
 

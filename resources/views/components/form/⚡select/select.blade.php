@@ -37,12 +37,56 @@
                     return this.selected.map(v => ({ value: v, label: this.labelMap[v] ?? v }));
                 },
 
+                normalize(text) {
+                    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
+                },
+
+                fuzzyMatch(query, text) {
+                    query = this.normalize(query);
+                    text = this.normalize(text);
+
+                    let queryIndex = 0;
+
+                    for (let textIndex = 0; textIndex < text.length; textIndex++) {
+                        if (text[textIndex] === query[queryIndex]) {
+                            queryIndex++;
+                        }
+                        if (queryIndex === query.length) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+
+                scoreSearch(query, text) {
+                    query = this.normalize(query);
+                    text = this.normalize(text);
+
+                    if (text === query) return 1000;
+                    if (text.startsWith(query)) return 900;
+                    if (text.includes(query)) return 800 - text.indexOf(query);
+                    if (this.fuzzyMatch(query, text)) {
+                        let score = 500;
+                        let queryIndex = 0;
+
+                        for (let textIndex = 0; textIndex < text.length; textIndex++) {
+                            if (text[textIndex] === query[queryIndex]) {
+                                score -= textIndex;
+                                queryIndex++;
+                            }
+                        }
+                        return score;
+                    }
+                    return -1;
+                },
+
                 get displayOptions() {
-                    if (! this.searchQuery) return this.options;
-                    const q = this.searchQuery.toLowerCase();
-                    return this.options
-                        .filter(o => o.label.toLowerCase().includes(q))
-                        .sort((a, b) => a.label.toLowerCase().indexOf(q) - b.label.toLowerCase().indexOf(q));
+                    if (!this.searchQuery) return this.options;
+
+                    return this.options.map(option => ({option, score: this.scoreSearch(this.searchQuery, option.label)}))
+                        .filter(item => item.score >= 0)
+                        .sort((a, b) => b.score - a.score)
+                        .map(item => item.option);
                 },
 
                 isSelected(value) {
@@ -86,7 +130,22 @@
                 },
 
                 handleKeydown(e) {
-                    if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
+                    if (e.key === 'Backspace') {
+                        if (this.searchQuery.length > 0) {
+                            e.preventDefault();
+                            this.searchQuery = this.searchQuery.slice(0, -1);
+                            this.isOpen = true;
+                            clearTimeout(this.searchTimeout);
+                            if (this.searchQuery.length === 0) {
+                                this.resetNextType = true;
+                            } else {
+                                this.searchTimeout = setTimeout(() => {
+                                    this.resetNextType = true;
+                                }, 1000);
+                            }
+                        }
+                        return;
+                    } else if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
                         if (e.key === 'Escape') { this.isOpen = false; return; }
                         if (! this.isOpen) { e.preventDefault(); this.isOpen = true; return; }
                         e.preventDefault();
@@ -117,7 +176,9 @@
                 $watch('isOpen', v => {
                     if (! v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; }
                 });
-                $watch('searchQuery', () => { highlightedIndex = 0; });
+                $watch('searchQuery', () => {
+                    highlightedIndex = 0;
+                });
             "
             x-bind:aria-expanded="isOpen"
             x-on:keydown="handleKeydown"
@@ -167,6 +228,14 @@
                 role="listbox"
                 :aria-multiselectable="isMultiple"
             >
+                <div
+                    x-show="searchQuery"
+                    class="px-3 py-2 text-sm border-b bg-black/5"
+                >
+                    Pesquisando por:
+                    <span class="font-medium" x-text="searchQuery"></span>
+                </div>
+
                 <template x-if="displayOptions.length === 0">
                     <div class="select-option text-black/50 cursor-not-allowed" role="option" aria-disabled="true">
                         Sem resultados
