@@ -1,5 +1,6 @@
 <x-layouts.auth title="Login">
-    <x-auth-card title="Login" titleMargin="10" class="pb-13">
+    <x-auth-card title="Login" titleMargin="1" class="pb-13 max-w-150">
+        <p class="text-white text-center">O login com credenciais ainda não está disponível<br>Apenas clique em 'Acessar'</p>
 
         <div class="flex flex-col gap-1 mb-3">
             <livewire:form.input label="Nome:" disabled />

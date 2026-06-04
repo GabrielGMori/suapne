@@ -55,7 +55,7 @@ new class extends Component
         $this->resetPage();
     }
 
-    public function updatedFiltersState(): void
+    public function updatedFiltersStates(): void
     {
         $this->resetPage();
     }

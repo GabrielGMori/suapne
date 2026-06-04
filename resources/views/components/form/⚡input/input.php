@@ -66,7 +66,6 @@ new class extends Component
         }
 
         return match (true) {
-            $this->isTypePassword()    => 'Digite sua senha',
             $this->type === 'datetime' => 'DD/MM/AAAA 00:00',
             $this->type === 'date'     => 'DD/MM/AAAA',
             default                    => '',
