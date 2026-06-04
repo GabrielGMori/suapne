@@ -56,27 +56,31 @@
 
     <x-secao-expansivel title="Necessidades" class="mt-5">
         <p class="p-5">{{ $estudante->necessidades }}</p>
-        <header class="flex justify-between items-center px-5 py-3">
-            <p class="text-display-small">Observações</p>
-        </header>
-        <hr class="mx-4 text-on-surface">
 
-        @if (count($estudante->observacoes) > 0)
-            <div class="flex flex-col gap-5 my-3">
-                @foreach ($estudante->observacoes as $observacao)
-                    <div class="flex flex-col px-5">
-                        <div class="flex gap-1.5 items-center mb-0.5">
-                            <p class="text-title-small">{{ $observacao->user->nome }}</p>
-                            <p class="text-body-small text-secondary-accent">{{ $observacao->user->role->label() }}</p>
-                            <p class="text-body-small text-secondary-accent">{{ $observacao->created_at->format('d/m/Y H:i') }}</p>
-                        </div>
-                        <p class="text-body-medium">{{ $observacao->observacao }}</p>
+        <div x-data="{ expanded: true }" x-on:toggle-collapse.window="expanded = $event.detail.expand" class="p-2">
+            <header class="flex justify-between items-center px-5 py-3">
+                <p class="text-display-small">Observações</p>
+            </header>
+            <hr class="mx-4 text-on-surface">
+            <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+                @if (count($estudante->observacoes) > 0)
+                    <div class="flex flex-col gap-5 my-3">
+                        @foreach ($estudante->observacoes as $observacao)
+                            <div class="flex flex-col px-5">
+                                <div class="flex gap-1.5 items-center mb-0.5">
+                                    <p class="text-title-small">{{ $observacao->user->nome }}</p>
+                                    <p class="text-body-small text-secondary-accent">{{ $observacao->user->role->label() }}</p>
+                                    <p class="text-body-small text-secondary-accent">{{ $observacao->created_at->format('d/m/Y H:i') }}</p>
+                                </div>
+                                <p class="text-body-medium">{{ $observacao->observacao }}</p>
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
+                @else
+                    <p class="p-5">Nenhuma observação registrada</p>
+                @endif
             </div>
-        @else
-            <p class="p-5">Nenhuma observação registrada</p>
-        @endif
+        </div>
     </x-secao-expansivel>
 
     <x-secao-expansivel title="Entrevistas" class="mt-5">
@@ -187,14 +191,14 @@
                     $planosPorAno = $estudante->planosTrabalho->groupBy(fn($plano) => $plano->created_at->format('Y'))->sortKeysDesc();
                 @endphp
                 @foreach ($planosPorAno as $ano => $planos)
-                    <div x-data="{ yearExpanded: true }" x-on:toggle-collapse.window="yearExpanded = $event.detail.expand" class="p-2">
-                        <header class="flex justify-between items-center cursor-pointer select-none" x-on:click="yearExpanded = !yearExpanded">
+                    <div x-data="{ expanded: true }" x-on:toggle-collapse.window="expanded = $event.detail.expand" class="p-2">
+                        <header class="flex justify-between items-center cursor-pointer select-none" x-on:click="expanded = !expanded">
                             <p class="text-title-medium">{{ $ano }}</p>
                             <button type="button" class="flex items-center text-black hover:opacity-70 transition-opacity cursor-pointer">
-                                <x-icon icon="keyboard_arrow_down" size="30" class="transition-transform duration-200" x-bind:class="yearExpanded ? 'rotate-180' : ''" />
+                                <x-icon icon="keyboard_arrow_down" size="30" class="transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''" />
                             </button>
                         </header>
-                        <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="yearExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+                        <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
                             <div class="min-h-0 overflow-hidden flex flex-col gap-2 pt-3">
                                 @foreach ($planos as $plano)
                                     <x-documento name="PTE {{ $estudante->nome }} - {{ $plano->disciplina->nome }} - {{ $plano->created_at->format('Y') }}"

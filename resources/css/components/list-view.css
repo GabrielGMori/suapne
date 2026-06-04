@@ -23,11 +23,7 @@
         @apply bg-on-surface text-secondary flex items-center w-full rounded-3xl py-5;
     }
 
-    .list-view-item-data {
-        @apply flex items-center w-full;
-    }
-
-    .list-view-item-data>p {
+    .list-view-item>div {
         @apply text-center;
     }
 

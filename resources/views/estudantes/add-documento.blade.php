@@ -9,7 +9,7 @@
     <hr class="text-on-surface">
     <div class="flex flex-col gap-10 mt-10">
         <div class="flex">
-            <x-documento name="Entrevista com o estudante" icon="draft" actionIcon="download" class="grow">
+            <x-documento name="Documento a ser adicionado.pdf" icon="draft" actionIcon="download" class="grow">
                 <x-slot:metadata>
                     <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
                     <p>Data de envio: {{ now()->format('d/m/Y') }}</p>

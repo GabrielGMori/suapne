@@ -24,13 +24,13 @@ class RegistroAcaoFactory extends Factory
         $estudante = Estudante::query()->inRandomOrder('')->first();
 
         return [
-            'tipo' => $this->faker->randomElement([TipoRegistroAcaoEnum::CRIACAO->value, TipoRegistroAcaoEnum::EDICAO->value, TipoRegistroAcaoEnum::EXCLUSAO->value]),
+            'tipo' => $this->faker->randomElement(TipoRegistroAcaoEnum::cases()),
             'estudante_id' => $estudante->id,
-            'atributo' => 'situacao',
+            'user_id' => $user->id,
+            'atributo' => $estudante->getFillable()[array_rand($estudante->getFillable())],
             'atributo_valor' => 'Formado',
             'atributo_antigo_valor' => 'Matriculado',
             'atributo_tipo' => 'string',
-            'user_id' => $user->id,
         ];
     }
 }

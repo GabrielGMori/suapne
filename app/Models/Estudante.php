@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Curso;
+use App\Models\PlanoFlexibilizacaoCurricular;
+use App\Models\PlanoTrabalhoEstudante;
+use App\Models\AtendimentoSemanal;
+use App\Models\Documento;
+use App\Models\EntrevistaFamiliar;
+use App\Models\ObservacaoEstudante;
 class Estudante extends Model
 {
     use HasFactory;
@@ -39,6 +46,33 @@ class Estudante extends Model
         'avatar',
     ];
 
+    protected $readableFillable = [
+        'nome' => 'Nome',
+        'matricula' => 'Matrícula',
+        'ingresso_ano' => 'Ano de ingresso',
+        'ingresso_periodo' => 'Período de ingresso',
+        'periodo' => 'Período atual',
+        'email_pessoal' => 'Email pessoal',
+        'email_academico' => 'Email acadêmico',
+        'data_nascimento' => 'Data de nascimento',
+        'telefone' => 'Telefone',
+        'necessidades' => 'Necessidades',
+        'cpf' => 'CPF',
+        'situacao' => 'Situação',
+        'sexo' => 'Sexo',
+        'etnia' => 'Etnia',
+        'nacionalidade' => 'Nacionalidade',
+        'naturalidade' => 'Naturalidade',
+        'nome_pai' => 'Nome do pai',
+        'telefone_pai' => 'Telefone do pai',
+        'nome_mae' => 'Nome da mãe',
+        'telefone_mae' => 'Telefone da mãe',
+        'nome_responsavel' => 'Nome do responsável',
+        'telefone_responsavel' => 'Telefone do responsável',
+        'email_responsavel' => 'Email do responsável',
+        'curso_id' => 'Curso',
+    ];
+
     protected $casts = [
         'ingresso_ano' => 'integer',
         'ingresso_periodo' => 'integer',
@@ -48,6 +82,11 @@ class Estudante extends Model
         'sexo' => \App\Enums\SexoEnum::class,
         'etnia' => \App\Enums\EtniaEnum::class,
     ];
+
+    public function getReadableFillable(string $key): ?string
+    {
+        return $this->readableFillable[$key] ?? null;
+    }
 
     public function getAvatarAttribute($value)
     {

@@ -20,7 +20,7 @@ class SolicitacaoRegistroTable extends ListViewConfig
     public function title(): ?string { return 'Solicitações pendentes'; }
     public function emptyMessage(): string { return 'Nenhuma solicitação de registro foi encontrada.'; }
     public function perPage(): int { return 20; }
-    public function icon(): string|\Closure { return fn($item) => match ($item->role) {
+    public function icon(): string|\Closure { return static fn($item) => match ($item->role) {
         RoleEnum::TECNICO => 'server_person',
         default => 'person'
     }; }
@@ -29,13 +29,16 @@ class SolicitacaoRegistroTable extends ListViewConfig
     {
         return [
             ListViewColumn::make('nome')->label('Nome'),
-            ListViewColumn::make('email')->label('E-mail'),
-            ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label()),
-            ListViewColumn::make('disciplinas')->label('Disciplinas')
-            ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
-                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
-                'label' => 'Disciplinas'
-            ]) : '---'),
+            ListViewColumn::make('email')->label('E-mail')->size('large'),
+            ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label())->size('small'),
+            ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
+                ->format(fn($value) => $value->count() > 0
+                ? view('components.item-expansivel', [
+                    'items' => $value->map(fn($disciplina) => "$disciplina->nome - {$disciplina->curso->nome}")->toArray(),
+                    'label' => 'Disciplinas'
+                ])->render()
+                : '---'),
+            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i'))->size('tiny'),
         ];
     }
 
@@ -49,6 +52,8 @@ class SolicitacaoRegistroTable extends ListViewConfig
                 RoleEnum::PROFESSOR_REGULAR->value => RoleEnum::PROFESSOR_REGULAR->label(),
                 RoleEnum::TECNICO->value => RoleEnum::TECNICO->label()
             ])->equals(),
+            ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('created_at'),
+            ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('created_at'),
         ];
     }
 

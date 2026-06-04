@@ -26,14 +26,14 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $nome = fake()->name();
+        $nome = $this->faker->name();
 
         return [
             'nome' => $nome,
             'email' => str_replace(' ', '.', trim(str_replace('.', '', strtolower($nome)))) . '@exemplo.com',
-            'role' => fake()->randomElement(RoleEnum::cases()),
+            'role' => $this->faker->randomElement(RoleEnum::cases()),
             'password' => static::$password ??= Hash::make('password'),
-            'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode(fake()->userName()),
+            'avatar' => 'https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode($this->faker->userName()),
         ];
     }
 
@@ -46,7 +46,7 @@ class UserFactory extends Factory
 
             $disciplinas = Disciplina::query()
                 ->inRandomOrder('')
-                ->limit(rand(1, min(5, Disciplina::count(3))))
+                ->limit(random_int(1, min(5, Disciplina::count(3))))
                 ->pluck('id')
                 ->toArray();
 

@@ -24,9 +24,11 @@ class SolicitacaoRegistroFactory extends Factory
      */
     public function definition(): array
     {
+        $nome = $this->faker->name();
+
         return [
-            'nome' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'nome' => $nome,
+            'email' => str_replace(' ', '.', trim(str_replace('.', '', strtolower($nome)))) . '@exemplo.com',
             'password' => static::$password ??= Hash::make('password'),
             'role' => $this->faker->randomElement([RoleEnum::PROFESSOR_REGULAR, RoleEnum::TECNICO]),
             'status' => $this->faker->randomElement(StatusSolicitacaoRegistroEnum::cases()),
@@ -44,7 +46,7 @@ class SolicitacaoRegistroFactory extends Factory
             }
 
             $disciplinas = Disciplina::inRandomOrder()
-                ->limit(rand(1, 5))
+                ->limit(random_int(1, 5))
                 ->pluck('id');
 
             $solicitacaoRegistro->disciplinas()->attach($disciplinas);

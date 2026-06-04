@@ -23,7 +23,7 @@ class ObservacaoEstudanteFactory extends Factory
         $user = User::query()->inRandomOrder('')->first();
 
         return [
-            'observacao' => $this->faker->realText(),
+            'observacao' => 'O estudante apresentou dificuldade ao realizar uma atividade em grupo [Texto de exemplo]',
             'estudante_id' => $estudante->id,
             'user_id' => $user->id,
         ];

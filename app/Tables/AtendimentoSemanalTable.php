@@ -16,7 +16,7 @@ class AtendimentoSemanalTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return AtendimentoSemanal::query();
+        return AtendimentoSemanal::query()->orderBy('data', 'desc');
     }
     public function title(): ?string { return 'Atendimentos Semanais'; }
     public function createUrl(): ?string { return route('atendimentos.form'); }
@@ -31,19 +31,19 @@ class AtendimentoSemanalTable extends ListViewConfig
         return [
             ListViewColumn::make('estudante.nome')->label('Nome do estudante'),
             ListViewColumn::make('user.nome')->label('Feito por'),
-            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i')),
             ListViewColumn::make('local')->label('Local')->size("medium"),
+            ListViewColumn::make('data')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i')),
         ];
     }
 
     public function filters(): array
     {
         return [
-            ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante'),
-            ListViewFilter::make('user')->foreignKey('nome')->label('Feito por')->size('small'),
-            ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('created_at'),
-            ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('created_at'),
-            ListViewFilter::make('local')->label('Local do atendimento')->size('small'),
+            ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante')->size('large'),
+            ListViewFilter::make('user')->foreignKey('nome')->label('Feito por')->size('large'),
+            ListViewFilter::make('local')->label('Local do atendimento'),
+            ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('data'),
+            ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('data'),
         ];
     }
 

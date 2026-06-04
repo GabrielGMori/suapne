@@ -23,7 +23,7 @@ class PlanoTrabalhoEstudanteFactory extends Factory
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
         $user = User::query()->inRandomOrder('')->first();
-        $disciplina = Disciplina::query()->inRandomOrder('')->first();
+        $disciplina = Disciplina::query()->where('curso_id', $estudante->curso_id)->inRandomOrder('')->first();
 
         return [
             'status' => $this->faker->randomElement([StatusPlanoTrabalhoEnum::PENDENTE->value, StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO->value, StatusPlanoTrabalhoEnum::DEVOLVIDO->value, StatusPlanoTrabalhoEnum::APROVADO->value]),

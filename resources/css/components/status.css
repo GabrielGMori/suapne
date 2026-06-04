@@ -1,6 +1,6 @@
 @layer components {
     .badge {
-        @apply min-h-8 w-max rounded-lg text-center;
+        @apply min-h-8 w-max rounded-lg text-center text-nowrap;
     }
 
     .badge-filled {

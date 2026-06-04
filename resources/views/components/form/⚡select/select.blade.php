@@ -229,7 +229,7 @@
                 :aria-multiselectable="isMultiple"
             >
                 <div
-                    x-show="searchQuery"
+                    x-show="searchQuery.length > 0"
                     class="px-3 py-2 text-sm border-b bg-black/5"
                 >
                     Pesquisando por:

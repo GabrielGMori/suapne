@@ -28,9 +28,7 @@ class PlanoFlexibilizacaoCurricularFactory extends Factory
             'estudante_id' => $estudante->id,
             'periodo_inicio' => $this->faker->date('2026-01-01', '2026-05-20'),
             'periodo_fim' => $this->faker->date('2025-10-01', '2025-12-31'),
-            'campos' => [
-                'necessidades' => $this->faker->paragraph(),
-            ],
+            'campos' => [],
         ];
     }
 }

@@ -42,13 +42,13 @@ class ListViewColumn
 
     public function getLabel(): string  { return $this->label ?? Str::headline($this->key); }
     public function getSize(): string   { return $this->size; }
-    public function getFormattedValue(object $item): string|HtmlString    
-    { 
+    public function getFormattedValue(object $item): string|HtmlString
+    {
         $value = data_get($item, $this->key);
         if ($this->format) {
             $result = ($this->format)($value, $item);
             return $result instanceof HtmlString ? $result : new HtmlString($result);
         }
-        return e((string) $value);
+        return (string) $value;
     }
 }

@@ -17,7 +17,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoTrabalhoEstudante::query();
+        return PlanoTrabalhoEstudante::query()->orderBy('status', 'asc')->orderBy('periodo_inicio', 'desc');
     }
     public function title(): ?string { return 'Planos de Trabalho do Estudante'; }
     public function createUrl(): ?string { return route('planos-trabalho.form'); }
@@ -32,7 +32,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
         return [
             ListViewColumn::make('estudante.nome')->label('Nome do estudante'),
             ListViewColumn::make('disciplina.nome')->label('Componente curricular'),
-            ListViewColumn::make('estudante.curso')->label('Curso'),
+            ListViewColumn::make('disciplina.curso')->label('Curso'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
             ListViewColumn::make('status')->label('Status')->size('small')->format(
                 function ($value) use (&$statusCache) {
@@ -52,10 +52,8 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('disciplina_id')->label('Componente curricular')->size('large')->type('multiselect')
-                ->options(Disciplina::all()->pluck('nome', 'id')->toArray())->equals(),
-            ListViewFilter::make('estudante')->foreignKey('curso_id')->identifier('estudanteCurso')->label('Curso')->size('large')->type('select')
-                ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('disciplina_id')->label('Componente curricular')->size('xlarge')->type('multiselect')->equals()
+                ->options(Disciplina::all()->pluck('nome', 'id')->mapWithKeys(fn($value, $key) => [$key => "$value - " . Disciplina::find($key)->curso->nome])->toArray()),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('status')->label('Status')->size('small')->type('select')->options(StatusPlanoTrabalhoEnum::options())->equals(),

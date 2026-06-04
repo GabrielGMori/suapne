@@ -39,7 +39,7 @@ class DocumentoFactory extends Factory
 
         return [
             'tipo' => $tipo,
-            'nome' => $this->faker->words(3, true) . '.pdf',
+            'nome' => 'Documento do estudante.pdf',
             'path' => 'documentos/' . $this->faker->uuid() . '.pdf',
             'estudante_id' => $estudante->id,
         ];

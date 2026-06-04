@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\User;
+use App\Models\Estudante;
 class RegistroAcao extends Model
 {
     use HasFactory, SoftDeletes;
@@ -41,9 +43,9 @@ class RegistroAcao extends Model
     public function getAcaoAttribute() : string
     {
         return match($this->tipo) {
-            TipoRegistroAcaoEnum::CRIACAO => "Registrou o estudante",
-            TipoRegistroAcaoEnum::EDICAO => "Editou o campo $this->atributo",
-            TipoRegistroAcaoEnum::EXCLUSAO => "Excluiu o estudante",
+            TipoRegistroAcaoEnum::CRIACAO_ESTUDANTE => "Registrou o estudante",
+            TipoRegistroAcaoEnum::EDICAO_ESTUDANTE => "Editou o campo {$this->estudante->getReadableFillable($this->atributo)}",
+            TipoRegistroAcaoEnum::EXCLUSAO_ESTUDANTE => "Excluiu o estudante",
         };
     }
 }

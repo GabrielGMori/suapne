@@ -50,13 +50,11 @@
                             @endif
                         </div>
 
-                        <div class="list-view-item-data">
-                            @foreach ($columns as $column)
-                                <div class="list-view-size-{{ $column->getSize() }} text-center">
-                                    {{ $column->getFormattedValue($item) }}
-                                </div>
-                            @endforeach
-                        </div>
+                        @foreach ($columns as $column)
+                            <div class="list-view-size-{{ $column->getSize() }} text-center">
+                                {{ $column->getFormattedValue($item) }}
+                            </div>
+                        @endforeach
 
                         @if(count($actions) > 0)
                             <div class="min-w-40 text-center flex items-center justify-center gap-2">

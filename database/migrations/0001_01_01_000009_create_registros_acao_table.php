@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
 
             $table->enum('tipo', [
-                'CRIACAO',
-                'EDICAO',
-                'EXCLUSAO',
+                'CRIACAO_ESTUDANTE',
+                'EDICAO_ESTUDANTE',
+                'EXCLUSAO_ESTUDANTE',
+                'CRIACAO_DOCUMENTO',
+                'EXCLUSAO_DOCUMENTO',
             ]);
 
             $table->foreignId('estudante_id')
@@ -25,10 +27,10 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->string('atributo', 200);
-            $table->string('atributo_valor', 200);
-            $table->string('atributo_antigo_valor', 200);
-            $table->string('atributo_tipo', 200);
+            $table->string('atributo', 200)->nullable();
+            $table->string('atributo_valor', 200)->nullable();
+            $table->string('atributo_antigo_valor', 200)->nullable();
+            $table->string('atributo_tipo', 200)->nullable();
 
             $table->timestamps();
             $table->softDeletes();
