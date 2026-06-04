@@ -47,7 +47,7 @@ class DisciplinaTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(fn(Disciplina $item) => route('disciplinas.edit', ['id' => $item->id]))->icon('edit'),
+            ListViewAction::make(static fn(Disciplina $item) => route('disciplinas.edit', ['id' => $item->id]))->icon('edit'),
         ];
     }
 

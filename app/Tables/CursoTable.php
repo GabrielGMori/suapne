@@ -43,7 +43,7 @@ class CursoTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(fn(Curso $item) => route('cursos.edit', ['id' => $item->id]))->icon('edit'),
+            ListViewAction::make(static fn(Curso $item) => route('cursos.edit', ['id' => $item->id]))->icon('edit'),
         ];
     }
 

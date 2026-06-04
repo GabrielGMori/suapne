@@ -49,7 +49,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#'),
+            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['id' => $item->id])),
         ];
     }
 
