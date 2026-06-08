@@ -202,7 +202,7 @@
 
     <div class="{{ $dividerClasses }}"></div>
 
-    <nav class="flex flex-1 flex-col items-stretch overflow-y-scroll overflow-x-hidden py-2">
+    <nav class="flex flex-1 flex-col items-stretch overflow-x-hidden py-2">
         @foreach ($navItems as $item)
             @if ($item['divider'] ?? false)
                 <div class="{{ $dividerClasses }}"></div>

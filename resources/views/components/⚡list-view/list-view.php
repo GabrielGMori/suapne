@@ -16,7 +16,7 @@ new class extends Component
     public ?string $createUrl = null;
     public ?string $createLabel = null;
 
-    public int $perPage = 15;
+    public int $perPage = 10;
     public array $filtersStates = [];
 
     protected function getConfigInstance(): ListViewConfig
