@@ -19,7 +19,6 @@ class ContasCnapneTable extends ListViewConfig
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
     public function emptyMessage(): string { return 'Nenhuma conta da CNAPNE foi encontrada.'; }
-    public function perPage(): int { return 20; }
     public function imageIcon(): bool { return true; }
     public function icon(): string|\Closure { return fn($item) => $item->avatar
         ? asset($item->avatar)

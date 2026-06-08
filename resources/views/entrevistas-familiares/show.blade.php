@@ -2,7 +2,7 @@
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Identificação do Estudante</h2>
         <hr class="text-on-surface">
-        <livewire:form.input disabled type="date" label="Data da entrevista" appearance="outlined" size="small"/>
+        <livewire:form.input disabled type="date" label="Data da entrevista" appearance="outlined" size="small" />
         <hr class="text-on-surface">
         <p>Nome completo do estudante:</p>
         <p>Nome social:</p>
@@ -24,7 +24,8 @@
         <p>Email do pai:</p>
         <p>Email do responsável:</p>
         <hr class="text-on-surface">
-        <livewire:form.input disabled type="select" label="Pode ser chamado SAMU?" placeholder="Selecionar" appearance="outlined"/>
+        <livewire:form.input disabled type="select" label="Pode ser chamado SAMU?" placeholder="Selecionar"
+            appearance="outlined" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Identificação do curso</h2>
@@ -77,11 +78,13 @@
         <p>Já reprovou algum ano escolar? Qual? Motivo?:</p>
         <p>Áreas de conhecimento com as quais têm mais facilidade na escola:</p>
         <p>Áreas de conhecimento com as quais têm mais dificuldade na escola:</p>
-        <p>Trajetória escolar quanto a rendimentos, relacionamentos, adaptações, principais dificuldades e o que mais gostava (Antecedentes relevantes):</p>
+        <p>Trajetória escolar quanto a rendimentos, relacionamentos, adaptações, principais dificuldades e o que mais
+            gostava (Antecedentes relevantes):</p>
         <p>Frequentou educação infantil a partir de que idade?:</p>
         <p>Com quantos anos aprendeu a ler e escrever?:</p>
         <p>Quais os cursos extra-escolares que já fez?:</p>
-        <p>Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o atendimento?:</p>
+        <p>Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o
+            atendimento?:</p>
         <p>Foi necessária alguma Adaptação Curricular? Qual(is)?:</p>
         <p>Outras necessidades relatadas e/ou percebidas:</p>
         <p>Potencialidades do estudante. Em quais atividades se destaca? Na escola ou fora dela.:</p>
@@ -93,12 +96,14 @@
         <p>Doenças apresentadas?:</p>
         <p>Usou fraldas até que idade?:</p>
         <p>Até que idade fez uso de mamadeira, chupeta, outros recursos de segurança afetiva?:</p>
-        <p>Como foi o desenvolvimento da fala, do andar, alimentação e controle de esfíncteres (em que idade passou a ter independência nas atividades cotidianas)?:</p>
+        <p>Como foi o desenvolvimento da fala, do andar, alimentação e controle de esfíncteres (em que idade passou a
+            ter independência nas atividades cotidianas)?:</p>
         <p>As indicações de vacinação foram cumpridas? Se não, por quê?:</p>
         <p>Faz uso de medicamento?:</p>
         <p>Seletividade ou restrição alimentar?:</p>
         <p>Internamentos e cirurgias?:</p>
-        <p>Deficiência, Dificuldade, Transtorno ou Altas Habilidades (Diagnóstico e histórico do caso e atendimentos)?:</p>
+        <p>Deficiência, Dificuldade, Transtorno ou Altas Habilidades (Diagnóstico e histórico do caso e atendimentos)?:
+        </p>
         <p>Fez ou faz algum acompanhamento com profissional de Saúde externo?:</p>
         <hr class="text-on-surface">
         <p>Nome do fisioterapeuta?:</p>
@@ -136,10 +141,12 @@
         <p>Origem e histórico do caso e dos atendimentos:</p>
         <p>Faz uso de algum artefato para mobilidade? Qual(is)?:</p>
         <p>Há necessidade de adaptação de mobiliário? (carteira, rampas, apoio para pés, etc.):</p>
-        <p>É totalmente dependente para a locação na rampa, banheiros, sala de aula, laboratórios? Qual a necessidade?:</p>
+        <p>É totalmente dependente para a locação na rampa, banheiros, sala de aula, laboratórios? Qual a necessidade?:
+        </p>
         <p>Necessita de alguma adaptação para a utilização do computador? Qual?:</p>
         <p>Possui transporte para locomoção ao Campus? Necessita de auxílio para ingresso ao Campus?:</p>
-        <p>Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o atendimento?:</p>
+        <p>Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o
+            atendimento?:</p>
         <p>Foi necessária alguma Adaptação Curricular? Qual(is)?:</p>
         <p>Sistema linguístico utilizado pelo estudante(Oral, gestual, LIBRAS, outros):</p>
         <p>Recursos ou equipamentos de acessibilidade já usados pelo estudante:</p>
@@ -174,5 +181,9 @@
         <p>Quais recursos e/ou estratégias dificultam sua aprendizagem?:</p>
         <p>Em que área do conhecimento apresenta mais facilidade para aprender? Por quê?:</p>
         <p>Em que área do conhecimento percebe mais dificuldade para aprender? Por quê?:</p>
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['id' => $entrevista->estudante->id]) }}" color="tertiary" />
     </div>
 </x-layouts.main>

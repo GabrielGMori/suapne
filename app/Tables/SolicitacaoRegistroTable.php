@@ -19,7 +19,6 @@ class SolicitacaoRegistroTable extends ListViewConfig
 
     public function title(): ?string { return 'Solicitações pendentes'; }
     public function emptyMessage(): string { return 'Nenhuma solicitação de registro foi encontrada.'; }
-    public function perPage(): int { return 20; }
     public function icon(): string|\Closure { return static fn($item) => match ($item->role) {
         RoleEnum::TECNICO => 'server_person',
         default => 'person'

@@ -1,11 +1,12 @@
-<x-layouts.main title="Atendimento Semanal com {{$atendimento->estudante->nome}} - {{$atendimento->data->format('d/m/Y')}}">
+<x-layouts.main
+    title="Atendimento Semanal com {{ $atendimento->estudante->nome }} - {{ $atendimento->data->format('d/m/Y') }}">
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h3 class="text-title-large">Data do atendimento: {{$atendimento->data->format('d/m/Y H:i')}}</h3>
-            <h3 class="text-title-large">Feito por: {{$atendimento->user->nome}}</h3>
+            <h3 class="text-title-large">Data do atendimento: {{ $atendimento->data->format('d/m/Y H:i') }}</h3>
+            <h3 class="text-title-large">Feito por: {{ $atendimento->user->nome }}</h3>
         </div>
         <div class="flex justify-end">
-            <x-button label="Exportar como PDF" color="tertiary" icon="file_export"/>
+            <x-button label="Exportar como PDF" color="tertiary" icon="file_export" />
         </div>
     </div>
 
@@ -37,5 +38,9 @@
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
             <p>Observações do atendimento<br>...<br>... <br>...</p>
         </div>
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('atendimentos.index')  }}" color="tertiary" />
     </div>
 </x-layouts.main>

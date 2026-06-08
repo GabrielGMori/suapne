@@ -46,4 +46,8 @@
             <p>Informações adicionais<br>...<br>... <br>...</p>
         </div>
     </div>
+
+    <div class="flex justify-end gap-2">
+        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-flexibilizacao.index')  }}" color="tertiary" />
+    </div>
 </x-layouts.main>

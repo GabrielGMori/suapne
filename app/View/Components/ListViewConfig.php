@@ -13,7 +13,7 @@ abstract class ListViewConfig
     public function actions(): array { return []; }
     public function icon(): string|\Closure { return 'description'; }
     public function imageIcon(): bool { return false; }
-    public function perPage(): int { return 15; }
+    public function perPage(): int { return 10; }
     public function title(): ?string { return null; }
     public function createUrl(): ?string { return null; }
     public function createLabel(): ?string { return null; }

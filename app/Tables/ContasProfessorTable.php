@@ -20,7 +20,6 @@ class ContasProfessorTable extends ListViewConfig
 
     public function title(): ?string { return 'Professores registrados'; }
     public function emptyMessage(): string { return 'Nenhum professor foi encontrado.'; }
-    public function perPage(): int { return 20; }
     public function imageIcon(): bool { return true; }
     public function icon(): string|\Closure { return fn($item) => $item->avatar
             ? asset($item->avatar)
