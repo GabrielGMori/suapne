@@ -90,7 +90,7 @@
             @if ($estudante->entrevistaEstudante)
                 <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="#" icon="edit_note">
                     <x-slot:metadata>
-                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Enviada por: {{ $estudante->entrevistaEstudante->user->nome }}</p>
                         <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
@@ -101,7 +101,7 @@
             @if ($estudante->entrevistaFamiliar)
                 <x-documento name="Entrevista com familiar" actionUrl="{{route('estudantes.entrevistas-familiares.show', ['id' => $estudante->entrevistaFamiliar->id])}}" icon="edit_note">
                     <x-slot:metadata>
-                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
                         <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
@@ -117,7 +117,7 @@
             @if ($estudante->laudo)
                 <x-documento name="Laudo" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
-                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Enviada por: {{ $estudante->laudo->user->nome }}</p>
                         <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
@@ -128,7 +128,7 @@
             @if ($estudante->estudoDeCaso)
                 <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
-                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Enviada por: {{ $estudante->estudoDeCaso->user->nome }}</p>
                         <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
@@ -139,7 +139,7 @@
             @if ($estudante->fichaCpae)
                 <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="#">
                     <x-slot:metadata>
-                        <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                        <p>Enviada por: {{ $estudante->fichaCpae->user->nome }}</p>
                         <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
                     </x-slot:metadata>
                 </x-documento>
@@ -151,7 +151,7 @@
                     @foreach ($estudante->outrosDocumentos as $documento)
                         <x-documento name="{{ $documento->nome }}" actionIcon="download" actionUrl="#">
                             <x-slot:metadata>
-                                <p>Enviada  por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                                <p>Enviada  por: {{ $documento->user->nome }}</p>
                                 <p>Data de envio: {{ $documento->created_at->format('d/m/Y') }}</p>
                             </x-slot:metadata>
                         </x-documento>
@@ -165,10 +165,10 @@
         <div class="p-5 flex flex-col gap-2">
             @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
                 @foreach ($estudante->planosFlexibilizacaoCurricular as $plano)
-                    <x-documento name="Plano de Flexibilização Curricular {{ $estudante->nome }} - {{ $plano->ano }}"
+                    <x-documento name="{{ $plano->nome }}"
                         icon="tune" actionUrl="{{route('planos-flexibilizacao.show',  ['id' => $plano->id])}}">
                         <x-slot:metadata>
-                            <p>Criado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                            <p>Criado por: {{ $plano->user->nome }}</p>
                             <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                         </x-slot:metadata>
                     </x-documento>
@@ -202,11 +202,11 @@
                         <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
                             <div class="min-h-0 overflow-hidden flex flex-col gap-2 pt-3">
                                 @foreach ($planos as $plano)
-                                    <x-documento name="PTE {{ $estudante->nome }} - {{ $plano->disciplina->nome }} - {{ $plano->created_at->format('Y') }}"
+                                    <x-documento name="{{ $plano->nome }}"
                                         icon="assignment" actionUrl="{{route('planos-trabalho.show', ['id' => $plano->id])}}">
                                         <x-slot:metadata>
                                             <p>Status: {{ $plano->status->label() }}</p>
-                                            <p>Criado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                                            <p>Criado por: {{ $plano->user->nome }}</p>
                                             <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                                         </x-slot:metadata>
                                     </x-documento>
@@ -231,10 +231,10 @@
         <div class="p-5 flex flex-col gap-4">
             @if (count($estudante->atendimentosSemanais) > 0)
                 @foreach ($estudante->atendimentosSemanais as $atendimento)
-                    <x-documento name="Atendimento Semanal com {{ $estudante->nome }} - {{ $atendimento->created_at->format('d/m/Y') }}"
+                    <x-documento name="{{ $atendimento->nome }}"
                         icon="article_person" actionUrl="{{route('atendimentos.show',['id'=>$atendimento->id])}}">
                         <x-slot:metadata>
-                            <p>Realizado por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
+                            <p>Realizado por: {{ $atendimento->user->nome }}</p>
                             <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
                         </x-slot:metadata>
                     </x-documento>

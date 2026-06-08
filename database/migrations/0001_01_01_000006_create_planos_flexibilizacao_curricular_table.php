@@ -26,6 +26,11 @@ return new class extends Migration
                 ->constrained('estudantes')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('entrevistas_familiar', function (Blueprint $table) {
             $table->id();
 
+            $table->date('data');
+
             $table->json('campos');
 
             $table->timestamps();
@@ -21,6 +23,11 @@ return new class extends Migration
 
             $table->foreignId('estudante_id')
                 ->constrained('estudantes')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->foreignId('user_id')
+                ->constrained('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });

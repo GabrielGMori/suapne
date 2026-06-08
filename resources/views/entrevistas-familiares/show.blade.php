@@ -1,8 +1,6 @@
-<x-layouts.main title="Entrevista Escolar Familiar">
+<x-layouts.main title="Entrevista Escolar Familiar de {{ $entrevistaFamiliar->estudante->nome}}">
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Identificação do Estudante</h2>
-        <hr class="text-on-surface">
-        <livewire:form.input disabled type="date" label="Data da entrevista" appearance="outlined" size="small" />
         <hr class="text-on-surface">
         <p>Nome completo do estudante:</p>
         <p>Nome social:</p>
@@ -23,9 +21,6 @@
         <p>Email da mãe:</p>
         <p>Email do pai:</p>
         <p>Email do responsável:</p>
-        <hr class="text-on-surface">
-        <livewire:form.input disabled type="select" label="Pode ser chamado SAMU?" placeholder="Selecionar"
-            appearance="outlined" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Identificação do curso</h2>
@@ -184,6 +179,6 @@
     </div>
 
     <div class="flex justify-end gap-2">
-        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['id' => $entrevista->estudante->id]) }}" color="tertiary" />
+        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['id' => $entrevistaFamiliar->estudante->id]) }}" color="tertiary" />
     </div>
 </x-layouts.main>

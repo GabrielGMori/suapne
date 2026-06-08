@@ -35,4 +35,9 @@ class AtendimentoSemanal extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function getNomeAttribute() : string
+    {
+        return "Atendimento Semanal com {$this->estudante->nome} - {$this->data->format('d/m/Y')}";
+    }
 }

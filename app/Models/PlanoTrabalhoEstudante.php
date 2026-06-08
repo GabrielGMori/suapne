@@ -19,6 +19,7 @@ class PlanoTrabalhoEstudante extends Model
         'periodo_fim',
         'campos',
         'estudante_id',
+        'user_id',
         'disciplina_id',
         'user_professor_id',
     ];
@@ -33,6 +34,11 @@ class PlanoTrabalhoEstudante extends Model
     public function estudante()
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function disciplina()
@@ -54,6 +60,11 @@ class PlanoTrabalhoEstudante extends Model
     public function getAnoAttribute()
     {
         return $this->created_at->format('Y');
+    }
+
+    public function getNomeAttribute(): string
+    {
+        return "PTE de {$this->estudante->nome} - {$this->disciplina->nome} - {$this->periodo_inicio->year}";
     }
 }
 

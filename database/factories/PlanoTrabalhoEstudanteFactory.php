@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoleEnum;
 use App\Models\Disciplina;
 use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
@@ -23,18 +24,16 @@ class PlanoTrabalhoEstudanteFactory extends Factory
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
         $user = User::query()->inRandomOrder('')->first();
+        $professor = User::query()->where('funcao', RoleEnum::PROFESSOR_REGULAR)->inRandomOrder('')->first();
         $disciplina = Disciplina::query()->where('curso_id', $estudante->curso_id)->inRandomOrder('')->first();
 
         return [
             'status' => $this->faker->randomElement([StatusPlanoTrabalhoEnum::PENDENTE->value, StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO->value, StatusPlanoTrabalhoEnum::DEVOLVIDO->value, StatusPlanoTrabalhoEnum::APROVADO->value]),
             'periodo_inicio' => $this->faker->date('2026-01-01', '2026-05-20'),
             'periodo_fim' => $this->faker->date('2025-10-01', '2025-12-31'),
-            'campos' => [
-                'objetivos' => $this->faker->paragraph(),
-                'metodologia' => $this->faker->paragraph(),
-                'avaliacao' => $this->faker->paragraph(),
-            ],
+            'campos' => [],
             'estudante_id' => $estudante->id,
+            'user_id' => $user->id,
             'disciplina_id' => $disciplina->id,
             'user_professor_id' => $user->id,
         ];

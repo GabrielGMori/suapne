@@ -1,14 +1,14 @@
-<x-layouts.main title="Plano de Flexibilização Ricardo Borges 2026">
+<x-layouts.main title="{{ $planoFlexibilizacao->nome }}">
     <div class="flex items-center justify-between mb-5">
-        <h2 class="text-title-large">Período de realização: 08/02/2026 a 29/11/2026</h2>
+        <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
         <x-button label="Exportar como PDF" icon="file_export" color="tertiary"/>
     </div>
     <div class="flex flex-col bg-surface rounded-lg p-5 mb-5 mt-5">
-        <h2 class="text-display-small">1. Dados do estudante</h2>
-        <p>Nome: Ricardo Borges</p>
-        <p>Curso/Turma: Informática 4</p>
-        <p>Série/Ano: 4</p>
-        <p class="mb-5">Laudo: sim</p>
+        <h2 class="text-display-small mb-5">1. Dados do estudante</h2>
+        <p>Nome: {{ $planoFlexibilizacao->estudante->nome }}</p>
+        <p>Curso/Turma: {{ $planoFlexibilizacao->estudante->curso->nome }}</p>
+        <p>Série/Ano: {{ $planoFlexibilizacao->estudante->periodo }}</p>
+        <p class="mb-5">Laudo: {{ $planoFlexibilizacao->estudante->laudo !== null ? 'Sim' : 'Não' }}</p>
         <p>Necessidade educacional específica:</p>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5 mt-5">
             <p>Necessidade educacional específica <br>...<br>...<br>...</p>

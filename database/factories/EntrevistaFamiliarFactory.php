@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\EntrevistaFamiliar;
 use App\Models\Estudante;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,15 +20,13 @@ class EntrevistaFamiliarFactory extends Factory
     public function definition(): array
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder('')->first();
 
         return [
+            'data' => $this->faker->dateTimeBetween('-10 year', 'now'),
             'estudante_id' => $estudante->id,
-            'campos' => [
-                'data_entrevista' => $this->faker->date(),
-                'familiar_entrevistado' => $this->faker->name(),
-                'parentesco' => $this->faker->randomElement(['Pai', 'Mãe', 'Tio', 'Avô', 'Avó']),
-                'relato' => $this->faker->paragraph(),
-            ],
+            'user_id' => $user->id,
+            'campos' => [],
         ];
     }
 }

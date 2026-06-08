@@ -100,9 +100,9 @@ class Estudante extends Model
     }
 
     public function planosFlexibilizacaoCurricular()
-    {
-        return $this->hasMany(PlanoFlexibilizacaoCurricular::class, 'estudante_id');
-    }
+{
+    return $this->hasMany(PlanoFlexibilizacaoCurricular::class, 'estudante_id');
+}
 
     public function planosTrabalho()
     {

@@ -18,6 +18,7 @@ class PlanoFlexibilizacaoCurricular extends Model
         'periodo_fim',
         'campos',
         'estudante_id',
+        'user_id',
     ];
 
     protected $casts = [
@@ -34,5 +35,15 @@ class PlanoFlexibilizacaoCurricular extends Model
     public function estudante() : BelongsTo
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getNomeAttribute(): string
+    {
+        return "Plano de Flexibilização Curricular de {$this->estudante->nome} - {$this->periodo_inicio->year}";
     }
 }

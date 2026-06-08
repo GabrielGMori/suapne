@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\TipoDocumentoEnum;
 use App\Models\Documento;
 use App\Models\Estudante;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,7 @@ class DocumentoFactory extends Factory
     public function definition(): array
     {
         $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder('')->first();
 
         $disponiveis = [TipoDocumentoEnum::DOCUMENTO];
         if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->exists()) {
@@ -42,6 +44,7 @@ class DocumentoFactory extends Factory
             'nome' => 'Documento do estudante.pdf',
             'path' => 'documentos/' . $this->faker->uuid() . '.pdf',
             'estudante_id' => $estudante->id,
+            'user_id' => $user->id,
         ];
     }
 }

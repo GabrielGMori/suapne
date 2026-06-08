@@ -1,5 +1,4 @@
-<x-layouts.main
-    title="Atendimento Semanal com {{ $atendimento->estudante->nome }} - {{ $atendimento->data->format('d/m/Y') }}">
+<x-layouts.main title="{{ $atendimento->nome }}">
     <div class="flex items-center justify-between mb-5">
         <div>
             <h3 class="text-title-large">Data do atendimento: {{ $atendimento->data->format('d/m/Y H:i') }}</h3>
@@ -12,10 +11,10 @@
 
     <div class="flex flex-col bg-surface rounded-lg p-5 mb-5 mt-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
-        <p>Nome: Ricardo Borges</p>
-        <p>Curso/Turma: Informática 4</p>
-        <p>Idade: 17 anos</p>
-        <p class="mb-5">Local: CNAPNE-IFPR Campus Curitiba</p>
+        <p>Nome: {{$atendimento->estudante->nome}}</p>
+        <p>Curso/Turma: {{$atendimento->estudante->curso->nome}} {{$atendimento->estudante->periodo}}</p>
+        <p>Idade: {{ $atendimento->estudante->idade }} anos</p>
+        <p class="mb-5">Local: {{ $atendimento->local }}</p>
         <p>Perfil do Estudante:</p>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5 mt-5">
             <p>Perfil do estudante<br>...<br>... <br>...</p>

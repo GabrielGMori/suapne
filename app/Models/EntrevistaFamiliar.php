@@ -13,17 +13,25 @@ class EntrevistaFamiliar extends Model
     protected $table = 'entrevistas_familiar';
 
     protected $fillable = [
+        'data',
         'campos',
         'estudante_id',
+        'user_id',
     ];
 
     protected $casts = [
+        'data' => 'date',
         'campos' => 'array',
     ];
 
     public function estudante()
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function enviadoPor()

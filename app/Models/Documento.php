@@ -17,6 +17,7 @@ class Documento extends Model
         'nome',
         'path',
         'estudante_id',
+        'user_id',
     ];
 
     protected $casts = [
@@ -26,5 +27,10 @@ class Documento extends Model
     public function estudante()
     {
         return $this->belongsTo(Estudante::class, 'estudante_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
