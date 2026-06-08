@@ -5,7 +5,7 @@
         <livewire:form.input label="Nome do curso" appearance="outlined" size="large" disabled/>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ route('cursos.index') }}" color="red"/>
+        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('cursos.index') }}" color="red"/>
         <x-button label="Registrar (Em breve)" disabled/>
     </div>
 </x-layouts.main>

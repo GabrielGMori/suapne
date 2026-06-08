@@ -72,7 +72,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <x-button label="Voltar" type="link" href="{{ route('planos-trabalho.index') }}" color="tertiary" />
+                <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-trabalho.index')  }}" color="tertiary" />
                 @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
                     <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow" />
                 @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)

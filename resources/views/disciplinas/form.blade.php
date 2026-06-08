@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="flex justify-end gap-2">
-                <x-button label="Cancelar" type="link" href="{{ route('disciplinas.index') }}" color="red"/>
+                <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('disciplinas.index') }}" color="red"/>
                 <x-button label="Registrar (Em breve)" disabled/>
             </div>
         </div>

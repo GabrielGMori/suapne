@@ -19,7 +19,7 @@
         <livewire:form.input type="textarea" name="observacoes-outlined" appearance="outlined" size="full" disabled/>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ route('atendimentos.index') }}" color="red" disabled/>
+        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('atendimentos.index') }}" color="red" disabled/>
         <x-button label="Registrar (Em breve)" disabled/>
     </div>
 </x-layouts.main>

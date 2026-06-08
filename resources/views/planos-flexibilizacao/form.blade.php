@@ -32,7 +32,7 @@
             <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined" appearance="outlined" size="full"/>
         </div>
         <div class="flex justify-end gap-2">
-            <x-button label="Cancelar" type="link" href="{{ route('planos-flexibilizacao.index') }}" color="red"/>
+            <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-flexibilizacao.index') }}" color="red"/>
             <x-button label="Registrar (Em breve)" disabled/>
         </div>
     </div>
