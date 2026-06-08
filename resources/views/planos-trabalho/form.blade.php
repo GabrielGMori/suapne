@@ -47,7 +47,7 @@
 
          <div class="flex justify-end gap-2">
             <x-button label="Cancelar" color="red" type="link" href="{{ route('planos-trabalho.index') }}" />
-            <x-button label="Pré-visualização" color="tertiary" />
+            <x-button label="Pré-visualização" color="tertiary" type="link" href="{{ route('planos-trabalho.previsualizacao') }}" />
             <x-button label="Enviar para docentes (Em breve)" disabled />
         </div>
     </div>
