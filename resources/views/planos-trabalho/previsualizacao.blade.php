@@ -1,7 +1,9 @@
 <x-layouts.main title="PTE Ricardo Borges -Matematica III -2026">
     <div>
-        <h2 class="flex items-center gap-5 mb-5 text-display-small">Adaptação e/ou flexibilização curricular
-
+        
+            <h2 class="flex items-center gap-5 mb-5 text-display-small">Adaptação e/ou flexibilização curricular
+            <x-status label="Pré-visualização" :filled="false"/>
+        
             <h4>Período de realização: 08/02/2026 a 29/11/2026</h4>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">

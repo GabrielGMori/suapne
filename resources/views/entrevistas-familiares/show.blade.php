@@ -1,4 +1,10 @@
+
 <x-layouts.main title="Entrevista Escolar Familiar de {{ $entrevistaFamiliar->estudante->nome}}">
+    <div class="flex justify-between items-center mb-5">
+        <h2 class="text-title-large ">Data da entrevista: 30/03/2026</h2>
+        <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary"/>
+    </div>
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Identificação do Estudante</h2>
         <hr class="text-on-surface">
@@ -6,7 +12,7 @@
         <p>Nome social:</p>
         <hr class="text-on-surface">
         <p>Idade:</p>
-        <p>Dia da entrevista:</p>
+        <p>Dia de nascimento:</p>
         <hr class="text-on-surface">
         <p>Nome completo da mãe:</p>
         <p>Nome completo do pai:</p>
@@ -21,6 +27,9 @@
         <p>Email da mãe:</p>
         <p>Email do pai:</p>
         <p>Email do responsável:</p>
+        
+        <hr class="text-on-surface">
+        <p>Pode ser chamado SAMU?</p>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Identificação do curso</h2>
