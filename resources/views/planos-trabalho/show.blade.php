@@ -1,23 +1,25 @@
-<x-layouts.main title="PTE Ricardo Borges -Matematica III -2026">
+<x-layouts.main title="{{ $planoTrabalho->nome }}">
     <div>
         <div class="flex justify-between items-center">
             <div>
                 <h2 class="flex items-center gap-5 mb-5 text-display-small">Adaptação e/ou flexibilização curricular
-                <x-status label="Aprovado" color="success" :filled="false"/>
+                <x-status label="{{ $planoTrabalho->status->label() }}" color="{{ $planoTrabalho->status->color() }}" :filled="false"/>
             </div>
-            <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary"/>
+            @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
+                <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary"/>
+            @endif
         </div>
-            <h4>Período de realização: 08/02/2026 a 29/11/2026</h4>
+            <h4 class="mb-5">Período de realização: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }} a {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</h4>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">1. Dados do estudante</h2>
-                <p>Nome: Ricardo Borges</p>
-                <p>Curso/Turma: Informática 4</p>
-                <p>Série/Ano: 4</p>
-                <p>Componente curricular: Matemática III</p>
-                <p>Docente: José Muda</p>
+                <p>Nome: {{ $planoTrabalho->estudante->nome }}</p>
+                <p>Curso/Turma: {{ $planoTrabalho->estudante->curso->nome }}</p>
+                <p>Série/Ano: {{ $planoTrabalho->estudante->periodo }}</p>
+                <p>Componente curricular: {{ $planoTrabalho->disciplina->nome }}</p>
+                <p>Docente: {{ $planoTrabalho->professor->nome }}</p>
                 <p>Carga horária de atendimento individualizado (se necessário): ---</p>
-                <p>Dia/Horário/Local: 30/03/2026 15:30 CNAPNE</p>
+                <p>Dia/Horário/Local: {{ $planoTrabalho->created_at->format('d/m/Y h:i') }} CNAPNE</p>
 
                 <p>Necessidade educacional específica:</p>
                 <livewire:form.input disabled type="textarea" name="adaptacaopedagogica_outlined" appearance="outlined"
@@ -70,7 +72,14 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <x-button label="Devolver para retificação (em breve)" color="red" />
+                <x-button label="Voltar" type="link" href="{{ route('planos-trabalho.index') }}" color="tertiary" />
+                @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
+                    <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow" />
+                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)
+                    <x-button label="Devolver para retificação (em breve)" color="red" />
+                    <x-button label="Aprovar (em breve)" />
+                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
+                @endif
             </div>
     </div>
 </x-layouts.main>
