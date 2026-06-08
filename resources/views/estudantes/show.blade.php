@@ -15,7 +15,7 @@
                 <x-display-dado label="E-mail pessoal:" value="{{ $estudante->email_pessoal }}" />
                 <x-display-dado label="E-mail acadêmico:" value="{{ $estudante->email_academico }}" />
                 <x-display-dado label="Telefone:" value="{{ $estudante->telefone }}" />
-                <x-display-dado label="Data de nascimento:" value="{{ $estudante->data_nascimento }}" />
+                <x-display-dado label="Data de nascimento:" value="{{ $estudante->data_nascimento->format('d/m/Y') }}" />
             </div>
         </div>
 
@@ -23,6 +23,7 @@
             <div class="flex gap-20 justify-center items-center px-20">
                 <div class="min-w-50"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
+                    <x-display-dado label="Idade:" value="{{ $estudante->idade }}" />
                     <x-display-dado label="Situação acadêmica:" value="{{ $estudante->situacao->label() }}" />
                     <x-display-dado label="CPF:" value="{{ $estudante->cpf }}" />
                     <x-display-dado label="Nacionalidade:" value="{{ $estudante->nacionalidade }}" />

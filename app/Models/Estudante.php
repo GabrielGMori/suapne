@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TipoDocumentoEnum;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -149,5 +150,10 @@ class Estudante extends Model
     public function getOutrosDocumentosAttribute()
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::DOCUMENTO)->get();
+    }
+
+    public function getIdadeAttribute() : int
+    {
+        return now()->diff($this->data_nascimento)->y;
     }
 }
