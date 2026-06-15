@@ -40,7 +40,7 @@ Primeiro, crie a database. Você pode fazer isso com o seguinte comando modifica
 ```
 mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE <DB_DATABASE>;" # Cria a database no servidor MySQL
 ```
-Ou manualmente com o MySQL Workbench:
+Ou manualmente com um gerenciador de banco de dados, como o MySQL Workbench e PHPMyAdmin:
 ```
 CREATE DATABASE <DB_DATABASE> # Cria a database no servidor com nome igual a DB_DATABASE
 ```
