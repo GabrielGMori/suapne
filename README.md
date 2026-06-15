@@ -38,11 +38,11 @@ Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso nece
 
 Primeiro, crie a database. Você pode fazer isso com o seguinte comando modificando as váriaveis em "<>", mas apenas caso o `mysql.exe` (Normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) estiver em seu PATH:
 ```
-mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE <DB_DATABASE>;" # Cria a database no servidor MySQL
+mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE suapne_db;" # Cria a database "suapne_db" no servidor MySQL
 ```
 Ou manualmente com um gerenciador de banco de dados, como o MySQL Workbench e PHPMyAdmin:
 ```
-CREATE DATABASE <DB_DATABASE> # Cria a database no servidor com nome igual a DB_DATABASE
+CREATE DATABASE suapne_db # Cria a database no servidor com nome igual a DB_DATABASE
 ```
 Depois, execute:
 ```
