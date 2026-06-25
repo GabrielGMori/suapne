@@ -20,8 +20,8 @@ class DocumentoFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first();
-        $user = User::query()->inRandomOrder('')->first();
+        $estudante = Estudante::query()->inRandomOrder()->first();
+        $user = User::query()->inRandomOrder()->first();
 
         $disponiveis = [TipoDocumentoEnum::DOCUMENTO];
         if (! $estudante->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->exists()) {

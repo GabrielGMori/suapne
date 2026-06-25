@@ -22,10 +22,10 @@ class PlanoTrabalhoEstudanteFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first();
-        $user = User::query()->inRandomOrder('')->first();
-        $professor = User::query()->where('funcao', RoleEnum::PROFESSOR_REGULAR)->inRandomOrder('')->first();
-        $disciplina = Disciplina::query()->where('curso_id', $estudante->curso_id)->inRandomOrder('')->first();
+        $estudante = Estudante::query()->inRandomOrder()->first();
+        $user = User::query()->inRandomOrder()->first();
+        $professor = User::query()->where('funcao', RoleEnum::PROFESSOR_REGULAR)->inRandomOrder()->first();
+        $disciplina = Disciplina::query()->where('curso_id', $estudante->curso_id)->inRandomOrder()->first();
 
         return [
             'status' => $this->faker->randomElement([StatusPlanoTrabalhoEnum::PENDENTE->value, StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO->value, StatusPlanoTrabalhoEnum::DEVOLVIDO->value, StatusPlanoTrabalhoEnum::APROVADO->value]),

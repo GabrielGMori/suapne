@@ -20,8 +20,8 @@ class RegistroAcaoFactory extends Factory
      */
     public function definition(): array
     {
-        $user = User::query()->inRandomOrder('')->first();
-        $estudante = Estudante::query()->inRandomOrder('')->first();
+        $user = User::query()->inRandomOrder()->first();
+        $estudante = Estudante::query()->inRandomOrder()->first();
 
         return [
             'tipo' => $this->faker->randomElement(TipoRegistroAcaoEnum::cases()),

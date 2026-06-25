@@ -29,7 +29,7 @@
                 <div class="min-w-30 shrink-0"></div>
 
                 @foreach($columns as $i => $column)
-                    <p class="{{ $i == 0 ? 'border-l-2' : '' }} list-view-size-{{ $column->getSize() }}">{{ $column->getLabel() }}</p>
+                    <p class="{{ $i === 0 ? 'border-l-2' : '' }} list-view-size-{{ $column->getSize() }}">{{ $column->getLabel() }}</p>
                 @endforeach
 
                 @if(count($actions) > 0) <div class="min-w-40 shrink-0"></div> @endif
@@ -44,7 +44,7 @@
                             @endphp
 
                             @if ($imageIcon)
-                                <img class="h-16 rounded-[100%]" src="{{ $resolvedIcon }}">
+                                <img class="h-16 rounded-[100%]" src="{{ $resolvedIcon }}" alt="Ícone">
                             @else
                                 <x-icon class="w-full" size="40">{{ $resolvedIcon }}</x-icon>
                             @endif

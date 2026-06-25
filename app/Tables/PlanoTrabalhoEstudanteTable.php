@@ -17,7 +17,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoTrabalhoEstudante::query()->orderBy('status', 'asc')->orderBy('periodo_inicio', 'desc');
+        return PlanoTrabalhoEstudante::query()->orderBy('status')->orderBy('periodo_inicio', 'desc');
     }
     public function title(): ?string { return 'Planos de Trabalho do Estudante'; }
     public function createUrl(): ?string { return route('planos-trabalho.form'); }

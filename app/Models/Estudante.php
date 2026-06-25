@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use App\Enums\EtniaEnum;
+use App\Enums\SexoEnum;
+use App\Enums\SituacaoEstudanteEnum;
 use App\Enums\TipoDocumentoEnum;
-use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Collection;
 
-use App\Models\Curso;
-use App\Models\PlanoFlexibilizacaoCurricular;
-use App\Models\PlanoTrabalhoEstudante;
-use App\Models\AtendimentoSemanal;
-use App\Models\Documento;
-use App\Models\EntrevistaFamiliar;
-use App\Models\ObservacaoEstudante;
 class Estudante extends Model
 {
     use HasFactory;
@@ -47,7 +45,7 @@ class Estudante extends Model
         'avatar',
     ];
 
-    protected $readableFillable = [
+    protected array $readableFillable = [
         'nome' => 'Nome',
         'matricula' => 'Matrícula',
         'ingresso_ano' => 'Ano de ingresso',
@@ -79,9 +77,9 @@ class Estudante extends Model
         'ingresso_periodo' => 'integer',
         'periodo' => 'integer',
         'data_nascimento' => 'date',
-        'situacao' => \App\Enums\SituacaoEstudanteEnum::class,
-        'sexo' => \App\Enums\SexoEnum::class,
-        'etnia' => \App\Enums\EtniaEnum::class,
+        'situacao' => SituacaoEstudanteEnum::class,
+        'sexo' => SexoEnum::class,
+        'etnia' => EtniaEnum::class,
     ];
 
     public function getReadableFillable(string $key): ?string
@@ -89,65 +87,65 @@ class Estudante extends Model
         return $this->readableFillable[$key] ?? null;
     }
 
-    public function getAvatarAttribute($value)
+    public function getAvatarAttribute($value) : string
     {
         return $value ?: ('https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode($this->matricula ?? 'user'));
     }
 
-    public function curso()
+    public function curso() : BelongsTo
     {
         return $this->belongsTo(Curso::class, 'curso_id');
     }
 
-    public function planosFlexibilizacaoCurricular()
+    public function planosFlexibilizacaoCurricular() : HasMany
 {
     return $this->hasMany(PlanoFlexibilizacaoCurricular::class, 'estudante_id');
 }
 
-    public function planosTrabalho()
+    public function planosTrabalho() : HasMany
     {
         return $this->hasMany(PlanoTrabalhoEstudante::class, 'estudante_id');
     }
 
-    public function atendimentosSemanais()
+    public function atendimentosSemanais() : HasMany
     {
         return $this->hasMany(AtendimentoSemanal::class, 'estudante_id');
     }
 
-    public function documentos()
+    public function documentos() : HasMany
     {
         return $this->hasMany(Documento::class, 'estudante_id');
     }
 
-    public function entrevistaFamiliar()
+    public function entrevistaFamiliar() : HasOne
     {
         return $this->hasOne(EntrevistaFamiliar::class, 'estudante_id');
     }
 
-    public function observacoes()
+    public function observacoes() : HasMany
     {
         return $this->hasMany(ObservacaoEstudante::class, 'estudante_id');
     }
-    public function getEntrevistaEstudanteAttribute()
+    public function getEntrevistaEstudanteAttribute() : ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::ENTREVISTA_ESTUDANTE)->first();
     }
-    public function getLaudoAttribute()
+    public function getLaudoAttribute() : ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->first();
     }
 
-    public function getEstudoDeCasoAttribute()
+    public function getEstudoDeCasoAttribute() : ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::ESTUDO_DE_CASO)->first();
     }
 
-    public function getFichaCpaeAttribute()
+    public function getFichaCpaeAttribute() : ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::FICHA_CPAE)->first();
     }
 
-    public function getOutrosDocumentosAttribute()
+    public function getOutrosDocumentosAttribute() : Documento|Collection
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::DOCUMENTO)->get();
     }

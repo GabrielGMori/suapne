@@ -9,6 +9,7 @@ use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\AtendimentoSemanal;
 
@@ -22,7 +23,7 @@ class AtendimentoSemanalTable extends ListViewConfig
     public function createUrl(): ?string { return route('atendimentos.form'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum atendimento semanal foi encontrado'; }
-    public function icon(): string|\Closure { return "article_person"; }
+    public function icon(): string|Closure { return "article_person"; }
 
     public function columns(): array
     {

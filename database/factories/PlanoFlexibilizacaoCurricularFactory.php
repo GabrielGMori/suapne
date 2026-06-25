@@ -20,8 +20,8 @@ class PlanoFlexibilizacaoCurricularFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::inRandomOrder('')->first();
-        $user = User::inRandomOrder('')->first();
+        $estudante = Estudante::inRandomOrder()->first();
+        $user = User::inRandomOrder()->first();
 
         return [
             'estudante_id' => $estudante->id,

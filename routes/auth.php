@@ -1,10 +1,15 @@
 <?php
 
-Route::redirect('/', '/login');
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
-Route::view('/login', 'auth.login')->name('auth.login');
+Route::controller(LoginController::class)->group(function () {
+    Route::middleware('guest')->get('/login', 'index')->name('login.index');
+    Route::middleware('guest')->post('/login', 'login')->name('login');
+    Route::middleware('auth')->post('/logout', 'logout')->name('logout');
+});
 
-Route::name('auth.cadastro.')->prefix('cadastro')->group(function () {
+Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastro')->group(function () {
     Route::view('/', 'auth.cadastro.escolher')->name('index');
     Route::view('/professor', 'auth.cadastro.professor-regular')->name('professor');
     Route::view('/docente', 'auth.cadastro.docente-especial')->name('docente');

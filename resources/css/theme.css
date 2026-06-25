@@ -6,7 +6,7 @@
     --color-primary: #32643B;
     --color-primary-container: #244429;
     --color-primary-accent: #76B729;
-    
+
     --color-gradient: linear-gradient(135deg, #32643D 0%, #26452C 100%);
 
     --color-secondary: #262626;
@@ -23,6 +23,7 @@
     --color-success: #ADF59A;
     --color-warning: #F5E39A;
     --color-danger: #F59A9A;
+    --color-error: #fd4646;
     --color-info: #71cdf8;
 
     --color-black: #000000;

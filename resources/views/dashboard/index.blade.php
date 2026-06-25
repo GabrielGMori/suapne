@@ -1,5 +1,5 @@
-<x-layouts.main title="Início" header="Olá, seja bem-vindo(a)!">
-    <div class="grid grid-cols-2 gap-8 w-full">
+<x-layouts.main title="Início" header="Olá, {{auth()->user()->nome}}!">
+    <div class="grid grid-cols-2 gap-8 w-full mt-8">
         <div class="col-span-2 space-y-1">
             <div class="flex items-center gap-1">
                 @php($solicitacoes = \App\Models\SolicitacaoRegistro::count())

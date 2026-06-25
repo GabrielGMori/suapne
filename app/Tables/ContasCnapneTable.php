@@ -14,13 +14,13 @@ class ContasCnapneTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO], 'and', false);
+        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO]);
     }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
     public function emptyMessage(): string { return 'Nenhuma conta da CNAPNE foi encontrada.'; }
     public function imageIcon(): bool { return true; }
-    public function icon(): string|\Closure { return fn($item) => $item->avatar
+    public function icon(): string|\Closure { return static fn($item) => $item->avatar
         ? asset($item->avatar)
         : asset('storage/img/placeholder-user.png'); }
 

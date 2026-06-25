@@ -22,8 +22,8 @@
                 resetNextType: false,
                 highlightedIndex: 0,
                 selected: @entangle('selectedItems'),
-                options: @js($options),
-                isMultiple: @js($isMultiple),
+                options: @js($options, JSON_THROW_ON_ERROR),
+                isMultiple: @js($isMultiple, JSON_THROW_ON_ERROR),
 
                 get selectedSet() {
                     return new Set(this.selected);
@@ -195,8 +195,8 @@
                             <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
                                     <button type="button" class="select-chip-remove"
-                                        x-on:click.stop="removeOption(item.value)"
-                                        :aria-label="'Remover ' + item.label"
+                                            x-on:click.stop="removeOption(item.value)"
+                                            :aria-label="'Remover ' + item.label"
                                     >&times;</button>
                                     <span x-text="item.label" :title="item.label"></span>
                                 </span>
@@ -218,7 +218,8 @@
                 x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
                 x-on:click="clearSelections()"
                 aria-label="Limpar seleção"
-            >&times;</button>
+            >&times;
+            </button>
 
             <div
                 x-show="isOpen"
@@ -266,14 +267,14 @@
             @if ($submittedName !== '')
                 <template x-if="isMultiple">
                     <template x-for="val in selected" :key="val">
-                        <input type="hidden" name="{{ $submittedName }}" :value="val" />
+                        <input type="hidden" name="{{ $submittedName }}" :value="val"/>
                     </template>
                 </template>
             @endif
 
             @if ($name !== '')
                 <template x-if="!isMultiple && selected.length > 0">
-                    <input type="hidden" name="{{ $name }}" x-bind:value="selected[0]" />
+                    <input type="hidden" name="{{ $name }}" x-bind:value="selected[0]"/>
                 </template>
             @endif
 

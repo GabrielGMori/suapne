@@ -1,14 +1,14 @@
 @layer components {
     .form-field {
-        @apply flex flex-col gap-1;
+        @apply flex flex-col justify-stretch;
     }
 
     .form-label {
-        @apply inline w-full text-body-medium text-white;
+        @apply inline text-body-medium text-white;
     }
 
     .form-helper {
-        @apply text-label-small text-primary-accent w-full text-center;
+        @apply text-label-small text-primary-accent text-center mt-1;
     }
 
     .form-control-wrap {

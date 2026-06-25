@@ -20,7 +20,7 @@ class EstudanteTable extends ListViewConfig
 
     public function title(): ?string { return 'Estudantes registrados'; }
 
-    public function createUrl(): ?string { return route('estudantes.form'); }
+    public function createUrl(): ?string { return route('estudantes.create'); }
 
     public function createLabel(): ?string { return 'Registrar Novo'; }
 
@@ -72,7 +72,7 @@ class EstudanteTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(Estudante $item) => route('estudantes.show', ['id' => $item->id])),
+            ListViewAction::make(static fn(Estudante $item) => route('estudantes.show', ['estudante' => $item])),
         ];
     }
 }

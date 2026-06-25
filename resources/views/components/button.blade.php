@@ -23,7 +23,7 @@
     {{ $attributes->merge(['class' => "btn btn-$size btn-$color btn-$height"]) }}
     @if($onClick) x-on:click="{{ $onClick }}" @endif
 >
-    @if ($type == 'link') <a href="{{ $href }}"> @endif
+    @if ($type === 'link') <a href="{{ $href }}"> @endif
 
     @if ($icon && $iconPos === 'left')
         <x-icon size="{{ $iconSize }}">{{ $icon }}</x-icon>
@@ -37,5 +37,5 @@
         <x-icon size="{{ $iconSize }}">{{ $icon }}</x-icon>
     @endif
 
-    @if ($type == 'link') </a> @endif
+    @if ($type === 'link') </a> @endif
 </button>

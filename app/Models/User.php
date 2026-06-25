@@ -54,11 +54,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Disciplina::class);
     }
 
-    public function getAvatarAttribute($value)
-    {
-        return $value ?: ('https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode($this->email ?? 'user'));
-    }
-
     public function getNameAttribute()
     {
         return $this->nome;

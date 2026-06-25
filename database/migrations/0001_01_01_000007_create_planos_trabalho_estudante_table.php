@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('planos_trabalho_estudante', function (Blueprint $table) {
+        Schema::create('planos_trabalho_estudante', static function (Blueprint $table) {
             $table->id();
 
             $table->enum('status', [

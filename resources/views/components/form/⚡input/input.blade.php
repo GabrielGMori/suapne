@@ -4,7 +4,7 @@
     @endif
 
     <div class="form-control-wrap"
-        x-data="{ showPassword: false }"
+         x-data="{ showPassword: false }"
     >
         @if ($this->isTextarea())
             <textarea
@@ -31,15 +31,23 @@
             />
 
             @if ($this->isTypePassword())
-                <button type="button" class="form-password-toggle" aria-label="Mostrar senha" x-on:click="showPassword = !showPassword">
-                    <span class="material-symbols-outlined" x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
+                <button type="button" class="form-password-toggle" aria-label="Mostrar senha"
+                        x-on:click="showPassword = !showPassword">
+                    <span class="material-symbols-outlined"
+                          x-text="showPassword ? 'visibility_off' : 'visibility'"></span>
                 </button>
             @endif
         @endif
     </div>
 
+    <div class="h-5">
+        @error($name)
+        <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
+        @enderror
+    </div>
+
     @if ($type === 'password_forgot' && !$helper)
-        <a href="{{ route('auth.cadastro.enviado') }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
+        <a href="{{ route('cadastro.enviado') }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
     @elseif ($helper)
         <p class="form-helper">{{ $helper }}</p>
     @endif

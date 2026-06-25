@@ -18,7 +18,7 @@ class DisciplinaFactory extends Factory
      */
     public function definition(): array
     {
-        $curso = Curso::query()->inRandomOrder('')->first();
+        $curso = Curso::query()->inRandomOrder()->first();
 
         return [
             'nome' => $this->faker->words(3, true),

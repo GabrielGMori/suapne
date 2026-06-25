@@ -13,7 +13,9 @@ class EstudanteController extends Controller
      */
     public function index()
     {
-        //
+        $estudantes = Estudante::orderBy('nome')->paginate(10);
+
+        return view('estudantes.index', compact('estudantes'));
     }
 
     /**
@@ -21,7 +23,7 @@ class EstudanteController extends Controller
      */
     public function create()
     {
-        //
+        return view('estudantes.form');
     }
 
     /**
@@ -29,7 +31,9 @@ class EstudanteController extends Controller
      */
     public function store(StoreEstudanteRequest $request)
     {
-        //
+//        Estudante::create($request->validated());
+
+        return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
     }
 
     /**
@@ -37,7 +41,7 @@ class EstudanteController extends Controller
      */
     public function show(Estudante $estudante)
     {
-        //
+        return view('estudantes.show', compact('estudante'));
     }
 
     /**

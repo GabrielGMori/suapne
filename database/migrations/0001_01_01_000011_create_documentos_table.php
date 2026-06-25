@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TipoDocumentoEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documentos', function (Blueprint $table) {
+        Schema::create('documentos', static function (Blueprint $table) {
             $table->id();
 
-            $table->enum('tipo', \App\Enums\TipoDocumentoEnum::values());
+            $table->enum('tipo', TipoDocumentoEnum::values());
 
             $table->string('nome', 200);
             $table->string('path', 200);

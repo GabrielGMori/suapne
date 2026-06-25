@@ -2,9 +2,15 @@
 
 <x-layouts.app title="{{ $title }} - SUAPNE">
     <div class="flex flex-1">
-        <x-menu-lateral />
+        <x-menu-lateral/>
 
         <main class="flex-1 px-20 py-5 bg-{{$bg}} mb-20">
+            @if(session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <h2>{{ $header ?? $title }}</h2>
             <hr class="mt-3 mb-5 text-on-surface">
 
@@ -12,5 +18,5 @@
         </main>
     </div>
 
-    <x-footer />
+    <x-footer/>
 </x-layouts.app>

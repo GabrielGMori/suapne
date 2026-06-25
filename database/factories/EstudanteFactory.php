@@ -17,7 +17,7 @@ class EstudanteFactory extends Factory
 {
     public function definition(): array
     {
-        $curso = Curso::query()->inRandomOrder('')->first();
+        $curso = Curso::query()->inRandomOrder()->first();
         $nome = $this->faker->name();
         $matricula = $this->faker->unique()->numerify('202#####');
 
@@ -32,7 +32,7 @@ class EstudanteFactory extends Factory
             ),
             'email_pessoal' => str_replace(' ', '.', trim(str_replace('.', '', strtolower($nome)))) . '@exemplo.com',
             'email_academico' => str_replace(' ', '.', trim(str_replace('.', '', strtoupper($matricula)))) . '@estudantes.ifpr.edu.br',
-            'data_nascimento' => $this->faker->dateTimeBetween('-20 year', 'now'),
+            'data_nascimento' => $this->faker->dateTimeBetween('-20 year'),
             'telefone' => $this->faker->numerify('(##) 9####-####'),
             'necessidades' => "O aluno possui... [Texto de exemplo]",
             'cpf' => $this->faker->unique()->numerify('###.###.###-##'),

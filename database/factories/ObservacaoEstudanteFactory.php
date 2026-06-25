@@ -19,8 +19,8 @@ class ObservacaoEstudanteFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first();
-        $user = User::query()->inRandomOrder('')->first();
+        $estudante = Estudante::query()->inRandomOrder()->first();
+        $user = User::query()->inRandomOrder()->first();
 
         return [
             'observacao' => 'O estudante apresentou dificuldade ao realizar uma atividade em grupo [Texto de exemplo]',

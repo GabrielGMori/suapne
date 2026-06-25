@@ -19,11 +19,11 @@ class EntrevistaFamiliarFactory extends Factory
      */
     public function definition(): array
     {
-        $estudante = Estudante::query()->inRandomOrder('')->first();
-        $user = User::query()->inRandomOrder('')->first();
+        $estudante = Estudante::query()->inRandomOrder()->first();
+        $user = User::query()->inRandomOrder()->first();
 
         return [
-            'data' => $this->faker->dateTimeBetween('-10 year', 'now'),
+            'data' => $this->faker->dateTimeBetween('-10 year'),
             'estudante_id' => $estudante->id,
             'user_id' => $user->id,
             'campos' => [],

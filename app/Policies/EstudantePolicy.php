@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\Estudante;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -9,11 +10,21 @@ use Illuminate\Auth\Access\Response;
 class EstudantePolicy
 {
     /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($ability === 'forceDelete') {
+            return false;
+        }
+        return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
+    }
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +32,7 @@ class EstudantePolicy
      */
     public function view(User $user, Estudante $estudante): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +48,7 @@ class EstudantePolicy
      */
     public function update(User $user, Estudante $estudante): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
     /**

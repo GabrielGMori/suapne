@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\EstudanteController;
 use Illuminate\Support\Facades\Route;
 
-Route::name('estudantes.')->prefix('estudantes')->group(function () {
-    Route::view('/', 'estudantes.index')->name('index');
-    Route::view('/form', 'estudantes.form')->name('form');
-    Route::get("/{id}/visualizar", static fn($id) => view("estudantes.show", ['estudante' => App\Models\Estudante::findOrFail($id)]))->name('show');
+Route::resource('estudantes', EstudanteController::class);
 
+Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::name('documentos.')->prefix("/{id}/documentos")->group(function () {
         Route::get("/adicionar", static fn($id) => view('estudantes.add-documento', ['estudante' => App\Models\Estudante::findOrFail($id)]))->name('add');
     });

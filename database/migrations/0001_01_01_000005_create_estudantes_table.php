@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estudantes', function (Blueprint $table) {
+        Schema::create('estudantes', static function (Blueprint $table) {
             $table->id();
 
             $table->string('nome', 200);
             $table->string('matricula', 50);
 
-            $table->smallInteger('ingresso_ano');
+            $table->string('cpf', 20);
 
+            $table->smallInteger('ingresso_ano');
             $table->tinyInteger('ingresso_periodo');
             $table->tinyInteger('periodo');
 
-            $table->string('email_pessoal', 200)->nullable();
-            $table->string('email_academico', 200);
+            $table->string('email_pessoal', 255)->nullable();
+            $table->string('email_academico', 255);
 
             $table->date('data_nascimento');
 
@@ -31,7 +32,6 @@ return new class extends Migration
 
             $table->text('necessidades');
 
-            $table->string('cpf', 20);
 
             $table->enum('situacao', [
                 'MATRICULADO',
@@ -57,14 +57,14 @@ return new class extends Migration
             $table->string('naturalidade', 45)->nullable();
 
             $table->string('nome_pai', 200);
-            $table->string('telefone_pai', 200)->nullable();
+            $table->string('telefone_pai', 20)->nullable();
 
             $table->string('nome_mae', 200);
-            $table->string('telefone_mae', 200)->nullable();
+            $table->string('telefone_mae', 20)->nullable();
 
             $table->string('nome_responsavel', 200);
-            $table->string('telefone_responsavel', 200)->nullable();
-            $table->string('email_responsavel', 200)->nullable();
+            $table->string('telefone_responsavel', 20)->nullable();
+            $table->string('email_responsavel', 255)->nullable();
 
             $table->string('avatar', 255)->nullable();
 

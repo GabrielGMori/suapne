@@ -36,12 +36,13 @@
         ];
     }
 
-    // $navItems = [...$navItems, $divider, $divider,
-    //     ['label' => 'ComponentsTemp', 'href' => route('components-temp'), 'icon' => 'settings'],
-    // ];
+     $navItems = [...$navItems,
+         $divider,
+         ['label' => 'Sair', 'href' => route('logout'), 'icon' => 'logout', 'red' => true, 'method' => 'POST'],
+     ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
-    $navLinkClasses = 'w-full justify-start px-2
+    $navLinkClasses = 'w-full justify-start px-2 cursor-pointer
     flex items-center min-h-10 gap-3 overflow-hidden rounded-lg
     text-label-small text-on-surface
     hover:bg-white/5 hover:text-white
@@ -179,24 +180,25 @@
        data-sidebar-logo-link
        class="h-25 group-data-[expanded=false]/sidebar:h-18 flex items-center justify-center py-3 transition-[height] duration-300">
         <div data-sidebar-logo-wrapper
-            class="w-full group-data-[expanded=false]/sidebar:w-10 relative flex items-center justify-center h-16 transition-[width] duration-300 ease-in-out">
+             class="w-full group-data-[expanded=false]/sidebar:w-10 relative flex items-center justify-center h-16 transition-[width] duration-300 ease-in-out">
             <img data-sidebar-logo-full
-                class="opacity-100 scale-100 group-data-[expanded=false]/sidebar:opacity-0 group-data-[expanded=false]/sidebar:scale-75 group-data-[expanded=false]/sidebar:pointer-events-none absolute h-16 max-w-none shrink-0 transition-all duration-300 object-contain"
-                src="{{ asset('storage/img/logo-cnapne.png') }}" alt="CNAPNE">
+                 class="opacity-100 scale-100 group-data-[expanded=false]/sidebar:opacity-0 group-data-[expanded=false]/sidebar:scale-75 group-data-[expanded=false]/sidebar:pointer-events-none absolute h-16 max-w-none shrink-0 transition-all duration-300 object-contain"
+                 src="{{ asset('storage/img/logo-cnapne.png') }}" alt="CNAPNE">
             <img data-sidebar-logo-icon
-                class="opacity-0 scale-75 pointer-events-none group-data-[expanded=false]/sidebar:opacity-100 group-data-[expanded=false]/sidebar:scale-100 group-data-[expanded=false]/sidebar:pointer-events-auto absolute h-10 w-10 shrink-0 transition-all duration-300 object-contain"
-                src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}" alt="CNAPNE">
+                 class="opacity-0 scale-75 pointer-events-none group-data-[expanded=false]/sidebar:opacity-100 group-data-[expanded=false]/sidebar:scale-100 group-data-[expanded=false]/sidebar:pointer-events-auto absolute h-10 w-10 shrink-0 transition-all duration-300 object-contain"
+                 src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}" alt="CNAPNE">
         </div>
     </a>
 
     <div class="flex justify-center py-2">
         <a href="#"
-            data-sidebar-account
-            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
-            title="{{ $user ?? 'Minha conta' }}">
+           data-sidebar-account
+           class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
+           title="{{ $user ?? 'Minha conta' }}">
             <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
-                class="h-10 w-10 object-cover rounded-full shrink-0">
-            <span data-sidebar-label x-show="!collapsed" class="text-label-medium truncate">{{ $user ?? 'Minha conta' }}</span>
+                 class="h-10 w-10 object-cover rounded-full shrink-0">
+            <span data-sidebar-label x-show="!collapsed"
+                  class="text-label-medium truncate">{{ $user ?? 'Minha conta' }}</span>
         </a>
     </div>
 
@@ -209,34 +211,38 @@
                 @continue
             @endif
 
-            <a href="{{ $item['href'] ?? '#' }}" draggable="false"
-                data-sidebar-compact-link
-                title="{{ $item['label'] }}"
-                class="{{ $navLinkClasses }}">
+            @if(($item['method'] ?? 'GET') !== 'GET')
+                <form action="{{ $item['href'] ?? '#' }}" method="{{$item['method']}}" draggable="false"
+                      data-sidebar-compact-link>
+                    @csrf
+                    <button type="submit" title="{{ $item['label'] }}" class="{{ $navLinkClasses }}">
+            @else
+                <a href="{{ $item['href'] ?? '#' }}" draggable="false"
+                   data-sidebar-compact-link
+                   title="{{ $item['label'] }}"
+                   class="{{ $navLinkClasses }}">
+            @endif
                 @if (isset($item['icon']))
-                    <x-icon class="text-primary group-hover:text-primary-accent shrink-0" size="24">{{ $item['icon'] }}</x-icon>
+                    <x-icon
+                        class="{{($item['red'] ?? false) ? 'text-red group-hover:text-error pl-1' : 'text-primary group-hover:text-primary-accent'}} shrink-0"
+                        size="24">{{ $item['icon'] }}</x-icon>
                 @endif
                 <span data-sidebar-label x-show="!collapsed" class="truncate">
                     {{ $item['label'] }}
                 </span>
-            </a>
+            @if(($item['method'] ?? 'GET') !== 'GET')
+                    </button>
+                </form>
+            @else
+                </a>
+            @endif
         @endforeach
-
-        <div class="{{ $dividerClasses }}"></div>
-
-        <a href="{{ route('auth.login') }}" draggable="false"
-            data-sidebar-compact-link
-            x-bind:title="collapsed ? 'Sair' : ''"
-            class="{{ $navLinkClasses }}">
-            <x-icon class="text-red group-hover:text-error shrink-0 pl-1" size="24">logout</x-icon>
-            <span data-sidebar-label x-show="!collapsed" class="truncate">Sair</span>
-        </a>
     </nav>
 
     <div class="mt-auto flex justify-center py-2">
         <button x-on:click="toggleMenu()"
-            data-sidebar-compact-link
-            class="w-full cursor-pointer justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 rounded-lg text-white hover:bg-white/5 transition-[width,padding,background-color] duration-300 ease-in-out overflow-hidden whitespace-nowrap">
+                data-sidebar-compact-link
+                class="w-full cursor-pointer justify-start px-2 group-data-[expanded=false]/sidebar:px-2.5 group-data-[compact=true]/sidebar:w-10! group-data-[compact=true]/sidebar:aspect-square! group-data-[compact=true]/sidebar:justify-center! group-data-[compact=true]/sidebar:px-0! group-data-[compact=true]/sidebar:mx-auto! flex items-center h-10 gap-3 rounded-lg text-white hover:bg-white/5 transition-[width,padding,background-color] duration-300 ease-in-out overflow-hidden whitespace-nowrap">
             <span class="material-symbols-outlined text-[20px] shrink-0"
                   x-text="collapsed ? 'keyboard_double_arrow_right' : 'keyboard_double_arrow_left'">
             </span>

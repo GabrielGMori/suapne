@@ -1,9 +1,9 @@
-<x-layouts.main title="PTE Ricardo Borges -Matematica III -2026">
+<x-layouts.main title="PTE Ricardo Borges - Matematica III -2026">
     <div>
-        
-            <h2 class="flex items-center gap-5 mb-5 text-display-small">Adaptação e/ou flexibilização curricular
+
+            <h2 class="flex items-center gap-5 mb-5 text-display-small">Adaptação e/ou flexibilização curricular</h2>
             <x-status label="Aguardando aprovação" color="warning" :filled="false"/>
-        
+
             <h4>Período de realização: 08/02/2026 a 29/11/2026</h4>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
@@ -33,6 +33,7 @@
                     <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                         appearance="outlined" size="full" class="bg-surface"
                         value="Ementa da disciplina preenchida automaticamente..." />
+                </h2>
             </div>
 
 
@@ -42,6 +43,7 @@
                 <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período
                     <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                         appearance="outlined" size="full" class="bg-surface" value="Preenchido pelo professor" />
+                </h2>
             </div>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
@@ -50,7 +52,7 @@
                         appearance="outlined" size="full" class="bg-surface" value="Preenchido pelo professor" />
 
 
-
+                </h2>
             </div>
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">5. Instrumentos avaliativos pretendidos e procedimentos adotados:</h2>
