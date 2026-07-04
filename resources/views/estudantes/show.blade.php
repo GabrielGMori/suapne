@@ -1,7 +1,7 @@
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
     <x-secao-expansivel.bottom title="Dados Gerais">
         <div class="flex gap-20 justify-center items-center px-20">
-            <img src="{{ asset($estudante->avatar) ?? asset('storage/img/placeholder-user.png') }}" class="h-50 rounded-full" alt="{{ $estudante->avatar }}">
+            <img src="{{ asset($estudante->avatar ?? 'storage/img/placeholder-user.png') }}" class="h-50 rounded-full" alt="{{ $estudante->avatar }}">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
                 <x-display-dado label="Nome:" value="{{ $estudante->nome }}" />
