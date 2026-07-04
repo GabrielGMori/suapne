@@ -51,18 +51,18 @@ return new class extends Migration
                 'AMARELA',
                 'INDIGENA',
                 'NAO_DECLARADA',
-            ]);
+            ])->nullable();
 
             $table->string('nacionalidade', 45)->nullable();
             $table->string('naturalidade', 45)->nullable();
 
-            $table->string('nome_pai', 200);
+            $table->string('nome_pai', 200)->nullable();
             $table->string('telefone_pai', 20)->nullable();
 
-            $table->string('nome_mae', 200);
+            $table->string('nome_mae', 200)->nullable();
             $table->string('telefone_mae', 20)->nullable();
 
-            $table->string('nome_responsavel', 200);
+            $table->string('nome_responsavel', 200)->nullable();
             $table->string('telefone_responsavel', 20)->nullable();
             $table->string('email_responsavel', 255)->nullable();
 

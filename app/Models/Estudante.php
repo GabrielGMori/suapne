@@ -87,11 +87,6 @@ class Estudante extends Model
         return $this->readableFillable[$key] ?? null;
     }
 
-    public function getAvatarAttribute($value) : string
-    {
-        return $value ?: ('https://api.dicebear.com/7.x/adventurer/svg?backgroundColor=b6e3f4&seed=' . urlencode($this->matricula ?? 'user'));
-    }
-
     public function curso() : BelongsTo
     {
         return $this->belongsTo(Curso::class, 'curso_id');

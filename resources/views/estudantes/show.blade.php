@@ -1,7 +1,7 @@
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
     <x-secao-expansivel.bottom title="Dados Gerais">
         <div class="flex gap-20 justify-center items-center px-20">
-            <img src="{{ $estudante->avatar }}" class="h-50 rounded-full" alt="{{ $estudante->avatar }}">
+            <img src="{{ asset($estudante->avatar) ?? asset('storage/img/placeholder-user.png') }}" class="h-50 rounded-full" alt="{{ $estudante->avatar }}">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
                 <x-display-dado label="Nome:" value="{{ $estudante->nome }}" />
@@ -28,8 +28,9 @@
                     <x-display-dado label="CPF:" value="{{ $estudante->cpf }}" />
                     <x-display-dado label="Nacionalidade:" value="{{ $estudante->nacionalidade }}" />
                     <x-display-dado label="Naturalidade:" value="{{ $estudante->naturalidade }}" />
-                    <x-display-dado label="Etnia:" value="{{ $estudante->etnia->label() }}" />
+                    <x-display-dado label="Etnia:" value="{{ $estudante->etnia?->label() }}" />
                     <x-display-dado label="Sexo:" value="{{ $estudante->sexo->label() }}" />
+                    <div></div>
                     <x-display-dado label="Nome do pai:" value="{{ $estudante->nome_pai }}" />
                     <x-display-dado label="Telefone do pai:" value="{{ $estudante->telefone_pai }}" />
                     <x-display-dado label="Nome da mãe:" value="{{ $estudante->nome_mae }}" />

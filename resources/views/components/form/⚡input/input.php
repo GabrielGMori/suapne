@@ -15,6 +15,7 @@ new class extends Component
     public ?string $helper = null;
     public string $size = 'medium';
     public string $appearance = 'default';
+    public ?string $mask = null;
 
     public function mount(): void
     {
@@ -80,6 +81,15 @@ new class extends Component
             $this->isTextarea() => "{$baseClass} form-control-textarea",
             $this->isFile()     => "{$baseClass} form-control-file",
             default             => $baseClass,
+        };
+    }
+
+    public function resolvedMask() : string
+    {
+        return match (true) {
+            isset($this->mask) => trim($this->mask),
+            $this->type === 'tel' => '+55 (99) 99999-9999',
+            default => '',
         };
     }
 };

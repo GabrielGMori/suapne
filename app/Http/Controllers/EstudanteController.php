@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Estudante;
 use App\Http\Requests\StoreEstudanteRequest;
 use App\Http\Requests\UpdateEstudanteRequest;
+use Illuminate\Http\RedirectResponse;
 
 class EstudanteController extends Controller
 {
@@ -29,9 +30,9 @@ class EstudanteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEstudanteRequest $request)
+    public function store(StoreEstudanteRequest $request) : RedirectResponse
     {
-//        Estudante::create($request->validated());
+        Estudante::create($request->validated());
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
     }

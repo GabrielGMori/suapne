@@ -28,6 +28,8 @@
 
                 placeholder="{{ $this->resolvedPlaceholder() }}"
                 wire:model.live="value"
+
+                x-mask="{{$this->resolvedMask()}}"
             />
 
             @if ($this->isTypePassword())

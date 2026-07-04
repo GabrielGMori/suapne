@@ -285,4 +285,10 @@
             ></span>
         </div>
     </div>
+
+    <div class="h-5">
+        @error($name)
+        <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
+        @enderror
+    </div>
 </div>

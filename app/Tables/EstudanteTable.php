@@ -15,7 +15,7 @@ class EstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return Estudante::query();
+        return Estudante::query()->orderBy('created_at', 'DESC');
     }
 
     public function title(): ?string { return 'Estudantes registrados'; }

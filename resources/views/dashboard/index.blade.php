@@ -53,9 +53,9 @@
                 @if($acoes === 0)
                     <p class="grow flex items-center">Nenhuma ação encontrada</p>
                 @else
-                    @foreach(\App\Models\RegistroAcao::take(5)->get() as $registroAcao)
+                    @foreach(\App\Models\RegistroAcao::orderBy('created_at', 'DESC')->take(5)->get() as $registroAcao)
                         <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
-                            <img src="{{asset($registroAcao->user->avatar)}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
+                            <img src="{{asset($registroAcao->user->avatar ?? 'storage/img/placeholder-user.png')}}" alt="{{$registroAcao->user->nome}}" class="h-15 rounded-full" />
                             <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
                                 {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::EDICAO_ESTUDANTE ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
                             <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link" href="{{route('registro-auditoria.index')}}" /></div>
