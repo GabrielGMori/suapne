@@ -44,7 +44,7 @@
                             @endphp
 
                             @if ($imageIcon)
-                                <img class="h-16 rounded-[100%]" src="{{ $resolvedIcon }}" alt="Ícone">
+                                <img class="h-16 w-16 object-cover rounded-full shrink-0" src="{{ $resolvedIcon }}" alt="Ícone">
                             @else
                                 <x-icon class="w-full" size="40">{{ $resolvedIcon }}</x-icon>
                             @endif

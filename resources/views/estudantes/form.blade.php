@@ -16,7 +16,9 @@ use App\Enums\SexoEnum;
             <hr class="mb-5 text-on-surface">
             <div class="grid grid-cols-3">
 
-                <livewire:avatar-upload />
+                <div class="relative">
+                    <livewire:avatar-upload class="sticky top-10" :default-img-path="old('avatar')" />
+                </div>
 
                 <div class="flex flex-wrap gap-5 w-full col-span-2 items-center">
                     <livewire:form.input label="Nome completo*" appearance="outlined" size="large" name="nome" required/>

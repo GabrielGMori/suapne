@@ -1,7 +1,8 @@
-<div class="flex flex-col gap-2 place-items-center" x-data>
+<div {{ $attributes->merge(['class' => "flex flex-col gap-2 place-items-center"]) }} x-data>
+    <input type="hidden" name="{{ $name }}" value="{{ $storedImgPath }}">
 
     <div class="flex">
-        <img src="{{ $previewImgPath ?? asset('storage/img/placeholder-user.png') }}" alt="Usuário"
+        <img src="{{ $previewImgPath ? (str_starts_with($previewImgPath, 'http') ? $previewImgPath : asset($previewImgPath)) : asset('storage/img/placeholder-user.png') }}" alt="Usuário"
              class="h-50 w-50 object-cover rounded-full shrink-0">
         <x-button icon="replay" color="transparent" wire:click="restoreImage" x-on:click="$refs.avatarInput.value = null" @class([
                 'absolute ml-45 transition-transform duration-200 hover:-rotate-45',
@@ -9,7 +10,7 @@
             ])/>
     </div>
 
-    <input x-ref="avatarInput" id="avatar-upload-{{ $name }}" name="{{ $name }}" type="file" wire:model="uploadedImg" accept="image/*" hidden>
+    <input x-ref="avatarInput" id="avatar-upload-{{ $name }}" type="file" wire:model="uploadedImg" accept="image/*" hidden>
 
     @error('uploadedImg')
         <span class="text-error">{{ $message }}</span>

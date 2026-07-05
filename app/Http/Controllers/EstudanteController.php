@@ -32,13 +32,7 @@ class EstudanteController extends Controller
      */
     public function store(StoreEstudanteRequest $request) : RedirectResponse
     {
-        $data = $request->validated();
-
-        if ($request->hasFile('avatar')) {
-            $data['avatar'] = 'storage/' . $request->file('avatar')->store('img/uploads/avatars', 'public');
-        }
-
-        Estudante::create($data);
+        Estudante::create($request->validated());
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
     }
