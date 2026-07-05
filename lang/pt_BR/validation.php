@@ -69,7 +69,7 @@ return [
         'array'   => 'O campo :attribute deve conter :value itens ou mais.',
     ],
     'hex_color'            => 'O campo :attribute deve ser uma cor hexadecimal válida.',
-    'image'                => 'O campo :attribute deve ser uma imagem.',
+    'image'                => 'O arquivo enviado deve ser uma imagem.',
     'in'                   => 'O campo :attribute selecionado é inválido.',
     'in_array'             => 'O campo :attribute não existe em :other.',
     'integer'              => 'O campo :attribute deve ser um número inteiro.',
@@ -94,7 +94,7 @@ return [
     'mac_address' => 'O campo :attribute deve ser um MAC address válido.',
     'max' => [
         'numeric' => 'O campo :attribute não pode ser superior a :max.',
-        'file'    => 'O campo :attribute não pode ser superior a :max kilobytes.',
+        'file'    => 'O arquivo enviado não pode ser maior que 10 MB.',
         'string'  => 'O campo :attribute não pode ser superior a :max caracteres.',
         'array'   => 'O campo :attribute não pode ter mais do que :max itens.',
     ],
@@ -148,15 +148,15 @@ return [
     'same'                 => 'Os campos :attribute e :other devem corresponder.',
     'size'                 => [
         'numeric' => 'O campo :attribute deve ser :size.',
-        'file'    => 'O campo :attribute deve ser :size kilobytes.',
-        'string'  => 'O campo :attribute deve ser :size caracteres.',
+        'file'    => 'O campo :attribute deve ter :size kilobytes.',
+        'string'  => 'O campo :attribute deve ter :size caracteres.',
         'array'   => 'O campo :attribute deve conter :size itens.',
     ],
     'starts_with'          => 'O campo :attribute deve começar com um dos seguintes valores: :values',
     'string'               => 'O campo :attribute deve ser uma string.',
     'timezone'             => 'O campo :attribute deve ser uma zona válida.',
     'unique'               => 'Este :attribute já está sendo utilizado.',
-    'uploaded'             => 'Ocorreu uma falha no upload do campo :attribute.',
+    'uploaded'             => 'Ocorreu uma falha no upload do arquivo',
     'uppercase'            => 'O campo :attribute deve conter letras maiúsculas.',
     'url'                  => 'O campo :attribute tem um formato inválido.',
     'ulid'                 => 'O campo :attribute deve ser um ULID válido.',
@@ -235,7 +235,9 @@ return [
         'modality' => 'modalidade',
         'category' => 'categoria',
         'blood_type' => 'tipo sanguíneo',
-        'birth_date' => 'data de nascimento'
+        'birth_date' => 'data de nascimento',
+        'photo' => 'imagem',
+        'cpf' => 'CPF',
     ],
 
 ];

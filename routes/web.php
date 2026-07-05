@@ -7,6 +7,8 @@ Route::resourceVerbs([
     'edit' => 'editar'
 ]);
 
+Route::view('/temp', 'components-temp');
+
 Route::redirect('/', '/dashboard');
 
 Route::middleware('web')->group(base_path('routes/auth.php'));

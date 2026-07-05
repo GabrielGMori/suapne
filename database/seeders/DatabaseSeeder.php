@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             DocumentoSeeder::class,
             EntrevistaFamiliarSeeder::class,
             ObservacaoEstudanteSeeder::class,
+
+            AdminSeeder::class,
         ]);
     }
 }

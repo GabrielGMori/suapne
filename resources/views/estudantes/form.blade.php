@@ -3,24 +3,21 @@
 use App\Models\Curso;
 use App\Enums\EtniaEnum;
 use App\Enums\SituacaoEstudanteEnum;
-use App\Enums\SexoEnum
+use App\Enums\SexoEnum;
 
 ?>
 
 <x-layouts.main title="Cadastro de estudante">
-    <form action="{{ route('estudantes.store') }}" method="POST">
+    <form action="{{ route('estudantes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
             <h2 class="text-display-small">Dados do estudante</h2>
             <hr class="mb-5 text-on-surface">
             <div class="grid grid-cols-3">
-                <div class="flex flex-col gap-5 place-items-center">
-                    <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
-                         class="h-50 w-50 object-cover rounded-full shrink-0">
-                    <x-button label="Enviar arquivo" color="tertiary" icon="upload_file"/>
-                    <x-button label="Remover imagem" color="red"/>
-                </div>
+
+                <livewire:avatar-upload />
+
                 <div class="flex flex-wrap gap-5 w-full col-span-2 items-center">
                     <livewire:form.input label="Nome completo*" appearance="outlined" size="large" name="nome" required/>
                     <livewire:form.input label="Matrícula*" appearance="outlined" size="large" name="matricula" required/>
@@ -77,7 +74,6 @@ use App\Enums\SexoEnum
                     <livewire:form.input type="textarea" label="Necessidades*" appearance="outlined" name="necessidades"
                                          size="full" required/>
                 </div>
-                {{dump($errors)}}
             </div>
         </div>
         <div class="flex justify-end gap-2">
@@ -88,4 +84,3 @@ use App\Enums\SexoEnum
         </div>
     </form>
 </x-layouts.main>
-

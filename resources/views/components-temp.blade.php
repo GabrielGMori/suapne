@@ -4,6 +4,15 @@
 
         <details class="group">
             <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
+                Upload Avatar
+            </summary>
+            <div class="flex flex-col gap-5">
+                <livewire:avatar-upload default-img-path="storage/img/logo-ifpr.png" />
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
                 List View
             </summary>
             <div class="flex flex-col gap-5">
