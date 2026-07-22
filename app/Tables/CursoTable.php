@@ -19,7 +19,7 @@ class CursoTable extends ListViewConfig
     }
 
     public function title(): ?string { return 'Cursos registrados'; }
-    public function createUrl(): ?string { return route('cursos.form'); }
+    public function createUrl(): ?string { return route('cursos.create'); }
     public function createLabel(): ?string { return 'Cadastrar Novo'; }
     public function emptyMessage(): string { return 'Nenhum curso foi encontrado'; }
     public function icon(): string|\Closure { return "backpack"; }
@@ -43,7 +43,7 @@ class CursoTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(Curso $item) => route('cursos.edit', ['id' => $item->id]))->icon('edit'),
+            ListViewAction::make(static fn(Curso $item) => route('cursos.edit', ['curso' => $item->id]))->icon('edit'),
         ];
     }
 

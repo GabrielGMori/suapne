@@ -1,7 +1,9 @@
 <?php
 
-Route::name('cursos.')->prefix('cursos')->group(function () {
-    Route::view('/', 'cursos.index')->name('index');
-    Route::view('/novo', 'cursos.form')->name('form');
-    Route::get("/{id}/editar", fn(int $id) => view("cursos.form", ['curso' => App\Models\Curso::findOrFail($id)]))->name('edit');
-});
+use App\Http\Controllers\CursoController;
+use Illuminate\Support\Facades\Route;
+
+Route::resource('cursos', CursoController::class);
+
+
+
