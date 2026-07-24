@@ -1,5 +1,9 @@
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
     <x-secao-expansivel.bottom title="Dados Gerais">
+        <x-slot:topActions>
+            <x-button icon="edit" color="transparent" class="text-white" on-click="console.log('sdfsd')" />
+        </x-slot:topActions>
+
         <div class="flex gap-20 justify-center items-center px-20">
             <img src="{{ asset($estudante->avatar ?? 'storage/img/placeholder-user.png') }}" class="h-50 w-50 object-cover rounded-full shrink-0" alt="{{ $estudante->avatar }}">
 
