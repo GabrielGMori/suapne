@@ -1,12 +1,13 @@
+@props(['curso' =>null])
+
 <?php
 use App\Models\Curso;
 ?>
 
 <x-layouts.main title="{{ $titulo }}">
-        <form action="{{ $curso->exists ? route('cursos.update', $curso->id) : route('cursos.store') }}" method="POST">
-        @if($curso->exists){
-            @method('PATCH');
-        }
+        <form action="{{ $curso == null ? route('cursos.store') : route('cursos.update',['curso'=>$curso])}}" method="POST">
+        @if($curso !== null)
+            @method('PATCH')
         @endif
         @csrf
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">

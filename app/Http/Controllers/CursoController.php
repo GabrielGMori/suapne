@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Curso;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreCursoRequest;
-use App\Http\Requests\UpdateCursoRequest;
+use App\Http\Requests\CursoRequest;
 use Illuminate\Http\RedirectResponse;
 
 class CursoController extends Controller
@@ -26,14 +25,13 @@ class CursoController extends Controller
     public function create()
     {
         $titulo = 'Cadastrar Curso';
-        $curso = new Curso();
-        return view('cursos.form', compact('titulo', 'curso'));
+        return view('cursos.form', compact('titulo'));
     }
 
      /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCursoRequest $request) : RedirectResponse
+    public function store(CursoRequest $request) : RedirectResponse
     {
         Curso::create($request->validated());
         return redirect()->route('cursos.index')->with('status', 'Curso cadastrado com sucesso!');
@@ -59,10 +57,10 @@ class CursoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCursoRequest $request, Curso $curso) : RedirectResponse
+    public function update(CursoRequest $request, Curso $curso) : RedirectResponse
     {
         $curso->update($request->validated());
-        return redirect()->route('cursos.index')->with('status', 'Curso atualizado com sucesso!');
+        return redirect()->route('cursos.index',$curso)->with('status', 'Curso atualizado com sucesso!');
     }
 
     /**
