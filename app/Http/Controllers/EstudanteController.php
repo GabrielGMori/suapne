@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudante;
-use App\Http\Requests\StoreEstudanteRequest;
-use App\Http\Requests\UpdateEstudanteRequest;
+use App\Http\Requests\EstudanteRequest;
 use Illuminate\Http\RedirectResponse;
 
 class EstudanteController extends Controller
@@ -30,7 +29,7 @@ class EstudanteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEstudanteRequest $request) : RedirectResponse
+    public function store(EstudanteRequest $request) : RedirectResponse
     {
         Estudante::create($request->validated());
 
@@ -50,15 +49,17 @@ class EstudanteController extends Controller
      */
     public function edit(Estudante $estudante)
     {
-        //
+        return view('estudantes.form', compact('estudante'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEstudanteRequest $request, Estudante $estudante)
+    public function update(EstudanteRequest $request, Estudante $estudante)
     {
-        //
+        $estudante->update($request->validated());
+        
+        return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
     }
 
     /**

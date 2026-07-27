@@ -1,4 +1,3 @@
-
 <x-layouts.main title="Entrevista Escolar Familiar de {{ $entrevistaFamiliar->estudante->nome}}">
     <div class="flex justify-between items-center mb-5">
         <h2 class="text-title-large ">Data da entrevista: 30/03/2026</h2>

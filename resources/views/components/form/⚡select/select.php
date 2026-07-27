@@ -70,9 +70,11 @@ new class extends Component
         if (is_array($value)) {
             return array_values(array_map('strval', array_filter($value, fn($v) => $v !== '')));
         }
-        if (is_string($value) && $value !== '') {
-            return [$value];
+
+        if ($value !== null && $value !== '') {
+            return [strval($value)];
         }
+
         return [];
     }
 

@@ -1,7 +1,7 @@
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
     <x-secao-expansivel.bottom title="Dados Gerais">
         <x-slot:topActions>
-            <x-button icon="edit" color="transparent" class="text-white" on-click="console.log('sdfsd')" />
+            <x-button type="link" href="{{ route('estudantes.edit', ['estudante' => $estudante]) }}" icon="edit" color="transparent" class="text-white" />
         </x-slot:topActions>
 
         <div class="flex gap-20 justify-center items-center px-20">
