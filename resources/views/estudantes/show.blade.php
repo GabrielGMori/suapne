@@ -232,7 +232,7 @@
         </x-slot:topActions>
     </x-secao-expansivel>
 
-    <x-secao-expansivel title="Atendimentos Semanais" class="mt-5">
+    <x-secao-expansivel title="Atendimentos Semanais" class="m-5">
         <div class="p-5 flex flex-col gap-4">
             @if (count($estudante->atendimentosSemanais) > 0)
                 @foreach ($estudante->atendimentosSemanais as $atendimento)
@@ -252,4 +252,18 @@
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>
+
+    <div class="flex justify-end gap-3">
+        <livewire:modal title="Confirmar exclusão" label="Excluir estudante" icon="delete" color="red">
+            <p class="mb-10 text-body-large">Tem certeza que deseja excluir este estudante?<br>Você poderá restaurá-lo posteriormente.</p>
+            <div class="flex justify-end gap-3">
+                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <x-button label="Confirmar" type="submit" color="red" />
+                </form>
+            </div>
+        </livewire:modal>
+    </div>
 </x-layouts.main>

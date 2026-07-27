@@ -7,7 +7,7 @@ class ListViewAction
 {
     private string|Closure $url;
     private ?string $method = null;
-    private string $icon    = 'open_in_new';
+    private string|Closure $icon    = 'open_in_new';
     private string $color   = 'transparent';
     private bool $confirm   = false;
 
@@ -27,7 +27,7 @@ class ListViewAction
         return $this;
     }
 
-    public function icon(string $icon): static
+    public function icon(string|Closure $icon): static
     {
         $this->icon = $icon;
         return $this;

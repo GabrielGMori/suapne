@@ -4,6 +4,24 @@
 
         <details class="group">
             <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
+                Estudante select
+            </summary>
+            <div class="flex flex-col gap-5">
+                <livewire:modal title="sdjfaslkjfsalk" size="70vh" label="danger" :stateful='false'>
+                    <h1 class="mb-20">Esta é uma modal de teste</h1>
+                    <livewire:list-view
+                        config="App\Tables\EstudanteTable"
+                        title="Estudantes teste"
+                        create-url="#"
+                        create-label="Novo Estudante"
+                        empty-message="Nenhum estudante foi encontrado"
+                    />
+                </livewire:modal>
+            </div>
+        </details>
+
+        <details class="group">
+            <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
                 Upload Avatar
             </summary>
             <div class="flex flex-col gap-5">
