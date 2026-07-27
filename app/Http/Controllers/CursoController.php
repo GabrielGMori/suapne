@@ -24,8 +24,7 @@ class CursoController extends Controller
      */
     public function create()
     {
-        $titulo = 'Cadastrar Curso';
-        return view('cursos.form', compact('titulo'));
+        return view('cursos.form');
     }
 
      /**
@@ -50,8 +49,7 @@ class CursoController extends Controller
      */
     public function edit(Curso $curso)
     {   
-        $titulo = 'Editar Curso';
-        return view('cursos.form', compact('titulo', 'curso'));
+        return view('cursos.form', compact('curso'));
     }
 
     /**

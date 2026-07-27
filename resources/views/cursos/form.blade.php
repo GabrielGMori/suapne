@@ -4,7 +4,7 @@
 use App\Models\Curso;
 ?>
 
-<x-layouts.main title="{{ $titulo }}">
+<x-layouts.main title="{{ $curso == null ? 'Cadastrar curso' : 'Editar curso'}}">
         <form action="{{ $curso == null ? route('cursos.store') : route('cursos.update',['curso'=>$curso])}}" method="POST">
         @if($curso !== null)
             @method('PATCH')

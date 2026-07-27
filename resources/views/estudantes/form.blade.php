@@ -9,7 +9,7 @@ use App\Enums\SexoEnum;
 
 ?>
 
-<x-layouts.main title="Cadastro de estudante">
+<x-layouts.main title="{{$estudante == null ? 'Cadastrar estudante' : 'Editar estudante'}}">
     <form
         action="{{ $estudante == null ? route('estudantes.store') : route('estudantes.update', ['estudante' => $estudante]) }}"
         method="POST" enctype="multipart/form-data">
