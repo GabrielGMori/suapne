@@ -6,14 +6,14 @@ use App\Models\Curso;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCursoRequest extends FormRequest
+class CursoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Curso::class);
+        return $this->user()->can('create', Curso::class);
     }
 
     /**
@@ -23,6 +23,8 @@ class UpdateCursoRequest extends FormRequest
      */
     public function rules(): array
     {
+        $curso = $this->route('curso');
+
         return [
             'nome' => ['required','string', 'max:200'],
             'quantidade_periodos' => ['required','integer', 'min:1'],
