@@ -256,7 +256,7 @@
     <div class="flex justify-end gap-3">
         <livewire:modal title="Confirmar exclusão" label="Excluir estudante" icon="delete" color="red">
             <p class="mb-10 text-body-large">Tem certeza que deseja excluir este estudante?<br>Você poderá restaurá-lo posteriormente.</p>
-            <div class="flex justify-end gap-3">
+            <div class="flex justify-end gap-3 mb-2">
                 <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
                 <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
                     @method('DELETE')

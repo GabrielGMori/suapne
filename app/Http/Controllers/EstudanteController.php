@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudante;
+use Illuminate\Http\Request;
 use App\Http\Requests\EstudanteRequest;
 use Illuminate\Http\RedirectResponse;
 
@@ -70,5 +71,12 @@ class EstudanteController extends Controller
         $estudante->delete();
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante excluído com sucesso!');
+    }
+
+    public function restore(Request $request, Estudante $estudante)
+    {
+        $estudante->restore();
+
+        return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');
     }
 }

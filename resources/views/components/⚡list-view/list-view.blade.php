@@ -59,16 +59,32 @@
                         @if(count($actions) > 0)
                             <div class="min-w-40 text-center flex items-center justify-center gap-2">
                                 @foreach ($actions as $action)
-                                    @if(!$action->isLink())
-                                        <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod() === 'GET' ? 'GET' : 'POST' }}">
-                                            @csrf
-                                            @if($action->needsDirective())
-                                                @method($action->getMethod())
-                                            @endif
-                                            <x-button type="submit" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
-                                        </form>
-                                    @else
-                                        <x-button type="link" :href="$action->getUrl($item)" :icon="$action->getIcon()" :color="$action->getColor()" size="dynamic"></x-button>
+                                    @if($action->needsConfirmation($item))
+                                        <livewire:modal color="transparent" :icon="$action->getIcon($item)">
+                                            <p class="mb-10 text-body-large">{{ $action->getConfirmMessage() }}</p>
+                                            <div class="flex justify-end gap-3 mb-2">
+                                                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                                                @endif
+                                                
+                                                @if(!$action->isLink($item))
+                                                <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
+                                                    @if($action->needsDirective($item))
+                                                        @method($action->getMethod($item))
+                                                    @endif
+                                                    @csrf
+                                                @endif
+
+                                                    <x-button :label="$action->needsConfirmation($item) ? 'Confirmar' : null" :size="$action->needsConfirmation($item) ? 'medium' : 'dynamic'"
+                                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)" 
+                                                        :icon="!$action->needsConfirmation($item) ? $action->getIcon($item) : null" :href="$action->getUrl($item)" />
+
+                                                @if(!$action->isLink($item))
+                                                </form>
+                                                @endif
+
+                                                @if($action->needsConfirmation($item))
+                                            </div>
+                                        </livewire:modal>
                                     @endif
                                 @endforeach
                             </div>

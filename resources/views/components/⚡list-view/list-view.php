@@ -17,8 +17,10 @@ new class extends Component
     public ?string $createLabel = null;
 
     public int $perPage = 10;
-    public array $filtersStates = [];
 
+    #[Url(as: 'filter')]
+    public array $filtersStates = [];
+    
     protected function getConfigInstance(): ListViewConfig
     {
         return new ($this->config);
@@ -29,7 +31,7 @@ new class extends Component
         return collect($this->getConfigInstance()->filters())
             ->mapWithKeys(fn($filter) => [
                 ($filter->getIdentifier() ?? $filter->getKey()) => $filter->getDefault() ??
-                (in_array($filter->getType(), ['select', 'multiselect']) ? [] : ''),
+                (in_array($filter->getType(), ['select', 'multiselect']) ? [] : null),
             ])
             ->toArray();
     }
@@ -81,5 +83,16 @@ new class extends Component
         }
 
         return $query->paginate($this->perPage);
+    }
+
+    public function getUrlFiltersProperty(): array
+    {
+        return collect($this->filtersStates)
+            ->filter(fn ($value) =>
+                $value !== null &&
+                $value !== '' &&
+                (!is_array($value) || !empty($value))
+            )
+            ->toArray();
     }
 };
