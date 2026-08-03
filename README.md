@@ -48,8 +48,8 @@ Depois, execute:
 ```
 php artisan migrate:fresh --seed # Realiza as migrations e cria usuário primário
 ```
-- E-mail do usuário primário: admin@admin.com
-- Senha do usuário primário: 12345
+- E-mail do usuário primário: admin@exemplo.com
+- Senha do usuário primário: 123
 
 ### Iniciar Aplicação
 
