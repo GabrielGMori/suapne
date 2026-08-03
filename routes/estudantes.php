@@ -8,10 +8,11 @@ Route::resource('estudantes', EstudanteController::class);
 Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::controller(EstudanteController::class)->group(function () {
         Route::post('/{estudante}/restaurar', 'restore')->withTrashed()->name('restore');
+        Route::post('/{estudante}/observacoes', 'storeObservacao')->withTrashed()->name('observacoes.store');
     });
 
-    Route::name('documentos.')->prefix("/{id}/documentos")->group(function () {
-        Route::get("/adicionar", static fn($id) => view('estudantes.add-documento', ['estudante' => App\Models\Estudante::findOrFail($id)]))->name('add');
+    Route::controller(DocumentoController::class)->name('documentos.')->prefix("/{id}/documentos")->group(function () {
+        Route::get("/adicionar", static fn($id) => view('estudantes.create-documento', ['estudante' => App\Models\Estudante::findOrFail($id)]))->name('create');
     });
 
     Route::name('entrevistas-familiares.')->prefix('/entrevista-familiar')->group(function () {

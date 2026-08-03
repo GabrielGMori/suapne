@@ -12,8 +12,10 @@ class EstudanteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        abort_unless($request->user()->can('viewAny', Estudante::class), 401);
+
         $estudantes = Estudante::orderBy('nome')->paginate(10);
 
         return view('estudantes.index', compact('estudantes'));
@@ -78,5 +80,19 @@ class EstudanteController extends Controller
         $estudante->restore();
 
         return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');
+    }
+
+    public function storeObservacao(Request $request, Estudante $estudante)
+    {
+        $request->validate([
+            'observacao' => 'required|string|max:1000',
+        ]);
+
+        $estudante->observacoes()->create([
+            'observacao' => $request->input('observacao'),
+            'user_id' => auth()->id(),
+        ]);
+
+        return redirect()->route('estudantes.show', $estudante)->with('status', 'Observação adicionada com sucesso!');
     }
 }

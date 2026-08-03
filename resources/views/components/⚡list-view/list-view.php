@@ -18,7 +18,7 @@ new class extends Component
 
     public int $perPage = 10;
 
-    #[Url(as: 'filter')]
+    #[Session(as: 'filter')]
     public array $filtersStates = [];
     
     protected function getConfigInstance(): ListViewConfig
