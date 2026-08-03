@@ -14,7 +14,7 @@
             <div class="px-20 py-5">
                 <h2>{{ $header ?? $title }}</h2>
                 <hr class="mt-3 mb-5 text-on-surface">
-
+                    
                 {{ $slot }}
             </div>
         </main>

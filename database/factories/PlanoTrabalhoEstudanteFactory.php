@@ -24,7 +24,7 @@ class PlanoTrabalhoEstudanteFactory extends Factory
     {
         $estudante = Estudante::query()->inRandomOrder()->first();
         $user = User::query()->inRandomOrder()->first();
-        $professor = User::query()->where('funcao', RoleEnum::PROFESSOR_REGULAR)->inRandomOrder()->first();
+        $professor = User::query()->where('role', RoleEnum::PROFESSOR_REGULAR)->inRandomOrder()->first();
         $disciplina = Disciplina::query()->where('curso_id', $estudante->curso_id)->inRandomOrder()->first();
 
         return [
