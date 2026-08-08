@@ -1,7 +1,11 @@
 <?php
-
+use App\Http\Controllers\DisciplinaController;
 Route::name('disciplinas.')->prefix('disciplinas')->group(function () {
-    Route::view('/', 'disciplinas.index')->name('index');
+  Route::get('/', [DisciplinaController::class, 'index'])->name('index');
     Route::view('/novo', 'disciplinas.form')->name('form');
-    Route::get('/{id}/editar', fn(int $id) => view("disciplinas.form", ['disciplina' => App\Models\Disciplina::findOrFail($id)]))->name('edit');
+   Route::get('/{id}/editar', [DisciplinaController::class, 'edit'])->name('edit');
+   Route::put('/{id}', [DisciplinaController::class, 'update'])->name('update');
+    Route::post('/', [DisciplinaController::class, 'store'])->name('store');
+    Route::delete('/{id}', [DisciplinaController::class, 'destroy'])->name('destroy');
+
 });
