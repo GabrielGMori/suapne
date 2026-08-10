@@ -11,6 +11,7 @@
 <div class="list-view-wrapper">
     @include('components.⚡list-view.filters', [
         'filters' => $filters,
+        'filtersExpanded' => $filtersExpanded,
     ])
 
     <div class="list-view-card" wire:loading.class="opacity-50 transition-opacity duration-200">
@@ -64,25 +65,25 @@
                                             <p class="mb-10 text-body-large">{{ $action->getConfirmMessage() }}</p>
                                             <div class="flex justify-end gap-3 mb-2">
                                                 <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                                                @endif
+                                    @endif
                                                 
-                                                @if(!$action->isLink($item))
-                                                <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
-                                                    @if($action->needsDirective($item))
-                                                        @method($action->getMethod($item))
-                                                    @endif
-                                                    @csrf
-                                                @endif
+                                    @if(!$action->isLink($item))
+                                        <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
+                                            @if($action->needsDirective($item))
+                                                @method($action->getMethod($item))
+                                            @endif
+                                            @csrf
+                                    @endif
 
-                                                    <x-button :label="$action->needsConfirmation($item) ? 'Confirmar' : null" :size="$action->needsConfirmation($item) ? 'medium' : 'dynamic'"
-                                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)" 
-                                                        :icon="!$action->needsConfirmation($item) ? $action->getIcon($item) : null" :href="$action->getUrl($item)" />
+                                    <x-button :label="$action->needsConfirmation($item) ? 'Confirmar' : null" :size="$action->needsConfirmation($item) ? 'medium' : 'dynamic'"
+                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)" 
+                                        :icon="!$action->needsConfirmation($item) ? $action->getIcon($item) : null" :href="$action->getUrl($item)" />
 
-                                                @if(!$action->isLink($item))
-                                                </form>
-                                                @endif
+                                    @if(!$action->isLink($item))
+                                        </form>
+                                    @endif
 
-                                                @if($action->needsConfirmation($item))
+                                    @if($action->needsConfirmation($item))
                                             </div>
                                         </livewire:modal>
                                     @endif

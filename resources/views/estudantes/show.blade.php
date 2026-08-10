@@ -66,7 +66,7 @@
         <header class="flex justify-between items-center px-5 py-3">
             <p class="text-display-small">Observações</p>
             <div class="self-end">
-                <livewire:modal>
+                <x-modal>
                     <form action="{{ route('estudantes.observacoes.store', ['estudante' => $estudante->id]) }}" method="POST">
                         @csrf
                         <livewire:form.input type="textarea" name="observacao" label="Nova observação" appearance="outlined" />
@@ -75,7 +75,7 @@
                             <x-button label="Adicionar" type="submit" color="primary" />
                         </div>
                     </form>
-                </livewire:modal>
+                </x-modal>
             </div>
         </header>
             <hr class="mx-4 text-on-surface">
@@ -263,7 +263,7 @@
     </x-secao-expansivel>
 
     <div class="flex justify-end gap-3">
-        <livewire:modal title="Confirmar exclusão" label="Excluir estudante" icon="delete" color="red">
+        <x-modal title="Confirmar exclusão" label="Excluir estudante" icon="delete" color="red">
             <p class="mb-10 text-body-large">Tem certeza que deseja excluir este estudante?<br>Você poderá restaurá-lo posteriormente.</p>
             <div class="flex justify-end gap-3 mb-2">
                 <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
@@ -273,6 +273,6 @@
                     <x-button label="Confirmar" type="submit" color="red" />
                 </form>
             </div>
-        </livewire:modal>
+        </x-modal>
     </div>
 </x-layouts.main>

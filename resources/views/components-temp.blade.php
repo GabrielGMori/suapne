@@ -4,10 +4,10 @@
 
         <details class="group">
             <summary class="text-title-large mb-3 mt-5 cursor-pointer select-none outline-none">
-                Estudante select
+                Modal (Stateless)
             </summary>
             <div class="flex flex-col gap-5">
-                <livewire:modal title="sdjfaslkjfsalk" size="70vh" label="danger" :stateful='false'>
+                <x-modal title="sdjfaslkjfsalk" size="70vh" label="danger" :stateful='false'>
                     <h1 class="mb-20">Esta é uma modal de teste</h1>
                     <livewire:list-view
                         config="App\Tables\EstudanteTable"
@@ -16,7 +16,7 @@
                         create-label="Novo Estudante"
                         empty-message="Nenhum estudante foi encontrado"
                     />
-                </livewire:modal>
+                </x-modal>
             </div>
         </details>
 

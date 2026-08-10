@@ -18,7 +18,7 @@ class EstudanteController extends Controller
 
         $estudantes = Estudante::orderBy('nome')->paginate(10);
 
-        return view('estudantes.index', compact('estudantes'));
+        return view('estudantes.index', ['estudantes' => $estudantes, 'filtersExpanded' => true]);
     }
 
     /**

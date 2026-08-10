@@ -15,10 +15,11 @@ new class extends Component
     public ?string $emptyMessage = null;
     public ?string $createUrl = null;
     public ?string $createLabel = null;
+    public bool $filtersExpanded = false;
 
     public int $perPage = 10;
 
-    #[Session(as: 'filter')]
+    #[Url(as: 'filter')]
     public array $filtersStates = [];
     
     protected function getConfigInstance(): ListViewConfig
