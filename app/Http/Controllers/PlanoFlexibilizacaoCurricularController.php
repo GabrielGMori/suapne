@@ -14,7 +14,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     public function index()
     {
         $planos = PlanoFlexibilizacaoCurricular::orderBy('nome','asc')->paginate(10);
-        return view('planos-flexibilizacao.index', compact('planos'));
+        return view('planos-flexibilizacao.index', ['planos' => $planos]);
     }
 
      /**

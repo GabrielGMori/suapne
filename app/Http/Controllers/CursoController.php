@@ -16,7 +16,7 @@ class CursoController extends Controller
     {
         $cursos = Curso::orderBy('nome', 'asc')->paginate(10);
 
-        return view('cursos.index', compact('cursos'));
+        return view('cursos.index', ['cursos' => $cursos]);
     }
 
      /**
@@ -49,7 +49,7 @@ class CursoController extends Controller
      */
     public function edit(Curso $curso)
     {   
-        return view('cursos.form', compact('curso'));
+        return view('cursos.form', ['curso' => $curso]);
     }
 
     /**

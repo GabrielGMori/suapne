@@ -101,8 +101,11 @@
                             <div class="self-end">
                                 <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">
                                     <p class="mb-10 text-body-large">Tem certeza que deseja remover esta observação?
-                                        <br>Essa ação é irreversível.</p>
-                                    <form action="{{ route('estudantes.observacoes.destroy', ['observacaoEstudante' => $observacao->id]) }}" method="POST" class="flex justify-end gap-3 mt-1 mb-2">
+                                        <br>Essa ação é irreversível.
+                                    </p>
+                                    <form
+                                        action="{{ route('estudantes.observacoes.destroy', ['estudante' => $estudante, 'observacaoEstudante' => $observacao]) }}"
+                                        method="POST" class="flex justify-end gap-3 mt-1 mb-2">
                                         @method('DELETE')
                                         @csrf
                                         <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
@@ -130,12 +133,12 @@
                 </x-documento>
             @else
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['id' => $estudante->id])}}" />
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Familiar</p>
             @if ($estudante->entrevistaFamiliar)
                 <x-documento name="Entrevista com familiar"
-                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['id' => $estudante->entrevistaFamiliar->id])}}"
+                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['entrevista-familiar' => $estudante->entrevistaFamiliar])}}"
                     icon="edit_note">
                     <x-slot:metadata>
                         <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
@@ -144,7 +147,7 @@
                 </x-documento>
             @else
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.entrevistas-familiares.create')}}" />
+                    href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
             @endif
         </div>
     </x-secao-expansivel>
@@ -161,7 +164,7 @@
                 </x-documento>
             @else
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['id' => $estudante->id])}}" />
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Estudo de Caso</p>
             @if ($estudante->estudoDeCaso)
@@ -173,7 +176,7 @@
                 </x-documento>
             @else
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['id' => $estudante->id])}}" />
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Ficha CPAE</p>
             @if ($estudante->fichaCpae)
@@ -185,7 +188,7 @@
                 </x-documento>
             @else
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['id' => $estudante->id])}}" />
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Outros</p>
             <div class="flex flex-col gap-2">
@@ -198,7 +201,7 @@
                     </x-documento>
                 @endforeach
                 <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['id' => $estudante->id])}}" />
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             </div>
         </div>
     </x-secao-expansivel>

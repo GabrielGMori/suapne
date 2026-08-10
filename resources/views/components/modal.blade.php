@@ -20,11 +20,11 @@
         <div class="absolute inset-0 bg-black/50" x-on:click="show=false"></div>
 
         <div class="flex min-h-screen items-center justify-center p-4">
-            <div class="relative bg-white shadow-2xl rounded-xl {{ $widthClasses[$size] ?? $widthClasses['md'] }}" x-on:click.stop>
+            <div class="relative z-10 bg-white shadow-2xl rounded-xl {{ $widthClasses[$size] ?? $widthClasses['md'] }}" x-on:click.stop>
 
                 <div class="flex items-center justify-between px-6 pt-4 pb-2">
                     <h2 class="text-headline-small">{{ $title }}</h2>
-                    <x-button icon="close" x-on:click="show=false" color="transparent" />
+                    <x-button icon="close" x-on:click="show=false" color="transparent"/>
                 </div>
 
                 <div class="max-h-[70vh] overflow-y-auto px-6 py-2">

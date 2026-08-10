@@ -22,7 +22,7 @@ class ObservacaoEstudanteController extends Controller
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Observação adicionada com sucesso!');
     }
 
-    public function destroy(ObservacaoEstudante $observacaoEstudante) 
+    public function destroy(Request $request, Estudante $estudante, ObservacaoEstudante $observacaoEstudante) 
     {
         $observacaoEstudante->delete();
 

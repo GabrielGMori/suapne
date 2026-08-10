@@ -14,7 +14,7 @@ class DisciplinaController extends Controller
     {
         $disciplinas = Disciplina::all(); 
         
-        return view('disciplinas.index',  compact('disciplinas'));
+        return view('disciplinas.index',  ['disciplinas' => $disciplinas]);
     }
 
     /**
@@ -57,7 +57,7 @@ class DisciplinaController extends Controller
     {
       $disciplina = Disciplina::findOrFail($id);
       
-      return view('disciplinas.form', compact('disciplina'));
+      return view('disciplinas.form', ['disciplina' => $disciplina]);
 
     }
 

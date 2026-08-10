@@ -44,7 +44,7 @@ class EstudanteController extends Controller
      */
     public function show(Estudante $estudante)
     {
-        return view('estudantes.show', compact('estudante'));
+        return view('estudantes.show', ['estudante' => $estudante]);
     }
 
     /**
@@ -52,7 +52,7 @@ class EstudanteController extends Controller
      */
     public function edit(Estudante $estudante)
     {
-        return view('estudantes.form', compact('estudante'));
+        return view('estudantes.form', ['estudante' => $estudante]);
     }
 
     /**
