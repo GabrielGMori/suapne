@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstudanteController;
+use App\Http\Controllers\ObservacaoEstudanteController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('estudantes', EstudanteController::class);
@@ -8,7 +10,11 @@ Route::resource('estudantes', EstudanteController::class);
 Route::name('estudantes.')->prefix('estudantes')->group(function () {
     Route::controller(EstudanteController::class)->group(function () {
         Route::post('/{estudante}/restaurar', 'restore')->withTrashed()->name('restore');
-        Route::post('/{estudante}/observacoes', 'storeObservacao')->withTrashed()->name('observacoes.store');
+    });
+
+    Route::controller(ObservacaoEstudanteController::class)->name('observacoes.')->group(function () {
+        Route::post('/{estudante}/observacoes', 'store')->name('store');
+        Route::delete('/observacoes/{observacaoEstudante}', 'destroy')->name('destroy');
     });
 
     Route::controller(DocumentoController::class)->name('documentos.')->prefix("/{id}/documentos")->group(function () {

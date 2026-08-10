@@ -81,18 +81,4 @@ class EstudanteController extends Controller
 
         return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');
     }
-
-    public function storeObservacao(Request $request, Estudante $estudante)
-    {
-        $request->validate([
-            'observacao' => 'required|string|max:1000',
-        ]);
-
-        $estudante->observacoes()->create([
-            'observacao' => $request->input('observacao'),
-            'user_id' => auth()->id(),
-        ]);
-
-        return redirect()->route('estudantes.show', $estudante)->with('status', 'Observação adicionada com sucesso!');
-    }
 }

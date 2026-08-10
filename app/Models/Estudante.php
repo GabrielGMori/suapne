@@ -130,7 +130,7 @@ class Estudante extends Model
 
     public function observacoes(): HasMany
     {
-        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id');
+        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->orderBy('created_at','desc');
     }
     public function getEntrevistaEstudanteAttribute(): ?Documento
     {
