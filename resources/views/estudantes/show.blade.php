@@ -120,7 +120,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.entrevistas-familiares.form')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('estudantes.entrevistas-familiares.create')}}" />
             @endif
         </div>
     </x-secao-expansivel>
@@ -179,8 +179,7 @@
         <div class="p-5 flex flex-col gap-2">
             @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
                 @foreach ($estudante->planosFlexibilizacaoCurricular as $plano)
-                    <x-documento name="{{ $plano->nome }}"
-                        icon="tune" actionUrl="{{route('planos-flexibilizacao.show',  ['id' => $plano->id])}}">
+                    <x-documento name="{{ $plano->nome }}" icon="tune" actionUrl="{{route('planos-flexibilizacao.show',  ['planos_flexibilizacao' => $plano])}}">
                         <x-slot:metadata>
                             <p>Criado por: {{ $plano->user->nome }}</p>
                             <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
@@ -189,7 +188,7 @@
                 @endforeach
             @else
                 <p>Nenhum plano foi criado no momento</p>
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('planos-flexibilizacao.form')}}" />
+                <x-button label="Adicionar" icon="add" color="tertiary" type="link" href="{{route('planos-flexibilizacao.create')}}" />
             @endif
         </div>
 

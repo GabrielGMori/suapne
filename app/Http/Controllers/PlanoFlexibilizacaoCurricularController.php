@@ -38,9 +38,9 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PlanoFlexibilizacaoCurricular $planosFlexibilizacao)
+    public function show(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {   
-        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planosFlexibilizacao]);
+        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
     /**
