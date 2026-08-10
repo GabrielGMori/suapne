@@ -31,7 +31,7 @@ class DisciplinaTable extends ListViewConfig
             ListViewColumn::make('nome')->label('Componente curricular')->size("large"),
             ListViewColumn::make('curso.nome')->label('Curso')->size("large"),
             ListViewColumn::make('ementa')->label('Ementa')->size("large")
-            ->format(fn($value) => view('components.item-expansivel', ['items' => [$value], 'label' => 'Ementa'])->render())
+            ->format(fn($value) => view('components.modal.simple-text', ['label' => 'Ver ementa', 'title' => 'Ementa', 'value' => $value])->render())
         ];
     }
 

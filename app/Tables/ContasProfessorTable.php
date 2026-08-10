@@ -32,10 +32,11 @@ class ContasProfessorTable extends ListViewConfig
             ListViewColumn::make('name')->label('Nome do professor'),
             ListViewColumn::make('email')->label('E-mail do professor')->size('large'),
             ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
-            ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
-                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
-                'label' => 'Disciplinas'
-            ]) : '---'),
+            ->format(fn($value) => $value->count() > 0 ? view('components.modal.simple-text', [
+                'label' => 'Ver disciplinas',
+                'title' => 'Disciplinas',
+                'value' => $value->map(fn($disciplina) => "• {$disciplina->nome} - {$disciplina->curso->nome}")->toArray()
+            ])->render() : '---'),
         ];
     }
 

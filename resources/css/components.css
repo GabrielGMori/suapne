@@ -3,7 +3,7 @@
 @import './components/status.css';
 @import './components/list-view.css';
 
-@layer components {
+@layer base {
     [x-cloak] { visibility: hidden !important; }
 
     h1 {
