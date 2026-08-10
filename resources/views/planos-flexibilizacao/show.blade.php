@@ -1,4 +1,4 @@
-<x-layouts.main title="{{ $planoFlexibilizacao->nome }}">
+<x-layouts.main title="{{ $planoFlexibilizacao->nome}}">
     <div class="flex items-center justify-between mb-5">
         <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
         <x-button label="Exportar como PDF" icon="file_export" color="tertiary"/>

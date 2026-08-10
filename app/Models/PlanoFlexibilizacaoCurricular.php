@@ -26,6 +26,7 @@ class PlanoFlexibilizacaoCurricular extends Model
         'periodo_inicio' => 'date',
         'periodo_fim' => 'date',
     ];
+    
 
     public function getAnoAttribute(): string
     {
