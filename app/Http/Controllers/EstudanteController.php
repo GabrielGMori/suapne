@@ -24,8 +24,10 @@ class EstudanteController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        abort_unless($request->user()->can('create', Estudante::class), 401);
+
         return view('estudantes.form');
     }
 
@@ -34,6 +36,8 @@ class EstudanteController extends Controller
      */
     public function store(EstudanteRequest $request) : RedirectResponse
     {
+        abort_unless($request->user()->can('create', Estudante::class), 401);
+
         Estudante::create($request->validated());
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
@@ -42,16 +46,20 @@ class EstudanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Estudante $estudante)
+    public function show(Request $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('view', $estudante), 401);
+
         return view('estudantes.show', ['estudante' => $estudante]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estudante $estudante)
+    public function edit(Request $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('update', $estudante), 401);
+
         return view('estudantes.form', ['estudante' => $estudante]);
     }
 
@@ -60,6 +68,8 @@ class EstudanteController extends Controller
      */
     public function update(EstudanteRequest $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('update', $estudante), 401);
+
         $estudante->update($request->validated());
         
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
@@ -68,8 +78,10 @@ class EstudanteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estudante $estudante)
+    public function destroy(Request $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('delete', $estudante), 401);
+
         $estudante->delete();
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante excluído com sucesso!');
@@ -77,6 +89,8 @@ class EstudanteController extends Controller
 
     public function restore(Request $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('restore', $estudante), 401);
+
         $estudante->restore();
 
         return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');

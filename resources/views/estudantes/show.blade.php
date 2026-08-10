@@ -87,7 +87,7 @@
             @if (count($estudante->observacoes) > 0)
                 <div class="flex flex-col gap-5 my-3">
                     @foreach ($estudante->observacoes as $observacao)
-                        <div class="flex items-center">
+                        <div class="flex items-center justify-between">
                             <div class="flex flex-col px-5">
                                 <div class="flex gap-1.5 items-center mb-0.5">
                                     <p class="text-label-large">{{ $observacao->user->nome }}</p>
@@ -98,7 +98,7 @@
                                 </div>
                                 <p class="text-body-medium">{{ $observacao->observacao }}</p>
                             </div>
-                            <div class="self-end">
+                            <div class="mr-5">
                                 <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">
                                     <p class="mb-10 text-body-large">Tem certeza que deseja remover esta observação?
                                         <br>Essa ação é irreversível.

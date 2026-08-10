@@ -24,7 +24,7 @@
     }
 
     .btn-transparent {
-        @apply bg-transparent hover:bg-white/20 text-secondary
+        @apply bg-transparent hover:bg-white/50 text-secondary
     }
 
     .btn-dynamic {

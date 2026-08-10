@@ -17,7 +17,7 @@
     <div class="list-view-card" wire:loading.class="opacity-50 transition-opacity duration-200">
         <div class="list-view-header">
             @if($title) <h3>{{ $title }}</h3> @endif
-            @if ($createUrl)
+            @if ($createUrl && $canCreate)
                 <x-button type="link" color="tertiary"
                     href="{{ $createUrl }}"
                     label="{{ $createLabel }}"
