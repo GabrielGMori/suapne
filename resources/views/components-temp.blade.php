@@ -7,15 +7,8 @@
                 Modal (Stateless)
             </summary>
             <div class="flex flex-col gap-5">
-                <x-modal title="sdjfaslkjfsalk" size="70vh" label="danger" :stateful='false'>
-                    <h1 class="mb-20">Esta é uma modal de teste</h1>
-                    <livewire:list-view
-                        config="App\Tables\EstudanteTable"
-                        title="Estudantes teste"
-                        create-url="#"
-                        create-label="Novo Estudante"
-                        empty-message="Nenhum estudante foi encontrado"
-                    />
+                <x-modal title="sdjfaslkjfsalk" size="70vh" label="danger" color="secondary">
+                    <h1>OI MEUS AMIGOS</h1>
                 </x-modal>
             </div>
         </details>

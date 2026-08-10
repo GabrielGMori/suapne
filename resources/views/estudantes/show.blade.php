@@ -66,11 +66,11 @@
         <header class="flex justify-between items-center px-5 py-3">
             <p class="text-display-small">Observações</p>
             <div class="self-end">
-                <x-modal>
+                <x-modal title="Adicionar observação" icon="add" color="transparent" size="2xl">
                     <form action="{{ route('estudantes.observacoes.store', ['estudante' => $estudante->id]) }}" method="POST">
                         @csrf
-                        <livewire:form.input type="textarea" name="observacao" label="Nova observação" appearance="outlined" />
-                        <div class="flex justify-end gap-3 mt-2">
+                        <livewire:form.input type="textarea" name="observacao" label="Nova observação" appearance="outlined" size="full" />
+                        <div class="flex justify-end gap-3 mt-1 mb-2">
                             <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
                             <x-button label="Adicionar" type="submit" color="primary" />
                         </div>
