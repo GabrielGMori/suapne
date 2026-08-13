@@ -20,7 +20,11 @@
                     highlightedIndex = 0;
                 });
             " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
-            <button type="button" class="select-control {{ $baseClass }}" x-on:click="isOpen = !isOpen">
+            <button
+                type="button"
+                class="select-control {{ $baseClass }} {{ $name && $errors->has($name) ? 'form-control-error' : ''}}"
+                x-on:click="isOpen = !isOpen"
+            >
                 <div x-show="selected.length > 0" class="w-full text-left">
                     <template x-if="isMultiple">
                         <div class="select-chips">
@@ -109,6 +113,7 @@
             searchTimeout: null,
             resetNextType: false,
             highlightedIndex: 0,
+            errorDismissed: false,
             selected,
             options,
             isMultiple,
@@ -190,14 +195,17 @@
                     this.selected = [opt.value];
                     this.isOpen = false;
                 }
+
                 this.resetSearch();
             },
 
             removeOption(value) {
+
                 this.selected = this.selected.filter(v => v !== value);
             },
 
             clearSelections() {
+
                 this.selected = [];
             },
 

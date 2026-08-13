@@ -2,12 +2,24 @@
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\Disciplina;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class DisciplinaPolicy
 {
+    /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($ability === 'forceDelete') {
+            return false;
+        }
+        return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -23,7 +35,7 @@ class DisciplinaPolicy
     {
         return false;
     }
-    
+
     /**
      * Determine whether the user can create models.
      */

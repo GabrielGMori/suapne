@@ -81,6 +81,10 @@
         @apply w-full;
     }
 
+    .form-control-error {
+        @apply ring-1 ring-error;
+    }
+
     /* Icons */
     .form-icon {
         @apply pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary-accent;

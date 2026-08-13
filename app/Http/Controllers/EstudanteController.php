@@ -14,11 +14,9 @@ class EstudanteController extends Controller
      */
     public function index(Request $request)
     {
-        abort_unless($request->user()->can('viewAny', Estudante::class), 401);
+        $estudantes = Estudante::paginate(10);
 
-        $estudantes = Estudante::orderBy('nome')->paginate(10);
-
-        return view('estudantes.index', ['estudantes' => $estudantes, 'filtersExpanded' => true]);
+        return view('estudantes.index', ['estudantes' => $estudantes]);
     }
 
     /**
@@ -26,8 +24,6 @@ class EstudanteController extends Controller
      */
     public function create(Request $request)
     {
-        abort_unless($request->user()->can('create', Estudante::class), 401);
-
         return view('estudantes.form');
     }
 
@@ -36,8 +32,6 @@ class EstudanteController extends Controller
      */
     public function store(EstudanteRequest $request) : RedirectResponse
     {
-        abort_unless($request->user()->can('create', Estudante::class), 401);
-
         Estudante::create($request->validated());
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
@@ -48,8 +42,6 @@ class EstudanteController extends Controller
      */
     public function show(Request $request, Estudante $estudante)
     {
-        abort_unless($request->user()->can('view', $estudante), 401);
-
         return view('estudantes.show', ['estudante' => $estudante]);
     }
 
@@ -58,8 +50,6 @@ class EstudanteController extends Controller
      */
     public function edit(Request $request, Estudante $estudante)
     {
-        abort_unless($request->user()->can('update', $estudante), 401);
-
         return view('estudantes.form', ['estudante' => $estudante]);
     }
 
@@ -68,10 +58,8 @@ class EstudanteController extends Controller
      */
     public function update(EstudanteRequest $request, Estudante $estudante)
     {
-        abort_unless($request->user()->can('update', $estudante), 401);
-
         $estudante->update($request->validated());
-        
+
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
     }
 
@@ -80,8 +68,6 @@ class EstudanteController extends Controller
      */
     public function destroy(Request $request, Estudante $estudante)
     {
-        abort_unless($request->user()->can('delete', $estudante), 401);
-
         $estudante->delete();
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante excluído com sucesso!');
@@ -89,8 +75,6 @@ class EstudanteController extends Controller
 
     public function restore(Request $request, Estudante $estudante)
     {
-        abort_unless($request->user()->can('restore', $estudante), 401);
-
         $estudante->restore();
 
         return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');

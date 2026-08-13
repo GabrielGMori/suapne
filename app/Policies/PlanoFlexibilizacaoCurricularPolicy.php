@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -9,14 +10,22 @@ use Illuminate\Auth\Access\Response;
 class PlanoFlexibilizacaoCurricularPolicy
 {
     /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($ability === 'forceDelete') {
+            return false;
+        }
+        return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-       if ($ability === 'forceDelete') {
-            return false;
-        }
-        return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
+        return false;
     }
 
     /**

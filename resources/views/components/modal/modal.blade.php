@@ -1,6 +1,7 @@
 @props([
     'title' => '', // Título da janela modal
     'width' => 'xl', // Tamanho da janela modal
+    'show' => null,
 ])
 
 @php
@@ -13,7 +14,7 @@
     ];
 @endphp
 
-<div x-data="{ show: false }" x-cloak>
+<div x-data="{ show: {{ $show ?? 'false' }} }" x-cloak>
     <x-button x-on:click="show=true" {{ $attributes }}/>
 
     <div x-show="show" class="fixed inset-0 z-50">

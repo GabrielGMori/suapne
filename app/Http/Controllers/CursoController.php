@@ -14,7 +14,7 @@ class CursoController extends Controller
      */
     public function index()
     {
-        $cursos = Curso::orderBy('nome', 'asc')->paginate(10);
+        $cursos = Curso::paginate(10);
 
         return view('cursos.index', ['cursos' => $cursos]);
     }
@@ -33,22 +33,15 @@ class CursoController extends Controller
     public function store(CursoRequest $request) : RedirectResponse
     {
         Curso::create($request->validated());
-        return redirect()->route('cursos.index')->with('status', 'Curso cadastrado com sucesso!');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Curso $curso)
-    {
-        //
+        return redirect()->route('cursos.index')->with('status', 'Curso cadastrado com sucesso!');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(Curso $curso)
-    {   
+    {
         return view('cursos.form', ['curso' => $curso]);
     }
 
@@ -67,5 +60,5 @@ class CursoController extends Controller
     public function destroy(Curso $curso)
     {
         //
-    }    
+    }
 }

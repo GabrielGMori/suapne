@@ -13,7 +13,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      */
     public function index()
     {
-        $planos = PlanoFlexibilizacaoCurricular::orderBy('nome','asc')->paginate(10);
+        $planos = PlanoFlexibilizacaoCurricular::paginate(10);
         return view('planos-flexibilizacao.index', ['planos' => $planos]);
     }
 
@@ -39,7 +39,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      * Display the specified resource.
      */
     public function show(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
-    {   
+    {
         return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
@@ -47,8 +47,8 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit()
-    {   
-        
+    {
+
     }
 
     /**
@@ -56,7 +56,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      */
     public function update()
     {
-        
+
     }
 
     /**
@@ -65,5 +65,5 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     public function destroy()
     {
         //
-    } 
+    }
 }

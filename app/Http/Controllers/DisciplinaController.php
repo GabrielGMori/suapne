@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Requests\DisciplinaRequest;
 use App\Models\Disciplina;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
@@ -10,10 +11,10 @@ class DisciplinaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() 
+    public function index()
     {
-        $disciplinas = Disciplina::all(); 
-        
+        $disciplinas = Disciplina::paginate(10);
+
         return view('disciplinas.index',  ['disciplinas' => $disciplinas]);
     }
 
@@ -22,68 +23,42 @@ class DisciplinaController extends Controller
      */
     public function create()
     {
-        
+        return view('disciplinas.form');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-  public function store(Request $request)
-{
-    $nome = $request->input('nome');
-    $ementa = $request->input('ementa');
-    $curso_id = $request->input('curso_id');
-
-    $disciplina = Disciplina::create([
-        'nome'     => $nome,
-        'curso_id' => $curso_id,
-        'ementa'   => $ementa,
-    ]);
-
-    return redirect()->route('disciplinas.index');
-}
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+  public function store(DisciplinaRequest $request)
     {
-        //
+        Disciplina::create($request->validated());
+
+        return redirect()->route('disciplinas.index')->with('status', 'Disciplina cadastrada com sucesso!');;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Disciplina $disciplina)
     {
-      $disciplina = Disciplina::findOrFail($id);
-      
-      return view('disciplinas.form', ['disciplina' => $disciplina]);
-
+        return view('disciplinas.form', ['disciplina' => $disciplina]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(DisciplinaRequest $request, Disciplina $disciplina)
     {
-        $disciplina = Disciplina::findOrFail($id);
+        $disciplina->update($request->validated());
 
-        $disciplina->update([
-        'nome'     => $request->input('nome'),
-        'ementa'   => $request->input('ementa'),
-        'curso_id' => $request->input('curso_id'),
-    ]);
-    return redirect()->route('disciplinas.index');
+        return redirect()->route('disciplinas.index')->with('status', 'Disciplina atualizada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Disciplina $disciplina)
     {
-        $disciplina = Disciplina::findOrFail($id);
-        $disciplina->delete();
 
-        return redirect()->route('disciplinas.index');
     }
 };
