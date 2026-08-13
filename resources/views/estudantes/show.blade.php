@@ -138,7 +138,7 @@
             <p class="text-title-medium my-2">Familiar</p>
             @if ($estudante->entrevistaFamiliar)
                 <x-documento name="Entrevista com familiar"
-                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['entrevista-familiar' => $estudante->entrevistaFamiliar])}}"
+                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar])}}"
                     icon="edit_note">
                     <x-slot:metadata>
                         <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
