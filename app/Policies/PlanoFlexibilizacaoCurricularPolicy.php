@@ -23,7 +23,7 @@ class PlanoFlexibilizacaoCurricularPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, string $ability): bool
     {
         return false;
     }

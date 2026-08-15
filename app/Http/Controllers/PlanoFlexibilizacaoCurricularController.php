@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\PlanoFlexibilizacaoCurricular;
 use Illuminate\Http\Request;
+use App\Http\Requests\PlanoFlexibilizacaoCurricularRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class PlanoFlexibilizacaoCurricularController extends Controller
 {
@@ -28,27 +30,26 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PlanoFlexibilizacaoCurricularRequest $request) : RedirectResponse
     {
-       PlanoFlexibilizacaoCurricular::create($request->validated());
-
+        PlanoFlexibilizacaoCurricular::create( $request->validated());
         return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    public function show(PlanoFlexibilizacaoCurricular $planosFlexibilizacao)
     {
-        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
+        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planosFlexibilizacao]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit()
-    {
-
+    {   
+        //
     }
 
     /**
@@ -56,7 +57,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      */
     public function update()
     {
-
+        //
     }
 
     /**

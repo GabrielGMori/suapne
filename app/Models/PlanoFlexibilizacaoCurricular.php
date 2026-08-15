@@ -47,4 +47,5 @@ class PlanoFlexibilizacaoCurricular extends Model
     {
         return "Plano de Flexibilização Curricular de {$this->estudante->nome} - {$this->periodo_inicio->year}";
     }
+    
 }
