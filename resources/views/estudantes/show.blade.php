@@ -1,28 +1,54 @@
+@php
+    $displays = [
+        [
+            'Nome:' => $estudante->nome,
+            'Matrícula:' => $estudante->matricula,
+            'Ingresso:' => $estudante->ingresso_ano . '/' . $estudante->ingresso_periodo,
+            'Período:' => $estudante->periodo,
+            'Curso:' => $estudante->curso->nome,
+            'Quant. de períodos do curso:' => $estudante->curso->quantidade_periodos,
+            'E-mail pessoal:' => $estudante->email_pessoal,
+            'E-mail acadêmico:' => $estudante->email_academico,
+            'Telefone:' => $estudante->telefone,
+            'Data de nascimento:' => $estudante->data_nascimento->format('d/m/Y'),
+        ],
+        [
+            'Idade:' => $estudante->idade,
+            'Situação acadêmica:' => $estudante->situacao->label(),
+            'CPF:' => $estudante->cpf,
+            'Nacionalidade:' => $estudante->nacionalidade,
+            'Naturalidade:' => $estudante->naturalidade,
+            'Etnia:' => $estudante->etnia?->label(),
+            'Sexo:' => $estudante->sexo->label(),
+            'empty' => '',
+            'Nome do pai:' => $estudante->nome_pai,
+            'Telefone do pai:' => $estudante->telefone_pai,
+            'Nome da mãe:' => $estudante->nome_mae,
+            'Telefone da mãe:' => $estudante->telefone_mae,
+            'Nome do responsável:' => $estudante->nome_responsavel,
+            'Telefone do responsável:' => $estudante->telefone_responsavel,
+            'E-mail do responsável:' => $estudante->email_responsavel,
+        ],
+    ]
+@endphp
+
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
     <x-secao-expansivel.bottom title="Dados Gerais">
-        <x-slot:topActions>
-            <x-button type="link" href="{{ route('estudantes.edit', ['estudante' => $estudante]) }}" icon="edit"
-                color="transparent" class="text-white" />
-        </x-slot:topActions>
+        @can('update', $estudante)
+            <x-slot:topActions>
+                <x-button type="link" href="{{ route('estudantes.edit', ['estudante' => $estudante]) }}" icon="edit"
+                    color="transparent" class="text-white" />
+            </x-slot:topActions>
+        @endcan
 
         <div class="flex gap-20 justify-center items-center px-20">
             <img src="{{ asset($estudante->avatar ?? 'storage/img/placeholder-user.png') }}"
                 class="h-50 w-50 object-cover rounded-full shrink-0" alt="{{ $estudante->avatar }}">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
-                <x-display-dado label="Nome:" value="{{ $estudante->nome }}" />
-                <x-display-dado label="Matrícula:" value="{{ $estudante->matricula }}" />
-                <x-display-dado label="Ingresso:"
-                    value="{{ $estudante->ingresso_ano . '/' . $estudante->ingresso_periodo }}" />
-                <x-display-dado label="Período:" value="{{ $estudante->periodo }}" />
-                <x-display-dado label="Curso:" value="{{ $estudante->curso->nome }}" />
-                <x-display-dado label="Quant. de períodos do curso:"
-                    value="{{ $estudante->curso->quantidade_periodos }}" />
-                <x-display-dado label="E-mail pessoal:" value="{{ $estudante->email_pessoal }}" />
-                <x-display-dado label="E-mail acadêmico:" value="{{ $estudante->email_academico }}" />
-                <x-display-dado label="Telefone:" value="{{ $estudante->telefone }}" />
-                <x-display-dado label="Data de nascimento:"
-                    value="{{ $estudante->data_nascimento->format('d/m/Y') }}" />
+                @foreach ($displays[0] as $label => $value)
+                    <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                @endforeach
             </div>
         </div>
 
@@ -30,21 +56,9 @@
             <div class="flex gap-20 justify-center items-center px-20">
                 <div class="min-w-50"></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
-                    <x-display-dado label="Idade:" value="{{ $estudante->idade }}" />
-                    <x-display-dado label="Situação acadêmica:" value="{{ $estudante->situacao->label() }}" />
-                    <x-display-dado label="CPF:" value="{{ $estudante->cpf }}" />
-                    <x-display-dado label="Nacionalidade:" value="{{ $estudante->nacionalidade }}" />
-                    <x-display-dado label="Naturalidade:" value="{{ $estudante->naturalidade }}" />
-                    <x-display-dado label="Etnia:" value="{{ $estudante->etnia?->label() }}" />
-                    <x-display-dado label="Sexo:" value="{{ $estudante->sexo->label() }}" />
-                    <div></div>
-                    <x-display-dado label="Nome do pai:" value="{{ $estudante->nome_pai }}" />
-                    <x-display-dado label="Telefone do pai:" value="{{ $estudante->telefone_pai }}" />
-                    <x-display-dado label="Nome da mãe:" value="{{ $estudante->nome_mae }}" />
-                    <x-display-dado label="Telefone da mãe:" value="{{ $estudante->telefone_mae }}" />
-                    <x-display-dado label="Nome do responsável:" value="{{ $estudante->nome_responsavel }}" />
-                    <x-display-dado label="Telefone do responsável:" value="{{ $estudante->telefone_responsavel }}" />
-                    <x-display-dado label="E-mail do responsável:" value="{{ $estudante->email_responsavel }}" />
+                    @foreach ($displays[1] as $label => $value)
+                        <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                    @endforeach
                 </div>
             </div>
         </x-slot:hidden>
@@ -67,18 +81,7 @@
 
     <x-secao-expansivel title="Observações" class="mt-5">
         <x-slot:topActions>
-            <x-modal title="Adicionar observação" icon="add" color="transparent" size="2xl">
-                <form action="{{ route('estudantes.observacoes.store', ['estudante' => $estudante->id]) }}"
-                    method="POST">
-                    @csrf
-                    <livewire:form.input type="textarea" name="observacao" label="Nova observação" appearance="outlined"
-                        size="full" />
-                    <div class="flex justify-end gap-3 mt-1 mb-2">
-                        <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                        <x-button label="Adicionar" type="submit" color="primary" />
-                    </div>
-                </form>
-            </x-modal>
+            <livewire:modal.stateful />
         </x-slot:topActions>
 
         <hr class="mx-4 text-on-surface">
@@ -132,8 +135,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Familiar</p>
             @if ($estudante->entrevistaFamiliar)
@@ -146,8 +148,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
             @endif
         </div>
     </x-secao-expansivel>
@@ -163,8 +164,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Estudo de Caso</p>
             @if ($estudante->estudoDeCaso)
@@ -175,8 +175,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Ficha CPAE</p>
             @if ($estudante->fichaCpae)
@@ -187,8 +186,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             @endif
             <p class="text-title-medium my-2">Outros</p>
             <div class="flex flex-col gap-2">
@@ -200,8 +198,7 @@
                         </x-slot:metadata>
                     </x-documento>
                 @endforeach
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
             </div>
         </div>
     </x-secao-expansivel>
@@ -220,8 +217,7 @@
                 @endforeach
             @else
                 <p>Nenhum plano foi criado no momento</p>
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('planos-flexibilizacao.create')}}" />
+                <x-button.add href="{{route('planos-flexibilizacao.create')}}" />
             @endif
         </div>
 
@@ -267,8 +263,7 @@
                 @endforeach
             @else
                 <p>Nenhum plano foi criado no momento</p>
-                <x-button label="Adicionar" icon="add" color="tertiary" type="link"
-                    href="{{route('planos-trabalho.form')}}" />
+                <x-button.add href="{{route('planos-trabalho.form')}}" />
             @endif
         </div>
 

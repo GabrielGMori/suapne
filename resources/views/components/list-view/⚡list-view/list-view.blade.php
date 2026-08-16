@@ -9,7 +9,7 @@
 @endphp
 
 <div class="list-view-wrapper">
-    @include('components.⚡list-view.filters', [
+    @include('components.list-view.⚡list-view.filters', [
         'filters' => $filters,
         'filtersExpanded' => $filtersExpanded,
     ])
@@ -66,7 +66,7 @@
                                             <div class="flex justify-end gap-3 mb-2">
                                                 <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
                                     @endif
-                                                
+
                                     @if(!$action->isLink($item))
                                         <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
                                             @if($action->needsDirective($item))
@@ -76,7 +76,7 @@
                                     @endif
 
                                     <x-button :label="$action->needsConfirmation($item) ? 'Confirmar' : null" :size="$action->needsConfirmation($item) ? 'medium' : 'dynamic'"
-                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)" 
+                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)"
                                         :icon="!$action->needsConfirmation($item) ? $action->getIcon($item) : null" :href="$action->getUrl($item)" />
 
                                     @if(!$action->isLink($item))

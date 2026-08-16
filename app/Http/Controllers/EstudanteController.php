@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\EstudanteRequest;
 use Illuminate\Http\RedirectResponse;
 
+use Illuminate\Support\Facades\Auth;
 class EstudanteController extends Controller
 {
     /**
