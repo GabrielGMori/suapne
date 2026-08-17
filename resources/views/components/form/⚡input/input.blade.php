@@ -8,7 +8,7 @@
     >
         @if ($this->isTextarea())
             <textarea
-                {{ $attributes->merge(['class' => $this->resolvedClass() . ($name && $errors->has($name) ? ' form-control-error' : '')]) }}
+                {{ $attributes->merge(['class' => $this->resolvedClass() . ($name && $errors->has($this->resolvedErrorName()) ? ' form-control-error' : '')]) }}
                 id="{{ $name }}"
                 name="{{ $name }}"
                 placeholder="{{ $this->resolvedPlaceholder() }}"
@@ -17,7 +17,7 @@
 
         @else
             <input
-                {{ $attributes->merge(['class' => $this->resolvedClass() . ($name && $errors->has($name) ? ' form-control-error' : '')]) }}
+                {{ $attributes->merge(['class' => $this->resolvedClass() . ($name && $errors->has($this->resolvedErrorName()) ? ' form-control-error' : '')]) }}
                 id="{{ $name }}"
                 name="{{ $name }}"
                 type="{{ $this->isTypePassword() ? 'password' : $this->resolvedType() }}"
@@ -43,7 +43,7 @@
     </div>
 
     <div class="h-5">
-        @error($name)
+        @error($this->resolvedErrorName())
             <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
     </div>

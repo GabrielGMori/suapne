@@ -32,7 +32,8 @@ class PlanoFlexibilizacaoCurricularController extends Controller
      */
     public function store(PlanoFlexibilizacaoCurricularRequest $request) : RedirectResponse
     {
-        PlanoFlexibilizacaoCurricular::create( $request->validated());
+        PlanoFlexibilizacaoCurricular::create($request->validated());
+
         return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
 

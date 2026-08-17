@@ -88,4 +88,9 @@ new class extends Component
 
         $this->dispatch('form-input-updated', name: $this->name, value: $value);
     }
+
+    public function resolvedErrorName(): string
+    {
+        return preg_replace('/\[(.*?)\]/', '.$1', $this->name);
+    }
 };

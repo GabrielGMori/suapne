@@ -15,20 +15,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            AdminSeeder::class,
+            
             CursoSeeder::class,
             DisciplinaSeeder::class,
             UserSeeder::class,
             EstudanteSeeder::class,
-            PlanoFlexibilizacaoCurricularSeeder::class,
-            PlanoTrabalhoEstudanteSeeder::class,
-            AtendimentoSemanalSeeder::class,
-            RegistroAcaoSeeder::class,
-            SolicitacaoRegistroSeeder::class,
-            DocumentoSeeder::class,
-            EntrevistaFamiliarSeeder::class,
-            ObservacaoEstudanteSeeder::class,
-
-            AdminSeeder::class,
+            // PlanoFlexibilizacaoCurricularSeeder::class,
+            // PlanoTrabalhoEstudanteSeeder::class,
+            // AtendimentoSemanalSeeder::class,
+            // RegistroAcaoSeeder::class,
+            // SolicitacaoRegistroSeeder::class,
+            // DocumentoSeeder::class,
+            // EntrevistaFamiliarSeeder::class,
+            // ObservacaoEstudanteSeeder::class,
         ]);
     }
 }

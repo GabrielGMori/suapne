@@ -22,7 +22,7 @@
             " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
             <button
                 type="button"
-                class="select-control {{ $baseClass }} {{ $name && $errors->has($name) ? 'form-control-error' : ''}}"
+                class="select-control {{ $baseClass }} {{ $name && $errors->has($this->resolvedErrorName()) ? 'form-control-error' : ''}}"
                 x-on:click="isOpen = !isOpen"
             >
                 <div x-show="selected.length > 0" class="w-full text-left">
@@ -99,7 +99,7 @@
     </div>
 
     <div class="h-5">
-        @error($name)
+        @error($this->resolvedErrorName())
             <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
     </div>

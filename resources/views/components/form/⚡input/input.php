@@ -92,4 +92,9 @@ new class extends Component
             default => '',
         };
     }
+
+    public function resolvedErrorName(): string
+    {
+        return preg_replace('/\[(.*?)\]/', '.$1', $this->name);
+    }
 };
