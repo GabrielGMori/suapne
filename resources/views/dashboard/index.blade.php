@@ -39,7 +39,7 @@
                 <div class="w-full max-w-sm">
                     <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
-                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.form')}}" />
+                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create')}}" />
             </div>
 
             <x-icon icon="assignment_add" size="40" label="Criar plano de trabalho do estudante" />
