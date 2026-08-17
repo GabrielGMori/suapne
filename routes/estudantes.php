@@ -24,6 +24,7 @@ Route::name('estudantes.')->prefix('/estudantes/{estudante}')->group(function ()
     });
 
     Route::controller(DocumentoController::class)->name('documentos.')->prefix("/documentos")->group(function () {
-        Route::get("/adicionar", 'create')->name('create');
+        Route::get("/adicionar/{tipoDocumento?}", 'create')->name('create');
+        Route::post("/adicionar/{tipoDocumento?}", 'store')->name('store');
     });
 });

@@ -164,7 +164,8 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'laudo'])}}" />
             @endif
             <p class="text-title-medium my-2">Estudo de Caso</p>
             @if ($estudante->estudoDeCaso)
@@ -175,7 +176,7 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'estudo_de_caso'])}}" />
             @endif
             <p class="text-title-medium my-2">Ficha CPAE</p>
             @if ($estudante->fichaCpae)
@@ -186,15 +187,17 @@
                     </x-slot:metadata>
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'ficha_cpae'])}}" />
             @endif
             <p class="text-title-medium my-2">Outros</p>
             <div class="flex flex-col gap-2">
                 @foreach ($estudante->outrosDocumentos as $documento)
-                    <x-documento name="{{ $documento->nome }}" actionIcon="download" actionUrl="#">
+                    <x-documento name="{{ $documento->nome . '.' . $documento->extensao }}">
                         <x-slot:metadata>
                             <p>Enviada por: {{ $documento->user->nome }}</p>
-                            <p>Data de envio: {{ $documento->created_at->format('d/m/Y') }}</p>
+                            <p>Data de envio: {{ $documento->created_at->format('d/m/Y m:i') }}</p>
+                            <x-button icon="download" color="transparent"
+                                @click="window.open('{{ Storage::disk('public')->url($documento->path) }}', '_blank')" />
                         </x-slot:metadata>
                     </x-documento>
                 @endforeach

@@ -1,5 +1,4 @@
 <?php
-// resources/views/livewire/form/avatar-upload.blade.php
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -24,7 +23,7 @@ new class extends Component {
         $this->validate([
             'uploadedImg' => 'image|max:10240' // 10 MB
         ]);
-        $path = $this->uploadedImg->store('img/uploads/avatars', 'public');
+        $path = $this->uploadedImg->store('uploads/avatars', 'public');
 
         $this->storedImgPath = 'storage/' . $path;
         $this->previewImgPath = $this->storedImgPath;

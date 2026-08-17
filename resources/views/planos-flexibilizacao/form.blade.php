@@ -46,10 +46,4 @@
             <x-button type="submit" label="Registrar (Em breve)"/>
         </div>
     </div>
-
-    @if($errors)
-        @foreach($errors as $error)
-            dd($error)
-        @endforeach
-    @endif
 </x-layouts.main>

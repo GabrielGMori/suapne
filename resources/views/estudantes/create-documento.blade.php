@@ -1,25 +1,27 @@
-<x-layouts.main title="Adicionar documento">
-    <div class="flex items-end justify-between mb-10">
-        <div class="flex items-center gap-10">
-        <livewire:form.input disabled type="text" label="Nome do documento" appearance="outlined"/>
-        <livewire:form.input disabled type="file" label="Arquivo" appearance="outlined"/>
+@props(['tipo' => null])
+
+@php
+    use App\Enums\TipoDocumentoEnum;
+    $resolvedTipo = $tipo !== null ? TipoDocumentoEnum::from($tipo) : TipoDocumentoEnum::DOCUMENTO;
+@endphp
+
+<x-layouts.main title="Adicionar {{ $resolvedTipo->label() ?? 'documento' }}">
+
+    <form
+        action="{{ route('estudantes.documentos.store', ['estudante' => $estudante, 'tipoDocumento' => $resolvedTipo]) }}"
+        method="POST">
+        @csrf
+
+        {{-- The Livewire component sits inside the form --}}
+        <livewire:document-upload />
+
+        <div class="flex justify-end gap-2 mt-10">
+            <x-button label="Cancelar" type="link"
+                href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['estudante' => $estudante]) }}"
+                color="red" />
+
+            <x-button label="Adicionar" type="submit" />
         </div>
-        <x-button color="secondary" icon="add"/>
-    </div>
-    <hr class="text-on-surface">
-    <div class="flex flex-col gap-10 mt-10">
-        <div class="flex">
-            <x-documento name="Documento a ser adicionado.pdf" icon="draft" actionIcon="download" class="grow">
-                <x-slot:metadata>
-                    <p>Enviada por: {{ \App\Models\User::inRandomOrder()->first()->nome }}</p>
-                    <p>Data de envio: {{ now()->format('d/m/Y') }}</p>
-                    <x-button icon="delete" color="transparent"/>
-                </x-slot:metadata>
-            </x-documento>
-        </div>
-        <div class="flex justify-end gap-2">
-            <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['id' => $estudante->id]) }}" color="red"/>
-            <x-button label="Adicionar (Em breve)" disabled/>
-        </div>
-    </div>
+    </form>
+
 </x-layouts.main>

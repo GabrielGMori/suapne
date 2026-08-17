@@ -1,21 +1,24 @@
 <?php
 
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
 
-new class extends Component
-{
+new class extends Component {
     public ?string $label = null;
     public string $name = '';
     public string $type = 'text';
     public ?string $placeholder = null;
 
     #[Modelable]
-    public ?string $value = null;
+    public mixed $value = null;
     public ?string $helper = null;
     public string $size = 'medium';
     public string $appearance = 'default';
     public ?string $mask = null;
+
+    #[Reactive] 
+    public ?string $error = null;
 
     public function mount(): void
     {
@@ -46,17 +49,12 @@ new class extends Component
         return $this->type === 'textarea';
     }
 
-    public function isFile(): bool
-    {
-        return $this->type === 'file';
-    }
-
     public function resolvedType(): string
     {
         return match (true) {
             $this->type === 'datetime' => 'datetime-local',
-            $this->isTypePassword()   => 'password',
-            default                   => $this->type,
+            $this->isTypePassword() => 'password',
+            default => $this->type,
         };
     }
 
@@ -68,8 +66,8 @@ new class extends Component
 
         return match (true) {
             $this->type === 'datetime' => 'DD/MM/AAAA 00:00',
-            $this->type === 'date'     => 'DD/MM/AAAA',
-            default                    => '',
+            $this->type === 'date' => 'DD/MM/AAAA',
+            default => '',
         };
     }
 
@@ -79,12 +77,11 @@ new class extends Component
 
         return match (true) {
             $this->isTextarea() => "{$baseClass} form-control-textarea",
-            $this->isFile()     => "{$baseClass} form-control-file",
-            default             => $baseClass,
+            default => $baseClass,
         };
     }
 
-    public function resolvedMask() : string
+    public function resolvedMask(): string
     {
         return match (true) {
             isset($this->mask) => trim($this->mask),
