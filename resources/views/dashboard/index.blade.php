@@ -1,13 +1,16 @@
-<x-layouts.main title="Início" header="Olá, {{auth()->user()->nome}}!">
+<x-layouts.main title="Início" header="Olá, {{Auth::user()->nome}}!">
     <div class="grid grid-cols-2 gap-8 w-full mt-8">
         <div class="col-span-2 space-y-1">
             <div class="flex items-center gap-1">
                 @php($solicitacoes = \App\Models\SolicitacaoRegistro::count())
                 @if($solicitacoes === 0)
-                    <x-icon icon="check" class="text-primary-accent" size="45" label="Não há solicitações de cadastro no momento" />
+                    <x-icon icon="check" class="text-primary-accent" size="45"
+                        label="Não há solicitações de cadastro no momento" />
                 @else
-                    <x-icon icon="person_alert" class="ml-1" size="45" label="Existem {{$solicitacoes}} solicitaç{{$solicitacoes === 1 ? 'ão' : 'ões'}} de cadastro aguardando aprovação" />
-                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link" href="{{route('solicitacoes-registro.index')}}" />
+                    <x-icon icon="person_alert" class="ml-1" size="45"
+                        label="Existem {{$solicitacoes}} solicitaç{{$solicitacoes === 1 ? 'ão' : 'ões'}} de cadastro aguardando aprovação" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link"
+                        href="{{route('solicitacoes-registro.index')}}" />
                 @endif
             </div>
         </div>
@@ -16,10 +19,13 @@
             <div class="flex items-center gap-1">
                 @php($planos = \App\Models\PlanoTrabalhoEstudante::where('status', \App\Enums\StatusPlanoTrabalhoEnum::PENDENTE)->count())
                 @if($planos === 0)
-                    <x-icon icon="check" class="text-primary-accent" size="45" label="Não há PTEs aguardando revisão no momento" />
+                    <x-icon icon="check" class="text-primary-accent" size="45"
+                        label="Não há PTEs aguardando revisão no momento" />
                 @else
-                    <x-icon icon="notification_important" size="45" label="Existem {{$planos}} PTE{{$planos === 1 ? '' : 's'}} aguardando revisão" />
-                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link" href="{{route('planos-trabalho.index')}}" />
+                    <x-icon icon="notification_important" size="45"
+                        label="Existem {{$planos}} PTE{{$planos === 1 ? '' : 's'}} aguardando revisão" />
+                    <x-button icon="open_in_new" size="dynamic" color="transparent" type="link"
+                        href="{{route('planos-trabalho.index')}}" />
                 @endif
             </div>
 
@@ -33,7 +39,7 @@
                 <div class="w-full max-w-sm">
                     <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
-                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.form')}}" />
+                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create')}}" />
             </div>
 
             <x-icon icon="assignment_add" size="40" label="Criar plano de trabalho do estudante" />
@@ -55,16 +61,20 @@
                 @else
                     @foreach(\App\Models\RegistroAcao::orderBy('created_at', 'DESC')->take(5)->get() as $registroAcao)
                         <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
-                            <img src="{{asset($registroAcao->user->avatar ?? 'storage/img/placeholder-user.png')}}" alt="{{$registroAcao->user->nome}}" class="h-15 w-15 object-cover rounded-full shrink-0" />
+                            <img src="{{asset($registroAcao->user->avatar ?? 'storage/img/placeholder-user.png')}}"
+                                alt="{{$registroAcao->user->nome}}" class="h-15 w-15 object-cover rounded-full shrink-0" />
                             <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
-                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::EDICAO_ESTUDANTE ? 'de' : ''}} <b>{{$registroAcao->estudante->nome}}</b></p>
-                            <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link" href="{{route('registro-auditoria.index')}}" /></div>
+                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::EDICAO_ESTUDANTE ? 'de' : ''}}
+                                <b>{{$registroAcao->estudante->nome}}</b>
+                            </p>
+                            <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link"
+                                    href="{{route('registro-auditoria.index')}}" /></div>
                         </div>
                     @endforeach
-                    <x-button label="Ver mais" height="small" color="tertiary" type="link" href="{{route('registro-auditoria.index')}}" />
+                    <x-button label="Ver mais" height="small" color="tertiary" type="link"
+                        href="{{route('registro-auditoria.index')}}" />
                 @endif
             </div>
         </div>
     </div>
 </x-layouts.main>
-

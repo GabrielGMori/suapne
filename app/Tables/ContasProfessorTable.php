@@ -32,20 +32,21 @@ class ContasProfessorTable extends ListViewConfig
             ListViewColumn::make('name')->label('Nome do professor'),
             ListViewColumn::make('email')->label('E-mail do professor')->size('large'),
             ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
-            ->format(fn($value) => $value->count() > 0 ? view('components.item-expansivel', [
-                'items' => $value->map(fn($disciplina) => "{$disciplina->nome} - {$disciplina->curso->nome}")->toArray(),
-                'label' => 'Disciplinas'
-            ]) : '---'),
+            ->format(fn($value) => $value->count() > 0 ? view('components.modal.simple-text', [
+                'label' => 'Ver disciplinas',
+                'title' => 'Disciplinas',
+                'value' => $value->map(fn($disciplina) => "• {$disciplina->nome} - {$disciplina->curso->nome}")->toArray()
+            ])->render() : '---'),
         ];
     }
 
     public function filters(): array
     {
         return [
-            ListViewFilter::make('nome')->label('Nome do professor')->size('large'),
+            ListViewFilter::make('nome')->label('Nome do professor'),
             ListViewFilter::make('email')->label('E-mail do professor')->size('large'),
             ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('xlarge')->type('multiselect')->equals()
-                ->options(Disciplina::all()->pluck('nome', 'id')->mapWithKeys(fn($value, $key) => [$key => "$value - " . Disciplina::find($key)->curso->nome])->toArray()),
+                ->options(Disciplina::all()->mapWithKeys(fn(Disciplina $disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso->nome}"])->toArray()),
         ];
     }
 

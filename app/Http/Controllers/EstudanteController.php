@@ -7,22 +7,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\EstudanteRequest;
 use Illuminate\Http\RedirectResponse;
 
+use Illuminate\Support\Facades\Auth;
 class EstudanteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $estudantes = Estudante::orderBy('nome')->paginate(10);
+        $estudantes = Estudante::paginate(10);
 
-        return view('estudantes.index', compact('estudantes'));
+        return view('estudantes.index', ['estudantes' => $estudantes]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         return view('estudantes.form');
     }
@@ -40,17 +41,17 @@ class EstudanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Estudante $estudante)
+    public function show(Request $request, Estudante $estudante)
     {
-        return view('estudantes.show', compact('estudante'));
+        return view('estudantes.show', ['estudante' => $estudante]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estudante $estudante)
+    public function edit(Request $request, Estudante $estudante)
     {
-        return view('estudantes.form', compact('estudante'));
+        return view('estudantes.form', ['estudante' => $estudante]);
     }
 
     /**
@@ -59,14 +60,14 @@ class EstudanteController extends Controller
     public function update(EstudanteRequest $request, Estudante $estudante)
     {
         $estudante->update($request->validated());
-        
+
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estudante $estudante)
+    public function destroy(Request $request, Estudante $estudante)
     {
         $estudante->delete();
 

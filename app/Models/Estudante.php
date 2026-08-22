@@ -6,6 +6,7 @@ use App\Enums\EtniaEnum;
 use App\Enums\SexoEnum;
 use App\Enums\SituacaoEstudanteEnum;
 use App\Enums\TipoDocumentoEnum;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Illuminate\Support\Collection;
 
 class Estudante extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = [
         'nome',
@@ -73,6 +74,15 @@ class Estudante extends Model
         'curso_id' => 'Curso',
     ];
 
+    protected $cascadeSofDeleteRelations = [
+        'planosFlexibilizacaoCurricular',
+        'planosTrabalho',
+        'atendimentosSemanais',
+        'documentos',
+        'entrevistaFamiliar',
+        'observacoes',
+    ];
+
     protected $casts = [
         'ingresso_ano' => 'integer',
         'ingresso_periodo' => 'integer',
@@ -88,65 +98,65 @@ class Estudante extends Model
         return $this->readableFillable[$key] ?? null;
     }
 
-    public function curso() : BelongsTo
+    public function curso(): BelongsTo
     {
         return $this->belongsTo(Curso::class, 'curso_id');
     }
 
-    public function planosFlexibilizacaoCurricular() : HasMany
-{
-    return $this->hasMany(PlanoFlexibilizacaoCurricular::class, 'estudante_id');
-}
+    public function planosFlexibilizacaoCurricular(): HasMany
+    {
+        return $this->hasMany(PlanoFlexibilizacaoCurricular::class, 'estudante_id');
+    }
 
-    public function planosTrabalho() : HasMany
+    public function planosTrabalho(): HasMany
     {
         return $this->hasMany(PlanoTrabalhoEstudante::class, 'estudante_id');
     }
 
-    public function atendimentosSemanais() : HasMany
+    public function atendimentosSemanais(): HasMany
     {
         return $this->hasMany(AtendimentoSemanal::class, 'estudante_id');
     }
 
-    public function documentos() : HasMany
+    public function documentos(): HasMany
     {
         return $this->hasMany(Documento::class, 'estudante_id');
     }
 
-    public function entrevistaFamiliar() : HasOne
+    public function entrevistaFamiliar(): HasOne
     {
         return $this->hasOne(EntrevistaFamiliar::class, 'estudante_id');
     }
 
-    public function observacoes() : HasMany
+    public function observacoes(): HasMany
     {
-        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id');
+        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->orderBy('created_at','desc');
     }
-    public function getEntrevistaEstudanteAttribute() : ?Documento
+    public function getEntrevistaEstudanteAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::ENTREVISTA_ESTUDANTE)->first();
     }
-    public function getLaudoAttribute() : ?Documento
+    public function getLaudoAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->first();
     }
 
-    public function getEstudoDeCasoAttribute() : ?Documento
+    public function getEstudoDeCasoAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::ESTUDO_DE_CASO)->first();
     }
 
-    public function getFichaCpaeAttribute() : ?Documento
+    public function getFichaCpaeAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::FICHA_CPAE)->first();
     }
 
-    public function getOutrosDocumentosAttribute() : Documento|Collection
+    public function getOutrosDocumentosAttribute(): Documento|Collection
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::DOCUMENTO)->get();
     }
 
-    public function getIdadeAttribute() : int
+    public function getIdadeAttribute(): int
     {
         return now()->diff($this->data_nascimento)->y;
     }

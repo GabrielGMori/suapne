@@ -19,6 +19,7 @@ class CursoPolicy
         }
         return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
     }
+
     /**
      * Determine whether the user can view any models.
      */

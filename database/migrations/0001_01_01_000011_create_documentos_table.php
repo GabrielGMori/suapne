@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('tipo', TipoDocumentoEnum::values());
 
             $table->string('nome', 200);
+            $table->string('extensao', 10);
             $table->string('path', 200);
 
             $table->timestamps();

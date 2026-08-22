@@ -10,6 +10,7 @@ use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewConfig;
 use App\View\Components\ListViewFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class EstudanteTable extends ListViewConfig
 {
@@ -21,6 +22,11 @@ class EstudanteTable extends ListViewConfig
     public function title(): ?string
     {
         return 'Estudantes registrados';
+    }
+
+    public function canCreate(): bool
+    {
+        return Auth::user()->can('create', Estudante::class);
     }
 
     public function createUrl(): ?string

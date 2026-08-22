@@ -19,7 +19,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         return PlanoFlexibilizacaoCurricular::query();
     }
     public function title(): ?string { return 'Planos de Flexibilização Curricular'; }
-    public function createUrl(): ?string { return route('planos-flexibilizacao.form'); }
+    public function createUrl(): ?string { return route('planos-flexibilizacao.create'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }
     public function icon(): string|\Closure { return "tune"; }
@@ -49,7 +49,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['id' => $item->id])),
+            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $item->id])),
         ];
     }
 

@@ -12,11 +12,12 @@
 
     <input x-ref="avatarInput" id="avatar-upload-{{ $name }}" type="file" wire:model="uploadedImg" accept="image/*" hidden>
 
+    <span wire:loading wire:target="uploadedImg">Carregando...</span>
     @error('uploadedImg')
-        <span class="text-error">{{ $message }}</span>
+    <span class="text-error">{{ $message }}</span>
     @enderror
     @error($name)
-        <span class="text-error">{{ $message }}</span>
+    <span class="text-error">{{ $message }}</span>
     @enderror
 
     <div class="btn btn-tertiary cursor-pointer text-body-medium">

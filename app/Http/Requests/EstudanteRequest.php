@@ -18,7 +18,7 @@ class EstudanteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Estudante::class);
+        return true;
     }
 
     protected function prepareForValidation(): void
@@ -66,7 +66,7 @@ class EstudanteRequest extends FormRequest
             'nome_responsavel' => ['nullable', 'string', 'max:200'],
             'telefone_responsavel' => ['nullable', 'string', 'min:10', 'max:20'],
             'email_responsavel' => ['nullable', 'email', 'max:255'],
-            'avatar' => ['nullable', 'string', 'max:255'], // 'starts_with:storage/img/uploads/avatars/'],
+            'avatar' => ['nullable', 'string', 'max:255'], // 'starts_with:storage/uploads/avatars/'],
 
             'curso_id' => ['required', 'integer', 'exists:cursos,id'],
         ];

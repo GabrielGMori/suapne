@@ -46,7 +46,7 @@ class UserFactory extends Factory
 
             $disciplinas = Disciplina::query()
                 ->inRandomOrder()
-                ->limit(random_int(1, min(5, Disciplina::count(3))))
+                ->limit(random_int(1, 5))
                 ->pluck('id')
                 ->toArray();
 

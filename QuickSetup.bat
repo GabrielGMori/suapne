@@ -142,22 +142,22 @@ echo Email: admin@exemplo.com
 echo Password: 123
 echo.
 
-set /p START=Start the development server now? (Y/N): 
+set /p START=Start the development server now? (Y/n): 
 
-if /I "%START%"=="Y" (
+if /I "%START%"=="n" (
     echo.
-    call composer dev
+    pause
+    exit /b 0
+
+    :error
+    echo.
+    echo ======================================
+    echo Setup failed.
+    echo Check the error messages above.
+    echo ======================================
+    pause
+    exit /b 1
 )
 
 echo.
-pause
-exit /b 0
-
-:error
-echo.
-echo ======================================
-echo Setup failed.
-echo Check the error messages above.
-echo ======================================
-pause
-exit /b 1
+call composer dev

@@ -4,14 +4,14 @@
     'height' => 'medium', // Altura do botão. Pode ser: small|medium
     'icon' => null, // Ícone do botão (usando Google Material Icons)
     'iconPos' => 'left', // Posição do ícone. Pode ser: left|right
+    'iconSize' => "26", // Tamanho do ícone
     'label' => null, // Texto do botão
     'type' => 'button', // Tipo do botão. Pode ser: button|submit|link
     'href' => null, // URL para o tipo 'link'
-    'onClick' => null // Função a ser chamada quando o botão for clicado
+    'onClick' => null, // Função a ser chamada quando o botão for clicado
 ])
 
 @php
-    $iconSize = "26";
     if (isset($icon) && (!isset($label) || empty($label) || !$label)) {
         $size = "icon";
         $iconSize = "32";

@@ -5,22 +5,23 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
 
-new class extends Component
-{
+new class extends Component {
     use WithPagination;
 
     public string $config;
 
     public ?string $title = null;
     public ?string $emptyMessage = null;
+    public bool|Closure $canCreate = true;
     public ?string $createUrl = null;
     public ?string $createLabel = null;
+    public bool $filtersExpanded = false;
 
     public int $perPage = 10;
 
     #[Url(as: 'filter')]
     public array $filtersStates = [];
-    
+
     protected function getConfigInstance(): ListViewConfig
     {
         return new ($this->config);
@@ -31,7 +32,7 @@ new class extends Component
         return collect($this->getConfigInstance()->filters())
             ->mapWithKeys(fn($filter) => [
                 ($filter->getIdentifier() ?? $filter->getKey()) => $filter->getDefault() ??
-                (in_array($filter->getType(), ['select', 'multiselect']) ? [] : null),
+                    (in_array($filter->getType(), ['select', 'multiselect']) ? [] : null),
             ])
             ->toArray();
     }
@@ -39,11 +40,12 @@ new class extends Component
     public function mount(): void
     {
         $config = $this->getConfigInstance();
-        $this->perPage      = $config->perPage();
-        $this->title        ??= $config->title();
-        $this->createUrl    ??= $config->createUrl();
-        $this->createLabel  ??= $config->createLabel();
-        $this->emptyMessage ??= $config->emptyMessage();
+        $this->perPage = $config->perPage();
+        $this->title = $config->title();
+        $this->canCreate = $config->canCreate();
+        $this->createUrl = $config->createUrl();
+        $this->createLabel = $config->createLabel();
+        $this->emptyMessage = $config->emptyMessage();
 
         $this->filtersStates = array_merge(
             $this->buildDefaultFiltersStates(),
@@ -88,7 +90,8 @@ new class extends Component
     public function getUrlFiltersProperty(): array
     {
         return collect($this->filtersStates)
-            ->filter(fn ($value) =>
+            ->filter(
+                fn($value) =>
                 $value !== null &&
                 $value !== '' &&
                 (!is_array($value) || !empty($value))

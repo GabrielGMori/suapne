@@ -1,8 +1,11 @@
 @props([
-    'role' => 'docente_especial' // Define o role do usuário para mostrar os itens de navegação corretos. Pode ser: professor_regular|tecnico|docente_especial
+    'role' => 'docente_especial', // Define o role do usuário para mostrar os itens de navegação corretos. Pode ser: professor_regular|tecnico|docente_especial
+    'user' => null, // Nome do usuário logado para exibir no menu lateral
 ])
 
 @php
+    use App\Enums\RoleEnum;
+
     $divider = ['divider' => true];
     $sidebarStorageKey = 'cnapne.sidebar.collapsed';
 
@@ -11,15 +14,15 @@
         ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'],
     ];
 
-    if ($role === 'professor_regular') {
+    if ($role === RoleEnum::PROFESSOR_REGULAR->value) {
         $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment']];
     }
 
-    if ($role === 'tecnico') {
+    if ($role === RoleEnum::TECNICO->value) {
         $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history']];
     }
 
-    if ($role === 'docente_especial') {
+    if ($role === RoleEnum::DOCENTE_ESPECIAL->value) {
         $navItems = [
             ...$navItems,
             ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'],

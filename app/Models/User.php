@@ -59,9 +59,4 @@ class User extends Authenticatable
         return $this->nome;
     }
 
-    public function getFuncaoAttribute()
-    {
-        return $this->role instanceof \App\Enums\RoleEnum ? $this->role->label() : $this->role;
-    }
-
 }

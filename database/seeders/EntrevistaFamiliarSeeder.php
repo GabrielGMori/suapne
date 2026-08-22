@@ -13,6 +13,6 @@ class EntrevistaFamiliarSeeder extends Seeder
      */
     public function run(): void
     {
-        EntrevistaFamiliar::factory(30)->create();
+        EntrevistaFamiliar::factory(5)->create();
     }
 }

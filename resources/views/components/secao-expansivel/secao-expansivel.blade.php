@@ -14,7 +14,7 @@
             @if($title)
                 <header class="flex justify-between items-center px-5 py-3">
                     <p class="text-display-small cursor-pointer" x-on:click="expanded = !expanded">{{ $title }}</p>
-                    <div class="grow flex justify-end z-200">
+                    <div class="grow flex justify-end">
                         {{ $topActions ?? '' }}
                         <button type="button" class="flex items-center gap-1 text-black font-medium hover:opacity-70 transition-opacity cursor-pointer"  x-on:click="expanded = !expanded">
                             <x-icon icon="keyboard_arrow_down" size="40" class="transition-transform duration-200" x-bind:class="expanded ? 'rotate-180' : ''" />
