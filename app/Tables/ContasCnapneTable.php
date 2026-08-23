@@ -49,7 +49,7 @@ class ContasCnapneTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(User $item) => route('contas.cnapne.form', ['id' => $item->id]))->icon('edit'),
+            ListViewAction::make(static fn(User $item) => route('contas.cnapne.edit', $item->id))->icon('edit'),
         ];
     }
 }

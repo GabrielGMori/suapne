@@ -15,7 +15,9 @@ class ContasProfessorTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->where('role', RoleEnum::PROFESSOR_REGULAR);
+         return User::query()
+        ->where('role', RoleEnum::PROFESSOR_REGULAR)
+        ->with('disciplinas.curso');
     }
 
     public function title(): ?string { return 'Professores registrados'; }
@@ -53,7 +55,7 @@ class ContasProfessorTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(User $item) => route('contas.professor.form', ['id' => $item->id]))->icon('edit'),
+           ListViewAction::make(static fn(User $item) => route('contas.professor.edit', $item))->icon('edit'),
         ];
     }
 }

@@ -1,13 +1,22 @@
 <?php
 
-Route::name('contas.')->prefix('contas')->group(function () {
-    Route::name('cnapne.')->prefix('cnapne')->group(function () {
-        Route::view('/', 'contas.cnapne.index')->name('index');
-        Route::view('/editar', 'contas.cnapne.form')->name('form');
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+
+Route::prefix('contas')->name('contas.')->group(function () {
+
+    // Contas CNAPNE
+    Route::prefix('cnapne')->name('cnapne.')->group(function () {
+        Route::get('/', [UserController::class, 'indexCnapne'])->name('index');
+        Route::get('/{user}/editar', [UserController::class, 'editCnapne'])->name('edit');
+        Route::put('/{user}', [UserController::class, 'updateCnapne'])->name('update');
     });
 
-    Route::name('professor.')->prefix('professor')->group(function () {
-        Route::view('/', 'contas.professor.index')->name('index');
-        Route::view('/editar', 'contas.professor.form')->name('form');
+    // Contas de Professores
+    Route::prefix('professor')->name('professor.')->group(function () {
+        Route::get('/', [UserController::class, 'indexProfessor'])->name('index');
+        Route::get('/{user}/editar', [UserController::class, 'editProfessor'])->name('edit');
+        Route::put('/{user}', [UserController::class, 'updateProfessor'])->name('update');
     });
+
 });

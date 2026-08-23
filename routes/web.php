@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\PlanoFlexibilizacaoCurricularController;
 use Illuminate\Support\Facades\Route;
 
 Route::resourceVerbs([
+
     'create' => 'novo',
-    'edit' => 'editar'
+    'edit' => 'editar',
+
 ]);
 
 Route::view('/temp', 'components-temp');
@@ -15,8 +18,15 @@ Route::middleware('web')->group(base_path('routes/auth.php'));
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard.index')->name('dashboard.index');
+
     Route::middleware('web')->group(base_path('routes/estudantes.php'));
+
     Route::middleware('web')->group(base_path('routes/planos-flexibilizacao.php'));
+
+    Route::get('/planos-flexibilizacao/{id}/pdf',
+        [PlanoFlexibilizacaoCurricularController::class, 'exportPdf']
+    )->name('planos-flexibilizacao.pdf');
+
     Route::middleware('web')->group(base_path('routes/planos-trabalho.php'));
     Route::middleware('web')->group(base_path('routes/atendimentos.php'));
 
@@ -33,4 +43,3 @@ Route::middleware('auth')->group(function () {
     Route::middleware('web')->group(base_path('routes/cursos.php'));
     Route::middleware('web')->group(base_path('routes/disciplinas.php'));
 });
-
