@@ -2,12 +2,11 @@
 
 use App\Http\Controllers\PlanoFlexibilizacaoCurricularController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlanoFlexibilizacaoController;
 
 Route::resourceVerbs([
-
     'create' => 'novo',
     'edit' => 'editar',
-
 ]);
 
 Route::view('/temp', 'components-temp');
@@ -16,7 +15,9 @@ Route::redirect('/', '/dashboard');
 
 Route::middleware('web')->group(base_path('routes/auth.php'));
 
+// Grupo de rotas autenticadas
 Route::middleware('auth')->group(function () {
+
     Route::view('/dashboard', 'dashboard.index')->name('dashboard.index');
 
     Route::middleware('web')->group(base_path('routes/estudantes.php'));
@@ -29,7 +30,6 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('web')->group(base_path('routes/planos-trabalho.php'));
     Route::middleware('web')->group(base_path('routes/atendimentos.php'));
-
     Route::middleware('web')->group(base_path('routes/contas.php'));
 
     Route::name('registro-auditoria.')->group(function () {
