@@ -3,25 +3,32 @@
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
+use Livewire\Attributes\Reactive;
 
 new class extends Component
 {
     #[Modelable]
     public array|string $selectedItems = [];
 
-    public array  $options       = [];
+    #[Reactive]
+    public array|Collection|null  $options       = [];
+
     public bool   $isMultiple    = false;
     public bool   $clearable     = false;
     public string $name          = '';
     public ?string $label        = null;
     public string $appearance    = 'default';
     public string $size          = 'medium';
-    public ?string $placeholder  = '';
     public bool   $dispatchEvent = true;
+
+    #[Reactive]
+    public ?string $placeholder  = '';
+
+    #[Reactive]
+    public ?bool   $disabled      = false;
 
     public function mount(
         string  $type          = 'select',
-        array   $options       = [],
         mixed   $value         = null,
         string  $name          = '',
         ?string $label         = null,
@@ -30,6 +37,7 @@ new class extends Component
         ?string $placeholder   = '',
         bool    $clearable     = false,
         bool    $dispatchEvent = true,
+        bool    $disabled      = false,
     ): void {
         $this->isMultiple    = $type === 'multiselect';
         $this->name          = $name;
@@ -38,13 +46,8 @@ new class extends Component
         $this->size          = $size;
         $this->placeholder   = $placeholder;
         $this->clearable     = $clearable;
+        $this->disabled      = $disabled;
         $this->dispatchEvent = $dispatchEvent;
-
-        // Preserve key => label pairs as [{value, label}] objects for Alpine
-        $this->options = collect($options)
-            ->map(fn($label, $key) => ['value' => (string) $key, 'label' => (string) $label])
-            ->values()
-            ->all();
 
         $baseName = rtrim($name, '[]');
         $resolved = ($value !== null && $value !== '')
@@ -62,6 +65,8 @@ new class extends Component
 
     public function clear(): void
     {
+        if ($this->disabled) return;
+
         $this->selectedItems = [];
         $this->emitChange();
     }

@@ -81,11 +81,7 @@
 
     <x-secao-expansivel title="Observações" class="mt-5">
         <x-slot:topActions>
-<<<<<<< Updated upstream
             <livewire:modal.stateful.observacoes :estudante="$estudante" />
-=======
-            
->>>>>>> Stashed changes
         </x-slot:topActions>
 
         <hr class="mx-4 text-on-surface">

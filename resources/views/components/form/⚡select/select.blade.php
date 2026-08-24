@@ -1,7 +1,7 @@
 @php
-    $baseClass = "form-control form-control-{$appearance} form-control-{$size}";
+    $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/70' : '');
     $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
-    $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '');
+    $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '') . ($disabled ? ' hidden' : '');
 @endphp
 
 <div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">
@@ -11,7 +11,8 @@
 
     <div class="form-control-wrap">
         <div class="select form-control-{{ $size }}" role="combobox" aria-haspopup="listbox" tabindex="0"
-            x-data="formSelectData(@js($options, JSON_THROW_ON_ERROR), @js($isMultiple, JSON_THROW_ON_ERROR), @entangle('selectedItems'))"
+            aria-disabled="{{ $disabled ? 'true' : 'false' }}"
+            x-data="formSelectData(@js($options, JSON_THROW_ON_ERROR), @js($isMultiple, JSON_THROW_ON_ERROR), @entangle('selectedItems'), @js($disabled, JSON_THROW_ON_ERROR))"
             x-init="
                 $watch('isOpen', v => {
                     if (! v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; }
@@ -22,6 +23,7 @@
             " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
             <button
                 type="button"
+                @disabled($disabled)
                 class="select-control {{ $baseClass }} {{ $name && $errors->has($this->resolvedErrorName()) ? 'form-control-error' : ''}}"
                 x-on:click="isOpen = !isOpen"
             >
@@ -48,6 +50,7 @@
             </button>
 
             <button type="button" class="select-clear"
+                @disabled($disabled)
                 x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
                 x-on:click="clearSelections()" aria-label="Limpar seleção">&times;
             </button>
@@ -106,7 +109,7 @@
 </div>
 
 <script>
-    window.formSelectData = function (options, isMultiple, selected) {
+    window.formSelectData = function (options, isMultiple, selected, disabled) {
         return {
             isOpen: false,
             searchQuery: '',
@@ -117,6 +120,7 @@
             selected,
             options,
             isMultiple,
+            disabled,
 
             get selectedSet() {
                 return new Set(this.selected);
@@ -187,6 +191,8 @@
             },
 
             toggleOption(opt) {
+                if (this.disabled) return;
+
                 if (this.isMultiple) {
                     this.selected = this.isSelected(opt.value)
                         ? this.selected.filter(v => v !== opt.value)
@@ -200,11 +206,13 @@
             },
 
             removeOption(value) {
+                if (this.disabled) return;
 
                 this.selected = this.selected.filter(v => v !== value);
             },
 
             clearSelections() {
+                if (this.disabled) return;
 
                 this.selected = [];
             },
@@ -226,6 +234,8 @@
             },
 
             handleKeydown(e) {
+                if (this.disabled) return;
+
                 if (e.key === 'Backspace') {
                     if (this.searchQuery.length > 0) {
                         e.preventDefault();

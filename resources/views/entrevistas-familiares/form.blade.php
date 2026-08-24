@@ -179,11 +179,7 @@
         <livewire:form.input  type="text" label="Em que área do conhecimento percebe mais dificuldade para aprender? Por quê?" appearance="outlined" name="campos[emQueAreaDificuldade]" value="{{old('campos.emQueAreaDificuldade')}}"/>
     </div>
     <div class="flex justify-end gap-2">
-<<<<<<< Updated upstream
-        <x-button label="Registrar"/>
-=======
         <x-button type="submit" label="Registrar" />
->>>>>>> Stashed changes
     </div>
     @if ($errors->any())
     <div class="alert alert-danger">
