@@ -1,4 +1,5 @@
 @php
+
     $displays = [
         [
             'Nome:' => $estudante->nome,
@@ -145,6 +146,7 @@
                 <x-documento name="Entrevista com familiar" icon="edit_note">
                     <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
                     <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
+                    <x-button icon="open_in_new" color="transparent" type="link" href="{{ route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar ]) }}" />
                 </x-documento>
             @else
                 <x-button.add href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />

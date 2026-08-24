@@ -37,6 +37,14 @@ class EntrevistaFamiliarController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
+    {
+        return view('entrevistas-familiares.show',['estudante' => $estudante,'entrevistaFamiliar' => $entrevistaFamiliar]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit()
