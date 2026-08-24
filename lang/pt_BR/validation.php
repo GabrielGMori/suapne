@@ -261,6 +261,8 @@ return [
         'email_responsavel' => 'e-mail do responsável',
         'avatar' => 'avatar',
         'curso_id' => 'curso',
+        'observacoes' => 'observações',
+        'observacao' => 'observação',
     ],
 
 ];

@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Estudante;
+use App\Models\User;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 class PlanoFlexibilizacaoCurricular extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'planos_flexibilizacao_curricular';
 
@@ -26,7 +29,7 @@ class PlanoFlexibilizacaoCurricular extends Model
         'periodo_inicio' => 'date',
         'periodo_fim' => 'date',
     ];
-    
+
 
     public function getAnoAttribute(): string
     {
@@ -47,5 +50,5 @@ class PlanoFlexibilizacaoCurricular extends Model
     {
         return "Plano de Flexibilização Curricular de {$this->estudante->nome} - {$this->periodo_inicio->year}";
     }
-    
+
 }

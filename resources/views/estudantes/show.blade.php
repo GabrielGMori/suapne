@@ -81,7 +81,7 @@
 
     <x-secao-expansivel title="Observações" class="mt-5">
         <x-slot:topActions>
-            <livewire:modal.stateful />
+            <livewire:modal.stateful.observacoes :estudante="$estudante" />
         </x-slot:topActions>
 
         <hr class="mx-4 text-on-surface">
@@ -122,30 +122,29 @@
             @else
                 <p class="p-5">Nenhuma observação registrada</p>
             @endif
+        </div>
     </x-secao-expansivel>
 
     <x-secao-expansivel title="Entrevistas" class="mt-5">
         <div class="p-5">
             <p class="text-title-medium mb-2">Estudante</p>
             @if ($estudante->entrevistaEstudante)
-                <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="#" icon="edit_note">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->entrevistaEstudante->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
+                <x-documento name="Entrevista com o estudante ({{ $estudante->entrevistaEstudante->nomeArquivo }})"
+                    icon="edit_note">
+                    <p>Enviada por: {{ $estudante->entrevistaEstudante->user->nome }}</p>
+                    <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
+                    <x-button icon="download" color="transparent"
+                        @click="window.open('{{ Storage::disk('public')->url($estudante->entrevistaEstudante->path) }}', '_blank')" />
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
+                <x-button.add
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'entrevista_estudante'])}}" />
             @endif
             <p class="text-title-medium my-2">Familiar</p>
             @if ($estudante->entrevistaFamiliar)
-                <x-documento name="Entrevista com familiar"
-                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar])}}"
-                    icon="edit_note">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
+                <x-documento name="Entrevista com familiar" icon="edit_note">
+                    <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
+                    <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
                 </x-documento>
             @else
                 <x-button.add href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
@@ -157,11 +156,11 @@
         <div class="p-5">
             <p class="text-title-medium mb-2">Laudo</p>
             @if ($estudante->laudo)
-                <x-documento name="Laudo" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->laudo->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
+                <x-documento name="Laudo ({{ $estudante->laudo->nomeArquivo }})">
+                    <p>Enviada por: {{ $estudante->laudo->user->nome }}</p>
+                    <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
+                    <x-button icon="download" color="transparent"
+                        @click="window.open('{{ Storage::disk('public')->url($estudante->laudo->path) }}', '_blank')" />
                 </x-documento>
             @else
                 <x-button.add
@@ -169,36 +168,36 @@
             @endif
             <p class="text-title-medium my-2">Estudo de Caso</p>
             @if ($estudante->estudoDeCaso)
-                <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->estudoDeCaso->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
+                <x-documento name="Estudo de Caso ({{ $estudante->estudoDeCaso->nomeArquivo }})">
+                    <p>Enviada por: {{ $estudante->estudoDeCaso->user->nome }}</p>
+                    <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
+                    <x-button icon="download" color="transparent"
+                        @click="window.open('{{ Storage::disk('public')->url($estudante->estudoDeCaso->path) }}', '_blank')" />
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'estudo_de_caso'])}}" />
+                <x-button.add
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'estudo_de_caso'])}}" />
             @endif
             <p class="text-title-medium my-2">Ficha CPAE</p>
             @if ($estudante->fichaCpae)
-                <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->fichaCpae->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
+                <x-documento name="Ficha CPAE ({{ $estudante->fichaCpae->nomeArquivo }})">
+                    <p>Enviada por: {{ $estudante->fichaCpae->user->nome }}</p>
+                    <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
+                    <x-button icon="download" color="transparent"
+                        @click="window.open('{{ Storage::disk('public')->url($estudante->fichaCpae->path) }}', '_blank')" />
                 </x-documento>
             @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'ficha_cpae'])}}" />
+                <x-button.add
+                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'ficha_cpae'])}}" />
             @endif
             <p class="text-title-medium my-2">Outros</p>
             <div class="flex flex-col gap-2">
                 @foreach ($estudante->outrosDocumentos as $documento)
-                    <x-documento name="{{ $documento->nome . '.' . $documento->extensao }}">
-                        <x-slot:metadata>
-                            <p>Enviada por: {{ $documento->user->nome }}</p>
-                            <p>Data de envio: {{ $documento->created_at->format('d/m/Y m:i') }}</p>
-                            <x-button icon="download" color="transparent"
-                                @click="window.open('{{ Storage::disk('public')->url($documento->path) }}', '_blank')" />
-                        </x-slot:metadata>
+                    <x-documento name="{{ $documento->nomeArquivo }}">
+                        <p>Enviada por: {{ $documento->user->nome }}</p>
+                        <p>Data de envio: {{ $documento->created_at->format('d/m/Y m:i') }}</p>
+                        <x-button icon="download" color="transparent"
+                            @click="window.open('{{ Storage::disk('public')->url($documento->path) }}', '_blank')" />
                     </x-documento>
                 @endforeach
                 <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
@@ -210,12 +209,9 @@
         <div class="p-5 flex flex-col gap-2">
             @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
                 @foreach ($estudante->planosFlexibilizacaoCurricular as $plano)
-                    <x-documento name="{{ $plano->nome }}" icon="tune"
-                        actionUrl="{{route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano])}}">
-                        <x-slot:metadata>
-                            <p>Criado por: {{ $plano->user->nome }}</p>
-                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
-                        </x-slot:metadata>
+                    <x-documento name="{{ $plano->nome }}" icon="tune">
+                        <p>Criado por: {{ $plano->user->nome }}</p>
+                        <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                     </x-documento>
                 @endforeach
             @else
@@ -223,7 +219,6 @@
                 <x-button.add href="{{route('planos-flexibilizacao.create')}}" />
             @endif
         </div>
-
         <x-slot:topActions>
             <x-button icon="search" color="transparent"></x-button>
             <x-button icon="add" color="transparent"></x-button>
@@ -251,13 +246,10 @@
                             x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
                             <div class="min-h-0 overflow-hidden flex flex-col gap-2 pt-3">
                                 @foreach ($planos as $plano)
-                                    <x-documento name="{{ $plano->nome }}" icon="assignment"
-                                        actionUrl="{{route('planos-trabalho.show', ['id' => $plano->id])}}">
-                                        <x-slot:metadata>
-                                            <p>Status: {{ $plano->status->label() }}</p>
-                                            <p>Criado por: {{ $plano->user->nome }}</p>
-                                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
-                                        </x-slot:metadata>
+                                    <x-documento name="{{ $plano->nome }}" icon="assignment">
+                                        <p>Status: {{ $plano->status->label() }}</p>
+                                        <p>Criado por: {{ $plano->user->nome }}</p>
+                                        <p>Data de criaÃ§Ã£o: {{ $plano->created_at->format('d/m/Y') }}</p>
                                     </x-documento>
                                 @endforeach
                             </div>
@@ -269,35 +261,33 @@
                 <x-button.add href="{{route('planos-trabalho.form')}}" />
             @endif
         </div>
-
         <x-slot:topActions>
             <x-button icon="search" color="transparent"></x-button>
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>
 
-    <x-secao-expansivel title="Atendimentos Semanais" class="m-5">
+    <x-secao-expansivel title="Atendimentos Semanais" class="mt-5">
         <div class="p-5 flex flex-col gap-4">
             @if (count($estudante->atendimentosSemanais) > 0)
                 @foreach ($estudante->atendimentosSemanais as $atendimento)
-                    <x-documento name="{{ $atendimento->nome }}" icon="article_person"
-                        actionUrl="{{route('atendimentos.show', ['id' => $atendimento->id])}}">
-                        <x-slot:metadata>
-                            <p>Realizado por: {{ $atendimento->user->nome }}</p>
-                            <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
-                        </x-slot:metadata>
+                    <x-documento name="{{ $atendimento->nome }}" icon="article_person">
+                        <p>Realizado por: {{ $atendimento->user->nome }}</p>
+                        <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
                     </x-documento>
                 @endforeach
+            @else
+                <p>Nenhum atendimento foi registrado no momento</p>
+                <x-button.add href="{{route('atendimentos.create')}}" />
             @endif
         </div>
-
         <x-slot:topActions>
             <x-button icon="search" color="transparent"></x-button>
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>
 
-    <div class="flex justify-end gap-3">
+    <div class="flex justify-end gap-3 mt-5">
         <x-modal title="Excluir estudante" label="Excluir estudante" icon="delete" color="red">
             <p class="mb-10 text-body-large">Tem certeza que deseja excluir este estudante?<br>Você poderá restaurá-lo
                 posteriormente.</p>

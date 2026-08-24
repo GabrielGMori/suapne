@@ -14,10 +14,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use App\Models\Curso;
+use App\Models\PlanoFlexibilizacaoCurricular;
+use App\Models\PlanoTrabalhoEstudante;
+use App\Models\AtendimentoSemanal;
+use App\Models\EntrevistaFamiliar;
+use App\Models\ObservacaoEstudante;
+use App\Models\Documento;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Estudante extends Model
+class Estudante extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $fillable = [
         'nome',

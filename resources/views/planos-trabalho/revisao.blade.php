@@ -69,8 +69,8 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <x-button label="Devolver para retificação (em breve)" color="red" />
-                <x-button label="Aprovar PTE (em breve)" />
+                <x-button label="Devolver para retificação" color="red" />
+                <x-button label="Aprovar PTE" />
             </div>
     </div>
 </x-layouts.main>

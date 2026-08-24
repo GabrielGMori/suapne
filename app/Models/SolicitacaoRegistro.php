@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\User;
+use App\Models\Disciplina;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 class SolicitacaoRegistro extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'solicitacoes_registro';
 
@@ -39,12 +42,12 @@ class SolicitacaoRegistro extends Model
     {
         return $this->belongsTo(User::class, 'user_aprovador_id');
     }
-    
+
     public function usuarioCriado()
     {
         return $this->belongsTo(User::class, 'user_criado_id');
     }
-    
+
     public function disciplinas()
     {
         return $this->belongsToMany(Disciplina::class);

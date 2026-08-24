@@ -1,4 +1,4 @@
-@php($error ??= $errors->first($name))
+@php($error ??= $errors->first($this->resolvedErrorName()))
 
 <div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">
     @if ($label)

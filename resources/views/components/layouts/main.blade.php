@@ -2,7 +2,9 @@
 
 <x-layouts.app title="{{ $title }} - SUAPNE">
     <div class="flex flex-1">
-        <x-menu-lateral user="{{ Auth::user()->nome }}" role="{{ Auth::user()->role }}"/>
+        <div class="bg-secondary-container">
+            <x-menu-lateral user="{{ Auth::user()->nome }}" role="{{ Auth::user()->role }}"/>
+        </div>
 
         <main class="flex-1 bg-{{$bg}} mb-20">
             @if(session('status'))

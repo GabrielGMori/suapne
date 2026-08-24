@@ -84,8 +84,8 @@
             @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
                 <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow"/>
             @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)
-                <x-button label="Devolver para retificação (em breve)" color="red"/>
-                <x-button label="Aprovar (em breve)"/>
+                <x-button label="Devolver para retificação" color="red"/>
+                <x-button label="Aprovar"/>
             @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
             @endif
         </div>

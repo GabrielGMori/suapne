@@ -28,7 +28,7 @@
     </div>
     <div class="flex justify-end gap-2">
         <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('atendimentos.index') }}" color="red"/>
-        <x-button type="submit" label="Registrar (Em breve)"/>
+        <x-button type="submit" label="Registrar"/>
     </div>
     @if($errors)
         @foreach($errors as $error)

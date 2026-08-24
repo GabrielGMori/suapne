@@ -5,11 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
+use App\Models\Curso;
+use App\Models\User;
+use App\Models\SolicitacaoRegistro;
 class Disciplina extends Model
 {
     /** @use HasFactory<\Database\Factories\DisciplinaFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = [
         'nome',

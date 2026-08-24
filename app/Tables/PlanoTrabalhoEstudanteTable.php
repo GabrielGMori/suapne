@@ -13,6 +13,7 @@ use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder

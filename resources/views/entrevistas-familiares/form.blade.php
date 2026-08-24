@@ -171,6 +171,6 @@
         <livewire:form.input disabled type="text" label="Em que área do conhecimento percebe mais dificuldade para aprender? Por quê?" appearance="outlined"/>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Registrar (em breve)" disabled/>
+        <x-button label="Registrar"/>
     </div>
 </x-layouts.main>

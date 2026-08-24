@@ -54,25 +54,37 @@
 
         <div class="space-y-2 row-span-2 col-span-2 xl:col-span-1">
             <h3>Últimas alterações</h3>
-            @php($acoes = \App\Models\RegistroAcao::count())
+            @php($acoes = OwenIt\Auditing\Models\Audit::query()->latest()->take(5)->get())
             <div class="bg-surface rounded-xl flex flex-col items-center h-max p-5 gap-1">
-                @if($acoes === 0)
+                @if($acoes->isEmpty())
                     <p class="grow flex items-center">Nenhuma ação encontrada</p>
                 @else
-                    @foreach(\App\Models\RegistroAcao::orderBy('created_at', 'DESC')->take(5)->get() as $registroAcao)
+                    @foreach($acoes as $registroAcao)
                         <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
-                            <img src="{{asset($registroAcao->user->avatar ?? 'storage/img/placeholder-user.png')}}"
-                                alt="{{$registroAcao->user->nome}}" class="h-15 w-15 object-cover rounded-full shrink-0" />
-                            <p><b>{{$registroAcao->user->nome}}</b> {{strtolower($registroAcao->acao)}}
-                                {{$registroAcao->tipo === \App\Enums\TipoRegistroAcaoEnum::EDICAO_ESTUDANTE ? 'de' : ''}}
-                                <b>{{$registroAcao->estudante->nome}}</b>
+                            <img src="{{ asset($registroAcao->user?->avatar ?? 'storage/img/placeholder-user.png') }}"
+                                alt="{{ $registroAcao->user?->nome ?? 'Usuário' }}"
+                                class="h-15 w-15 object-cover rounded-full shrink-0" />
+
+                            <p>
+                                <b>{{ $registroAcao->user?->nome ?? 'Usuário' }}</b>
+                                {{ strtolower($registroAcao->acao) }}
+
+                                @if($registroAcao->event === 'update')
+                                    de
+                                @endif
+
+                                <b>{{ $registroAcao->estudante?->nome ?? 'estudante removido' }}</b>
                             </p>
-                            <div class="flex justify-end grow"><x-button icon="open_in_new" color="transparent" type="link"
-                                    href="{{route('registro-auditoria.index')}}" /></div>
+
+                            <div class="flex justify-end grow">
+                                <x-button icon="open_in_new" color="transparent" type="link"
+                                    href="{{ route('registro-auditoria.index') }}" />
+                            </div>
                         </div>
                     @endforeach
+
                     <x-button label="Ver mais" height="small" color="tertiary" type="link"
-                        href="{{route('registro-auditoria.index')}}" />
+                        href="{{ route('registro-auditoria.index') }}" />
                 @endif
             </div>
         </div>

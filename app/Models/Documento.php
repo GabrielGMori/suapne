@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
+use App\Models\User;
+use App\Models\Estudante;
 class Documento extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'documentos';
 
@@ -33,5 +36,10 @@ class Documento extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getNomeArquivoAttribute(): string
+    {
+        return $this->nome . '.' . $this->extensao;
     }
 }

@@ -177,7 +177,7 @@
     x-bind:data-expanded="!collapsed ? 'true' : 'false'"
     data-compact="false"
     x-bind:data-compact="compact ? 'true' : 'false'"
-    {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
+    {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-[100vh] flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
 
     <a href="#"
        data-sidebar-logo-link
@@ -219,25 +219,25 @@
                       data-sidebar-compact-link>
                     @csrf
                     <button type="submit" title="{{ $item['label'] }}" class="{{ $navLinkClasses }}">
-            @else
-                <a href="{{ $item['href'] ?? '#' }}" draggable="false"
-                   data-sidebar-compact-link
-                   title="{{ $item['label'] }}"
-                   class="{{ $navLinkClasses }}">
-            @endif
-                @if (isset($item['icon']))
-                    <x-icon
-                        class="{{($item['red'] ?? false) ? 'text-red group-hover:text-error pl-1' : 'text-primary group-hover:text-primary-accent'}} shrink-0"
-                        size="24">{{ $item['icon'] }}</x-icon>
-                @endif
-                <span data-sidebar-label x-show="!collapsed" class="truncate">
+                        @else
+                            <a href="{{ $item['href'] ?? '#' }}" draggable="false"
+                               data-sidebar-compact-link
+                               title="{{ $item['label'] }}"
+                               class="{{ $navLinkClasses }}">
+                                @endif
+                                @if (isset($item['icon']))
+                                    <x-icon
+                                        class="{{($item['red'] ?? false) ? 'text-red group-hover:text-error pl-1' : 'text-primary group-hover:text-primary-accent'}} shrink-0"
+                                        size="24">{{ $item['icon'] }}</x-icon>
+                                @endif
+                                <span data-sidebar-label x-show="!collapsed" class="truncate">
                     {{ $item['label'] }}
                 </span>
-            @if(($item['method'] ?? 'GET') !== 'GET')
+                            @if(($item['method'] ?? 'GET') !== 'GET')
                     </button>
                 </form>
-            @else
-                </a>
+                @else
+                    </a>
             @endif
         @endforeach
     </nav>

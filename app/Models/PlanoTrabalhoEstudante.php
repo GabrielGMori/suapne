@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Estudante;
+use App\Models\User;
+use App\Models\Disciplina;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 class PlanoTrabalhoEstudante extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'planos_trabalho_estudante';
 
@@ -58,6 +62,11 @@ class PlanoTrabalhoEstudante extends Model
     }
 
     public function getAnoAttribute()
+    {
+        return $this->created_at->format('Y');
+    }
+
+    public function getAnoCriacaoAttribute(): string
     {
         return $this->created_at->format('Y');
     }

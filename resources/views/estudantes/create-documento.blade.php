@@ -1,8 +1,13 @@
 @props(['tipo' => null])
 
 @php
-    use App\Enums\TipoDocumentoEnum;
-    $resolvedTipo = $tipo !== null ? TipoDocumentoEnum::from($tipo) : TipoDocumentoEnum::DOCUMENTO;
+    use App\Enums\TipoDocumentoEnum as TipoDoc;
+    $resolvedTipo = $tipo !== null ? TipoDoc::from($tipo) : TipoDoc::DOCUMENTO;
+
+    $maxDoc = 1;
+    if ($resolvedTipo === TipoDoc::DOCUMENTO) {
+        $maxDoc = null;
+    }
 @endphp
 
 <x-layouts.main title="Adicionar {{ $resolvedTipo->label() ?? 'documento' }}">
@@ -12,8 +17,7 @@
         method="POST">
         @csrf
 
-        {{-- The Livewire component sits inside the form --}}
-        <livewire:document-upload />
+        <livewire:document-upload :max-documents="$maxDoc" />
 
         <div class="flex justify-end gap-2 mt-10">
             <x-button label="Cancelar" type="link"

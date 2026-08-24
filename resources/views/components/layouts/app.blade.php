@@ -15,8 +15,14 @@
 
 <body class="min-h-screen bg-white font-sans text-black antialised flex flex-col">
     {{ $slot }}
-    
+
     @livewireScripts
 </body>
+
+<script>
+    Livewire.on('refresh-page', (status) => {
+        location.reload();
+    });
+</script>
 
 </html>

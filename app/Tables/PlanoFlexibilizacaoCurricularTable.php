@@ -11,6 +11,8 @@ use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
 class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
 {

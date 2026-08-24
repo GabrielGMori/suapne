@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
+use App\Models\Disciplina;
+use App\Models\Estudante;
 class Curso extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $fillable = [
         'nome',

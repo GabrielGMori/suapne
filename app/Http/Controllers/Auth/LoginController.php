@@ -27,7 +27,8 @@ class LoginController extends Controller
             return redirect()->route('dashboard.index');
         }
 
-        throw ValidationException::withMessages(['credentials' => 'As credenciais inseridas são inválidas']);
+        return redirect()->route('login')->withErrors(['credentials' => 'As credenciais inseridas são inválidas']);
+        // throw ValidationException::withMessages(['credentials' => 'As credenciais inseridas são inválidas']);
     }
 
     public function logout(Request $request) : RedirectResponse

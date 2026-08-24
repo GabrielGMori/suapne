@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Estudante;
+use App\Models\User;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 class EntrevistaFamiliar extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'entrevistas_familiar';
 

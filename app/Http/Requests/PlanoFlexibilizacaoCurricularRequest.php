@@ -37,17 +37,17 @@ class PlanoFlexibilizacaoCurricularRequest extends FormRequest
             'user_id' => ['required','integer','exists:users,id'],
             'estudante_id' => ['required','integer','exists:estudantes,id'],
             'periodo_inicio' => ['required','date'],
-            'periodo_fim' => ['required','date','after:periodo_inicio'],   
+            'periodo_fim' => ['required','date','after:periodo_inicio'],
             'campos' => ['required','array'],
             'campos.acoesPedagogicas' => ['required','string'],
             'campos.atendimentoMultiprofissional' => ['required','string'],
             'campos.diferenciacaoCurricular' => ['required','string'],
             'campos.atendimentoIndividualizado' => ['required','string'],
-            'campos.alteracaoPrazo' => ['required','string'], 
+            'campos.alteracaoPrazo' => ['required','string'],
             'campos.reorganizacaoCurricular' => ['required','string'],
-            'campos.criteriosDiferenciados' => ['required','string'], 
-            'campos.componentesCurriculares' => ['nullable','array'],
-            'campos.informacoesAdicionais' => ['nullable','string'],     
+            'campos.criteriosDiferenciados' => ['required','string'],
+            'campos.componentesCurriculares' => ['required','array'],
+            'campos.informacoesAdicionais' => ['nullable','string'],
         ];
     }
 }

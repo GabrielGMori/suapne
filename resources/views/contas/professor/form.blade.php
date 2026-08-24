@@ -32,7 +32,6 @@
 
             </div>
         </div>
-
         <div class="flex justify-end gap-2">
             <x-button label="Cancelar" type="link" href="{{ route('contas.professor.index') }}" color="red" />
 
