@@ -17,20 +17,20 @@
                 <p>Dia/Horário/Local: 30/03/2026 15:30 CNAPNE</p>
 
                 <p>Necessidade educacional específica:</p>
-                <livewire:form.input disabled type="textarea" name="adaptacaopedagogica_outlined" appearance="outlined"
+                <x-form.input disabled type="textarea" name="adaptacaopedagogica_outlined" appearance="outlined"
                                      size="full" class="bg-surface" value="O aluno possui..."/>
             </div>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">2. Particularidades do estudante</h2>
-                <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                      appearance="outlined" size="full" class="bg-surface"
                                      value="Atendimentos e recursos utilizados pelo estudante..."/>
             </div>
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
                     flexibilização:
-                    <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                    <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                          appearance="outlined" size="full" class="bg-surface"
                                          value="Ementa da disciplina preenchida automaticamente..."/>
                 </h2>
@@ -39,7 +39,7 @@
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período
-                    <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                    <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                          appearance="outlined" size="full" class="bg-surface"
                                          value="Preenchido pelo professor"/>
                 </h2>
@@ -47,7 +47,7 @@
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período
-                    <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                    <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                          appearance="outlined" size="full" class="bg-surface"
                                          value="Preenchido pelo professor"/>
                 </h2>
@@ -56,7 +56,7 @@
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">5. Instrumentos avaliativos pretendidos e procedimentos adotados:</h2>
                 <p>(De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)</p>
-                <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                      appearance="outlined" size="full" class="bg-surface"
                                      value="Preenchido pelo professor"/>
             </div>
@@ -64,7 +64,7 @@
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">6. Outras considerações relevantes:</h2>
 
-                <livewire:form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
+                <x-form.input disabled type="textarea" name="atendimentomultiprofissional_outlined"
                                      appearance="outlined" size="full" class="bg-surface"
                                      value="Preenchido pelo professor"/>
             </div>

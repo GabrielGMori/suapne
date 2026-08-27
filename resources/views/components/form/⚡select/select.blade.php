@@ -15,7 +15,13 @@
             x-data="formSelectData(@js($options, JSON_THROW_ON_ERROR), @js($isMultiple, JSON_THROW_ON_ERROR), @entangle('selectedItems'), @js($disabled, JSON_THROW_ON_ERROR))"
             x-init="
                 $watch('isOpen', v => {
-                    if (! v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; }
+                    if ($refs.menu) $refs.menu.scrollTop = 0;
+                    if (! v) {
+                        searchQuery = '';
+                        resetNextType = false;
+                        highlightedIndex = 0;
+                        return;
+                    }
                 });
                 $watch('searchQuery', () => {
                     highlightedIndex = 0;
@@ -274,13 +280,14 @@
                     if (!this.isOpen) { e.preventDefault(); this.isOpen = true; return; }
                     e.preventDefault();
                     if (e.key === 'ArrowDown' && this.displayOptions.length > 0) {
-                        this.highlightedIndex = (this.highlightedIndex + 1) % this.displayOptions.length;
+                        this.highlightedIndex = Math.min(
+                            this.highlightedIndex + 1,
+                            this.displayOptions.length - 1,
+                        );
                         this.scrollToHighlighted();
                     }
                     if (e.key === 'ArrowUp' && this.displayOptions.length > 0) {
-                        this.highlightedIndex = this.highlightedIndex - 1 < 0
-                            ? this.displayOptions.length - 1
-                            : this.highlightedIndex - 1;
+                        this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0);
                         this.scrollToHighlighted();
                     }
                     if (e.key === 'Enter' && this.displayOptions.length > 0) {

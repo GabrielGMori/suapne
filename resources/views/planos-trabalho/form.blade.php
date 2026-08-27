@@ -1,26 +1,26 @@
 <x-layouts.main title="Criar Plano de Trabalho do Estudante">
     <div>
         <h2 class="flex items-center gap-5 mb-5 text-display-small">Período de realização:
-            <livewire:form.input disabled type="date" size="small" name="diainicio-outlined" appearance="outlined" /> a
-            <livewire:form.input disabled type="date" size="small" name="diafim-outlined" appearance="outlined" />
+            <x-form.input disabled type="date" size="small" name="diainicio-outlined" appearance="outlined" /> a
+            <x-form.input disabled type="date" size="small" name="diafim-outlined" appearance="outlined" />
         </h2>
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
             <h2 class="text-display-small">1. Dados do estudante</h2>
-            <livewire:form.input disabled type="select" label="Estudante" name="estudante_outlined" appearance="outlined"
+            <x-form.input disabled type="select" label="Estudante" name="estudante_outlined" appearance="outlined"
                 placeholder="Selecionar" />
-            <livewire:form.input disabled type="select" label="Componentes curriculares" name="estudante_outlined"
+            <x-form.input disabled type="select" label="Componentes curriculares" name="estudante_outlined"
                 appearance="outlined" placeholder="Selecionar" />
-            <livewire:form.input disabled type="select" label="Docentes" name="estudante_outlined" appearance="outlined"
+            <x-form.input disabled type="select" label="Docentes" name="estudante_outlined" appearance="outlined"
                 placeholder="Selecionar" />
-            <livewire:form.input disabled type="text" label=" Curso" name="estudante_outlined" appearance="outlined" />
-            <livewire:form.input disabled type="datetime" label=" Dia/Hora" name="estudante_outlined" appearance="outlined"
+            <x-form.input disabled type="text" label=" Curso" name="estudante_outlined" appearance="outlined" />
+            <x-form.input disabled type="datetime" label=" Dia/Hora" name="estudante_outlined" appearance="outlined"
                 size="small" />
-            <livewire:form.input disabled type="text" label=" Local" name="estudante_outlined" appearance="outlined" />
+            <x-form.input disabled type="text" label=" Local" name="estudante_outlined" appearance="outlined" />
         </div>
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">2. Pariculares do estudante </h2>
-            <livewire:form.input disabled type="textarea" name="adaptacaopedagogica_outlined" appearance="outlined"
+            <x-form.input disabled type="textarea" name="adaptacaopedagogica_outlined" appearance="outlined"
                 size="full" />
         </div>
 

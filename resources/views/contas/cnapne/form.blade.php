@@ -19,13 +19,13 @@
 
 
                 <div class="gap-4">
-                    <livewire:form.input type="text" name="name" label="Nome" appearance="outlined"
+                    <x-form.input type="text" name="name" label="Nome" appearance="outlined"
                         :value="$user->name" />
                 </div>
 
 
                 <div>
-                    <livewire:form.input type="email" name="email" label="E-mail" appearance="outlined"
+                    <x-form.input type="email" name="email" label="E-mail" appearance="outlined"
                         :value="$user->email" />
                 </div>
             </div>

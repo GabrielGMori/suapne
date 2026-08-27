@@ -17,25 +17,23 @@ new class extends Component {
     public string $appearance = 'default';
     public ?string $mask = null;
 
-    #[Reactive] 
+    #[Reactive]
     public ?string $error = null;
 
     public function mount(): void
     {
         if ($this->name !== '') {
-            $this->value = old($this->name, $this->value);
-        }
-    }
+            $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $this->name), '.');
 
-    public function updatedValue($val): void
-    {
-        $this->dispatch('form-input-updated', name: $this->name, value: $val);
+            if (old($oldName) !== null) {
+                $this->value = old($oldName);
+            }
+        }
     }
 
     public function clear(): void
     {
         $this->value = null;
-        $this->dispatch('form-input-updated', name: $this->name, value: null);
     }
 
 

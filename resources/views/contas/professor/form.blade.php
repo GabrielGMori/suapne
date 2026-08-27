@@ -19,14 +19,14 @@
                 </div>
 
                 <div class="flex flex-col gap-4">
-                    <livewire:form.input type="text" name="name" label="Nome" appearance="outlined"
+                    <x-form.input type="text" name="name" label="Nome" appearance="outlined"
                         :value="$user->name" />
 
-                    <livewire:form.input type="multiselect" label="Disciplinas" appearance="outlined" />
+                    <x-form.input type="multiselect" label="Disciplinas" appearance="outlined" />
                 </div>
 
                 <div>
-                    <livewire:form.input type="email" name="email" label="E-mail" appearance="outlined"
+                    <x-form.input type="email" name="email" label="E-mail" appearance="outlined"
                         :value="$user->email" />
                 </div>
 

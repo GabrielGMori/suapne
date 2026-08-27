@@ -11,13 +11,13 @@
         @endif
 
         <div class="space-y-4">
-            <livewire:form.input label="Nome do componente curricular" name="nome" appearance="outlined"
+            <x-form.input label="Nome do componente curricular" name="nome" appearance="outlined"
                 :value="$disciplina?->nome" required />
 
             <livewire:form.select label="Curso*" appearance="outlined" size="large" name="curso_id"
                 :options="\App\Models\Curso::pluck('nome', 'id')->toArray()" :value="$disciplina?->curso_id" required />
 
-            <livewire:form.input type="textarea" label="Ementa" name="ementa" appearance="outlined" size="full"
+            <x-form.input type="textarea" label="Ementa" name="ementa" appearance="outlined" size="full"
                 :value="$disciplina?->ementa" />
 
             <div class="flex justify-end gap-2">

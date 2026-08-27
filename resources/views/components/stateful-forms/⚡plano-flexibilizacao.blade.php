@@ -2,11 +2,11 @@
 
 use Livewire\Component;
 use App\Models\Estudante;
-use Illuminate\Database\Eloquent\Collection as DatabaseCollection;
 
 new class extends Component {
     public string|array $estudanteId = '';
     public ?Estudante $estudante = null;
+
     public ?array $disciplinas = null;
 
     public function mount(): void
@@ -40,10 +40,10 @@ new class extends Component {
     <div>
         <div class="flex gap-5 mb-5">
             <h2 class="text-display-small">Período de realização:</h2>
-            <livewire:form.input type="date" size="small" name="periodo_inicio" appearance="outlined"
+            <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined"
                 :value="$planoFlexibilizacao?->periodo_inicio->format('Y-m-d')" />
             <h2 class="text-display-small">a</h2>
-            <livewire:form.input type="date" size="small" name="periodo_fim" appearance="outlined"
+            <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined"
                 :value="$planoFlexibilizacao?->periodo_fim->format('Y-m-d')" />
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
@@ -60,13 +60,13 @@ new class extends Component {
                 implementação da flexibilização curricular</h2>
             <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas e tentativas de
                 adaptações realizadas até o momento)</h3>
-            <livewire:form.input type="textarea" name="campos[acoesPedagogicas]" appearance="outlined" size="full" />
+            <x-form.input type="textarea" name="campos[acoesPedagogicas]" appearance="outlined" size="full" />
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
             <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou
                 externos ao IFPR) que fazem o acompanhamento do estudante</h3>
-            <livewire:form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined"
+            <x-form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined"
                 size="full" />
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
@@ -95,7 +95,7 @@ new class extends Component {
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">6. Informações adicionais</h2>
-            <livewire:form.input type="textarea" name="campos[informacoesAdicionais]" appearance="outlined"
+            <x-form.input type="textarea" name="campos[informacoesAdicionais]" appearance="outlined"
                 size="full" />
         </div>
         <div class="flex justify-end gap-2">

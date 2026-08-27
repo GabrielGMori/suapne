@@ -14,7 +14,7 @@
         wire:model.live.debounce.300ms="filtersStates.{{ $id }}"
     />
 @else
-    <livewire:form.input
+    <x-form.input
         :key="$prefix.$id"
         :type="$filter->getType()"
         :name="$id"

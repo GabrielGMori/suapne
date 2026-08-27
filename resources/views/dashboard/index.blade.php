@@ -37,7 +37,7 @@
 
             <div class="flex items-end gap-4 mb-15">
                 <div class="w-full max-w-sm">
-                    <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
+                    <x-form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
                 <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create')}}" />
             </div>
@@ -46,7 +46,7 @@
 
             <div class="flex items-end gap-4">
                 <div class="w-full max-w-sm">
-                    <livewire:form.input label="Estudante" appearance="outlined" size="full" disabled />
+                    <x-form.input label="Estudante" appearance="outlined" size="full" disabled />
                 </div>
                 <x-button label="Criar PTE" type="link" href="{{route('planos-trabalho.form')}}" />
             </div>

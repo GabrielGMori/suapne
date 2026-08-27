@@ -2,7 +2,7 @@
     <x-modal name="modal-observacoes" title="Adicionar observação" icon="add" color="transparent" width="2xl">
         <form wire:submit="save">
 
-            <livewire:form.input
+            <x-form.input
                 type="textarea"
                 name="observacao"
                 label="Nova observação"

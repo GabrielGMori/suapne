@@ -49,8 +49,8 @@ new class extends Component
         $this->disabled      = $disabled;
         $this->dispatchEvent = $dispatchEvent;
 
-        $baseName = rtrim($name, '[]');
-        $resolved = $baseName !== '' ? old($baseName, $value) : $value;
+        $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
+        $resolved = $oldName !== '' ? old($oldName, $value) : $value;
 
         $this->selectedItems = $this->normalize($resolved);
     }
@@ -63,7 +63,6 @@ new class extends Component
     public function updatedSelectedItems(): void
     {
         $this->selectedItems = $this->normalize($this->selectedItems);
-        $this->emitChange();
     }
 
     public function clear(): void
@@ -71,7 +70,6 @@ new class extends Component
         if ($this->disabled) return;
 
         $this->selectedItems = [];
-        $this->emitChange();
     }
 
     private function normalize(mixed $value): array
@@ -85,17 +83,6 @@ new class extends Component
         }
 
         return [];
-    }
-
-    private function emitChange(): void
-    {
-        if (! $this->dispatchEvent) return;
-
-        $value = $this->isMultiple
-            ? $this->selectedItems
-            : ($this->selectedItems[0] ?? '');
-
-        $this->dispatch('form-input-updated', name: $this->name, value: $value);
     }
 
     public function resolvedErrorName(): string

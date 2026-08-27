@@ -146,7 +146,8 @@
                 <x-documento name="Entrevista com familiar" icon="edit_note">
                     <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
                     <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
-                    <x-button icon="open_in_new" color="transparent" type="link" href="{{ route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar ]) }}" />
+                    <x-button icon="open_in_new" color="transparent" type="link"
+                        href="{{ route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar]) }}" />
                 </x-documento>
             @else
                 <x-button.add href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
@@ -214,7 +215,8 @@
                     <x-documento name="{{ $plano->nome }}" icon="tune">
                         <p>Criado por: {{ $plano->user->nome }}</p>
                         <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
-                        <x-button icon="open_in_new" color="transparent" type="link" href="{{ route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano]) }}" />
+                        <x-button icon="open_in_new" color="transparent" type="link"
+                            href="{{ route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano]) }}" />
                     </x-documento>
                 @endforeach
             @else
@@ -277,6 +279,8 @@
                     <x-documento name="{{ $atendimento->nome }}" icon="article_person">
                         <p>Realizado por: {{ $atendimento->user->nome }}</p>
                         <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
+                        <x-button icon="open_in_new" color="transparent" type="link"
+                            href="{{ route('atendimentos.show', ['atendimento' => $plano]) }}" />
                     </x-documento>
                 @endforeach
             @else

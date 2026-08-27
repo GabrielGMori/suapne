@@ -4,8 +4,8 @@
             @csrf
 
             <div class="flex flex-col gap-2 mb-3">
-                <livewire:form.input label="E-mail:" name="email" placeholder="Digite seu e-mail"/>
-                <livewire:form.input type="password_forgot" label="Senha:" name="password"
+                <x-form.input label="E-mail:" name="email" placeholder="Digite seu e-mail"/>
+                <x-form.input type="password_forgot" label="Senha:" name="password"
                                      placeholder="Digite sua senha"/>
             </div>
 
