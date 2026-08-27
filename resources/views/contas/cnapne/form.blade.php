@@ -20,13 +20,13 @@
 
                 <div class="gap-4">
                     <livewire:form.input type="text" name="name" label="Nome" appearance="outlined"
-                        value="{{ old('name', $user->name) }}" />
+                        :value="$user->name" />
                 </div>
 
 
                 <div>
                     <livewire:form.input type="email" name="email" label="E-mail" appearance="outlined"
-                        value="{{ old('email', $user->email) }}" />
+                        :value="$user->email" />
                 </div>
             </div>
         </div>

@@ -214,6 +214,7 @@
                     <x-documento name="{{ $plano->nome }}" icon="tune">
                         <p>Criado por: {{ $plano->user->nome }}</p>
                         <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
+                        <x-button icon="open_in_new" color="transparent" type="link" href="{{ route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano]) }}" />
                     </x-documento>
                 @endforeach
             @else
@@ -222,7 +223,7 @@
             @endif
         </div>
         <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
+            {{-- <x-button icon="search" color="transparent"></x-button> --}}
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>
@@ -251,7 +252,7 @@
                                     <x-documento name="{{ $plano->nome }}" icon="assignment">
                                         <p>Status: {{ $plano->status->label() }}</p>
                                         <p>Criado por: {{ $plano->user->nome }}</p>
-                                        <p>Data de criaÃ§Ã£o: {{ $plano->created_at->format('d/m/Y') }}</p>
+                                        <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                                     </x-documento>
                                 @endforeach
                             </div>
@@ -264,7 +265,7 @@
             @endif
         </div>
         <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
+            {{-- <x-button icon="search" color="transparent"></x-button> --}}
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>
@@ -284,7 +285,7 @@
             @endif
         </div>
         <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
+            {{-- <x-button icon="search" color="transparent"></x-button> --}}
             <x-button icon="add" color="transparent"></x-button>
         </x-slot:topActions>
     </x-secao-expansivel>

@@ -146,4 +146,8 @@
     .select-option-selected {
         @apply bg-surface;
     }
+
+    .select-option-highlighted {
+        @apply bg-surface;
+    }
 }

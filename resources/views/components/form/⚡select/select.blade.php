@@ -20,6 +20,9 @@
                 $watch('searchQuery', () => {
                     highlightedIndex = 0;
                 });
+                $wire.on('updated-options', ({opt}) => {
+                    { options = normalizeOptions(opt) }
+                });
             " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
             <button
                 type="button"
@@ -57,7 +60,7 @@
 
             <div x-show="isOpen" x-cloak x-ref="menu" class="select-menu" role="listbox"
                 :aria-multiselectable="isMultiple">
-                <div x-show="searchQuery.length > 0" class="px-3 py-2 text-sm border-b bg-black/5">
+                <div x-show="searchQuery.length > 0" class="px-3 py-2 text-sm border-b sticky top-0 z-10 bg-surface">
                     Pesquisando por:
                     <span class="font-medium" x-text="searchQuery"></span>
                 </div>
@@ -72,7 +75,7 @@
                     <button type="button" class="select-option" role="option" :aria-selected="isSelected(option.value)"
                         x-bind:class="{
                             'select-option-selected': isSelected(option.value),
-                            'bg-black/5': highlightedIndex === index
+                            'select-option-highlighted': highlightedIndex === index
                         }" x-on:click="toggleOption(option)" x-on:mouseenter="highlightedIndex = index">
                         <span x-text="option.label"></span>
                         @if ($isMultiple)
@@ -110,6 +113,20 @@
 
 <script>
     window.formSelectData = function (options, isMultiple, selected, disabled) {
+        const normalizeOptions = (options) => {
+            if (!Array.isArray(options)) {
+                return Object.entries(options ?? {}).map(([value, label]) => ({ value, label }));
+            }
+
+            return options.map((option) => {
+                if (option && typeof option === 'object' && 'value' in option && 'label' in option) {
+                    return option;
+                }
+
+                return { value: option, label: option };
+            });
+        };
+
         return {
             isOpen: false,
             searchQuery: '',
@@ -117,8 +134,9 @@
             resetNextType: false,
             highlightedIndex: 0,
             errorDismissed: false,
+            normalizeOptions,
+            options: normalizeOptions(options),
             selected,
-            options,
             isMultiple,
             disabled,
 

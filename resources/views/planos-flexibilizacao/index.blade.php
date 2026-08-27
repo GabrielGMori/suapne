@@ -3,7 +3,7 @@
         @php($count = \App\Models\Estudante::doesntHave('planosFlexibilizacaoCurricular')->count())
         @if($count > 0)
             <x-icon icon="notification_important" size="45" label="Existem {{$count}} estudante{{$count === 1 ? '' : 's'}} sem plano de flexibilização para este ano" />
-            <x-button type="link" href="{{route('planos-flexibilizacao.create')}}" color="tertiary" icon="add" label="Criar Planos"/>
+            <x-button type="link" href="{{route('planos-flexibilizacao.create')}}" color="tertiary" icon="add" label="Criar Plano"/>
         @else
             <x-icon icon="check" class="text-primary-accent" size="45" label="Todos os estudantes registrados possuem um plano de flexibilização para este ano" />
         @endif

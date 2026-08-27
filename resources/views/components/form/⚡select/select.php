@@ -11,7 +11,7 @@ new class extends Component
     public array|string $selectedItems = [];
 
     #[Reactive]
-    public array|Collection|null  $options       = [];
+    public array  $options       = [];
 
     public bool   $isMultiple    = false;
     public bool   $clearable     = false;
@@ -50,11 +50,14 @@ new class extends Component
         $this->dispatchEvent = $dispatchEvent;
 
         $baseName = rtrim($name, '[]');
-        $resolved = ($value !== null && $value !== '')
-            ? $value
-            : (($baseName !== '') ? old($baseName) : null);
+        $resolved = $baseName !== '' ? old($baseName, $value) : $value;
 
         $this->selectedItems = $this->normalize($resolved);
+    }
+
+    public function updatedOptions($opt): void
+    {
+        $this->dispatch('updated-options', opt: $opt);
     }
 
     public function updatedSelectedItems(): void

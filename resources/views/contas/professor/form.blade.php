@@ -20,14 +20,14 @@
 
                 <div class="flex flex-col gap-4">
                     <livewire:form.input type="text" name="name" label="Nome" appearance="outlined"
-                        value="{{ old('name', $user->name) }}" />
+                        :value="$user->name" />
 
                     <livewire:form.input type="multiselect" label="Disciplinas" appearance="outlined" />
                 </div>
 
                 <div>
                     <livewire:form.input type="email" name="email" label="E-mail" appearance="outlined"
-                        value="{{ old('email', $user->email) }}" />
+                        :value="$user->email" />
                 </div>
 
             </div>
