@@ -116,7 +116,7 @@
     }
 
     .select-control {
-        @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-3;
+        @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-2;
     }
 
     .select-chips {
