@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdateCnapneRequest;
+use App\Http\Requests\UpdateProfessorRequest;
 
 class UserController extends Controller
 {
@@ -19,15 +20,15 @@ class UserController extends Controller
 
     public function editCnapne(User $user)
     {
-        return view('contas.cnapne.form', compact('user'));
+        return view('contas.cnapne.form', ['user' => $user]);
     }
 
     public function editProfessor(User $user)
     {
-        return view('contas.professor.form', compact('user'));
+        return view('contas.professor.form', ['user' => $user]);
     }
 
-    public function updateCnapne(Request $request, User $user)
+    public function updateCnapne(UpdateCnapneRequest $request, User $user)
     {
         $user->update([
             'nome' => $request->input('name'),
@@ -39,7 +40,7 @@ class UserController extends Controller
             ->with('success', 'Conta da CNAPNE atualizada com sucesso!');
     }
 
-    public function updateProfessor(Request $request, User $user)
+    public function updateProfessor(UpdateProfessorRequest $request, User $user)
     {
         $user->update([
             'nome' => $request->input('name'),

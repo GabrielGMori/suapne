@@ -8,9 +8,6 @@ use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class DisciplinaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $disciplinas = Disciplina::paginate(10);
@@ -18,17 +15,11 @@ class DisciplinaController extends Controller
         return view('disciplinas.index',  ['disciplinas' => $disciplinas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('disciplinas.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
   public function store(DisciplinaRequest $request)
     {
         Disciplina::create($request->validated());
@@ -36,17 +27,11 @@ class DisciplinaController extends Controller
         return redirect()->route('disciplinas.index')->with('status', 'Disciplina cadastrada com sucesso!');;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Disciplina $disciplina)
     {
         return view('disciplinas.form', ['disciplina' => $disciplina]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(DisciplinaRequest $request, Disciplina $disciplina)
     {
         $disciplina->update($request->validated());
@@ -54,9 +39,6 @@ class DisciplinaController extends Controller
         return redirect()->route('disciplinas.index')->with('status', 'Disciplina atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Disciplina $disciplina)
     {
 

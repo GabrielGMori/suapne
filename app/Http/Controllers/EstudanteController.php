@@ -10,9 +10,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 class EstudanteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $estudantes = Estudante::paginate(10);
@@ -20,17 +17,11 @@ class EstudanteController extends Controller
         return view('estudantes.index', ['estudantes' => $estudantes]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         return view('estudantes.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(EstudanteRequest $request) : RedirectResponse
     {
         Estudante::create($request->validated());
@@ -38,25 +29,16 @@ class EstudanteController extends Controller
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Request $request, Estudante $estudante)
     {
         return view('estudantes.show', ['estudante' => $estudante]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Request $request, Estudante $estudante)
     {
         return view('estudantes.form', ['estudante' => $estudante]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(EstudanteRequest $request, Estudante $estudante)
     {
         $estudante->update($request->validated());
@@ -64,9 +46,6 @@ class EstudanteController extends Controller
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request, Estudante $estudante)
     {
         $estudante->delete();

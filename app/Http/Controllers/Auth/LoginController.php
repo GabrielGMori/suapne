@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,12 +15,9 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request) : RedirectResponse
+    public function login(LoginRequest $request) : RedirectResponse
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
@@ -28,7 +26,6 @@ class LoginController extends Controller
         }
 
         return redirect()->route('login')->withErrors(['credentials' => 'As credenciais inseridas são inválidas']);
-        // throw ValidationException::withMessages(['credentials' => 'As credenciais inseridas são inválidas']);
     }
 
     public function logout(Request $request) : RedirectResponse

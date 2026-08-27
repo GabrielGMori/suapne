@@ -10,19 +10,10 @@ use Illuminate\Http\RedirectResponse;
 
 class PlanoFlexibilizacaoCurricularController extends Controller
 {
-    public function exportPdf(int $id) 
-    {
-        $planoFlexibilizacao = PlanoFlexibilizacaoCurricular::with('estudante.curso')->findOrFail($id);
-
-        $pdf = Pdf::loadView('planos-flexibilizacao.show', compact('planoFlexibilizacao'));
-        $pdf->setPaper('A4', 'portrait');
-
-        return $pdf->download("plano_flexibilizacao_{$planoFlexibilizacao->id}.pdf");
-    }
-
     public function index()
     {
         $planos = PlanoFlexibilizacaoCurricular::paginate(10);
+
         return view('planos-flexibilizacao.index', ['planos' => $planos]);
     }
 
@@ -45,17 +36,24 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     }
 
     public function edit()
-    {   
-        //
+    {
     }
 
     public function update()
     {
-        //
     }
 
     public function destroy()
     {
-        //
+    }
+
+    public function exportPdf(int $id)
+    {
+        $planoFlexibilizacao = PlanoFlexibilizacaoCurricular::with('estudante.curso')->findOrFail($id);
+
+        $pdf = Pdf::loadView('planos-flexibilizacao.show', compact('planoFlexibilizacao'));
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download("plano_flexibilizacao_{$planoFlexibilizacao->id}.pdf");
     }
 }

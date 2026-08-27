@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class EntrevistaFamiliarRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return $this->user()->can('create', EntrevistaFamiliar::class);
@@ -25,11 +22,6 @@ class EntrevistaFamiliarRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
 
@@ -40,7 +32,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
             'data' => ['required', 'date'],
 
-            // Dados Cadastrais
             'campos.nomeCompleto' => ['required', 'string', 'max:255'],
             'campos.nomeSocial' => ['required', 'string', 'max:255'],
             'campos.dataNascimento' => ['required', 'date'],
@@ -48,7 +39,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.nomePai' => ['required', 'string', 'max:255'],
             'campos.nomeResponsavel' => ['required', 'string', 'max:255'],
             'campos.idade' => ['required','integer','min:0','max:140'],
-            // Contatos
             'campos.celularEstudante' => ['required', 'string', 'min:10', 'max:20'],
             'campos.celularMae' => ['required', 'string', 'min:10', 'max:20'],
             'campos.celularPai' => ['required', 'string', 'min:10', 'max:20'],
@@ -59,7 +49,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.emailResponsavel' => ['required', 'email', 'max:255'],
             'campos.podeSerChamadoSAMU' => ['required', 'string'],
 
-            // Informações Acadêmicas
             'campos.nomeCurso' => ['required', 'string', 'max:255'],
             'campos.formaOferta' => ['required', 'string', 'max:255'],
             'campos.matricula' => ['required', 'string', 'max:50'],
@@ -78,7 +67,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.atendimentoEduacionalEspecializado' => ['required', 'string'],
             'campos.adaptacaoCurricular' => ['required', 'string'],
 
-            // Dados Familiares e Socioeconômicos
             'campos.formacaoMae' => ['required', 'string', 'max:255'],
             'campos.profissaoMae' => ['required', 'string', 'max:255'],
             'campos.idadeMae' => ['required', 'integer', 'min:10','max:140'],
@@ -101,7 +89,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.condicoesMoradia' => ['required', 'string'],
             'campos.ambienteEstudo' => ['required', 'string'],
 
-            // Saúde e Desenvolvimento
             'campos.deficiencia' => ['required', 'string'],
             'campos.tipoDeficiencia' => ['nullable', 'string'],
             'campos.gestacaoPlanejada' => ['required', 'string'],
@@ -117,7 +104,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.deficienciaTranstornos' => ['required', 'string'],
             'campos.acompanhamentoSaudeExterno' => ['required', 'string'],
 
-            // Profissionais de Saúde Acompanhantes
             'campos.nomeFisioterapeuta' => ['nullable', 'string', 'max:255'],
             'campos.contatoFisioterapeuta' => ['nullable', 'string', 'max:50'],
             'campos.nomeFonoaudiologo' => ['nullable', 'string', 'max:255'],
@@ -127,7 +113,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.nomeNeurologista' => ['nullable', 'string', 'max:255'],
             'campos.contatoNeurologista' => ['nullable', 'string', 'max:50'],
 
-            // Comportamento e Perfil
             'campos.rotinaDiaria' => ['required', 'string'],
             'campos.timido' => ['required', 'string'],
             'campos.extrovertido' => ['required', 'string'],
@@ -142,7 +127,6 @@ class EntrevistaFamiliarRequest extends FormRequest
             'campos.nervoso' => ['required', 'string'],
             'campos.inseguro' => ['required', 'string'],
 
-            // Acessibilidade e Necessidades Específicas
             'campos.origemHistorico' => ['required', 'string'],
             'campos.artefatosMobilidade' => ['required', 'string'],
             'campos.adaptacaoMobiliario' => ['required', 'string'],

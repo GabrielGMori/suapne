@@ -13,9 +13,6 @@ use Illuminate\Validation\Rule;
 
 class EstudanteRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
@@ -33,11 +30,6 @@ class EstudanteRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array|string>
-     */
     public function rules(): array
     {
         $estudante = $this->route('estudante');
@@ -66,7 +58,7 @@ class EstudanteRequest extends FormRequest
             'nome_responsavel' => ['nullable', 'string', 'max:200'],
             'telefone_responsavel' => ['nullable', 'string', 'min:10', 'max:20'],
             'email_responsavel' => ['nullable', 'email', 'max:255'],
-            'avatar' => ['nullable', 'string', 'max:255'], // 'starts_with:storage/uploads/avatars/'],
+            'avatar' => ['nullable', 'string', 'max:255'],
 
             'curso_id' => ['required', 'integer', 'exists:cursos,id'],
         ];
