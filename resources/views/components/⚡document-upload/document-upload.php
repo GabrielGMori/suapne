@@ -33,7 +33,7 @@ new class extends Component {
 
     public function updatedNome(): void
     {
-        if ($this->maxDocuments ?? 2 === 1) {
+        if (($this->maxDocuments ?? 2) === 1) {
             $this->validate([
                 'nome' => 'required|string|max:255',
             ]);
@@ -69,7 +69,7 @@ new class extends Component {
             'enviado_em' => now()->format('Y-m-d H:i:s'),
         ];
 
-        if ($this->maxDocuments ?? 2 > 1) {
+        if (($this->maxDocuments ?? 2) > 1) {
             $this->reset(['nome', 'arquivo']);
             $this->fileIteration++;
         }

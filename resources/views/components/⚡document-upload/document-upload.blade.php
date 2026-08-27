@@ -7,15 +7,15 @@
             <x-form.file wire:model="arquivo" name="arquivo" id="arquivo-{{ $fileIteration }}" label="Arquivo"
                          appearance="outlined" error="{{ $errors->first('arquivo') }}"/>
         </div>
-        @if($maxDocuments ?? 2 > 1 && $arquivo && ($maxDocuments === null || count($documents) < $maxDocuments))
+        @if(($maxDocuments ?? 2) > 1 && $arquivo && ($maxDocuments === null || count($documents) < $maxDocuments))
             <x-button color="secondary" icon="add" wire:click="addDocument"/>
         @endif
-        @if($maxDocuments ?? 2 > 1 && count($documents) === $maxDocuments)
+        @if(($maxDocuments ?? 2) > 1 && count($documents) === $maxDocuments)
             <p>Limite de arquivos atingido</p>
         @endif
     </div>
 
-    @if($maxDocuments ?? 2 < 2)
+    @if(($maxDocuments ?? 2) < 2)
         @error('documentos')
             <p class="text-red">Por favor, envie um arquivo</p>
         @enderror

@@ -4,14 +4,14 @@ use Livewire\Component;
 use App\Models\Estudante;
 
 new class extends Component {
-    public string|array $estudanteId = '';
+    public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;
 
     public ?array $disciplinas = null;
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->estudanteId);
+        $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
 
         if ($this->estudanteId !== '' && $this->estudanteId !== []) {
             $this->updatedEstudanteId();

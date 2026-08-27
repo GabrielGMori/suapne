@@ -2,7 +2,6 @@
 
 namespace App\Tables;
 
-use App\Models\Estudante;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewConfig;
@@ -15,7 +14,6 @@ class RegistroAcaoTable extends ListViewConfig
     public function query(): Builder
     {
         return Audit::query()
-            ->where('auditable_type', Estudante::class)
             ->with(['user', 'auditable'])
             ->latest();
     }
@@ -45,10 +43,20 @@ class RegistroAcaoTable extends ListViewConfig
     private function actionMessage(Audit $audit): string
     {
         return match ($audit->event) {
-            'created' => 'Criou o estudante',
-            'deleted' => 'Excluiu o estudante',
+            'created' => 'Cadastrou no sistema',
+            'deleted' => 'Excluiu do sistema',
             'updated' => $this->updatedMessage($audit),
             default => $audit->event,
+        };
+    }
+
+    private function actionColor(Audit $audit): string
+    {
+        return match ($audit->event) {
+            'created' => 'success',
+            'deleted' => 'danger',
+            'updated' => 'warning',
+            default => 'dark',
         };
     }
 
@@ -57,7 +65,7 @@ class RegistroAcaoTable extends ListViewConfig
         $changes = $audit->getModified();
 
         if (empty($changes)) {
-            return 'Editou o estudante';
+            return 'Editou sem mudanças';
         }
 
         $fields = collect($changes)
@@ -65,25 +73,23 @@ class RegistroAcaoTable extends ListViewConfig
             ->map(fn ($field) => "'{$field}'")
             ->join(', ');
 
-        return "Editou campo {$fields}";
+        return "Editou o(s) campo(s): {$fields}";
     }
 
     public function columns(): array
     {
         return [
-            ListViewColumn::make('user.nome')
-                ->label('Nome do autor'),
+            ListViewColumn::make('user.nome')->label('Nome do autor'),
+            ListViewColumn::make('event')->label('O que foi feito?')->format(function ($value, $item) use (&$statusCache) {
+                $msg = $this->actionMessage($item);
 
-            ListViewColumn::make('auditable.nome')
-                ->label('Estudante alterado'),
-
-            ListViewColumn::make('created_at')
-                ->label('Data')
-                ->format(
-                    fn ($value) => $value->format('d/m/Y H:i')
-                ),
-
-            ListViewColumn::make('event')->label('Ação')->format(fn ($value, $item) => $this->actionMessage($item)),
+                return $statusCache[$msg] ??= view('components.status', [
+                    'color' => $this->actionColor($item),
+                    'label' => $msg,
+                ])->render();
+            }),
+            ListViewColumn::make('auditable.nome')->label('O que foi alterado?'),
+            ListViewColumn::make('created_at')->label('Data')->format(fn ($value) => $value->format('d/m/Y H:i')),
         ];
     }
 
@@ -94,9 +100,14 @@ class RegistroAcaoTable extends ListViewConfig
                 ->foreignKey('nome')
                 ->label('Nome do autor'),
 
-            ListViewFilter::make('auditable')
-                ->foreignKey('nome')
-                ->label('Nome do estudante'),
+            ListViewFilter::make('event')
+                ->label('Tipo de ação')
+                ->type('multiselect')
+                ->options([
+                    'created' => 'Criação',
+                    'updated' => 'Edição',
+                    'deleted' => 'Exclusão',
+                ]),
 
             ListViewFilter::make('created_at_start')
                 ->label('Data inicial')
@@ -109,15 +120,6 @@ class RegistroAcaoTable extends ListViewConfig
                 ->size('small')
                 ->type('date')
                 ->endingDateInterval('created_at'),
-
-            ListViewFilter::make('event')
-                ->label('Tipo de ação')
-                ->type('multiselect')
-                ->options([
-                    'created' => 'Criação',
-                    'updated' => 'Edição',
-                    'deleted' => 'Exclusão',
-                ]),
         ];
     }
 

@@ -32,25 +32,7 @@
             <hr class="text-on-surface my-5">
         </div>
 
-        <div class="space-y-5 col-span-2 xl:col-span-1">
-            <x-icon icon="article_person" size="40" label="Iniciar atendimento semanal" />
-
-            <div class="flex items-end gap-4 mb-15">
-                <div class="w-full max-w-sm">
-                    <x-form.input label="Estudante" appearance="outlined" size="full" disabled />
-                </div>
-                <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create')}}" />
-            </div>
-
-            <x-icon icon="assignment_add" size="40" label="Criar plano de trabalho do estudante" />
-
-            <div class="flex items-end gap-4">
-                <div class="w-full max-w-sm">
-                    <x-form.input label="Estudante" appearance="outlined" size="full" disabled />
-                </div>
-                <x-button label="Criar PTE" type="link" href="{{route('planos-trabalho.form')}}" />
-            </div>
-        </div>
+        <livewire:stateful-forms.estudante-quick-start />
 
         <div class="space-y-2 row-span-2 col-span-2 xl:col-span-1">
             <h3>Últimas alterações</h3>

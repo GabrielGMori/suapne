@@ -10,9 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Estudante;
 use App\Models\User;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
-class PlanoFlexibilizacaoCurricular extends Model
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+class PlanoFlexibilizacaoCurricular extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'planos_flexibilizacao_curricular';
 

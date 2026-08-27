@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AtendimentoSemanal;
-use Illuminate\Http\Request;
+use App\Models\Estudante;
 use App\Http\Requests\AtendimentoSemanalRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 
 class AtendimentoSemanalController extends Controller
 {
@@ -22,9 +21,9 @@ class AtendimentoSemanalController extends Controller
      /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(?Estudante $estudante = null)
     {
-        return view('atendimentos.form');
+        return view('atendimentos.form', ['estudanteId' => $estudante?->id]);
     }
 
      /**
@@ -48,7 +47,7 @@ class AtendimentoSemanalController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit()
-    {   
+    {
         //
     }
 
