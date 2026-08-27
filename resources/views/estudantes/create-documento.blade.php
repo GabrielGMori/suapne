@@ -20,10 +20,7 @@
         <livewire:document-upload :max-documents="$maxDoc" />
 
         <div class="flex justify-end gap-2 mt-10">
-            <x-button label="Cancelar" type="link"
-                href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['estudante' => $estudante]) }}"
-                color="red" />
-
+            <x-button.cancel fallback="estudantes.show" :args="['estudante' => $estudante]" />
             <x-button label="Adicionar" type="submit" />
         </div>
     </form>

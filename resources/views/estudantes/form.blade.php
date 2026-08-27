@@ -98,9 +98,7 @@ use App\Enums\SexoEnum;
             </div>
         </div>
         <div class="flex justify-end gap-2">
-            <x-button label="Cancelar" type="link"
-                href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.index') }}"
-                color="red" />
+            <x-button.cancel fallback="estudantes.index" />
             <x-button label="Registrar" type="submit" />
         </div>
     </form>

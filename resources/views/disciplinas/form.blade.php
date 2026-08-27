@@ -21,9 +21,7 @@
                 :value="$disciplina?->ementa" />
 
             <div class="flex justify-end gap-2">
-                <x-button label="Cancelar" type="link"
-                    href="{{ url()->previous() !== url()->current() ? url()->previous() : route('disciplinas.index') }}"
-                    color="red" />
+                <x-button.cancel fallback="disciplinas.index" />
 
                 <x-button label="{{ $disciplina === null ? 'Registrar' : 'Atualizar' }}" type="submit" />
             </div>

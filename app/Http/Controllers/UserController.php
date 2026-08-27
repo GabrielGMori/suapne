@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Requests\UpdateCnapneRequest;
-use App\Http\Requests\UpdateProfessorRequest;
+use App\Http\Requests\CnapneRequest;
+use App\Http\Requests\ProfessorRequest;
 
 class UserController extends Controller
 {
@@ -28,27 +28,22 @@ class UserController extends Controller
         return view('contas.professor.form', ['user' => $user]);
     }
 
-    public function updateCnapne(UpdateCnapneRequest $request, User $user)
+    public function updateCnapne(CnapneRequest $request, User $user)
     {
-        $user->update([
-            'nome' => $request->input('name'),
-            'email' => $request->input('email'),
-        ]);
+        $validated = $request->validated();
 
-        return redirect()
-            ->route('contas.cnapne.index')
-            ->with('success', 'Conta da CNAPNE atualizada com sucesso!');
+        $user->update($validated);
+
+        return redirect()->route('contas.cnapne.index')->with('status', 'Conta da CNAPNE atualizada com sucesso!');
     }
 
-    public function updateProfessor(UpdateProfessorRequest $request, User $user)
+    public function updateProfessor(ProfessorRequest $request, User $user)
     {
-        $user->update([
-            'nome' => $request->input('name'),
-            'email' => $request->input('email'),
-        ]);
+        $validated = $request->validated();
 
-        return redirect()
-            ->route('contas.professor.index')
-            ->with('success', 'Conta do professor atualizada com sucesso!');
+        $user->update($validated);
+        $user->disciplinas()->sync($validated['disciplinas'] ?? []);
+
+        return redirect()->route('contas.professor.index')->with('status', 'Conta do professor atualizada com sucesso!');
     }
 }

@@ -3,7 +3,7 @@
 <x-layouts.app title="{{ $title }} - SUAPNE">
     <div class="flex flex-1">
         <div class="bg-secondary-container">
-            <x-menu-lateral user="{{ Auth::user()->nome }}" role="{{ Auth::user()->role }}"/>
+            <x-menu-lateral :user="Auth::user()"/>
         </div>
 
         <main class="flex-1 bg-{{$bg}} mb-20">

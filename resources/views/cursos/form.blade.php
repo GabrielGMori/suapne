@@ -23,7 +23,7 @@ use App\Models\Curso;
         </div>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('cursos.index') }}" color="red"/>
+        <x-button.cancel fallback="cursos.index" color="red"/>
         <x-button label="Registrar" type="submit"/>
     </div>
     </form>

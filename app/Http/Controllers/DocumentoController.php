@@ -31,6 +31,6 @@ class DocumentoController extends Controller
 
         return redirect()
             ->route('estudantes.show', ['estudante' => $estudante])
-            ->with('success', 'Documentos salvos com sucesso.');
+            ->with('status', 'Documentos salvos com sucesso.');
     }
 }

@@ -4,7 +4,7 @@ use Livewire\Component;
 use App\Models\Estudante;
 
 new class extends Component {
-    public null|string|array $estudanteId = '';
+    public null|string|array $estudanteId = null;
     public ?Estudante $estudante = null;
 
     public ?string $perfil = "";
@@ -16,20 +16,22 @@ new class extends Component {
         $oldPerfil = old('campos.perfilDoEstudante');
         if ($oldPerfil !== null) {
             $this->perfil = $oldPerfil;
-        } elseif ($this->estudanteId !== '' && $this->estudanteId !== []) {
-            $this->updatedEstudanteId();
+        } elseif (filled($this->estudanteId)) {
+            $this->updatedEstudanteId($this->estudanteId);
         }
     }
 
     public function loadPerfil(): void
     {
         $ultimoAtendimento = $this->estudante->atendimentosSemanais()->latest()->first();
+        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '') return;
         $this->perfil = $ultimoAtendimento ? ($ultimoAtendimento->campos['perfilDoEstudante'] ?? '') : '';
     }
 
-    public function updatedEstudanteId()
+    public function updatedEstudanteId($newId)
     {
-        $id = is_array($this->estudanteId) ? $this->estudanteId[0] : $this->estudanteId;
+        if (!filled($this->estudanteId)) return;
+        $id = is_array($newId) ? $newId[0] : $newId;
         $this->estudante = Estudante::find($id);
         $this->loadPerfil();
     }
@@ -54,7 +56,7 @@ new class extends Component {
             :value="$atendimento?->data->format('Y-m-d H:i:s')" />
 
         <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined"
-            name="campos[perfilDoEstudante]" size="full" wire:model.live="perfil" />
+            name="campos[perfilDoEstudante]" size="full" wire:model.blur="perfil" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>
@@ -69,9 +71,7 @@ new class extends Component {
         <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full" />
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link"
-            href="{{ url()->previous() !== url()->current() ? url()->previous() : route('atendimentos.index') }}"
-            color="red" />
+        <x-button.cancel fallback="atendimentos.index" />
         <x-button type="submit" label="Registrar" />
     </div>
 </form>

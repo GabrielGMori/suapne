@@ -12,8 +12,12 @@
     <div class="form-control-wrap">
         <div class="select form-control-{{ $size }}" role="combobox" aria-haspopup="listbox" tabindex="0"
             aria-disabled="{{ $disabled ? 'true' : 'false' }}"
-            x-data="formSelectData(@js($options, JSON_THROW_ON_ERROR), @js($isMultiple, JSON_THROW_ON_ERROR), @entangle('selectedItems'), @js($disabled, JSON_THROW_ON_ERROR))"
-            x-init="
+            x-data="formSelectData(
+                @js($options, JSON_THROW_ON_ERROR),
+                @js($isMultiple, JSON_THROW_ON_ERROR),
+                @js($disabled, JSON_THROW_ON_ERROR)),
+                $wire
+            " x-init="
                 $watch('isOpen', v => {
                     if ($refs.menu) $refs.menu.scrollTop = 0;
                     if (! v) {
@@ -136,15 +140,21 @@
         return {
             isOpen: false,
             searchQuery: '',
-            searchTimeout: null,
             resetNextType: false,
             highlightedIndex: 0,
             errorDismissed: false,
             normalizeOptions,
             options: normalizeOptions(options),
-            selected,
             isMultiple,
             disabled,
+
+            get selected() {
+                return this.$wire.selectedItems;
+            },
+
+            set selected(value) {
+                this.$wire.selectedItems = value;
+            },
 
             get selectedSet() {
                 return new Set(this.selected);
@@ -243,8 +253,6 @@
 
             resetSearch() {
                 this.resetNextType = true;
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = null;
             },
 
             scrollToHighlighted() {
@@ -265,13 +273,8 @@
                         e.preventDefault();
                         this.searchQuery = this.searchQuery.slice(0, -1);
                         this.isOpen = true;
-                        clearTimeout(this.searchTimeout);
                         if (this.searchQuery.length === 0) {
                             this.resetNextType = true;
-                        } else {
-                            this.searchTimeout = setTimeout(() => {
-                                this.resetNextType = true;
-                            }, 1000);
                         }
                     }
                     return;
@@ -299,8 +302,6 @@
                 if (this.resetNextType) { this.searchQuery = e.key; this.resetNextType = false; }
                 else { this.searchQuery += e.key; }
                 this.isOpen = true;
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = setTimeout(() => { this.resetNextType = true; }, 1000);
             }
         };
     };

@@ -60,11 +60,6 @@ new class extends Component
         $this->dispatch('updated-options', opt: $opt);
     }
 
-    public function updatedSelectedItems(): void
-    {
-        $this->selectedItems = $this->normalize($this->selectedItems);
-    }
-
     public function clear(): void
     {
         if ($this->disabled) return;

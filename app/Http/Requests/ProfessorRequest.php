@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProfessorRequest extends FormRequest
+class ProfessorRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,8 +15,11 @@ class UpdateProfessorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'nome' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
+            'disciplinas' => ['nullable', 'array'],
+            'disciplinas.*' => ['exists:disciplinas,id'],
+            'avatar' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -33,7 +33,7 @@
 @endphp
 
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
-    @include('estudantes.sections.dados-gerais')
+    @include('estudantes.sections.dados-gerais', ['estudante' => $estudante, 'displays' => $displays])
 
     <div class="w-full flex justify-end my-4" x-data="{ expandAll: true }">
         <x-button type="button" x-on:click="expandAll = !expandAll; $dispatch('toggle-collapse', { expand: expandAll })"

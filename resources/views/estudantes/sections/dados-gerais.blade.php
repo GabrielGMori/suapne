@@ -1,3 +1,5 @@
+@props(['estudante', 'displays'])
+
 <x-secao-expansivel.bottom title="Dados Gerais">
     @can('update', $estudante)
         <x-slot:topActions>

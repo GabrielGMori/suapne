@@ -1,6 +1,5 @@
 @props([
-    'role' => 'docente_especial', // Define o role do usuário para mostrar os itens de navegação corretos. Pode ser: professor_regular|tecnico|docente_especial
-    'user' => null, // Nome do usuário logado para exibir no menu lateral
+    'user', // Usuário logado
 ])
 
 @php
@@ -14,15 +13,15 @@
         ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'],
     ];
 
-    if ($role === RoleEnum::PROFESSOR_REGULAR->value) {
+    if ($user->role === RoleEnum::PROFESSOR_REGULAR) {
         $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment']];
     }
 
-    if ($role === RoleEnum::TECNICO->value) {
+    if ($user->role === RoleEnum::TECNICO) {
         $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history']];
     }
 
-    if ($role === RoleEnum::DOCENTE_ESPECIAL->value) {
+    if ($user->role === RoleEnum::DOCENTE_ESPECIAL) {
         $navItems = [
             ...$navItems,
             ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'],
@@ -197,11 +196,11 @@
         <a href="#"
            data-sidebar-account
            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
-           title="{{ $user ?? 'Minha conta' }}">
-            <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
+           title="{{ $user->nome }}">
+            <img src="{{ asset($user->avatar) ?? asset('storage/img/placeholder-user.png') }}" alt="Imagem do usuário"
                  class="h-10 w-10 object-cover rounded-full shrink-0">
             <span data-sidebar-label x-show="!collapsed"
-                  class="text-label-medium truncate">{{ $user ?? 'Minha conta' }}</span>
+                  class="text-label-medium truncate">{{ $user->nome }}</span>
         </a>
     </div>
 
