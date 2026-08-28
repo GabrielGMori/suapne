@@ -9,12 +9,12 @@
     $solicitacoes = \App\Models\SolicitacaoRegistro::count();
 
     $planos = $user->role === RoleEnum::PROFESSOR_REGULAR
-        ? $user->planosTrabalhoProfessor->where('status', StatusPlanoTrabalhoEnum::PENDENTE)->count()
+        ? $user->planosTrabalhoProfessor->filter(fn($plano) => $plano->status === StatusPlanoTrabalhoEnum::PENDENTE || $plano->status === StatusPlanoTrabalhoEnum::DEVOLVIDO)->count()
         : PlanoTrabalhoEstudante::where('status', StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)->count();
     $plural = $planos === 1 ? '' : 's';
     $isProfessorRegular = $user->role === RoleEnum::PROFESSOR_REGULAR;
     $notificationType = $isProfessorRegular ? ('pendente' . $plural) : 'aguardando revisão';
-    $status = $isProfessorRegular ? 'PENDENTE' : 'AGUARDANDO_REVISAO';
+    $status = $isProfessorRegular ? ['PENDENTE', 'DEVOLVIDO'] : ['AGUARDANDO_REVISAO'];
 
     $acoes = Audit::query()->latest()->take(5)->get()
 @endphp
@@ -43,7 +43,7 @@
                     <x-icon icon="notification_important" size="45"
                         label="Existe{{$planos === 1 ? '' : 'm'}} {{$planos}} PTE{{$plural}} {{ $notificationType }}" />
                     <x-button icon="open_in_new" size="dynamic" color="transparent" type="link"
-                        :href="route('planos-trabalho.index') . '?' . http_build_query(['filter' => ['status' => [$status]]])" />
+                        :href="route('planos-trabalho.index') . '?' . http_build_query(['filter' => ['status' => $status]])" />
                 @else
                     <x-icon icon="check" class="text-primary-accent" size="45"
                         label="Não há PTEs {{ $notificationType }} no momento" />

@@ -1,5 +1,7 @@
 <?php
     use App\Models\Disciplina;
+
+    $count = count($planoFlexibilizacao->campos['componentesCurriculares']);
 ?>
 
 <x-layouts.main title="{{ $planoFlexibilizacao->nome}}">
@@ -15,21 +17,21 @@
         <p class="mb-5">Laudo: {{ $planoFlexibilizacao->estudante->laudo !== null ? 'Sim' : 'Não' }}</p>
         <p>Necessidade educacional específica:</p>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5 mt-5">
-            <p>{{$planoFlexibilizacao->estudante->necessidades}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->estudante->necessidades}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular</h2>
         <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular)</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p>{{$planoFlexibilizacao->campos['acoesPedagogicas']}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['acoesPedagogicas']}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
         <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou externos ao IFPR) que fazem o acompanhamento do estudante</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p>{{$planoFlexibilizacao->campos['atendimentoMultiprofissional']}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['atendimentoMultiprofissional']}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
@@ -43,15 +45,15 @@
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
         <p class="text-body-large">
-            @foreach($planoFlexibilizacao->campos['componentesCurriculares'] as $disciplinaId)
-                {{ Disciplina::find($disciplinaId)->nome}};
+            @foreach($planoFlexibilizacao->campos['componentesCurriculares'] as $index => $disciplinaId)
+                {{ Disciplina::find($disciplinaId)->nome . ($index === $count-1 ? '.' : ',') }}
             @endforeach
         </p>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">6. Informações adicionais</h2>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p>{{$planoFlexibilizacao->campos['informacoesAdicionais']}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['informacoesAdicionais'] ?? '---'}}</p>
         </div>
     </div>
 

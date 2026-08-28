@@ -6,7 +6,7 @@
     $plural = $count === 1 ? '' : 's';
     $isProfessorRegular = Auth::user()->role === RoleEnum::PROFESSOR_REGULAR;
     $notificationType = $isProfessorRegular ? ('pendente' . $plural) : 'aguardando revisão';
-    $status = $isProfessorRegular ? 'PENDENTE' : 'AGUARDANDO_REVISAO';
+    $status = $isProfessorRegular ? ['PENDENTE', 'DEVOLVIDO'] : ['AGUARDANDO_REVISAO'];
 @endphp
 
 <x-layouts.main title="Planos de Trabalho do Estudante">
@@ -15,7 +15,7 @@
             <x-icon icon="notification_important" size="45"
                 label="Existe{{$count === 1 ? '' : 'm'}} {{$count}} PTE{{$plural}} {{ $notificationType }}" />
             <x-button color="tertiary" label="Ver Planos" type="link"
-                :href="url()->current().'?'.http_build_query(['filter' => ['status' => [$status]]])" />
+                :href="url()->current().'?'.http_build_query(['filter' => ['status' => $status]])" />
         @else
             <x-icon icon="check" class="text-primary-accent" size="45"
                 label="Não há PTEs {{ $notificationType }} no momento" />

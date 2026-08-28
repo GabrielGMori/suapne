@@ -1,6 +1,8 @@
+@php(['estudante'])
+
 <x-secao-expansivel title="Observações" class="mt-5">
     <x-slot:topActions>
-        <livewire:modal.stateful.observacoes :estudante="$estudante" />
+        <livewire:modal.stateful.add-observacao :estudante="$estudante" />
     </x-slot:topActions>
 
     <hr class="mx-4 text-on-surface">
@@ -18,7 +20,7 @@
                                     {{ $observacao->created_at->format('d/m/Y \à\s H:i') }}
                                 </p>
                             </div>
-                            <p class="text-body-medium">{{ $observacao->observacao }}</p>
+                            <p class="text-body-medium whitespace-pre-line">{{ $observacao->observacao }}</p>
                         </div>
                         <div class="mr-5">
                             <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">

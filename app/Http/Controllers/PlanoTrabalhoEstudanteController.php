@@ -18,7 +18,7 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         $user = Auth::user();
         $count = $user->role === RoleEnum::PROFESSOR_REGULAR
-            ? $user->planosTrabalhoProfessor->where('status', StatusPlanoTrabalhoEnum::PENDENTE)->count()
+            ? $user->planosTrabalhoProfessor->filter(fn($plano) => $plano->status === StatusPlanoTrabalhoEnum::PENDENTE || $plano->status === StatusPlanoTrabalhoEnum::DEVOLVIDO)->count()
             : PlanoTrabalhoEstudante::where('status', StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)->count();
 
         return view('planos-trabalho.index', ['count' => $count]);

@@ -2,6 +2,7 @@
 
 namespace App\Tables;
 
+use App\Enums\RoleEnum;
 use App\Enums\StatusPlanoTrabalhoEnum;
 use App\Models\Curso;
 use App\Models\Disciplina;
@@ -11,6 +12,7 @@ use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
+use Auth;
 use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,7 +20,10 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoTrabalhoEstudante::query()->orderBy('status')->orderBy('periodo_inicio', 'desc');
+        $query = PlanoTrabalhoEstudante::query()->orderBy('status')->orderBy('periodo_inicio', 'desc');
+        $user = Auth::user();
+        $query = $user->role === RoleEnum::PROFESSOR_REGULAR ? $query->where('user_professor_id', $user->id) : $query;
+        return $query;
     }
     public function title(): ?string { return 'Planos de Trabalho do Estudante'; }
     public function createUrl(): ?string { return route('planos-trabalho.create'); }
@@ -57,7 +62,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
                 ->options(Curso::pluck('nome', 'id')->toArray()),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
-            ListViewFilter::make('status')->label('Status')->size('small')->type('select')->options(StatusPlanoTrabalhoEnum::options())->equals(),
+            ListViewFilter::make('status')->label('Status')->size('small')->type('multiselect')->options(StatusPlanoTrabalhoEnum::options())->equals(),
         ];
     }
 

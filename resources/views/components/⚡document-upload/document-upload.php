@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Documento;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -33,7 +32,7 @@ new class extends Component {
 
     public function updatedNome(): void
     {
-        if (($this->maxDocuments ?? 2) === 1) {
+        if ($this->maxDocuments === 1) {
             $this->validate([
                 'nome' => 'required|string|max:255',
             ]);

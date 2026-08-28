@@ -2,10 +2,11 @@
 
 @php
     use App\Enums\RoleEnum;
+    use App\Enums\StatusPlanoTrabalhoEnum;
 
     $isProfessorRegular = Auth::user()->role === RoleEnum::PROFESSOR_REGULAR;
     $preenchendo = !$preview && $isProfessorRegular
-        && ($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO || $planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::PENDENTE);
+                    && ($planoTrabalho->status === StatusPlanoTrabalhoEnum::DEVOLVIDO || $planoTrabalho->status === StatusPlanoTrabalhoEnum::PENDENTE);
 
     $created_at = $planoTrabalho->created_at ?? now();
     $updated_at = $planoTrabalho->updated_at ?? $created_at;
@@ -26,7 +27,7 @@
                         color="{{ $preview ? 'tertiary' : $planoTrabalho->status->color() }}" :filled="false" />
                 </div>
 
-                @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
+                @if($planoTrabalho->status === StatusPlanoTrabalhoEnum::APROVADO)
                     <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" />
                 @elseif ($preview)
                     @include('planos-trabalho.change-preview', [
@@ -36,6 +37,14 @@
                     ])
                 @endif
             </div>
+
+            @if ($planoTrabalho->status === StatusPlanoTrabalhoEnum::DEVOLVIDO && array_key_exists('devolvidoObservacao', $planoTrabalho->campos))
+                <hr class="mt-3 mb-10 text-on-surface">
+                <h3 class="text-display-small">Observação adicionada na devolução:</h3>
+                <p class="my-5 text-body-large whitespace-pre-line">{{ $planoTrabalho->campos['devolvidoObservacao'] }}</p>
+                <hr class="mt-10 mb-5 text-on-surface">
+            @endif
+
             <h4 class="mb-5">Período de realização: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }}
                 a {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</h4>
 
@@ -53,21 +62,21 @@
 
                 <p class="mt-5">Necessidade educacional específica:</p>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                    <p>{{$planoTrabalho->estudante->necessidades}}</p>
+                    <p class="whitespace-pre-line">{{$planoTrabalho->estudante->necessidades}}</p>
                 </div>
             </div>
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">2. Particularidades do estudante</h2>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                    <p>{{$planoTrabalho->campos['particularidadesEstudante']}}</p>
+                    <p class="whitespace-pre-line">{{$planoTrabalho->campos['particularidadesEstudante']}}</p>
                 </div>
             </div>
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
                     flexibilização:</h2>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                    <p>{{$planoTrabalho->disciplina->ementa}}</p>
+                    <p class="whitespace-pre-line">{{$planoTrabalho->disciplina->ementa}}</p>
                 </div>
             </div>
 
@@ -77,12 +86,12 @@
 
                 @if(!$preenchendo)
                     <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                {{ array_key_exists('objetivosEspecificos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p>{{ $planoTrabalho->campos['objetivosEspecificos'] ?? 'A ser preenchido pelo docente...' }}</p>
+                                    {{ array_key_exists('objetivosEspecificos', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['objetivosEspecificos'] ?? 'A ser preenchido pelo docente...' }}</p>
                     </div>
                 @else
                     <x-form.input type="textarea" name="campos[objetivosEspecificos]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." />
+                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['objetivosEspecificos'] ?? ''" />
                 @endif
             </div>
 
@@ -92,12 +101,12 @@
 
                 @if(!$preenchendo)
                     <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                {{ array_key_exists('instrumentosAvaliativos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p>{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? 'A ser preenchido pelo docente...' }}</p>
+                                    {{ array_key_exists('instrumentosAvaliativos', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? 'A ser preenchido pelo docente...' }}</p>
                     </div>
                 @else
                     <x-form.input type="textarea" name="campos[instrumentosAvaliativos]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." />
+                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['instrumentosAvaliativos'] ?? ''" />
                 @endif
             </div>
 
@@ -106,12 +115,13 @@
 
                 @if(!$preenchendo)
                     <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                {{ array_key_exists('outrasConsideracoes', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p>{{ $planoTrabalho->campos['outrasConsideracoes'] ?? 'A ser preenchido pelo docente...' }}</p>
+                                    {{ array_key_exists('outrasConsideracoes', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['outrasConsideracoes'] ?? ($planoTrabalho->status === StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO ? '---' : 'A ser preenchido pelo docente...') }}
+                        </p>
                     </div>
                 @else
                     <x-form.input type="textarea" name="campos[outrasConsideracoes]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." />
+                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['outrasConsideracoes'] ?? ''" />
                 @endif
             </div>
 
@@ -124,18 +134,19 @@
                     <x-button.cancel label="Voltar" color="tertiary" fallback="planos-trabalho.index" />
                 @endif
 
-                @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
-                    <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow" />
+                @switch($planoTrabalho->status)
+                    @case(StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)
+                    @case(StatusPlanoTrabalhoEnum::APROVADO)
+                        @if (!$isProfessorRegular)
+                            <livewire:modal.stateful.revisar-plano-trabalho :plano-trabalho="$planoTrabalho" />
+                        @endif
+                    @break
 
-                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO && !$isProfessorRegular)
-                    <x-button label="Devolver para retificação" color="red" />
-                    <x-button label="Aprovar" />
-
-                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
-
-                @elseif ($preenchendo)
-                    <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
-                @endif
+                    @default
+                        @if ($preenchendo)
+                            <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
+                        @endif
+                @endswitch
             </div>
         </div>
         @if ($preenchendo)

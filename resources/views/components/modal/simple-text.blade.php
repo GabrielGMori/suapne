@@ -7,9 +7,9 @@
 <x-modal title="{{ $title }}" {{ $attributes }} size="dynamic" height="small" color="transparent" label="{{ $label }}">
     @if (is_array($value))
         @foreach ($value as $item)
-            <p>{{ $item }}</p>
+            <p class="whitespace-pre-line">{{ $item }}</p>
         @endforeach
     @else
-        <p>{{ $value }}</p>
+        <p class="whitespace-pre-line">{{ $value }}</p>
     @endif
 </x-modal>

@@ -51,21 +51,21 @@ new class extends Component {
                 })->toArray()"
                 :value="$planoFlexibilizacao?->estudante_id" wire:model.live="estudanteId" />
         </div>
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
             <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de
                 implementação da flexibilização curricular</h2>
             <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas e tentativas de
                 adaptações realizadas até o momento)</h3>
             <x-form.input type="textarea" name="campos[acoesPedagogicas]" appearance="outlined" size="full" />
         </div>
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
             <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
             <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou
                 externos ao IFPR) que fazem o acompanhamento do estudante</h3>
             <x-form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined"
                 size="full" />
         </div>
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
             <h2 class="text-display-small">4. Flexibilização Curricular, visando a impletenção de 1(uma) ou mais
                 possibilidades</h2>
             <livewire:form.select
@@ -94,7 +94,7 @@ new class extends Component {
             </div>
         </div>
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
             <h2 class="text-display-small">6. Informações adicionais</h2>
             <x-form.input type="textarea" name="campos[informacoesAdicionais]" appearance="outlined"
                 size="full" />
