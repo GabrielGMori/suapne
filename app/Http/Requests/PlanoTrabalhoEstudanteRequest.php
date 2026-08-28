@@ -3,10 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Enums\StatusPlanoTrabalhoEnum;
+use App\Models\Disciplina;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\RequiredIf;
 
 class PlanoTrabalhoEstudanteRequest extends FormRequest
 {
@@ -28,23 +29,56 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
             'status' => ['required', Rule::enum(StatusPlanoTrabalhoEnum::class)],
             'periodo_inicio' => ['sometimes', 'required', 'date'],
             'periodo_fim' => ['sometimes', 'required', 'date', 'after_or_equal:periodo_inicio'],
-            'estudante_id' => ['sometimes', 'required', 'exists:estudantes,id'],
+            'estudante_id' => ['required_if:status,PENDENTE', 'exists:estudantes,id'],
             'user_id' => ['sometimes', 'required', 'exists:users,id'],
 
-            'disciplinas' => ['sometimes', 'required', 'array'],
-            'disciplinas.*' => ['sometimes', 'required', 'exists:disciplinas,id'],
+            'disciplinas' => ['required_with:estudante_id', 'array'],
+            'disciplinas.*' => ['required_with:estudante_id', 'exists:disciplinas,id'],
 
-            'professores' => ['sometimes', 'required', 'array'],
-            'professores.*' => ['sometimes', 'required', 'exists:users,id'],
+            'professores' => ['required_with:disciplinas', 'array'],
+            'professores.*' => ['required_with:disciplinas', 'exists:users,id'],
 
             'campos' => ['sometimes', 'required', 'array'],
             'campos.cargaHoraria' => ['nullable', 'string'],
-            'campos.diaHora' => ['sometimes', 'required', 'date'],
             'campos.local' => ['sometimes', 'required', 'string'],
             'campos.particularidadesEstudante' => ['sometimes', 'required', 'string'],
             'campos.objetivosEspecificos' => ['sometimes', 'required', 'string'],
             'campos.instrumentosAvaliativos' => ['sometimes', 'required', 'string'],
             'campos.outrasConsideracoes' => ['nullable', 'string'],
+
+            'chosenDisciplina' => ['sometimes', 'nullable', 'exists:disciplinas,id'],
+            'previewDisciplinas' => ['sometimes', 'nullable', 'array'],
+            'previewDisciplinas.*' => ['sometimes', 'exists:disciplinas,id']
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function ($validator) {
+                if ($this->input('estudante_id') === null) return;
+
+                $disciplinasIds = $this->input('disciplinas', []);
+                $professoresIds = $this->input('professores', []);
+                $disciplinas = Disciplina::whereIn('id', $disciplinasIds)->get()->keyBy('id');
+                $professores = User::with('disciplinas')->whereIn('id', $professoresIds)->get();
+
+                foreach($disciplinasIds as $disciplinaId) {
+                    $matchingProfessores = $professores->filter(fn($professor) => $professor->disciplinas->contains('id', $disciplinaId));
+
+                    if ($matchingProfessores->count() === 0)
+                        $validator->errors()->add('professores', 'O componente ' . $disciplinas[$disciplinaId]->nome . ' não possui um professor selecionado');
+
+                    if ($matchingProfessores->count() > 1)
+                        $validator->errors()->add('professores', 'O componente ' . $disciplinas[$disciplinaId]->nome . ' possui mais de um professor selecionado');
+                }
+
+                $chosenDisciplina = $this->input('chosenDisciplina');
+                $previewDisciplinas = $this->input('previewDisciplinas', []);
+
+                if ($chosenDisciplina !== null && !in_array($chosenDisciplina, $previewDisciplinas))
+                    $validator->errors()->add('chosenDisciplina', 'O componente selecionado não faz parte desta pré-visualização');
+            }
         ];
     }
 }

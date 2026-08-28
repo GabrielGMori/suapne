@@ -76,6 +76,6 @@
     <x-slot:topActions>
         {{-- <x-button icon="search" color="transparent"></x-button> --}}
         <x-button icon="add" color="transparent" type="link"
-            href="{{ route('atendimentos.create', ['estudante' => $estudante]) }}"></x-button>
+            href="{{ route('atendimentos.create', ['estudante' => $estudante]) }}" />
     </x-slot:topActions>
 </x-secao-expansivel>

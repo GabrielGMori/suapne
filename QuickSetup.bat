@@ -127,11 +127,26 @@ echo.
 
 :: Migrate
 echo ======================================
-echo Running migrations and seeders...
+echo Database Migration
 echo ======================================
+echo.
+echo WARNING: "migrate:fresh" will DROP ALL TABLES
+echo and delete ALL existing data in the database.
+echo.
+set /p MIGRATE=Run migrations and seeders? (y/N):
+
+if /I not "!MIGRATE!"=="y" (
+    echo.
+    echo Skipping migrations and seeders.
+    goto :skip_migrate
+)
+
+echo.
+echo Running migrations and seeders...
 call php artisan migrate:fresh --seed
 if errorlevel 1 goto :error
 
+:skip_migrate
 echo.
 echo ======================================
 echo Setup completed successfully!
@@ -142,7 +157,7 @@ echo Email: admin@exemplo.com
 echo Password: 123
 echo.
 
-set /p START=Start the development server now? (Y/n): 
+set /p START=Start the development server now? (Y/n):
 
 if /I "%START%"=="n" (
     echo.

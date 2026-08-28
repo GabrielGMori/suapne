@@ -24,6 +24,8 @@
                                     <p>Status: {{ $plano->status->label() }}</p>
                                     <p>Criado por: {{ $plano->user->nome }}</p>
                                     <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
+                                    <x-button icon="open_in_new" color="transparent" type="link"
+                                        href="{{ route('planos-trabalho.show', ['plano_trabalho' => $plano]) }}" />
                                 </x-documento>
                             @endforeach
                         </div>
@@ -37,6 +39,7 @@
     </div>
     <x-slot:topActions>
         {{-- <x-button icon="search" color="transparent"></x-button> --}}
-        <x-button icon="add" color="transparent" type="link" href="{{ route('planos-trabalho.create', ['estudante' => $estudante]) }}"></x-button>
+        <x-button icon="add" color="transparent" type="link"
+            href="{{ route('planos-trabalho.create', ['estudante' => $estudante]) }}" />
     </x-slot:topActions>
 </x-secao-expansivel>

@@ -21,7 +21,7 @@ class DisciplinaTable extends ListViewConfig
 
     public function title(): ?string { return 'Disciplinas registradas'; }
     public function createUrl(): ?string { return route('disciplinas.create'); }
-    public function createLabel(): ?string { return 'Cadastrar Novo'; }
+    public function createLabel(): ?string { return 'Cadastrar Nova'; }
     public function emptyMessage(): string { return 'Nenhuma disciplina foi encontrada'; }
     public function icon(): string|\Closure { return "book"; }
 
@@ -30,6 +30,7 @@ class DisciplinaTable extends ListViewConfig
         return [
             ListViewColumn::make('nome')->label('Componente curricular')->size("large"),
             ListViewColumn::make('curso.nome')->label('Curso')->size("large"),
+            ListViewColumn::make('curso_periodo')->label('Período')->size("small"),
             ListViewColumn::make('ementa')->label('Ementa')->size("large")
             ->format(fn($value) => view('components.modal.simple-text', [
                 'label' => 'Ver ementa',

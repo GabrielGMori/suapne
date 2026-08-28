@@ -7,12 +7,13 @@ new class extends Component {
     public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;
 
-    public ?array $disciplinas = null;
+    public ?array $displayDisciplinas = null;
+    public array $selectedDisciplinas = [];
 
     public function mount(): void
     {
         $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
-        if (filled($this->estudante)) $this->updatedEstudanteId($this->estudanteId);
+        if (filled($this->estudanteId)) $this->updatedEstudanteId($this->estudanteId);
     }
 
     public function updatedEstudanteId($estId)
@@ -20,9 +21,10 @@ new class extends Component {
         $id = is_array($estId) ? $estId[0] : $estId;
         $this->estudante = Estudante::find($id);
 
-        $estudanteDisciplinas = $this->estudante?->curso->disciplinas;
-        $this->disciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
+        $estudanteDisciplinas = $this->estudante?->disciplinas;
+        $this->displayDisciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
     }
+
 };
 ?>
 
@@ -82,9 +84,14 @@ new class extends Component {
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
-            <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
+            <div class="flex items-center gap-5" wire:key="disciplinas-select-wrapper">
+                <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
                 appearance="outlined" name="campos[componentesCurriculares]" :disabled="$estudante === null"
-                :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'" :options="$disciplinas ?? []" />
+                :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'" :options="$displayDisciplinas ?? []"
+                wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
+                <x-button type="button" size="dynamic" label="Selecionar todos" color="secondary"
+                    x-on:click="$dispatch('select-all', { name: 'campos[componentesCurriculares]' })" />
+            </div>
         </div>
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">

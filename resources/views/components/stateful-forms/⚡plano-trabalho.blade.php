@@ -32,7 +32,7 @@ new class extends Component {
         $id = is_array($estId) ? $estId[0] : $estId;
         $this->estudante = Estudante::find($id);
 
-        $estudanteDisciplinas = $this->estudante?->curso->disciplinas;
+        $estudanteDisciplinas = $this->estudante?->disciplinas;
         $this->displayDisciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
         $this->selectedDisciplinas = [];
         $this->selectedProfessores = [];
@@ -87,36 +87,42 @@ new class extends Component {
 <form action="{{ route('planos-trabalho.store') }}" method="POST">
     @csrf
 
-    <h2 class="flex gap-5 mb-5 text-display-small">Período de realização:
-        <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined" />
-        a
-        <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined" />
-    </h2>
+    <div wire:ignore>
+        <h2 class="flex gap-5 mb-5 text-display-small">Período de realização:
+            <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined" />
+            a
+            <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined" />
+        </h2>
+    </div>
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
 
-        <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined"
-            placeholder="Selecionar" :options="Estudante::pluck('nome', 'id')->toArray()"
-            wire:model.live="estudanteId" />
+        <div wire:key="selects-wrapper">
+            <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined"
+                placeholder="Selecionar" :options="Estudante::pluck('nome', 'id')->toArray()"
+                wire:model.live="estudanteId" />
 
-        <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
-            appearance="outlined" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
-            :options="$displayDisciplinas ?? []" :disabled="$estudante === null"
-            wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
+            <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
+                appearance="outlined" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
+                :options="$displayDisciplinas ?? []" :disabled="$estudante === null"
+                wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
 
-        <livewire:form.select type="multiselect" label="Docentes" name="professores" appearance="outlined"
-            size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'" wire:key="professores-select-{{ $this->estudante?->id }}"
-            wire:model.live="selectedProfessores" :options="$displayProfessores ?? []"
-            :disabled="!filled($selectedDisciplinas)"
-            no-result-message="Nenhum docente relacionado aos componentes selecionados foi encontrado" />
+            <livewire:form.select type="multiselect" label="Docentes" name="professores" appearance="outlined"
+                size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'" :disabled="!filled($selectedDisciplinas)"
+                no-result-message="Nenhum docente relacionado aos componentes selecionados foi encontrado"
+                wire:key="professores-select-{{ $this->estudante?->id }}" wire:model.live="selectedProfessores"
+                :options="$displayProfessores ?? []" />
+        </div>
 
-        <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
-            appearance="outlined" />
-        <x-form.input type="datetime" label=" Dia/Hora" name="campos[diaHora]" appearance="outlined" size="small" />
-        <x-form.input label="Local" name="campos[local]" appearance="outlined" />
+        <div wire:ignore>
+            <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
+                appearance="outlined" wire:ignore />
+            <x-form.input label="Local" name="campos[local]" appearance="outlined" wire:ignore />
+        </div>
     </div>
 
-    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
         <h2 class="text-display-small">2. Particularidades do estudante </h2>
         <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full" />
     </div>
@@ -137,7 +143,10 @@ new class extends Component {
     <div class="flex justify-end gap-2">
         <x-button label="Cancelar" color="red" type="link"
             href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-trabalho.index') }}" />
-        <x-button label="Pré-visualização" color="tertiary" type="link" href="{{ route('planos-trabalho.preview') }}" />
+
+        <x-button label="Pré-visualização" color="tertiary" type="submit"
+            formaction="{{ route('planos-trabalho.preview') }}" formmethod="POST" formtarget="_blank" />
+
         <x-button label="Enviar para docentes" type="submit" />
     </div>
 </form>

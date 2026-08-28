@@ -169,4 +169,9 @@ class Estudante extends Model implements Auditable
     {
         return now()->diff($this->data_nascimento)->y;
     }
+
+    public function getDisciplinasAttribute()
+    {
+        return $this->curso->disciplinas->where('curso_periodo', $this->periodo);
+    }
 }

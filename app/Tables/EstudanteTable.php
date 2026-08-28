@@ -61,7 +61,7 @@ class EstudanteTable extends ListViewConfig
         $statusCache = [];
 
         return [
-            ListViewColumn::make('nome')->label('Nome do estudante')->size('large'),
+            ListViewColumn::make('nome')->label('Nome do estudante')->size('large')->link(fn($item) => route('estudantes.show', $item)),
             ListViewColumn::make('curso')->label('Curso do estudante')->size('large'),
             ListViewColumn::make('periodo')->label('Período')->size('small')->format(
                 fn($value) => $value . '°'
@@ -96,8 +96,8 @@ class EstudanteTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(Estudante $item) => !$item->trashed() 
-                ? route('estudantes.show', ['estudante' => $item]) 
+            ListViewAction::make(static fn(Estudante $item) => !$item->trashed()
+                ? route('estudantes.show', ['estudante' => $item])
                 : route('estudantes.restore', ['estudante' => $item])
             )->confirm(static fn(Estudante $item) => $item->trashed())->confirmMessage("Deseja restaurar este estudante?")
             ->icon(static fn(Estudante $item) => !$item->trashed() ? 'open_in_new' : 'restore')->color(fn(Estudante $item) => !$item->trashed() ? 'transparent' : 'primary')

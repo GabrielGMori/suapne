@@ -31,7 +31,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large"),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->link(fn($item) => route('estudantes.show', $item)),
             ListViewColumn::make('estudante.curso')->label('Curso')->size('large'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
         ];

@@ -13,7 +13,7 @@
     <div class="flex flex-col gap-3 mt-10">
         @if($count > 0)
             <x-icon icon="notification_important" size="45"
-                label="Existem {{$count}} PTE{{$plural}} {{ $notificationType }}" />
+                label="Existe{{$count === 1 ? '' : 'm'}} {{$count}} PTE{{$plural}} {{ $notificationType }}" />
             <x-button color="tertiary" label="Ver Planos" type="link"
                 :href="url()->current().'?'.http_build_query(['filter' => ['status' => [$status]]])" />
         @else

@@ -25,7 +25,7 @@ class PlanoTrabalhoEstudante extends Model
         'user_id',
         'user_professor_id',
         'disciplina_id',
-        'campos',
+        'campos'
     ];
 
     protected $casts = [

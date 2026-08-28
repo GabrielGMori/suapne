@@ -18,7 +18,12 @@ class Disciplina extends Model
     protected $fillable = [
         'nome',
         'ementa',
+        'curso_periodo',
         'curso_id',
+    ];
+
+    protected $casts = [
+        'curso_periodo' => 'integer',
     ];
 
     public function curso()

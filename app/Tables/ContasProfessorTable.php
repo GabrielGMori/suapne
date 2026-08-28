@@ -15,9 +15,7 @@ class ContasProfessorTable extends ListViewConfig
 {
     public function query(): Builder
     {
-         return User::query()
-        ->where('role', RoleEnum::PROFESSOR_REGULAR)
-        ->with('disciplinas.curso');
+         return User::query()->where('role', RoleEnum::PROFESSOR_REGULAR)->with('disciplinas.curso');
     }
 
     public function title(): ?string { return 'Professores registrados'; }

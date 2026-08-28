@@ -23,6 +23,7 @@ class DisciplinaFactory extends Factory
         return [
             'nome' => $this->faker->words(3, true),
             'ementa' => $this->faker->paragraph(),
+            'curso_periodo' => $this->faker->numberBetween(1, 8),
             'curso_id' => $curso->id,
         ];
     }

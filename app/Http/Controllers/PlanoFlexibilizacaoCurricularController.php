@@ -18,9 +18,9 @@ class PlanoFlexibilizacaoCurricularController extends Controller
         return view('planos-flexibilizacao.index', ['count' => $count]);
     }
 
-    public function create()
+    public function create(?Estudante $estudante = null)
     {
-        return view('planos-flexibilizacao.form');
+        return view('planos-flexibilizacao.form', ['estudanteId' => $estudante?->id]);
     }
 
     public function store(PlanoFlexibilizacaoCurricularRequest $request): RedirectResponse

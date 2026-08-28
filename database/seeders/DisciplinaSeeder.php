@@ -50,6 +50,7 @@ class DisciplinaSeeder extends Seeder
                     Disciplina::create([
                         'nome' => $disciplina['nome'] . " " . $this->numberToRomanRepresentation($ano),
                         'ementa' => "Ementa da disciplina de " . $disciplina['nome'] . " para o " . $ano . "º ano do Curso " . $curso->nome,
+                        'curso_periodo' => $ano,
                         'curso_id' => $curso->id,
                     ]);
                 }

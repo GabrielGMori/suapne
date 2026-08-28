@@ -17,6 +17,9 @@
             <livewire:form.select label="Curso*" appearance="outlined" size="large" name="curso_id"
                 :options="\App\Models\Curso::pluck('nome', 'id')->toArray()" :value="$disciplina?->curso_id" required />
 
+            <x-form.input type="number" label="Período no curso" name="curso_periodo" appearance="outlined"
+                :value="$disciplina?->curso_periodo" min="1" required />
+
             <x-form.input type="textarea" label="Ementa" name="ementa" appearance="outlined" size="full"
                 :value="$disciplina?->ementa" />
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 
 new class extends Component
@@ -65,6 +66,14 @@ new class extends Component
         if ($this->disabled) return;
 
         $this->selectedItems = [];
+    }
+
+    #[On('select-all')]
+    public function selectAll(string $name): void
+    {
+        if ($this->disabled || !$this->isMultiple || $this->name !== $name) return;
+
+        $this->selectedItems = $this->normalize(array_keys($this->options));
     }
 
     private function normalize(mixed $value): array

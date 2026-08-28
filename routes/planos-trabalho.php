@@ -3,7 +3,8 @@
 use App\Http\Controllers\PlanoTrabalhoEstudanteController;
 
 Route::controller(PlanoTrabalhoEstudanteController::class)->name('planos-trabalho.')->prefix('/planos-trabalho')->group(function () {
-    Route::get('/preview', 'preview')->name('preview');
+    Route::post('/preview', 'preview')->name('preview');
+    Route::post('/preview/change', 'changePreview')->name('change-preview');
     Route::get('/novo/{estudante?}', 'create')->name('create');
 });
 

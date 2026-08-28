@@ -1,3 +1,5 @@
+@props(['estudante'])
+
 <x-secao-expansivel title="Planos de Flexibilização Curricular" class="mt-5">
     <div class="p-5 flex flex-col gap-2">
         @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
@@ -11,11 +13,12 @@
             @endforeach
         @else
             <p>Nenhum plano foi criado no momento</p>
-            <x-button.add href="{{ route('planos-flexibilizacao.create') }}" />
+            <x-button.add href="{{ route('planos-flexibilizacao.create', ['estudante' => $estudante]) }}" />
         @endif
     </div>
     <x-slot:topActions>
         {{-- <x-button icon="search" color="transparent"></x-button> --}}
-        <x-button icon="add" color="transparent"></x-button>
+        <x-button icon="add" color="transparent" type="link"
+            href="{{ route('planos-flexibilizacao.create', ['estudante' => $estudante]) }}" />
     </x-slot:topActions>
 </x-secao-expansivel>

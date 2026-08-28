@@ -40,6 +40,12 @@ class ListViewColumn
         return $this;
     }
 
+    public function link(Closure $href): static
+    {
+        $this->format = fn($value, $item) => view('components.link', ['label' => $value, 'href' => ($href)($item)]);
+        return $this;
+    }
+
     public function getLabel(): string  { return $this->label ?? Str::headline($this->key); }
     public function getSize(): string   { return $this->size; }
     public function getFormattedValue(object $item): string|HtmlString

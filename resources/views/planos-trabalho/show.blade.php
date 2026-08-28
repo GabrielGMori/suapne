@@ -1,10 +1,14 @@
-@props(['planoTrabalho'])
+@props(['planoTrabalho', 'preview' => false, 'previewDisciplinas' => [], 'previewProfessores' => []])
 
 @php
     use App\Enums\RoleEnum;
 
     $isProfessorRegular = Auth::user()->role === RoleEnum::PROFESSOR_REGULAR;
-    $preenchendo = $isProfessorRegular && ($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO || $planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::PENDENTE);
+    $preenchendo = !$preview && $isProfessorRegular
+        && ($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO || $planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::PENDENTE);
+
+    $created_at = $planoTrabalho->created_at ?? now();
+    $updated_at = $planoTrabalho->updated_at ?? $created_at;
 @endphp
 
 <x-layouts.main title="{{ $planoTrabalho->nome }}">
@@ -14,112 +18,127 @@
             @csrf
             <input type="hidden" name="status" value="AGUARDANDO_REVISAO">
     @endif
-    <div>
-        <div class="flex justify-between items-start mb-5">
-            <div class="flex items-end gap-5">
-                <h2 class="flex gap-5 text-display-small">Adaptação e/ou flexibilização curricular</h2>
-                <x-status label="{{ $planoTrabalho->status->label() }}" color="{{ $planoTrabalho->status->color() }}"
-                    :filled="false" />
-            </div>
-            @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
-                <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" />
-            @endif
-        </div>
-        <h4 class="mb-5">Período de realização: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }}
-            a {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</h4>
-
-        <div class="flex flex-col bg-surface rounded-lg gap-1 mb-5 p-5">
-            <h2 class="text-display-small mb-5">1. Dados do estudante</h2>
-            <p>Nome: {{ $planoTrabalho->estudante->nome }}</p>
-            <p>Curso/Turma: {{ $planoTrabalho->estudante->curso->nome }}</p>
-            <p>Série/Ano: {{ $planoTrabalho->estudante->periodo }}</p>
-            <p>Componente curricular: {{ $planoTrabalho->disciplina->nome }}</p>
-            <p>Docente: {{ $planoTrabalho->professor->nome }}</p>
-            <p>Carga horária de atendimento individualizado (se necessário):
-                {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
-            </p>
-            <p>Dia/Horário/Local: {{ $planoTrabalho->created_at->format('d/m/Y \à\s h:i') }} CNAPNE</p>
-
-            <p class="mt-5">Necessidade educacional específica:</p>
-            <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                <p>{{$planoTrabalho->estudante->necessidades}}</p>
-            </div>
-        </div>
-
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">2. Particularidades do estudante</h2>
-            <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                <p>{{$planoTrabalho->campos['particularidadesEstudante']}}</p>
-            </div>
-        </div>
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
-                flexibilização:</h2>
-            <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                <p>{{$planoTrabalho->disciplina->ementa}}</p>
-            </div>
-        </div>
-
-
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período</h2>
-
-            @if(!$preenchendo)
-                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                {{ array_key_exists('objetivosEspecificos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                    <p>{{ $planoTrabalho->campos['objetivosEspecificos'] ?? 'A ser preenchido pelo docente...' }}</p>
+        <div>
+            <div class="flex justify-between items-start mb-5">
+                <div class="flex items-end gap-5">
+                    <h2 class="flex gap-5 text-display-small">Adaptação e/ou flexibilização curricular</h2>
+                    <x-status label="{{ $preview ? 'Pré-visualização' : $planoTrabalho->status->label() }}"
+                        color="{{ $preview ? 'tertiary' : $planoTrabalho->status->color() }}" :filled="false" />
                 </div>
-            @else
-                <x-form.input type="textarea" name="campos[objetivosEspecificos]" appearance="outlined" size="full" placeholder="Preencha aqui..." />
-            @endif
-        </div>
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">5. Instrumentos avaliativos pretendidos e procedimentos adotados:</h2>
-            <p>(De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)</p>
+                @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
+                    <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" />
+                @elseif ($preview)
+                    @include('planos-trabalho.change-preview', [
+                        'planoTrabalho' => $planoTrabalho,
+                        'previewDisciplinas' => $previewDisciplinas,
+                        'previewProfessores' => $previewProfessores,
+                    ])
+                @endif
+            </div>
+            <h4 class="mb-5">Período de realização: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }}
+                a {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</h4>
 
-            @if(!$preenchendo)
-                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                {{ array_key_exists('instrumentosAvaliativos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                    <p>{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? 'A ser preenchido pelo docente...' }}</p>
+            <div class="flex flex-col bg-surface rounded-lg gap-1 mb-5 p-5">
+                <h2 class="text-display-small mb-5">1. Dados do estudante</h2>
+                <p>Nome: {{ $planoTrabalho->estudante->nome }}</p>
+                <p>Curso/Turma: {{ $planoTrabalho->estudante->curso->nome }}</p>
+                <p>Série/Ano: {{ $planoTrabalho->estudante->periodo }}</p>
+                <p>Componente curricular: {{ $planoTrabalho->disciplina->nome }}</p>
+                <p>Docente: {{ $planoTrabalho->professor->nome }}</p>
+                <p>Carga horária de atendimento individualizado:
+                    {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
+                </p>
+                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i') }} CNAPNE</p>
+
+                <p class="mt-5">Necessidade educacional específica:</p>
+                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+                    <p>{{$planoTrabalho->estudante->necessidades}}</p>
                 </div>
-            @else
-                <x-form.input type="textarea" name="campos[instrumentosAvaliativos]" appearance="outlined" size="full" placeholder="Preencha aqui..." />
-            @endif
-        </div>
+            </div>
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">6. Outras considerações relevantes:</h2>
-
-            @if(!$preenchendo)
-                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                {{ array_key_exists('outrasConsideracoes', $planoTrabalho->campos) ? '' : 'italic' }}">
-                    <p>{{ $planoTrabalho->campos['outrasConsideracoes'] ?? 'A ser preenchido pelo docente...' }}</p>
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+                <h2 class="text-display-small">2. Particularidades do estudante</h2>
+                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+                    <p>{{$planoTrabalho->campos['particularidadesEstudante']}}</p>
                 </div>
-            @else
-                <x-form.input type="textarea" name="campos[outrasConsideracoes]" appearance="outlined" size="full" placeholder="Preencha aqui..." />
-            @endif
-        </div>
+            </div>
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+                <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
+                    flexibilização:</h2>
+                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
+                    <p>{{$planoTrabalho->disciplina->ementa}}</p>
+                </div>
+            </div>
 
-        @if ($planoTrabalho->created_at !== $planoTrabalho->updated_at)
-            <p>Atualizado pela última vez: {{ $planoTrabalho->updated_at->format('d/m/Y \à\s H:i') }}</p>
+
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+                <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período</h2>
+
+                @if(!$preenchendo)
+                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
+                                {{ array_key_exists('objetivosEspecificos', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p>{{ $planoTrabalho->campos['objetivosEspecificos'] ?? 'A ser preenchido pelo docente...' }}</p>
+                    </div>
+                @else
+                    <x-form.input type="textarea" name="campos[objetivosEspecificos]" appearance="outlined" size="full"
+                        placeholder="Preencha aqui..." />
+                @endif
+            </div>
+
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+                <h2 class="text-display-small">5. Instrumentos avaliativos pretendidos e procedimentos adotados:</h2>
+                <p>(De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)</p>
+
+                @if(!$preenchendo)
+                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
+                                {{ array_key_exists('instrumentosAvaliativos', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p>{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? 'A ser preenchido pelo docente...' }}</p>
+                    </div>
+                @else
+                    <x-form.input type="textarea" name="campos[instrumentosAvaliativos]" appearance="outlined" size="full"
+                        placeholder="Preencha aqui..." />
+                @endif
+            </div>
+
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+                <h2 class="text-display-small">6. Outras considerações relevantes:</h2>
+
+                @if(!$preenchendo)
+                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
+                                {{ array_key_exists('outrasConsideracoes', $planoTrabalho->campos) ? '' : 'italic' }}">
+                        <p>{{ $planoTrabalho->campos['outrasConsideracoes'] ?? 'A ser preenchido pelo docente...' }}</p>
+                    </div>
+                @else
+                    <x-form.input type="textarea" name="campos[outrasConsideracoes]" appearance="outlined" size="full"
+                        placeholder="Preencha aqui..." />
+                @endif
+            </div>
+
+            <p>Atualizado pela última vez: {{ $updated_at->format('d/m/Y \à\s H:i') }}</p>
+
+            <div class="flex justify-end gap-2">
+                @if($preview)
+                    <x-button label="Voltar" color="tertiary" type="button" onclick="window.close()" />
+                @else
+                    <x-button.cancel label="Voltar" color="tertiary" fallback="planos-trabalho.index" />
+                @endif
+
+                @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
+                    <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow" />
+
+                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO && !$isProfessorRegular)
+                    <x-button label="Devolver para retificação" color="red" />
+                    <x-button label="Aprovar" />
+
+                @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
+
+                @elseif ($preenchendo)
+                    <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
+                @endif
+            </div>
+        </div>
+        @if ($preenchendo)
+            </form>
         @endif
-
-        <div class="flex justify-end gap-2">
-            <x-button.cancel label="Voltar" color="tertiary" fallback="planos-trabalho.index" />
-
-            @if($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::DEVOLVIDO)
-                <x-button label="Reavaliar" type="link" href="{{ route('planos-trabalho.index') }}" color="yellow" />
-            @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO && !$isProfessorRegular)
-                <x-button label="Devolver para retificação" color="red" />
-                <x-button label="Aprovar" />
-            @elseif($planoTrabalho->status === App\Enums\StatusPlanoTrabalhoEnum::APROVADO)
-            @elseif ($preenchendo)
-                <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
-            @endif
-        </div>
-    </div>
-    @if ($preenchendo)
-        </form>
-    @endif
 </x-layouts.main>

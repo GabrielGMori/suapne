@@ -52,7 +52,7 @@
                         </div>
 
                         @foreach ($columns as $column)
-                            <div class="list-view-size-{{ $column->getSize() }} text-center">
+                            <div class="list-view-size-{{ $column->getSize() }} text-center text-body-medium">
                                 {{ $column->getFormattedValue($item) }}
                             </div>
                         @endforeach
