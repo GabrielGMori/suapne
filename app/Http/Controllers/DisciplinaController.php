@@ -10,9 +10,7 @@ class DisciplinaController extends Controller
 {
     public function index()
     {
-        $disciplinas = Disciplina::paginate(10);
-
-        return view('disciplinas.index',  ['disciplinas' => $disciplinas]);
+        return view('disciplinas.index');
     }
 
     public function create()

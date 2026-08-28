@@ -6,7 +6,7 @@
                     <p>Criado por: {{ $plano->user->nome }}</p>
                     <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                     <x-button icon="open_in_new" color="transparent" type="link"
-                        href="{{ route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano]) }}" />
+                        href="{{ route('planos-flexibilizacao.show', ['plano_flexibilizacao' => $plano]) }}" />
                 </x-documento>
             @endforeach
         @else

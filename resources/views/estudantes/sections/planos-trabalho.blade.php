@@ -32,11 +32,11 @@
             @endforeach
         @else
             <p>Nenhum plano foi criado no momento</p>
-            <x-button.add href="{{ route('planos-trabalho.form') }}" />
+            <x-button.add href="{{ route('planos-trabalho.create', ['estudante' => $estudante]) }}" />
         @endif
     </div>
     <x-slot:topActions>
         {{-- <x-button icon="search" color="transparent"></x-button> --}}
-        <x-button icon="add" color="transparent"></x-button>
+        <x-button icon="add" color="transparent" type="link" href="{{ route('planos-trabalho.create', ['estudante' => $estudante]) }}"></x-button>
     </x-slot:topActions>
 </x-secao-expansivel>

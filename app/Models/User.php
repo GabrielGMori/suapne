@@ -6,6 +6,7 @@ use App\Models\Disciplina;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,9 +57,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Disciplina::class);
     }
 
+    public function planosTrabalhoProfessor(): HasMany
+    {
+        return $this->hasMany(PlanoTrabalhoEstudante::class, 'user_professor_id');
+    }
+
     public function getNameAttribute()
     {
         return $this->nome;
     }
-
 }

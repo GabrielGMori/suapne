@@ -1,0 +1,143 @@
+<?php
+
+use Livewire\Component;
+use App\Models\Estudante;
+use App\Models\Disciplina;
+
+new class extends Component {
+    public null|string|array $estudanteId = '';
+    public ?Estudante $estudante = null;
+
+    public ?array $displayDisciplinas = null;
+    public array $selectedDisciplinas = [];
+
+    public ?array $displayProfessores = null;
+    public array $selectedProfessores = [];
+
+    public function mount(): void
+    {
+        $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
+        if (filled($this->estudanteId))
+            $this->updatedEstudanteId($this->estudanteId);
+
+        $this->selectedDisciplinas = old('disciplinas', $this->selectedDisciplinas);
+        if (filled($this->selectedDisciplinas))
+            $this->updatedSelectedDisciplinas($this->selectedDisciplinas);
+
+        $this->selectedProfessores = old('professores', $this->selectedProfessores);
+    }
+
+    public function updatedEstudanteId($estId)
+    {
+        $id = is_array($estId) ? $estId[0] : $estId;
+        $this->estudante = Estudante::find($id);
+
+        $estudanteDisciplinas = $this->estudante?->curso->disciplinas;
+        $this->displayDisciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
+        $this->selectedDisciplinas = [];
+        $this->selectedProfessores = [];
+
+        $plano = $this->estudante->planosFlexibilizacaoCurricular?->last();
+        if ($plano === null)
+            return;
+
+        $this->selectedDisciplinas = $plano->campos['componentesCurriculares'];
+        $this->updatedSelectedDisciplinas($this->selectedDisciplinas);
+    }
+
+    public function updatedSelectedDisciplinas($discs)
+    {
+        if (empty($discs)) {
+            $this->displayProfessores = [];
+            $this->selectedProfessores = [];
+            return;
+        }
+
+        $disciplinas = Disciplina::with(['users:id,nome'])->whereIn('id', $discs)->get(['id', 'nome']);
+        $professores = [];
+
+        foreach ($disciplinas as $disciplina) {
+            foreach ($disciplina->users as $professor) {
+                $professores[$professor->id]['nome'] = $professor->nome;
+                $professores[$professor->id]['disciplinas'][] = $disciplina->nome;
+            }
+        }
+
+        $this->displayProfessores = [];
+
+        foreach ($professores as $professorId => $professor) {
+            $this->displayProfessores[$professorId] =
+                $professor['nome'] .
+                ' (' .
+                implode(', ', $professor['disciplinas']) .
+                ')';
+        }
+
+        $this->selectedProfessores = array_values(
+            array_filter(
+                $this->selectedProfessores,
+                fn($professorId) =>
+                array_key_exists($professorId, $this->displayProfessores)
+            )
+        );
+    }
+};
+?>
+
+<form action="{{ route('planos-trabalho.store') }}" method="POST">
+    @csrf
+
+    <h2 class="flex gap-5 mb-5 text-display-small">Período de realização:
+        <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined" />
+        a
+        <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined" />
+    </h2>
+    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
+        <h2 class="text-display-small">1. Dados do estudante</h2>
+
+        <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined"
+            placeholder="Selecionar" :options="Estudante::pluck('nome', 'id')->toArray()"
+            wire:model.live="estudanteId" />
+
+        <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
+            appearance="outlined" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
+            :options="$displayDisciplinas ?? []" :disabled="$estudante === null"
+            wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
+
+        <livewire:form.select type="multiselect" label="Docentes" name="professores" appearance="outlined"
+            size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'" wire:key="professores-select-{{ $this->estudante?->id }}"
+            wire:model.live="selectedProfessores" :options="$displayProfessores ?? []"
+            :disabled="!filled($selectedDisciplinas)"
+            no-result-message="Nenhum docente relacionado aos componentes selecionados foi encontrado" />
+
+        <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
+            appearance="outlined" />
+        <x-form.input type="datetime" label=" Dia/Hora" name="campos[diaHora]" appearance="outlined" size="small" />
+        <x-form.input label="Local" name="campos[local]" appearance="outlined" />
+    </div>
+
+    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <h2 class="text-display-small">2. Particularidades do estudante </h2>
+        <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full" />
+    </div>
+
+
+    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
+        <h2 class="text-display-small"> 3. Conteúdos do componente curricular que necessitam de adaptação e/ou
+            flexibilização: </h2>
+        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5 border border-on-surface">
+            <p class="text-label-large">
+                Preenchimento automático com base nas ementas dos componentes curriculares selecionados
+            </p>
+        </div>
+    </div>
+
+    <input type="hidden" name="status" value="PENDENTE">
+
+    <div class="flex justify-end gap-2">
+        <x-button label="Cancelar" color="red" type="link"
+            href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-trabalho.index') }}" />
+        <x-button label="Pré-visualização" color="tertiary" type="link" href="{{ route('planos-trabalho.preview') }}" />
+        <x-button label="Enviar para docentes" type="submit" />
+    </div>
+</form>

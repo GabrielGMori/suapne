@@ -263,6 +263,8 @@ return [
         'curso_id' => 'curso',
         'observacoes' => 'observações',
         'observacao' => 'observação',
+        'periodo_inicio' => 'data inicial',
+        'periodo_fim' => 'data final',
     ],
 
 ];

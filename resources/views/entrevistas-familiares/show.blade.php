@@ -9,7 +9,7 @@ use App\Models\Estudante;
         <h2 class="text-title-large ">Data da entrevista: {{$entrevistaFamiliar->data->format('d/m/Y')}}</h2>
         <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary"/>
     </div>
-    
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Identificação do Estudante</h2>
         <hr class="text-on-surface">
@@ -32,7 +32,7 @@ use App\Models\Estudante;
         <p>Email da mãe: {{$entrevistaFamiliar->campos['emailMae']}}</p>
         <p>Email do pai: {{$entrevistaFamiliar->campos['emailPai']}}</p>
         <p>Email do responsável: {{$entrevistaFamiliar->campos['emailResponsavel']}}</p>
-        
+
         <hr class="text-on-surface">
         <p>Pode ser chamado SAMU?: {{$entrevistaFamiliar->campos['podeSerChamadoSAMU']}}</p>
     </div>
@@ -187,6 +187,6 @@ use App\Models\Estudante;
     </div>
 
     <div class="flex justify-end gap-2">
-        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('estudantes.show', ['id' => $entrevistaFamiliar->estudante->id, 'estudante'=>$estudante]) }}" color="tertiary" />
+        <x-button.cancel label="Voltar" color="tertiary" fallback="estudantes.show" :args="['id' => $entrevistaFamiliar->estudante->id, 'estudante'=>$estudante]" color="tertiary" />
     </div>
 </x-layouts.main>

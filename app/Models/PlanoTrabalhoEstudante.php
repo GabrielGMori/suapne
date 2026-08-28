@@ -21,11 +21,11 @@ class PlanoTrabalhoEstudante extends Model
         'status',
         'periodo_inicio',
         'periodo_fim',
-        'campos',
         'estudante_id',
         'user_id',
-        'disciplina_id',
         'user_professor_id',
+        'disciplina_id',
+        'campos',
     ];
 
     protected $casts = [

@@ -26,10 +26,12 @@ class AtendimentoSemanalRequest extends FormRequest
         $atendimento = $this->route('atendimentos');
 
         return [
-            'user_id' => ['required','integer','exists:users,id'],
-            'estudante_id' => ['required','integer','exists:estudantes,id'],
-            'local' => ['required','string'],
-            'data' => ['required','date'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
+            'local' => ['required', 'string'],
+            'data' => ['required', 'date'],
+            'campos' => ['required', 'array'],
+
             'campos.perfilDoEstudante' => ['required','string'],
             'campos.registroDoAtendimento' => ['required','string'],
             'campos.encaminhamentos' => ['required','string'],

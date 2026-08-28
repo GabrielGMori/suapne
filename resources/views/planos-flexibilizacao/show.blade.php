@@ -44,7 +44,7 @@
         <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
         <p class="text-body-large">
             @foreach($planoFlexibilizacao->campos['componentesCurriculares'] as $disciplinaId)
-                {{ Disciplina::find($disciplinaId)->nome}}; 
+                {{ Disciplina::find($disciplinaId)->nome}};
             @endforeach
         </p>
     </div>
@@ -56,6 +56,6 @@
     </div>
 
     <div class="flex justify-end gap-2">
-        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-flexibilizacao.index')  }}" color="tertiary" />
+        <x-button.cancel label="Voltar" color="tertiary" fallback="planos-flexibilizacao.index" color="tertiary" />
     </div>
 </x-layouts.main>

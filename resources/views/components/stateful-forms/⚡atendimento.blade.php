@@ -21,19 +21,17 @@ new class extends Component {
         }
     }
 
-    public function loadPerfil(): void
-    {
-        $ultimoAtendimento = $this->estudante->atendimentosSemanais()->latest()->first();
-        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '') return;
-        $this->perfil = $ultimoAtendimento ? ($ultimoAtendimento->campos['perfilDoEstudante'] ?? '') : '';
-    }
-
     public function updatedEstudanteId($newId)
     {
-        if (!filled($this->estudanteId)) return;
+        if (!filled($this->estudanteId))
+            return;
         $id = is_array($newId) ? $newId[0] : $newId;
         $this->estudante = Estudante::find($id);
-        $this->loadPerfil();
+
+        $ultimoAtendimento = $this->estudante->atendimentosSemanais()->latest()->first();
+        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '')
+            return;
+        $this->perfil = $ultimoAtendimento ? ($ultimoAtendimento->campos['perfilDoEstudante'] ?? '') : '';
     }
 };
 ?>
@@ -49,14 +47,14 @@ new class extends Component {
             wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()"
             :value="$atendimento?->estudante_id" />
 
-        <x-form.input type="text" label="Local" appearance="outlined" size="small" name="local"
+        <x-form.input label="Local" appearance="outlined" size="small" name="local"
             :value="$atendimento?->local" />
 
         <x-form.input type="datetime" label="Dia" appearance="outlined" name="data"
             :value="$atendimento?->data->format('Y-m-d H:i:s')" />
 
-        <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined"
-            name="campos[perfilDoEstudante]" size="full" wire:model.blur="perfil" />
+        <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
+            size="full" wire:model.blur="perfil" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>

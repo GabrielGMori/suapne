@@ -19,7 +19,7 @@ new class extends Component
     public ?string $label        = null;
     public string $appearance    = 'default';
     public string $size          = 'medium';
-    public bool   $dispatchEvent = true;
+    public string $noResultMessage = 'Sem resultados';
 
     #[Reactive]
     public ?string $placeholder  = '';
@@ -36,8 +36,8 @@ new class extends Component
         string  $size          = 'medium',
         ?string $placeholder   = '',
         bool    $clearable     = false,
-        bool    $dispatchEvent = true,
         bool    $disabled      = false,
+        string $noResultMessage = 'Sem resultados',
     ): void {
         $this->isMultiple    = $type === 'multiselect';
         $this->name          = $name;
@@ -47,7 +47,7 @@ new class extends Component
         $this->placeholder   = $placeholder;
         $this->clearable     = $clearable;
         $this->disabled      = $disabled;
-        $this->dispatchEvent = $dispatchEvent;
+        $this->noResultMessage = $noResultMessage;
 
         $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
         $resolved = $oldName !== '' ? old($oldName, $value) : $value;

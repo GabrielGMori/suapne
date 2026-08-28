@@ -12,6 +12,8 @@
 ])
 
 @php
+    use Illuminate\Support\Carbon;
+
     $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
     $value = old($oldName, $value);
     $error ??= $errors->first($oldName);
@@ -40,6 +42,10 @@
         $type === 'tel' => '+55 (99) 99999-9999',
         default => '',
     };
+
+    if ($value instanceof Carbon) {
+        $value = $type === 'date' ? $value->format('Y-m-d') : $value->format('Y-m-d\TH:i');
+    }
 @endphp
 
 <div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">

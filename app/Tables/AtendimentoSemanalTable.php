@@ -33,7 +33,7 @@ class AtendimentoSemanalTable extends ListViewConfig
             ListViewColumn::make('estudante.nome')->label('Nome do estudante'),
             ListViewColumn::make('user.nome')->label('Feito por'),
             ListViewColumn::make('local')->label('Local')->size("medium"),
-            ListViewColumn::make('data')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i')),
+            ListViewColumn::make('data')->label('Data')->format(fn($value) => $value->format('d/m/Y \à\s H:i')),
         ];
     }
 

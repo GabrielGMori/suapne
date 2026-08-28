@@ -59,7 +59,6 @@ class EstudanteRequest extends FormRequest
             'telefone_responsavel' => ['nullable', 'string', 'min:10', 'max:20'],
             'email_responsavel' => ['nullable', 'email', 'max:255'],
             'avatar' => ['nullable', 'string', 'max:255'],
-
             'curso_id' => ['required', 'integer', 'exists:cursos,id'],
         ];
     }

@@ -28,7 +28,7 @@ new class extends Component {
             <livewire:form.select label="Estudante" appearance="outlined" size="full" name="estudante_id"
                 :options="App\Models\Estudante::pluck('nome', 'id')->toArray()" wire:model.live="estudanteId" />
         </div>
-        <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create', ['estudante' => $this->estudante])}}" />
+        <x-button label="Iniciar atendimento" type="link" href="{{route('atendimentos.create', ['estudante' => $estudante])}}" />
     </div>
 
     <x-icon icon="assignment_add" size="40" label="Criar plano de trabalho do estudante" />
@@ -38,6 +38,6 @@ new class extends Component {
             <livewire:form.select label="Estudante" appearance="outlined" size="full" name="estudante_id"
                 :options="App\Models\Estudante::pluck('nome', 'id')->toArray()" wire:model.live="estudanteId" />
         </div>
-        <x-button label="Criar PTE" type="link" href="{{route('planos-trabalho.form')}}" />
+        <x-button label="Criar PTE" type="link" href="{{route('planos-trabalho.create', ['estudante' => $estudante])}}" />
     </div>
 </div>

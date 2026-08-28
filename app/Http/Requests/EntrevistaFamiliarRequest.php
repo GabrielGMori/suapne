@@ -31,6 +31,7 @@ class EntrevistaFamiliarRequest extends FormRequest
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
             'data' => ['required', 'date'],
+            'campos' => ['required', 'array'],
 
             'campos.nomeCompleto' => ['required', 'string', 'max:255'],
             'campos.nomeSocial' => ['required', 'string', 'max:255'],

@@ -37,7 +37,7 @@ class SolicitacaoRegistroTable extends ListViewConfig
                     'label' => 'Disciplinas'
                 ])->render()
                 : '---'),
-            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i'))->size('tiny'),
+            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y \à\s H:i'))->size('tiny'),
         ];
     }
 

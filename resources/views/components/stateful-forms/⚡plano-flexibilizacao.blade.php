@@ -12,23 +12,16 @@ new class extends Component {
     public function mount(): void
     {
         $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
-
-        if ($this->estudanteId !== '' && $this->estudanteId !== []) {
-            $this->updatedEstudanteId();
-        }
+        if (filled($this->estudante)) $this->updatedEstudanteId($this->estudanteId);
     }
 
-    public function loadDisciplinas(): void
+    public function updatedEstudanteId($estId)
     {
-        $estudanteDisciplinas = $this->estudante?->curso->disciplinas;
-        $this->disciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->mapWithKeys(fn($disc) => [$disc->id => $disc->nome . " - " . $disc->curso->nome])->toArray() : [];
-    }
-
-    public function updatedEstudanteId()
-    {
-        $id = is_array($this->estudanteId) ? $this->estudanteId[0] : $this->estudanteId;
+        $id = is_array($estId) ? $estId[0] : $estId;
         $this->estudante = Estudante::find($id);
-        $this->loadDisciplinas();
+
+        $estudanteDisciplinas = $this->estudante?->curso->disciplinas;
+        $this->disciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
     }
 };
 ?>
@@ -37,6 +30,7 @@ new class extends Component {
 
 <form action="{{ route('planos-flexibilizacao.store') }}" method="POST">
     @csrf
+
     <div>
         <div class="flex gap-5 mb-5">
             <h2 class="text-display-small">Período de realização:</h2>
@@ -89,8 +83,8 @@ new class extends Component {
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
             <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
-                appearance="outlined" name="campos[componentesCurriculares]" :disabled="$estudante === null" size="xlarge"
-                :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'" :options="$this->disciplinas ?? []" />
+                appearance="outlined" name="campos[componentesCurriculares]" :disabled="$estudante === null"
+                :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'" :options="$disciplinas ?? []" />
         </div>
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">

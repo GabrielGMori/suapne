@@ -1,7 +1,7 @@
 <div>
     <div class="flex items-center justify-between {{ $maxDocuments > 1 ? 'mb-10' : '' }}">
         <div class="flex items-center gap-10">
-            <x-form.input wire:model="nome" name="nome" type="text" label="Nome do documento"
+            <x-form.input wire:model="nome" name="nome" label="Nome do documento"
                 appearance="outlined" error="{{ $errors->first('nome') }}"/>
 
             <x-form.file wire:model="arquivo" name="arquivo" id="arquivo-{{ $fileIteration }}" label="Arquivo"
@@ -46,7 +46,7 @@
                             <x-slot:metadata>
                                 <p>Enviada por: {{ $document['uploaded_by'] }}</p>
                                 <p>Data de
-                                    envio: {{ \Carbon\Carbon::parse($document['enviado_em'])->format('d/m/Y H:i') }}</p>
+                                    envio: {{ \Carbon\Carbon::parse($document['enviado_em'])->format('d/m/Y \à\s H:i') }}</p>
                                 <x-button icon="delete" color="transparent"
                                         wire:click="removeDocument('{{ $document['id'] }}')"/>
                                 <x-button icon="download" color="transparent"

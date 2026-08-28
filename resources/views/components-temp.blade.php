@@ -135,12 +135,12 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form.input type="text" label="Nome completo" name="nome-outlined" appearance="outlined" />
+                <x-form.input label="Nome completo" name="nome-outlined" appearance="outlined" />
                 <livewire:form.select type="select" label="Componente curricular" name="componente-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" placeholder="Selecionar" />
                 <livewire:form.select type="select" size="tiny" value="20" name="number-outlined" :options="['20', '10', '5']" appearance="outlined" />
                 <livewire:form.select type="multiselect" label="Componentes curriculares" name="componentes-outlined" :options="['Matemática', 'Português', 'Artes']" appearance="outlined" />
                 <x-form.input type="datetime" label="Dia e hora" name="datetime-outlined" appearance="outlined" />
-                <x-form.input type="date" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
+                <x-form.input type="date" :value="now()" size="small" label="Dia" name="dia-outlined" appearance="outlined" />
                 <x-form.input type="date" size="small" name="date-outlined" appearance="outlined" />
                 <x-form.input type="textarea" size="full" label="Texto" name="textarea-outlined" appearance="outlined" />
             </div>
@@ -164,7 +164,7 @@
                 Form Inputs
             </summary>
             <div class="flex flex-col gap-5">
-                <x-form.input type="text" label="Nome:" />
+                <x-form.input label="Nome:" />
                 <x-form.input type="password" label="Senha:" />
                 <x-form.input type="password_forgot" label="Senha:" />
                 <livewire:form.select :options="['Matemática', 'Português', 'Artes']" label="Disciplina:" />
@@ -196,7 +196,7 @@
             </summary>
             <div class="flex items-start gap-5 mt-2">
                 <x-auth-card title="Login" width="125">
-                    <x-form.input type="text" label="Nome:" />
+                    <x-form.input label="Nome:" />
                     <x-form.input type="password_forgot" label="Senha:" />
                     <x-button label="Acessar" type="submit" size="full" />
                     <div class="flex flex-col w-full">

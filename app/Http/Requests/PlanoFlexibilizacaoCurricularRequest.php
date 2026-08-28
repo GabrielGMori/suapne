@@ -29,6 +29,7 @@ class PlanoFlexibilizacaoCurricularRequest extends FormRequest
             'periodo_inicio' => ['required','date'],
             'periodo_fim' => ['required','date','after:periodo_inicio'],
             'campos' => ['required','array'],
+
             'campos.acoesPedagogicas' => ['required','string'],
             'campos.atendimentoMultiprofissional' => ['required','string'],
             'campos.diferenciacaoCurricular' => ['required','string'],

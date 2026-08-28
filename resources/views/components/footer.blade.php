@@ -32,7 +32,7 @@
             <div>
                 <h4 class="text-title-medium text-white mb-2">Informações técnicas</h4>
                 <p class="text-body-medium text-on-surface">
-                    Última atualização: {{ now()->format('d/m/Y H:i') }}
+                    Última atualização: {{ now()->format('d/m/Y \à\s H:i') }}
                 </p>
             </div>
         </div>

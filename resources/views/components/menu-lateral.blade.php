@@ -197,7 +197,7 @@
            data-sidebar-account
            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
            title="{{ $user->nome }}">
-            <img src="{{ asset($user->avatar) ?? asset('storage/img/placeholder-user.png') }}" alt="Imagem do usuário"
+            <img src="{{ $user->avatar ? asset($user->avatar) : asset('storage/img/placeholder-user.png') }}" alt="Imagem do usuário"
                  class="h-10 w-10 object-cover rounded-full shrink-0">
             <span data-sidebar-label x-show="!collapsed"
                   class="text-label-medium truncate">{{ $user->nome }}</span>

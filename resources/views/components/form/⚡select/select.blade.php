@@ -41,7 +41,7 @@
                 x-on:click="isOpen = !isOpen"
             >
                 <div x-show="selected.length > 0" class="w-full text-left">
-                    <template x-if="isMultiple">
+                    @if ($isMultiple && $submittedName !== '')
                         <div class="select-chips">
                             <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
@@ -52,11 +52,11 @@
                                 </span>
                             </template>
                         </div>
-                    </template>
+                    @endif
 
-                    <template x-if="!isMultiple">
+                    @if (!$isMultiple)
                         <span class="block truncate" x-text="labelMap[selected[0]] ?? selected[0]"></span>
-                    </template>
+                    @endif
                 </div>
 
                 <span x-show="selected.length === 0" class="text-black/40">{{ $placeholder }}</span>
@@ -77,7 +77,7 @@
 
                 <template x-if="displayOptions.length === 0">
                     <div class="select-option text-black/50 cursor-not-allowed" role="option" aria-disabled="true">
-                        Sem resultados
+                        {{ $noResultMessage }}
                     </div>
                 </template>
 
@@ -122,7 +122,7 @@
 </div>
 
 <script>
-    window.formSelectData = function (options, isMultiple, selected, disabled) {
+    window.formSelectData = function (options, isMultiple, disabled) {
         const normalizeOptions = (options) => {
             if (!Array.isArray(options)) {
                 return Object.entries(options ?? {}).map(([value, label]) => ({ value, label }));

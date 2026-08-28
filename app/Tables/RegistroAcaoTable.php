@@ -89,7 +89,7 @@ class RegistroAcaoTable extends ListViewConfig
                 ])->render();
             }),
             ListViewColumn::make('auditable.nome')->label('O que foi alterado?'),
-            ListViewColumn::make('created_at')->label('Data')->format(fn ($value) => $value->format('d/m/Y H:i')),
+            ListViewColumn::make('created_at')->label('Data')->format(fn ($value) => $value->format('d/m/Y \à\s H:i')),
         ];
     }
 

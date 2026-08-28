@@ -1,6 +1,5 @@
 <?php
 
 use App\Http\Controllers\PlanoFlexibilizacaoCurricularController;
-use Illuminate\Support\Facades\Route;
 
-Route::resource('planos-flexibilizacao', PlanoFlexibilizacaoCurricularController::class);
+Route::resource('planos-flexibilizacao', PlanoFlexibilizacaoCurricularController::class)->parameter('planos-flexibilizacao', 'plano-flexibilizacao');

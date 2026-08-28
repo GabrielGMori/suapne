@@ -18,7 +18,7 @@
 
             <div class="grid grid-cols-3 ml-15">
                 <livewire:avatar-upload :default-img-path="old('avatar', $user?->avatar)" class="row-span-3" />
-                <x-form.input type="text" name="nome" label="Nome" appearance="outlined" :value="$user->name"
+                <x-form.input name="nome" label="Nome" appearance="outlined" :value="$user->name"
                     size="large" />
                 <x-form.input type="email" name="email" label="E-mail" appearance="outlined" :value="$user->email"
                     size="large" />

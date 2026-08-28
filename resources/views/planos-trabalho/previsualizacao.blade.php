@@ -70,9 +70,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <x-button label="Voltar" type="link"
-                          href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-trabalho.form')  }}"
-                          color="tertiary"/>
+                <x-button.cancel label="Voltar" color="tertiary" fallback="planos-trabalho.create" />
             </div>
     </div>
 </x-layouts.main>

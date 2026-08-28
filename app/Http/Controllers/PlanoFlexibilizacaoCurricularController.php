@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Http\Requests\PlanoFlexibilizacaoCurricularRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -12,9 +13,9 @@ class PlanoFlexibilizacaoCurricularController extends Controller
 {
     public function index()
     {
-        $planos = PlanoFlexibilizacaoCurricular::paginate(10);
+        $count = Estudante::doesntHave('planosFlexibilizacaoCurricular')->count();
 
-        return view('planos-flexibilizacao.index', ['planos' => $planos]);
+        return view('planos-flexibilizacao.index', ['count' => $count]);
     }
 
     public function create()
@@ -26,13 +27,12 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     {
         PlanoFlexibilizacaoCurricular::create($request->validated());
 
-        return redirect()->route('planos-flexibilizacao.index')
-            ->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
+        return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
 
-    public function show(PlanoFlexibilizacaoCurricular $planosFlexibilizacao)
+    public function show(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
-        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planosFlexibilizacao]);
+        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
     public function edit()

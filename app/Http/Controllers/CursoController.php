@@ -11,9 +11,7 @@ class CursoController extends Controller
 {
     public function index()
     {
-        $cursos = Curso::paginate(10);
-
-        return view('cursos.index', ['cursos' => $cursos]);
+        return view('cursos.index');
     }
 
     public function create()

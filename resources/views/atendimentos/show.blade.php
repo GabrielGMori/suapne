@@ -1,7 +1,7 @@
 <x-layouts.main title="{{ $atendimento->nome }}">
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h3 class="text-title-large">Data do atendimento: {{ $atendimento->data->format('d/m/Y H:i') }}</h3>
+            <h3 class="text-title-large">Data do atendimento: {{ $atendimento->data->format('d/m/Y \à\s H:i') }}</h3>
             <h3 class="text-title-large">Feito por: {{ $atendimento->user->nome }}</h3>
         </div>
         <div class="flex justify-end">
@@ -40,6 +40,6 @@
     </div>
 
     <div class="flex justify-end gap-2">
-        <x-button label="Voltar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('atendimentos.index')  }}" color="tertiary" />
+        <x-button.cancel label="Voltar" color="tertiary" fallback="atendimentos.index" />
     </div>
 </x-layouts.main>

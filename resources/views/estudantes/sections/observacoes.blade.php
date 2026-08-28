@@ -15,7 +15,7 @@
                                 <p class="text-label-large">{{ $observacao->user->nome }}</p>
                                 <p class="text-body-small text-secondary-accent">{{ $observacao->user->role->label() }}</p>
                                 <p class="text-body-small text-secondary-accent">
-                                    {{ $observacao->created_at->format('d/m/Y H:i') }}
+                                    {{ $observacao->created_at->format('d/m/Y \à\s H:i') }}
                                 </p>
                             </div>
                             <p class="text-body-medium">{{ $observacao->observacao }}</p>

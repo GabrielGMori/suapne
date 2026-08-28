@@ -11,8 +11,7 @@ class AtendimentoSemanalController extends Controller
 {
     public function index()
     {
-        $atendimentos = AtendimentoSemanal::paginate(10);
-        return view('atendimentos.index', ['atendimentos'=> $atendimentos]);
+        return view('atendimentos.index');
     }
 
     public function create(?Estudante $estudante = null)
@@ -28,7 +27,7 @@ class AtendimentoSemanalController extends Controller
 
     public function show(AtendimentoSemanal $atendimento)
     {
-       return view('atendimentos.show',['atendimento'=>$atendimento]);
+       return view('atendimentos.show', ['atendimento' => $atendimento]);
     }
 
     public function edit()

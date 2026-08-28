@@ -3,21 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Estudante;
-use Illuminate\Http\Request;
 use App\Http\Requests\EstudanteRequest;
 use Illuminate\Http\RedirectResponse;
 
 use Illuminate\Support\Facades\Auth;
 class EstudanteController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $estudantes = Estudante::paginate(10);
-
-        return view('estudantes.index', ['estudantes' => $estudantes]);
+        return view('estudantes.index');
     }
 
-    public function create(Request $request)
+    public function create()
     {
         return view('estudantes.form');
     }
@@ -29,12 +26,12 @@ class EstudanteController extends Controller
         return redirect()->route('estudantes.index')->with('status', 'Estudante cadastrado com sucesso!');
     }
 
-    public function show(Request $request, Estudante $estudante)
+    public function show(Estudante $estudante)
     {
         return view('estudantes.show', ['estudante' => $estudante]);
     }
 
-    public function edit(Request $request, Estudante $estudante)
+    public function edit(Estudante $estudante)
     {
         return view('estudantes.form', ['estudante' => $estudante]);
     }
@@ -46,14 +43,14 @@ class EstudanteController extends Controller
         return redirect()->route('estudantes.show', $estudante)->with('status', 'Estudante atualizado com sucesso!');
     }
 
-    public function destroy(Request $request, Estudante $estudante)
+    public function destroy(Estudante $estudante)
     {
         $estudante->delete();
 
         return redirect()->route('estudantes.index')->with('status', 'Estudante excluído com sucesso!');
     }
 
-    public function restore(Request $request, Estudante $estudante)
+    public function restore(Estudante $estudante)
     {
         $estudante->restore();
 
