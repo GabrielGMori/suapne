@@ -84,7 +84,7 @@
 
     <div class="h-5">
         @if($error)
-            <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $error }}</p>
+            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $error }}</p>
         @endif
     </div>
 

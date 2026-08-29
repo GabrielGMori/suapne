@@ -15,8 +15,8 @@ class ProfessorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'nome' => ['required', 'string', 'max:200'],
+            'email' => ['required', 'email', 'max:200'],
             'disciplinas' => ['nullable', 'array'],
             'disciplinas.*' => ['exists:disciplinas,id'],
             'avatar' => ['nullable', 'string', 'max:255'],

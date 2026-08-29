@@ -16,7 +16,7 @@ class DisciplinaTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return Disciplina::query();
+        return Disciplina::query()->latest();
     }
 
     public function title(): ?string { return 'Disciplinas registradas'; }

@@ -18,7 +18,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoFlexibilizacaoCurricular::query();
+        return PlanoFlexibilizacaoCurricular::query()->latest();
     }
     public function title(): ?string { return 'Planos de Flexibilização Curricular'; }
     public function createUrl(): ?string { return route('planos-flexibilizacao.create'); }

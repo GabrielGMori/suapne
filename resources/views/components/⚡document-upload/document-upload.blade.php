@@ -17,7 +17,7 @@
 
     @if(($maxDocuments ?? 2) < 2)
         @error('documentos')
-            <p class="text-red">Por favor, envie um arquivo</p>
+            <p class="text-error">Por favor, envie um arquivo</p>
         @enderror
     @else
         <hr class="text-on-surface">
@@ -29,7 +29,7 @@
         </div>
 
         @error('documentos')
-            <p class="text-red">Por favor, adicione ao menos um arquivo à lista</p>
+            <p class="text-error">Por favor, adicione ao menos um arquivo à lista</p>
         @enderror
 
         <div class="flex flex-col gap-10">

@@ -132,7 +132,7 @@ class Estudante extends Model implements Auditable
 
     public function observacoes(): HasMany
     {
-        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->latest();
     }
 
     public function getEntrevistaEstudanteAttribute(): ?Documento

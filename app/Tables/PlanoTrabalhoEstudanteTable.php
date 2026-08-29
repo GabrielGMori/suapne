@@ -20,7 +20,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        $query = PlanoTrabalhoEstudante::query()->orderBy('status')->orderBy('periodo_inicio', 'desc');
+        $query = PlanoTrabalhoEstudante::query()->orderBy('status')->latest();
         $user = Auth::user();
         $query = $user->role === RoleEnum::PROFESSOR_REGULAR ? $query->where('user_professor_id', $user->id) : $query;
         return $query;

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nome', 200);
             $table->string('email', 200);
             $table->string('password', 200);
+            $table->json('campos')->nullable();
 
             $table->enum('role', [
                 'PROFESSOR_REGULAR',

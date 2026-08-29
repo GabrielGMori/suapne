@@ -15,7 +15,7 @@ class CursoTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return Curso::query();
+        return Curso::query()->latest();
     }
 
     public function title(): ?string { return 'Cursos registrados'; }

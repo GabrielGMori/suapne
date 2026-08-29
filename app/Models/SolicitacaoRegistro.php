@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Models\User;
 use App\Models\Disciplina;
-use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
-use OwenIt\Auditing\Auditable as AuditableTrait;
-use OwenIt\Auditing\Contracts\Auditable;
-class SolicitacaoRegistro extends Model implements Auditable
+
+class SolicitacaoRegistro extends Model
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
+    use HasFactory;
 
     protected $table = 'solicitacoes_registro';
 
@@ -23,6 +19,7 @@ class SolicitacaoRegistro extends Model implements Auditable
         'password',
         'role',
         'status',
+        'campos',
         'user_aprovador_id',
         'user_criado_id',
     ];
@@ -35,6 +32,7 @@ class SolicitacaoRegistro extends Model implements Auditable
     {
         return [
             'password' => 'hashed',
+            'campos' => 'array',
             'role' => \App\Enums\RoleEnum::class,
             'status' => \App\Enums\StatusSolicitacaoRegistroEnum::class,
         ];
@@ -55,8 +53,23 @@ class SolicitacaoRegistro extends Model implements Auditable
         return $this->belongsToMany(Disciplina::class);
     }
 
-    public function getNomeAttribute(): string
+    public function toUserAttributes() : array
     {
-        return 'Solicitação de registro';
+        return [
+            'nome' => $this->nome,
+            'email' => $this->email,
+            'password' => $this->password,
+            'role' => $this->role,
+            'disciplinas' => $this->disciplinas ?? null,
+        ];
+    }
+
+    public function createUser(): User
+    {
+        $data = $this->toUserAttributes();
+        $newUser = User::create($data);
+        $newUser->disciplinas()->sync($data['disciplinas']);
+
+        return $newUser;
     }
 }

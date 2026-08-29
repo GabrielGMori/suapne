@@ -116,7 +116,7 @@
 
     <div class="h-5">
         @error($this->resolvedErrorName())
-            <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
+            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
     </div>
 </div>

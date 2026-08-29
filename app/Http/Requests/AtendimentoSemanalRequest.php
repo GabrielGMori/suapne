@@ -28,7 +28,7 @@ class AtendimentoSemanalRequest extends FormRequest
         return [
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
-            'local' => ['required', 'string'],
+            'local' => ['required', 'string', 'max:100'],
             'data' => ['required', 'date'],
             'campos' => ['required', 'array'],
 

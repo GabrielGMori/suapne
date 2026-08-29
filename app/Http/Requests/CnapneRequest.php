@@ -17,8 +17,8 @@ class CnapneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
+            'nome' => ['required', 'string', 'max:200'],
+            'email' => ['required', 'email', 'max:200'],
             'role' => ['required', Rule::enum(RoleEnum::class)],
             'avatar' => ['nullable', 'string', 'max:255'],
         ];

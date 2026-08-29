@@ -14,7 +14,7 @@ class ContasCnapneTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO]);
+        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO])->latest();
     }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }

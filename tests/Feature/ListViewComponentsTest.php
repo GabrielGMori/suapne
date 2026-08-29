@@ -30,5 +30,5 @@ it('adds the shared restore action behavior for trashed items', function () {
         ->and($action->getIcon($item))->toBe('restore')
         ->and($action->getColor($item))->toBe('primary')
         ->and($action->needsConfirmation($item))->toBeTrue()
-        ->and($action->getConfirmMessage())->toBe('Deseja restaurar este estudante?');
+        ->and($action->getConfirmMessage($item))->toBe('Deseja restaurar este estudante?');
 });

@@ -10,9 +10,17 @@ Route::controller(LoginController::class)->group(function () {
 });
 
 Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastro')->group(function () {
-    Route::view('/', 'auth.cadastro.escolher')->name('index');
-    Route::view('/professor', 'auth.cadastro.professor-regular')->name('professor');
-    Route::view('/docente', 'auth.cadastro.docente-especial')->name('docente');
-    Route::view('/tecnico', 'auth.cadastro.tecnico')->name('tecnico');
-    Route::view('/enviado', 'auth.cadastro.enviado')->name('enviado');
+    Route::middleware('guest')->group(function () {
+        Route::view('/', 'auth.cadastro.escolher')->name('index');
+        Route::view('/professor', 'auth.cadastro.professor-regular')->name('professor');
+        Route::view('/tecnico', 'auth.cadastro.cnapne', ['role' => 'TECNICO'])->name('tecnico');
+        Route::view('/docente', 'auth.cadastro.cnapne', ['role' => 'DOCENTE_ESPECIAL'])->name('docente');
+        Route::view('/enviado', 'auth.cadastro.enviado')->name('enviado');
+        Route::post('/', 'submit')->name('submit');
+    });
+
+    Route::middleware('auth')->group(function () {
+        Route::post('/aceitar/{solicitacao}', 'accept')->name('accept');
+        Route::post('/recusar/{solicitacao}', 'decline')->name('decline');
+    });
 });

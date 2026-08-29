@@ -16,7 +16,7 @@
 
         <div class="flex flex-col w-full">
             <p class="text-body-small text-white">Não possui uma conta?</p>
-            <x-button label="Solicitar cadastro" type="link" href="{{ route('cadastro.enviado') }}" size="full"/>
+            <x-button label="Solicitar cadastro" type="link" href="{{ route('cadastro.index') }}" size="full"/>
         </div>
     </x-auth-card>
 </x-layouts.auth>

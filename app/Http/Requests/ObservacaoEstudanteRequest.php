@@ -15,7 +15,7 @@ class ObservacaoEstudanteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'observacao' => ['required', 'string', 'max:1000'],
+            'observacao' => ['required', 'string', 'max:200'],
         ];
     }
 }

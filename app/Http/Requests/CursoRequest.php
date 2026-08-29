@@ -18,7 +18,7 @@ class CursoRequest extends FormRequest
         $curso = $this->route('curso');
 
         return [
-            'nome' => ['required','string', 'max:200'],
+            'nome' => ['required','string', 'max:50'],
             'quantidade_periodos' => ['required','integer', 'min:1'],
         ];
     }
