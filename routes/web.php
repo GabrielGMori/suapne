@@ -2,6 +2,7 @@
 
 use App\Enums\RoleEnum;
 use App\Http\Controllers\PlanoFlexibilizacaoCurricularController;
+use App\Mail\PlanoTrabalhoDevolvido;
 use Illuminate\Support\Facades\Route;
 
 Route::resourceVerbs([
@@ -46,7 +47,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/mailable', function () {
-    $arg = App\Models\PlanoTrabalhoEstudante::take(3)->get();
+    $arg = App\Models\PlanoTrabalhoEstudante::find(1);
 
-    return new App\Mail\PlanoTrabalhoAtribuido(App\Models\User::where('role', App\Enums\RoleEnum::PROFESSOR_REGULAR)->first(), $arg);
+    return new App\Mail\PlanoTrabalhoDevolvido(App\Models\User::where('role', App\Enums\RoleEnum::PROFESSOR_REGULAR)->first(), $arg);
 });

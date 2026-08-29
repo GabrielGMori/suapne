@@ -1,4 +1,5 @@
 <x-mail::message>
+<img src="{{ $message->embed(asset('storage/img/logo-cnapne-sem-texto.png')) }}" alt="CNAPNE" style="height: 70px; width: auto; vertical-align: middle; margin-bottom: 20px;">
 
 # Olá, {{ $notifiable->nome }}!
 
@@ -26,6 +27,6 @@ Ele ficará marcado como pendente até que você preencha os campos necessários
 Ver planos de trabalho pendentes
 </x-mail::button>
 
-Atenção: O sistema SUAPNE só pode ser acessado em um computador ligado à rede do IFPR Campus Curitiba.
+**Atenção:** O SUAPNE só pode ser acessado em um computador ligado à rede do IFPR Campus Curitiba.
 
 </x-mail::message>

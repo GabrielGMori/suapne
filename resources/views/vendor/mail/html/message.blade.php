@@ -1,9 +1,7 @@
+@props(['logo'])
 <x-mail::layout>
-{{-- Header --}}
 
 {{-- Body --}}
-<img src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}" alt="CNAPNE" style="height: 70px; width: auto; vertical-align: middle; margin-bottom: 20px;">
-
 {!! $slot !!}
 
 {{-- Subcopy --}}

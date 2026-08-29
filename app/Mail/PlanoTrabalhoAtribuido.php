@@ -12,7 +12,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
-class PlanoTrabalhoAtribuido extends Mailable
+class PlanoTrabalhoAtribuido extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
