@@ -28,7 +28,9 @@
                 </div>
 
                 @if($planoTrabalho->status === StatusPlanoTrabalhoEnum::APROVADO)
-                    <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" />
+                    <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" target="_blank"
+                            type="link" href="{{ route('planos-trabalho.export-pdf', ['planoTrabalho' => $planoTrabalho]) }}" />
+
                 @elseif ($preview)
                     @include('planos-trabalho.change-preview', [
                         'planoTrabalho' => $planoTrabalho,
@@ -58,7 +60,7 @@
                 <p>Carga horária de atendimento individualizado:
                     {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
                 </p>
-                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i') }} CNAPNE</p>
+                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i ') . $planoTrabalho->campos['local'] }}</p>
 
                 <p class="mt-5">Necessidade educacional específica:</p>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">

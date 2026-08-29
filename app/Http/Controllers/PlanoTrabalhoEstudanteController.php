@@ -8,6 +8,7 @@ use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Http\Requests\PlanoTrabalhoEstudanteRequest;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -113,7 +114,9 @@ class PlanoTrabalhoEstudanteController extends Controller
         ]);
     }
 
-    public function exportPdf(int $id)
+    public function exportPdf(PlanoTrabalhoEstudante $planoTrabalho)
     {
+        //return view('planos-trabalho.pdf', ['planoTrabalho' => $planoTrabalho]);
+        return Pdf::loadView('planos-trabalho.pdf', ['planoTrabalho' => $planoTrabalho])->stream($planoTrabalho->nome.'.pdf');
     }
 }
