@@ -9,4 +9,4 @@ Route::controller(PlanoTrabalhoEstudanteController::class)->name('planos-trabalh
     Route::get('/{planoTrabalho}/exportar', 'exportPdf')->name('export-pdf');
 });
 
-Route::resource('planos-trabalho', PlanoTrabalhoEstudanteController::class)->except('create')->parameter('planos-trabalho', 'plano-trabalho');
+Route::resource('planos-trabalho', PlanoTrabalhoEstudanteController::class)->except('create')->parameter('planos-trabalho', 'planoTrabalho');

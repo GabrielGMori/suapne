@@ -32,7 +32,7 @@
                             href="{{route('solicitacoes-registro.index')}}" />
                     @else
                         <x-icon icon="check" class="text-primary-accent" size="45"
-                            label="Não há solicitações de cadastro no momento" />
+                            label="Não há solicitações de registro no momento" />
                     @endif
                 </div>
             </div>

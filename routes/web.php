@@ -1,8 +1,8 @@
 <?php
 
+use App\Enums\RoleEnum;
 use App\Http\Controllers\PlanoFlexibilizacaoCurricularController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PlanoFlexibilizacaoController;
 
 Route::resourceVerbs([
     'create' => 'novo',
@@ -42,4 +42,11 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('web')->group(base_path('routes/cursos.php'));
     Route::middleware('web')->group(base_path('routes/disciplinas.php'));
+});
+
+
+Route::get('/mailable', function () {
+    $arg = App\Models\PlanoTrabalhoEstudante::take(3)->get();
+
+    return new App\Mail\PlanoTrabalhoAtribuido(App\Models\User::where('role', App\Enums\RoleEnum::PROFESSOR_REGULAR)->first(), $arg);
 });

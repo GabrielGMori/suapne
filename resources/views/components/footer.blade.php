@@ -12,7 +12,7 @@
                 <h4 class="text-title-medium text-white mb-2">Sobre</h4>
                 <p class="text-body-medium text-on-surface leading-relaxed max-w-140">
                     O Sistema Unificado para Atendimento à Pessoas com
-                    Necessidades Específicas (SUAPNE) foi criado como projeto de
+                    Necessidades Específicas (SUAPNE) foi desenvolvido como projeto de
                     TCC de Informática no IFPR Campus Curitiba.
                 </p>
             </div>

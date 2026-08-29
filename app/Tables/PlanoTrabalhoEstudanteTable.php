@@ -69,7 +69,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['plano_trabalho' => $item])),
+            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['planoTrabalho' => $item])),
         ];
     }
 }

@@ -25,7 +25,7 @@
                                     <p>Criado por: {{ $plano->user->nome }}</p>
                                     <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
                                     <x-button icon="open_in_new" color="transparent" type="link"
-                                        href="{{ route('planos-trabalho.show', ['plano_trabalho' => $plano]) }}" />
+                                        href="{{ route('planos-trabalho.show', ['planoTrabalho' => $plano]) }}" />
                                 </x-documento>
                             @endforeach
                         </div>

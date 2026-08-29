@@ -8,10 +8,12 @@ use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Http\Requests\PlanoTrabalhoEstudanteRequest;
 use App\Models\User;
+use App\Notifications\PlanoTrabalhoAtribuido;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use function array_key_exists;
 
 class PlanoTrabalhoEstudanteController extends Controller
 {
@@ -34,12 +36,25 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         $validated = $request->validated();
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
+        $notifications = [];
 
-        DB::transaction(function () use ($validated, $professores) {
-            foreach($validated['disciplinas'] as $disciplinaId) PlanoTrabalhoEstudante::create([...$validated,
-                'disciplina_id' => $disciplinaId,
-                'user_professor_id' => $professores->first(fn($prof) => $prof->disciplinas->contains('id', $disciplinaId))->id]);
+        DB::transaction(function () use ($validated, $professores, &$notifications) {
+            foreach($validated['disciplinas'] as $disciplinaId) {
+                $novoPlano = PlanoTrabalhoEstudante::create([
+                    ...$validated,
+                    'disciplina_id' => $disciplinaId,
+                    'user_professor_id' => $professores->first(fn($prof) => $prof->disciplinas->contains('id', $disciplinaId))->id
+                ]);
+                $professorId = $novoPlano->professor->id;
+                if (!array_key_exists($professorId, $notifications)) {
+                    $notifications[$professorId] = [];
+                }
+                $notifications[$professorId][] = $novoPlano;
+            }
         });
+
+        foreach ($notifications as $professorId => $planos)
+            $professores->find($professorId)->notify(new PlanoTrabalhoAtribuido(collect($planos)));
 
         return redirect()->route('planos-trabalho.index')->with('status', 'Planos de trabalho criado com sucesso!');
     }
