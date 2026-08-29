@@ -1,8 +1,8 @@
 <div>
     <div class="flex items-center justify-between {{ $maxDocuments > 1 ? 'mb-10' : '' }}">
         <div class="flex items-center gap-10">
-            <x-form.input wire:model.live.debounce.300ms="nome" name="nome" label="Nome do documento"
-                appearance="outlined" error="{{ $errors->first('nome') }}"/>
+            <x-form.input wire:model.live.debounce.300ms="nome_arquivo" name="nome_arquivo" label="Nome_arquivo do documento"
+                appearance="outlined" error="{{ $errors->first('nome_arquivo') }}"/>
 
             <x-form.file wire:model="arquivo" name="arquivo" id="arquivo-{{ $fileIteration }}" label="Arquivo"
                          appearance="outlined" error="{{ $errors->first('arquivo') }}"/>
@@ -40,7 +40,7 @@
                     <p>Nenhum arquivo foi enviado no momento</p>
                 @else
                     @foreach ($documents as $document)
-                        <x-documento :name="$document['nome'] . '.' . $document['extensao']" icon="draft"
+                        <x-documento :name="$document['nome_arquivo'] . '.' . $document['extensao']" icon="draft"
                                     actionIcon="download"
                                     class="grow" wire:key="doc-{{ $document['id'] }}">
                             <x-slot:metadata>
@@ -61,7 +61,7 @@
 
     @foreach ($documents as $index => $document)
         <input type="hidden" name="documentos[{{ $index }}][id]" value="{{ $document['id'] }}">
-        <input type="hidden" name="documentos[{{ $index }}][nome]" value="{{ $document['nome'] }}">
+        <input type="hidden" name="documentos[{{ $index }}][nome_arquivo]" value="{{ $document['nome_arquivo'] }}">
         <input type="hidden" name="documentos[{{ $index }}][extensao]" value="{{ $document['extensao'] }}">
         <input type="hidden" name="documentos[{{ $index }}][path]" value="{{ $document['arquivo'] }}">
     @endforeach

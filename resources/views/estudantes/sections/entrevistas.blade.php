@@ -2,7 +2,7 @@
     <div class="p-5">
         <p class="text-title-medium mb-2">Estudante</p>
         @if ($estudante->entrevistaEstudante)
-            <x-documento name="Entrevista com o estudante ({{ $estudante->entrevistaEstudante->nomeArquivo }})" icon="edit_note">
+            <x-documento name="Entrevista com o estudante ({{ $estudante->entrevistaEstudante->arquivo }})" icon="edit_note">
                 <p>Enviada por: {{ $estudante->entrevistaEstudante->user->nome }}</p>
                 <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
                 <x-button icon="download" color="transparent"

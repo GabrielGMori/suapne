@@ -19,7 +19,7 @@ class DocumentoRequest extends FormRequest
 
         return [
             'documentos' => ['required', 'array', 'min:1'],
-            'documentos.*.nome' => ['required', 'string', 'max:255'],
+            'documentos.*.nome_arquivo' => ['required', 'string', 'max:255'],
             'documentos.*.path' => ['required', 'string'],
             'documentos.*.extensao' => ['required', 'string'],
         ];

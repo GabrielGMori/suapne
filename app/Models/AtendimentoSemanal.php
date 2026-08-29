@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
 use App\Models\Estudante;
 use App\Models\User;
-class AtendimentoSemanal extends Model
+class AtendimentoSemanal extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'atendimentos_semanais';
 

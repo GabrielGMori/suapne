@@ -7,6 +7,7 @@ use function in_array;
 class ListViewAction
 {
     private string|Closure $url;
+    private string|Closure $defaultUrl;
     private string|Closure|null $method = null;
     private string|Closure $icon    = 'open_in_new';
     private string|Closure $color   = 'transparent';
@@ -16,6 +17,7 @@ class ListViewAction
     private function __construct(string|Closure $url)
     {
         $this->url = $url;
+        $this->defaultUrl = $url;
     }
 
     public static function make(string|Closure $url): static
@@ -50,6 +52,28 @@ class ListViewAction
     public function confirmMessage(string $message): static
     {
         $this->confirmMessage = $message;
+        return $this;
+    }
+
+    public function restoreOnTrashed(string|Closure $restoreUrl, ?string $confirmMessage = null): static
+    {
+        $this->url = function (object $item) use ($restoreUrl) {
+            if (!method_exists($item, 'trashed') || !$item->trashed()) {
+                return is_callable($this->defaultUrl) ? ($this->defaultUrl)($item) : $this->defaultUrl;
+            }
+
+            return is_callable($restoreUrl) ? $restoreUrl($item) : $restoreUrl;
+        };
+
+        $this->method = fn(object $item) => $item->trashed() ? 'POST' : 'GET';
+        $this->icon = fn(object $item) => $item->trashed() ? 'restore' : 'open_in_new';
+        $this->color = fn(object $item) => $item->trashed() ? 'primary' : 'transparent';
+        $this->confirm = fn(object $item) => $item->trashed();
+
+        if ($confirmMessage !== null) {
+            $this->confirmMessage = $confirmMessage;
+        }
+
         return $this;
     }
 

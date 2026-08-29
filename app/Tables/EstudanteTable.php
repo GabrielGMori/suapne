@@ -36,7 +36,7 @@ class EstudanteTable extends ListViewConfig
 
     public function createLabel(): ?string
     {
-        return 'Registrar Novo';
+        return 'Cadastrar Novo';
     }
 
     public function emptyMessage(): string
@@ -86,22 +86,15 @@ class EstudanteTable extends ListViewConfig
             ListViewFilter::make('periodo')->label('Período')->size('tiny'),
             ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
-            ListViewFilter::make('excluido')->label('Excluído')->size('small')->type('select')->options([
-                0 => 'Não',
-                1 => 'Sim'
-            ])->applyUsing(fn(Builder $query, array $value) => $value[0] == 1 ? $query->onlyTrashed() : $query)->hidden(),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(Estudante $item) => !$item->trashed()
-                ? route('estudantes.show', ['estudante' => $item])
-                : route('estudantes.restore', ['estudante' => $item])
-            )->confirm(static fn(Estudante $item) => $item->trashed())->confirmMessage("Deseja restaurar este estudante?")
-            ->icon(static fn(Estudante $item) => !$item->trashed() ? 'open_in_new' : 'restore')->color(fn(Estudante $item) => !$item->trashed() ? 'transparent' : 'primary')
-            ->method(static fn(Estudante $item) => !$item->trashed() ? 'GET' : 'POST'),
+            ListViewAction::make(static fn(Estudante $item) => route('estudantes.show', ['estudante' => $item]))
+                ->restoreOnTrashed(static fn(Estudante $item) => route('estudantes.restore', ['estudante' => $item]), 'Deseja restaurar este estudante?'),
         ];
     }
 }

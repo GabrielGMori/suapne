@@ -54,6 +54,6 @@ class EstudanteController extends Controller
     {
         $estudante->restore();
 
-        return redirect()->route('estudantes.index', ['filter[excluido][0]' => 1])->with('status', 'Estudante restaurado com sucesso!');
+        return redirect()->back()->with('status', 'Estudante restaurado com sucesso!');
     }
 }

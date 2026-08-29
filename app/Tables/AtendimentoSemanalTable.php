@@ -21,7 +21,7 @@ class AtendimentoSemanalTable extends ListViewConfig
     }
     public function title(): ?string { return 'Atendimentos Semanais'; }
     public function createUrl(): ?string { return route('atendimentos.create'); }
-    public function createLabel(): ?string { return 'Criar Novo'; }
+    public function createLabel(): ?string { return 'Registrar Novo'; }
     public function emptyMessage(): string { return 'Nenhum atendimento semanal foi encontrado'; }
     public function icon(): string|Closure { return "article_person"; }
 

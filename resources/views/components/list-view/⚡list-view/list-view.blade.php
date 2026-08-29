@@ -63,7 +63,7 @@
                                     @if($action->needsConfirmation($item))
                                         <x-modal color="transparent" :icon="$action->getIcon($item)" title="Confirmar">
                                             <p class="mb-10 text-body-large">{{ $action->getConfirmMessage() }}</p>
-                                            <div class="flex justify-end gap-3 mb-2">
+                                            <div class="flex justify-center gap-3 mb-2">
                                                 <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
                                                 @include('components.list-view.⚡list-view.action-button', ['action' => $action])
                                             </div>

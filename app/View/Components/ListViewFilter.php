@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class ListViewFilter implements \JsonSerializable
@@ -98,6 +99,27 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
+    public function trashed(string $label = 'Excluído', array $options = [0 => 'Não', 1 => 'Sim']): static
+    {
+        return $this
+            ->label($label)
+            ->size('small')
+            ->type('select')
+            ->options($options)
+            ->applyUsing(function (Builder $query, array $value) {
+                if (empty($value[0])) {
+                    return;
+                }
+
+                if ($value[0] === 'Sim' || (int)$value[0] === 1) {
+                    $query->onlyTrashed();
+                    return;
+                }
+
+                $query;
+            })
+            ->hidden();
+    }
 
     public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null) : static
     {

@@ -6,7 +6,6 @@ use App\Enums\EtniaEnum;
 use App\Enums\SexoEnum;
 use App\Enums\SituacaoEstudanteEnum;
 use App\Enums\TipoDocumentoEnum;
-use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,19 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
-use App\Models\Curso;
-use App\Models\PlanoFlexibilizacaoCurricular;
-use App\Models\PlanoTrabalhoEstudante;
-use App\Models\AtendimentoSemanal;
-use App\Models\EntrevistaFamiliar;
-use App\Models\ObservacaoEstudante;
-use App\Models\Documento;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Estudante extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
+    use AuditableTrait, CascadeSoftDeletes, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'nome',
@@ -139,12 +132,14 @@ class Estudante extends Model implements Auditable
 
     public function observacoes(): HasMany
     {
-        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->orderBy('created_at','desc');
+        return $this->hasMany(ObservacaoEstudante::class, 'estudante_id')->orderBy('created_at', 'desc');
     }
+
     public function getEntrevistaEstudanteAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::ENTREVISTA_ESTUDANTE)->first();
     }
+
     public function getLaudoAttribute(): ?Documento
     {
         return $this->documentos()->where('tipo', TipoDocumentoEnum::LAUDO)->first();

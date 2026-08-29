@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
 use App\Models\Disciplina;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
-class SolicitacaoRegistro extends Model
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+class SolicitacaoRegistro extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'solicitacoes_registro';
 
@@ -51,5 +53,10 @@ class SolicitacaoRegistro extends Model
     public function disciplinas()
     {
         return $this->belongsToMany(Disciplina::class);
+    }
+
+    public function getNomeAttribute(): string
+    {
+        return 'Solicitação de registro';
     }
 }

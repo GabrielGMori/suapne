@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Estudante;
 use App\Models\User;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
-class ObservacaoEstudante extends Model
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+class ObservacaoEstudante extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'observacoes_estudante';
 
@@ -29,5 +31,10 @@ class ObservacaoEstudante extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getNomeAttribute(): string
+    {
+        return "Observação sobre estudante {$this->estudante->nome}";
     }
 }

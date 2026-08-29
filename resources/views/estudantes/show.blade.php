@@ -60,7 +60,7 @@
                 $planosFlexibilizacao = count($estudante->planosFlexibilizacaoCurricular);
                 $planosTrabalho = count($estudante->planosTrabalho);
                 $atendimentos = count($estudante->atendimentosSemanais);
-                $documentos = count($estudante->documentos->where('tipo', App\Enums\TipoDocumentoEnum::ENTREVISTA_ESTUDANTE->value));
+                $documentos = count($estudante->documentos->where('tipo', '!=', App\Enums\TipoDocumentoEnum::ENTREVISTA_ESTUDANTE->value));
                 $entrevistas = ($estudante->entrevistaEstudante ? 1 : 0) + ($estudante->entrevistaFamiliar ? 1 : 0);
                 $observacoes = count($estudante->observacoes);
             @endphp

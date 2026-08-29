@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
 use App\Models\Curso;
 use App\Models\User;
 use App\Models\SolicitacaoRegistro;
-class Disciplina extends Model
+class Disciplina extends Model implements Auditable
 {
     /** @use HasFactory<\Database\Factories\DisciplinaFactory> */
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $fillable = [
         'nome',

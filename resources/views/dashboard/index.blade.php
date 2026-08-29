@@ -3,6 +3,7 @@
     use App\Enums\StatusPlanoTrabalhoEnum;
     use App\Models\PlanoTrabalhoEstudante;
     use OwenIt\Auditing\Models\Audit;
+    use App\Support\ModelLabels;
 
     $user = Auth::user();
 
@@ -61,35 +62,31 @@
             <div class="space-y-2 row-span-2 col-span-2 xl:col-span-1">
                 <h3>Últimas alterações</h3>
                 <div class="bg-surface rounded-xl flex flex-col items-center h-max p-5 gap-1">
-                    @if($acoes->isEmpty())
+                    @if ($acoes->isEmpty())
                         <p class="grow flex items-center">Nenhuma ação encontrada</p>
                     @else
-                        @foreach($acoes as $acao)
-                            {{ dump() }}
-                            <div class="bg-on-surface rounded-lg flex items-center gap-2 justify-stretch w-full p-2">
-                                <img src="{{ asset($acao->user?->avatar ?? 'storage/img/placeholder-user.png') }}"
-                                    alt="{{ $acao->user?->nome ?? 'Usuário' }}"
-                                    class="h-15 w-15 object-cover rounded-full shrink-0" />
-                                <p>
-                                    <b>{{ $acao->user?->nome ?? 'Usuário' }}</b>
-                                    {{ strtolower($acao->acao) }}
+                        @foreach ($acoes as $acao)
+                            @php
+                                $autor = $acao->user?->nome ?? 'Alguém';
+                                $nome = $acao->auditable?->nome ?? ($acao->old_values['nome'] ?? '');
+                                $verbo = match ($acao->event) {
+                                    'created' => 'criou',
+                                    'deleted' => 'excluiu',
+                                    'restored' => 'restaurou',
+                                    'updated' => 'editou',
+                                    default => 'alterou',
+                                };
+                            @endphp
 
-                                    @if($acao->event === 'update')
-                                        de
-                                    @endif
-
-                                    <b>{{ $acao->estudante?->nome ?? 'estudante removido' }}</b>
-                                </p>
-
-                                <div class="flex justify-end grow">
-                                    <x-button icon="open_in_new" color="transparent" type="link"
-                                        href="{{ route('registro-auditoria.index') }}" />
-                                </div>
+                            <div class="flex items-center gap-4 w-full bg-on-surface p-2 rounded-xl">
+                                <img src="{{ $acao->user?->avatar ? asset($acao->user->avatar) : asset('storage/img/placeholder-user.png') }}"
+                                    alt="{{ $autor }}" class="h-16 w-16 object-cover rounded-full shrink-0">
+                                <p class="grow text-body-medium truncate">{{ "{$autor} {$verbo} {$nome}" }}</p>
+                                <span class="text-body-medium text-secondary-accent whitespace-nowrap shrink-0">{{ $acao->created_at->diffForHumans() }}</span>
                             </div>
                         @endforeach
 
-                        <x-button label="Ver mais" height="small" color="tertiary" type="link"
-                            href="{{ route('registro-auditoria.index') }}" />
+                        <x-button class="mt-2" label="Ver mais" height="small" color="tertiary" type="link" href="{{ route('registro-auditoria.index') }}" />
                     @endif
                 </div>
             </div>

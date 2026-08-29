@@ -11,9 +11,11 @@ use App\Models\Estudante;
 use App\Models\User;
 use App\Models\Disciplina;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
-class PlanoTrabalhoEstudante extends Model
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+class PlanoTrabalhoEstudante extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, CascadeSoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'planos_trabalho_estudante';
 

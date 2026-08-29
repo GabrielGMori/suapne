@@ -20,7 +20,7 @@ class DocumentoController extends Controller
 
         foreach ($documentos as $doc) {
             Documento::create([
-                'nome' => $doc['nome'],
+                'nome_arquivo' => $doc['nome_arquivo'],
                 'extensao' => $doc['extensao'],
                 'path' => $doc['path'],
                 'tipo' => $tipoDocumento,
