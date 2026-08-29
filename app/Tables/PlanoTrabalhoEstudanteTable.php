@@ -5,17 +5,13 @@ namespace App\Tables;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPlanoTrabalhoEnum;
 use App\Models\Curso;
-use App\Models\Disciplina;
-use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
-use Auth;
 use Illuminate\Database\Eloquent\Builder;
-
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
@@ -25,7 +21,10 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
         $query = $user->role === RoleEnum::PROFESSOR_REGULAR ? $query->where('user_professor_id', $user->id) : $query;
         return $query;
     }
-    public function title(): ?string { return 'Planos de Trabalho do Estudante'; }
+    public function title(): ?string {
+        return (Auth::user()->role === RoleEnum::PROFESSOR_REGULAR ? 'Meus ' : '') . 'Planos de Trabalho do Estudante';
+    }
+    public function canCreate(): bool { return Auth::user()->can('create', PlanoTrabalhoEstudante::class); }
     public function createUrl(): ?string { return route('planos-trabalho.create'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de trabalho do estudante foi encontrado'; }

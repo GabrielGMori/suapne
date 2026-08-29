@@ -5,31 +5,42 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\CnapneRequest;
 use App\Http\Requests\ProfessorRequest;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function indexCnapne()
+    public function indexCnapne(Request $request)
     {
+        abort_unless($request->user()->can('viewAny', User::class), 404);
+
         return view('contas.cnapne.index');
     }
 
-    public function indexProfessor()
+    public function indexProfessor(Request $request)
     {
+        abort_unless($request->user()->can('viewAny', User::class), 404);
+
         return view('contas.professor.index');
     }
 
-    public function editCnapne(User $user)
+    public function editCnapne(Request $request, User $user)
     {
+        abort_unless($request->user()->can('update', $user), 404);
+
         return view('contas.cnapne.form', ['user' => $user]);
     }
 
-    public function editProfessor(User $user)
+    public function editProfessor(Request $request, User $user)
     {
+        abort_unless($request->user()->can('update', $user), 404);
+
         return view('contas.professor.form', ['user' => $user]);
     }
 
     public function updateCnapne(CnapneRequest $request, User $user)
     {
+        abort_unless($request->user()->can('update', $user), 404);
+
         $validated = $request->validated();
 
         $user->update($validated);
@@ -39,6 +50,8 @@ class UserController extends Controller
 
     public function updateProfessor(ProfessorRequest $request, User $user)
     {
+        abort_unless($request->user()->can('update', $user), 404);
+
         $validated = $request->validated();
 
         $user->update($validated);

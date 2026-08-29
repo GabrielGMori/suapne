@@ -10,17 +10,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SolicitacaoRegistroRecusada extends Mailable
+class SolicitacaoRegistroRecusada extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public string $nome,
+        public ?string $observacao = null
+    ) {}
 
     /**
      * Get the message envelope.
@@ -28,7 +28,7 @@ class SolicitacaoRegistroRecusada extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Solicitacao Registro Recusada',
+            subject: 'SUAPNE - Solicitação de registro recusada',
         );
     }
 

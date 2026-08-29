@@ -6,12 +6,15 @@ use App\Enums\RoleEnum;
 use App\Models\AtendimentoSemanal;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use function in_array;
 
 class AtendimentoSemanalPolicy
 {
+    private array $alwaysCheck = ['forceDelete', 'update'];
+
     public function before(User $user, string $ability): bool|null
     {
-        if ($ability === 'forceDelete') {
+        if (in_array($ability, $this->alwaysCheck)) {
             return false;
         }
         return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
@@ -19,32 +22,32 @@ class AtendimentoSemanalPolicy
 
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
     public function view(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
     public function update(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
     public function delete(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
     public function restore(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
     public function forceDelete(User $user, AtendimentoSemanal $atendimentoSemanal): bool

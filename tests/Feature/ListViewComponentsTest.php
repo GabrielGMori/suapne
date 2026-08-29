@@ -32,3 +32,18 @@ it('adds the shared restore action behavior for trashed items', function () {
         ->and($action->needsConfirmation($item))->toBeTrue()
         ->and($action->getConfirmMessage($item))->toBe('Deseja restaurar este estudante?');
 });
+
+it('supports textarea input configuration in confirmation actions', function () {
+    $item = (object)['id' => 1];
+    $action = ListViewAction::make(fn () => '/solicitacoes/1/recusar')
+        ->confirm()
+        ->confirmMessage('Deseja recusar?')
+        ->textarea(name: 'observacao', label: 'Observação (opcional)', placeholder: 'Digite o motivo');
+
+    expect($action->needsConfirmation($item))->toBeTrue()
+        ->and($action->hasTextarea($item))->toBeTrue()
+        ->and($action->getTextareaName($item))->toBe('observacao')
+        ->and($action->getTextareaLabel($item))->toBe('Observação (opcional)')
+        ->and($action->getTextareaPlaceholder($item))->toBe('Digite o motivo');
+});
+

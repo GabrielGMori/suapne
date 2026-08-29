@@ -1,21 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Documento;
 use App\Models\Estudante;
 use App\Enums\TipoDocumentoEnum;
 use App\Http\Requests\DocumentoRequest;
-use Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentoController extends Controller
 {
-    public function create(Estudante $estudante, string $tipoDocumento = 'documento')
+    public function create(Request $request, Estudante $estudante, string $tipoDocumento = 'documento')
     {
+        abort_unless($request->user()->can('create', Documento::class), 404);
+
         return view('estudantes.create-documento', ['estudante' => $estudante, 'tipo' => strtoupper($tipoDocumento)]);
     }
 
-    public function store(DocumentoRequest $request, Estudante $estudante, TipoDocumentoEnum $tipoDocumento)
+    public function store(DocumentoRequest $request, Estudante $estudante, TipoDocumentoEnum $tipoDocumento) : RedirectResponse
     {
+        abort_unless($request->user()->can('create', Documento::class), 404);
+
         $documentos = $request->validated('documentos');
 
         foreach ($documentos as $doc) {

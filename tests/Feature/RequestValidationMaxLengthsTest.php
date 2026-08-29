@@ -36,3 +36,32 @@ it('creates a user with the original password when approving a registration requ
         ->and(Hash::check('senha123', $user->password))->toBeTrue()
         ->and($user->disciplinas->pluck('id')->contains($disciplina->id))->toBeTrue();
 });
+
+it('sends rejection email with observation when declining registration request', function () {
+    \Illuminate\Support\Facades\Mail::fake();
+
+    $admin = User::factory()->create(['role' => RoleEnum::DOCENTE_ESPECIAL]);
+    $solicitacao = SolicitacaoRegistro::create([
+        'nome' => 'Joao Recusado',
+        'email' => 'joao@teste.com',
+        'password' => Hash::make('senha123'),
+        'role' => RoleEnum::PROFESSOR_REGULAR,
+        'status' => 'PENDENTE',
+    ]);
+
+    $response = $this->actingAs($admin)
+        ->post(route('cadastro.decline', ['solicitacao' => $solicitacao]), [
+            'observacao' => 'Documentação incompleta.',
+        ]);
+
+    $response->assertRedirect(route('solicitacoes-registro.index'));
+
+    \Illuminate\Support\Facades\Mail::assertQueued(\App\Mail\SolicitacaoRegistroRecusada::class, function ($mail) {
+        return $mail->hasTo('joao@teste.com')
+            && $mail->nome === 'Joao Recusado'
+            && $mail->observacao === 'Documentação incompleta.';
+    });
+
+    expect(SolicitacaoRegistro::find($solicitacao->id))->toBeNull();
+});
+

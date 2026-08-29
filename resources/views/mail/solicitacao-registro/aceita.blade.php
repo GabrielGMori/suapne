@@ -1,12 +1,16 @@
 <x-mail::message>
-# Introduction
+<img src="{{ $message->embed(public_path('storage/img/logo-cnapne-sem-texto.png')) }}" alt="CNAPNE" style="height: 70px; width: auto; vertical-align: middle; margin-bottom: 20px;">
 
-The body of your message.
+# Olá, {{ $newUser->nome }}!
 
-<x-mail::button :url="''">
-Button Text
+Sua solicitação de registro no SUAPNE foi aceita e seu cadastro está ativo.
+
+Você pode agora logar em usa conta acessando o SUAPNE em um computador ligado à rede do IFPR Campus Curitiba.
+
+<x-mail::button :url="route('login')">
+Página de login
 </x-mail::button>
 
-Thanks,<br>
-{{ config('app.name') }}
+**Atenção:** Caso você não tenha feito esta solicitação, recomendamos que verifique seu e-mail e altere sua senha.
+
 </x-mail::message>

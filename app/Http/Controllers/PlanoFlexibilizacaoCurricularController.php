@@ -11,45 +11,58 @@ use Illuminate\Http\RedirectResponse;
 
 class PlanoFlexibilizacaoCurricularController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        abort_unless($request->user()->can('viewAny', PlanoFlexibilizacaoCurricular::class), 404);
+
         $count = Estudante::doesntHave('planosFlexibilizacaoCurricular')->count();
 
         return view('planos-flexibilizacao.index', ['count' => $count]);
     }
 
-    public function create(?Estudante $estudante = null)
+    public function create(Request $request, ?Estudante $estudante = null)
     {
+        abort_unless($request->user()->can('create', PlanoFlexibilizacaoCurricular::class), 404);
+
         return view('planos-flexibilizacao.form', ['estudanteId' => $estudante?->id]);
     }
 
     public function store(PlanoFlexibilizacaoCurricularRequest $request): RedirectResponse
     {
+        abort_unless($request->user()->can('create', PlanoFlexibilizacaoCurricular::class), 404);
+
         PlanoFlexibilizacaoCurricular::create($request->validated());
 
         return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
 
-    public function show(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    public function show(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
+        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
+
         return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
-    public function edit()
+    public function edit(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
+        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
     }
 
-    public function update()
+    public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
+        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
     }
 
-    public function destroy()
+    public function destroy(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
+        abort_unless($request->user()->can('delete', $planoFlexibilizacao), 404);
     }
 
-    public function exportPdf(int $id)
+    public function exportPdf(Request $request, int $id)
     {
         $planoFlexibilizacao = PlanoFlexibilizacaoCurricular::with('estudante.curso')->findOrFail($id);
+
+        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
 
         $pdf = Pdf::loadView('planos-flexibilizacao.show', compact('planoFlexibilizacao'));
         $pdf->setPaper('A4', 'portrait');

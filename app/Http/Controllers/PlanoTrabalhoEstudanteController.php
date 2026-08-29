@@ -17,9 +17,11 @@ use function array_key_exists;
 
 class PlanoTrabalhoEstudanteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
+        abort_unless($request->user()->can('viewAny', PlanoTrabalhoEstudante::class), 404);
+
+        $user = $request->user();
         $count = $user->role === RoleEnum::PROFESSOR_REGULAR
             ? $user->planosTrabalhoProfessor->filter(fn($plano) => $plano->status === StatusPlanoTrabalhoEnum::PENDENTE || $plano->status === StatusPlanoTrabalhoEnum::DEVOLVIDO)->count()
             : PlanoTrabalhoEstudante::where('status', StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)->count();
@@ -27,13 +29,17 @@ class PlanoTrabalhoEstudanteController extends Controller
         return view('planos-trabalho.index', ['count' => $count]);
     }
 
-    public function create(?Estudante $estudante = null)
+    public function create(Request $request, ?Estudante $estudante = null)
     {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
         return view('planos-trabalho.form', ['estudanteId' => $estudante?->id]);
     }
 
     public function store(PlanoTrabalhoEstudanteRequest $request)
     {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
         $validated = $request->validated();
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
         $notifications = [];
@@ -59,17 +65,22 @@ class PlanoTrabalhoEstudanteController extends Controller
         return redirect()->route('planos-trabalho.index')->with('status', 'Planos de trabalho criado com sucesso!');
     }
 
-    public function show(PlanoTrabalhoEstudante $planoTrabalho)
+    public function show(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
+        abort_unless($request->user()->can('view', $planoTrabalho), 404);
+
         return view('planos-trabalho.show', ['planoTrabalho' => $planoTrabalho]);
     }
 
-    public function edit()
+    public function edit(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
+        abort_unless($request->user()->can('update', $planoTrabalho), 404);
     }
 
     public function update(PlanoTrabalhoEstudanteRequest $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
+        abort_unless($request->user()->can('update', $planoTrabalho), 404);
+
         $validated = $request->validated();
         $validated['campos'] = [
             ...($planoTrabalho->campos ?? []),
@@ -81,12 +92,15 @@ class PlanoTrabalhoEstudanteController extends Controller
         return redirect()->route('planos-trabalho.index')->with('status', 'Plano de trabalho atualizado com sucesso!');
     }
 
-    public function destroy()
+    public function destroy(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
+        abort_unless($request->user()->can('delete', $planoTrabalho), 404);
     }
 
     public function preview(PlanoTrabalhoEstudanteRequest $request)
     {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
         $validated = $request->validated();
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
         $professor = $professores->first(
@@ -111,6 +125,8 @@ class PlanoTrabalhoEstudanteController extends Controller
 
     public function changePreview(PlanoTrabalhoEstudanteRequest $request)
     {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
         $validated = $request->validated();
         $planoTrabalho = new PlanoTrabalhoEstudante($validated);
         $planoTrabalho->disciplina_id = $validated['chosenDisciplina'] ?? $validated['previewDisciplinas'][0];
@@ -129,9 +145,10 @@ class PlanoTrabalhoEstudanteController extends Controller
         ]);
     }
 
-    public function exportPdf(PlanoTrabalhoEstudante $planoTrabalho)
+    public function exportPdf(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
-        //return view('planos-trabalho.pdf', ['planoTrabalho' => $planoTrabalho]);
+        abort_unless($request->user()->can('view', $planoTrabalho), 404);
+
         return Pdf::loadView('planos-trabalho.pdf', ['planoTrabalho' => $planoTrabalho])->stream($planoTrabalho->nome.'.pdf');
     }
 }

@@ -56,44 +56,46 @@
     @include('estudantes.sections.planos-trabalho', ['estudante' => $estudante])
     @include('estudantes.sections.atendimentos-semanais', ['estudante' => $estudante])
 
-    <div class="flex justify-end gap-3 mt-5">
-        <x-modal title="Excluir estudante" label="Excluir estudante" icon="delete" color="red">
-            @php
-                $planosFlexibilizacao = count($estudante->planosFlexibilizacaoCurricular);
-                $planosTrabalho = count($estudante->planosTrabalho);
-                $atendimentos = count($estudante->atendimentosSemanais);
-                $documentos = count($estudante->documentos->where('tipo', '!=', App\Enums\TipoDocumentoEnum::ENTREVISTA_ESTUDANTE->value));
-                $entrevistas = ($estudante->entrevistaEstudante ? 1 : 0) + ($estudante->entrevistaFamiliar ? 1 : 0);
-                $observacoes = count($estudante->observacoes);
-            @endphp
+    @can('delete', $estudante)
+        <div class="flex justify-end gap-3 mt-5">
+            <x-modal title="Excluir estudante" label="Excluir estudante" icon="delete" color="red">
+                @php
+                    $planosFlexibilizacao = count($estudante->planosFlexibilizacaoCurricular);
+                    $planosTrabalho = count($estudante->planosTrabalho);
+                    $atendimentos = count($estudante->atendimentosSemanais);
+                    $documentos = count($estudante->documentos->where('tipo', '!=', App\Enums\TipoDocumentoEnum::ENTREVISTA_ESTUDANTE->value));
+                    $entrevistas = ($estudante->entrevistaEstudante ? 1 : 0) + ($estudante->entrevistaFamiliar ? 1 : 0);
+                    $observacoes = count($estudante->observacoes);
+                @endphp
 
-            <p class="mb-5 text-body-large">
-                Tem certeza que deseja excluir este estudante?<br>
-                Isso também removerá tudo relacionado ao estudante:
-            </p>
+                <p class="mb-5 text-body-large">
+                    Tem certeza que deseja excluir este estudante?<br>
+                    Isso também removerá tudo relacionado ao estudante:
+                </p>
 
-            <ul class="mb-5 list-disc list-inside text-body-large">
-                <li>{{ $planosFlexibilizacao }} plano{{ $planosFlexibilizacao != 1 ? 's' : '' }} de flexibilização
-                    curricular</li>
-                <li>{{ $planosTrabalho }} plano{{ $planosTrabalho != 1 ? 's' : '' }} de trabalho</li>
-                <li>{{ $atendimentos }} atendimento{{ $atendimentos != 1 ? 's' : '' }}
-                    semana{{ $atendimentos != 1 ? 'is' : 'l' }}</li>
-                <li>{{ $entrevistas }} entrevista{{ $entrevistas != 1 ? 's' : '' }}</li>
-                <li>{{ $documentos }} documento{{ $documentos != 1 ? 's' : '' }}</li>
-                <li>{{ $observacoes }} observaç{{ $observacoes != 1 ? 'ões' : 'ão' }}</li>
-            </ul>
+                <ul class="mb-5 list-disc list-inside text-body-large">
+                    <li>{{ $planosFlexibilizacao }} plano{{ $planosFlexibilizacao != 1 ? 's' : '' }} de flexibilização
+                        curricular</li>
+                    <li>{{ $planosTrabalho }} plano{{ $planosTrabalho != 1 ? 's' : '' }} de trabalho</li>
+                    <li>{{ $atendimentos }} atendimento{{ $atendimentos != 1 ? 's' : '' }}
+                        semana{{ $atendimentos != 1 ? 'is' : 'l' }}</li>
+                    <li>{{ $entrevistas }} entrevista{{ $entrevistas != 1 ? 's' : '' }}</li>
+                    <li>{{ $documentos }} documento{{ $documentos != 1 ? 's' : '' }}</li>
+                    <li>{{ $observacoes }} observaç{{ $observacoes != 1 ? 'ões' : 'ão' }}</li>
+                </ul>
 
-            <p class="text-body-large mb-5">
-                Você poderá restaurá-lo junto com os itens acima posteriormente.
-            </p>
-            <div class="flex justify-end gap-3 mb-2">
-                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <x-button label="Confirmar" type="submit" color="red" />
-                </form>
-            </div>
-        </x-modal>
-    </div>
+                <p class="text-body-large mb-5">
+                    Você poderá restaurá-lo junto com os itens acima posteriormente.
+                </p>
+                <div class="flex justify-end gap-3 mb-2">
+                    <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                    <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <x-button label="Confirmar" type="submit" color="red" />
+                    </form>
+                </div>
+            </x-modal>
+        </div>
+    @endcan
 </x-layouts.main>

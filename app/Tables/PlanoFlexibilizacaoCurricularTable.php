@@ -12,6 +12,7 @@ use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
 class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
@@ -21,6 +22,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         return PlanoFlexibilizacaoCurricular::query()->latest();
     }
     public function title(): ?string { return 'Planos de Flexibilização Curricular'; }
+    public function canCreate(): bool { return Auth::user()->can('create', PlanoFlexibilizacaoCurricular::class); }
     public function createUrl(): ?string { return route('planos-flexibilizacao.create'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }

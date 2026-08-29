@@ -10,36 +10,46 @@ use Illuminate\Http\RedirectResponse;
 
 class EntrevistaFamiliarController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        abort_unless($request->user()->can('viewAny', EntrevistaFamiliar::class), 404);
     }
 
-    public function create(Estudante $estudante)
+    public function create(Request $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('create', EntrevistaFamiliar::class), 404);
+
         return view('entrevistas-familiares.form',['estudante' => $estudante]);
     }
 
     public function store(EntrevistaFamiliarRequest $request, Estudante $estudante): RedirectResponse
     {
+        abort_unless($request->user()->can('create', EntrevistaFamiliar::class), 404);
+
         EntrevistaFamiliar::create($request->validated());
 
         return redirect()->route('estudantes.show', ['estudante' => $estudante->id])->with('status', 'Entrevista familiar cadastrada com sucesso!');
     }
 
-    public function show(Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
+    public function show(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
+        abort_unless($request->user()->can('view', $entrevistaFamiliar), 404);
+
         return view('entrevistas-familiares.show',['estudante' => $estudante,'entrevistaFamiliar' => $entrevistaFamiliar]);
     }
 
-    public function edit()
+    public function edit(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
+        abort_unless($request->user()->can('update', $entrevistaFamiliar), 404);
     }
 
-    public function update()
+    public function update(EntrevistaFamiliarRequest $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
+        abort_unless($request->user()->can('update', $entrevistaFamiliar), 404);
     }
 
-    public function destroy()
+    public function destroy(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
+        abort_unless($request->user()->can('delete', $entrevistaFamiliar), 404);
     }
 }

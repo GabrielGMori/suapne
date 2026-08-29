@@ -56,7 +56,9 @@ class SolicitacaoRegistroTable extends ListViewConfig
     {
         return [
             ListViewAction::make(fn($item) => route('cadastro.decline', ['solicitacao' => $item]))->icon('person_remove')->color('red')
-                ->confirm()->confirmMessage(fn($item) => "Tem certeza de que deseja recusar esta solicitação de {$item->nome}?")->color('red')
+                ->confirm()->confirmMessage(fn($item) => "Tem certeza de que deseja recusar esta solicitação de {$item->nome}?")
+                ->textarea(name: 'observacao', label: 'Observação (opcional)')
+                ->color('red')
                 ->filledConfirm()->method('POST'),
             ListViewAction::make(fn($item) => route('cadastro.accept', ['solicitacao' => $item]))->icon('person_add')->color('primary')
                 ->confirm()->confirmMessage(fn($item) => "Tem certeza de que deseja aceitar esta solicitação de {$item->nome}?")

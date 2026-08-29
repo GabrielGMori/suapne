@@ -3,45 +3,63 @@
 ])
 
 @php
-    use App\Enums\RoleEnum;
 
     $divider = ['divider' => true];
     $sidebarStorageKey = 'cnapne.sidebar.collapsed';
 
     $navItems = [
         ['label' => 'Início', 'href' => route('dashboard.index'), 'icon' => 'home'],
-        ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'],
     ];
 
-    if ($user->role === RoleEnum::PROFESSOR_REGULAR) {
-        $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment']];
+    if ($user->can('viewAny', App\Models\Estudante::class))
+        $navItems[] = ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'];
+
+    if ($user->can('viewAny', App\Models\PlanoFlexibilizacaoCurricular::class))
+        $navItems[] = ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'];
+
+    if ($user->can('viewAny', App\Models\PlanoTrabalhoEstudante::class))
+        $navItems[] = ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment'];
+
+    if ($user->can('viewAny', App\Models\AtendimentoSemanal::class))
+        $navItems[] = ['label' => 'Atendimentos', 'href' => route('atendimentos.index'), 'icon' => 'article_person'];
+
+    $adminItems = [];
+
+    if ($user->can('viewAny', OwenIt\Auditing\Models\Audit::class))
+        $adminItems[] = ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history'];
+
+    if ($user->can('viewAny', App\Models\User::class))
+        $adminItems[] = ['label' => 'Contas da CNAPNE', 'href' => route('contas.cnapne.index'), 'icon' => 'server_person'];
+
+    if ($user->can('viewAny', App\Models\User::class))
+        $adminItems[] = ['label' => 'Contas de professores', 'href' => route('contas.professor.index'), 'icon' => 'person'];
+
+    if ($user->can('viewAny', App\Models\SolicitacaoRegistro::class))
+        $adminItems[] = ['label' => 'Solicitações de registro', 'href' => route('solicitacoes-registro.index'), 'icon' => 'pending_actions'];
+
+    if (!empty($adminItems)) {
+        $navItems = [...$navItems, $divider, ...$adminItems];
     }
 
-    if ($user->role === RoleEnum::TECNICO) {
-        $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history']];
+    $courseItems = [];
+
+    if ($user->can('viewAny', App\Models\Curso::class)) {
+        $courseItems[] = ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'];
     }
 
-    if ($user->role === RoleEnum::DOCENTE_ESPECIAL) {
-        $navItems = [
-            ...$navItems,
-            ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'],
-            ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment'],
-            ['label' => 'Atendimentos', 'href' => route('atendimentos.index'), 'icon' => 'article_person'],
-            $divider,
-            ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history'],
-            ['label' => 'Contas da CNAPNE', 'href' => route('contas.cnapne.index'), 'icon' => 'server_person'],
-            ['label' => 'Contas de professores', 'href' => route('contas.professor.index'), 'icon' => 'person'],
-            ['label' => 'Solicitações de registro', 'href' => route('solicitacoes-registro.index'), 'icon' => 'pending_actions'],
-            $divider,
-            ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'],
-            ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'],
-        ];
+    if ($user->can('viewAny', App\Models\Disciplina::class)) {
+        $courseItems[] = ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'];
     }
 
-     $navItems = [...$navItems,
-         $divider,
-         ['label' => 'Sair', 'href' => route('logout'), 'icon' => 'logout', 'red' => true, 'method' => 'POST'],
-     ];
+    if (!empty($courseItems)) {
+        $navItems = [...$navItems, $divider, ...$courseItems];
+    }
+
+    $navItems = [
+        ...$navItems,
+        $divider,
+        ['label' => 'Sair', 'href' => route('logout'), 'icon' => 'logout', 'red' => true, 'method' => 'POST'],
+    ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
     $navLinkClasses = 'w-full justify-start px-2 cursor-pointer

@@ -23,18 +23,20 @@
                             <p class="text-body-medium whitespace-pre-line">{{ $observacao->observacao }}</p>
                         </div>
                         <div class="mr-5">
-                            <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">
-                                <p class="mb-10 text-body-large">Tem certeza que deseja remover esta observação?
-                                    <br>Essa ação é irreversível.
-                                </p>
-                                <form action="{{ route('estudantes.observacoes.destroy', ['estudante' => $estudante, 'observacaoEstudante' => $observacao]) }}"
-                                    method="POST" class="flex justify-end gap-3 mt-1 mb-2">
-                                    @method('DELETE')
-                                    @csrf
-                                    <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                                    <x-button label="Confirmar" type="submit" color="red" />
-                                </form>
-                            </x-modal>
+                            @can('delete', $observacao)
+                                <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">
+                                    <p class="mb-10 text-body-large">Tem certeza que deseja remover esta observação?
+                                        <br>Essa ação é irreversível.
+                                    </p>
+                                    <form action="{{ route('estudantes.observacoes.destroy', ['estudante' => $estudante, 'observacaoEstudante' => $observacao]) }}"
+                                        method="POST" class="flex justify-end gap-3 mt-1 mb-2">
+                                        @method('DELETE')
+                                        @csrf
+                                        <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                                        <x-button label="Confirmar" type="submit" color="red" />
+                                    </form>
+                                </x-modal>
+                            @endcan
                         </div>
                     </div>
                 @endforeach

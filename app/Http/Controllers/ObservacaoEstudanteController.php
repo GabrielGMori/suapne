@@ -11,6 +11,8 @@ class ObservacaoEstudanteController extends Controller
 {
     public function store(ObservacaoEstudanteRequest $request, Estudante $estudante)
     {
+        abort_unless($request->user()->can('create', ObservacaoEstudante::class), 404);
+
         $estudante->observacoes()->create([
             'observacao' => $request->input('observacao'),
             'user_id' => auth()->id(),
@@ -21,6 +23,8 @@ class ObservacaoEstudanteController extends Controller
 
     public function destroy(Request $request, Estudante $estudante, ObservacaoEstudante $observacaoEstudante)
     {
+        abort_unless($request->user()->can('delete', $observacaoEstudante), 404);
+
         $observacaoEstudante->delete();
 
         return redirect()->back()->with('status','Observação removida com sucesso!');

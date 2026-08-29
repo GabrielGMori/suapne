@@ -18,6 +18,7 @@ class ListViewFilter implements \JsonSerializable
     private bool $clearable = true;
     private ?string $placeholder = null;
     private bool $hidden = false;
+    private bool $trashedFilter = false;
 
     private ?Closure $applyUsing = null;
     private ?string $foreignKey = null;
@@ -101,6 +102,7 @@ class ListViewFilter implements \JsonSerializable
 
     public function trashed(string $label = 'Excluído', array $options = [0 => 'Não', 1 => 'Sim']): static
     {
+        $this->trashedFilter = true;
         return $this
             ->label($label)
             ->size('small')
@@ -188,6 +190,7 @@ class ListViewFilter implements \JsonSerializable
     public function getPlaceholder(): ?string { return $this->placeholder; }
     public function getIdentifier(): ?string  { return $this->identifier; }
     public function isClearable(): bool       { return $this->clearable; }
+    public function isTrashedFilter(): bool       { return $this->trashedFilter; }
 
     public function jsonSerialize(): array
     {

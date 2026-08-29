@@ -6,12 +6,15 @@ use App\Enums\RoleEnum;
 use App\Models\ObservacaoEstudante;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use function in_array;
 
 class ObservacaoEstudantePolicy
 {
+    private array $alwaysCheck = ['forceDelete'];
+
     public function before(User $user, string $ability): bool|null
     {
-        if ($ability === 'forceDelete') {
+        if (in_array($ability, $this->alwaysCheck)) {
             return false;
         }
         return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;

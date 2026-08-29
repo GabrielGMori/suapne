@@ -3,13 +3,12 @@
 namespace App\Tables;
 
 use App\Models\Curso;
-use App\Models\Estudante;
-use App\Models\PlanoFlexibilizacaoCurricular;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class CursoTable extends ListViewConfig
 {
@@ -19,6 +18,7 @@ class CursoTable extends ListViewConfig
     }
 
     public function title(): ?string { return 'Cursos registrados'; }
+    public function canCreate(): bool { return Auth::user()->can('create', Curso::class); }
     public function createUrl(): ?string { return route('cursos.create'); }
     public function createLabel(): ?string { return 'Cadastrar Novo'; }
     public function emptyMessage(): string { return 'Nenhum curso foi encontrado'; }

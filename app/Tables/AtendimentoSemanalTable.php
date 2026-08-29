@@ -2,13 +2,11 @@
 
 namespace App\Tables;
 
-
-use App\Models\Estudante;
-
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
+use Illuminate\Support\Facades\Auth;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\AtendimentoSemanal;
@@ -20,6 +18,7 @@ class AtendimentoSemanalTable extends ListViewConfig
         return AtendimentoSemanal::query()->orderBy('data', 'desc');
     }
     public function title(): ?string { return 'Atendimentos Semanais'; }
+    public function canCreate(): bool { return Auth::user()->can('create', AtendimentoSemanal::class); }
     public function createUrl(): ?string { return route('atendimentos.create'); }
     public function createLabel(): ?string { return 'Registrar Novo'; }
     public function emptyMessage(): string { return 'Nenhum atendimento semanal foi encontrado'; }

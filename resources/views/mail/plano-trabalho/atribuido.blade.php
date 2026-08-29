@@ -1,5 +1,5 @@
 <x-mail::message>
-<img src="{{ $message->embed(asset('storage/img/logo-cnapne-sem-texto.png')) }}" alt="CNAPNE" style="height: 70px; width: auto; vertical-align: middle; margin-bottom: 20px;">
+<img src="{{ $message->embed(public_path('storage/img/logo-cnapne-sem-texto.png')) }}" alt="CNAPNE" style="height: 70px; width: auto; vertical-align: middle; margin-bottom: 20px;">
 
 # Olá, {{ $notifiable->nome }}!
 
