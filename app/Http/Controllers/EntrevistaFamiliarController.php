@@ -42,16 +42,31 @@ class EntrevistaFamiliarController extends Controller
     public function edit(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
         abort_unless($request->user()->can('update', $entrevistaFamiliar), 404);
+
+        return view('entrevistas-familiares.form', [
+            'estudante' => $estudante,
+            'entrevistaFamiliar' => $entrevistaFamiliar,
+        ]);
     }
 
-    public function update(EntrevistaFamiliarRequest $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
+    public function update(EntrevistaFamiliarRequest $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar): RedirectResponse
     {
         abort_unless($request->user()->can('update', $entrevistaFamiliar), 404);
+
+        $entrevistaFamiliar->update($request->validated());
+
+        return redirect()->route('estudantes.show', [
+            'estudante' => $estudante,
+        ])->with('status', 'Entrevista familiar atualizada com sucesso!');
     }
 
-    public function destroy(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
+    public function destroy(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar): RedirectResponse
     {
         abort_unless($request->user()->can('delete', $entrevistaFamiliar), 404);
+
+        $entrevistaFamiliar->delete();
+
+        return redirect()->route('estudantes.show', ['estudante' => $estudante])->with('status', 'Entrevista familiar excluída com sucesso!');
     }
     public function exportPdf(Estudante $estudante,EntrevistaFamiliar $entrevistaFamiliar)
     {

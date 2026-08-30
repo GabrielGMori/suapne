@@ -1,14 +1,14 @@
 <div>
     <div class="flex items-center justify-between {{ $maxDocuments > 1 ? 'mb-10' : '' }}">
         <div class="flex items-center gap-10">
-            <x-form.input wire:model.live.debounce.300ms="nome_arquivo" name="nome_arquivo" label="Nome_arquivo do documento"
-                appearance="outlined" error="{{ $errors->first('nome_arquivo') }}"/>
+            <x-form.input wire:model.live.debounce.300ms="nome_arquivo" name="nome_arquivo"
+                label="Nome_arquivo do documento" appearance="outlined" error="{{ $errors->first('nome_arquivo') }}" />
 
             <x-form.file wire:model="arquivo" name="arquivo" id="arquivo-{{ $fileIteration }}" label="Arquivo"
-                         appearance="outlined" error="{{ $errors->first('arquivo') }}"/>
+                appearance="outlined" error="{{ $errors->first('arquivo') }}" />
         </div>
         @if(($maxDocuments ?? 2) > 1 && $arquivo && ($maxDocuments === null || count($documents) < $maxDocuments))
-            <x-button color="secondary" icon="add" wire:click="addDocument"/>
+            <x-button color="secondary" icon="add" wire:click="addDocument" />
         @endif
         @if(($maxDocuments ?? 2) > 1 && count($documents) === $maxDocuments)
             <p>Limite de arquivos atingido</p>
@@ -41,17 +41,12 @@
                 @else
                     @foreach ($documents as $document)
                         <x-documento :name="$document['nome_arquivo'] . '.' . $document['extensao']" icon="draft"
-                                    actionIcon="download"
-                                    class="grow" wire:key="doc-{{ $document['id'] }}">
-                            <x-slot:metadata>
-                                <p>Enviada por: {{ $document['uploaded_by'] }}</p>
-                                <p>Data de
-                                    envio: {{ \Carbon\Carbon::parse($document['enviado_em'])->format('d/m/Y \à\s H:i') }}</p>
-                                <x-button icon="delete" color="transparent"
-                                        wire:click="removeDocument('{{ $document['id'] }}')"/>
-                                <x-button icon="download" color="transparent"
-                                        @click="window.open('{{ Storage::disk('public')->url($document['arquivo']) }}', '_blank')"/>
-                            </x-slot:metadata>
+                            actionIcon="download" class="grow" wire:key="doc-{{ $document['id'] }}">
+                            <p>Enviada por: {{ $document['uploaded_by'] }}</p>
+                            <p>Data de envio: {{ \Carbon\Carbon::parse($document['enviado_em'])->format('d/m/Y \à\s H:i') }}</p>
+                            <x-button icon="delete" color="transparent" wire:click="removeDocument('{{ $document['id'] }}')" />
+                            <x-button icon="download" color="transparent"
+                                @click="window.open('{{ Storage::disk('public')->url($document['arquivo']) }}', '_blank')" />
                         </x-documento>
                     @endforeach
                 @endif

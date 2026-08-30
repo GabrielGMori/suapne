@@ -10,7 +10,6 @@ use App\Models\Disciplina;
         <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a
             {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
         <x-button label="Exportar como PDF" icon="file_export" color="tertiary" type="link" target="_blank" :href="route('planos-flexibilizacao.exportPdf', [
-            'id' => $planoFlexibilizacao->id,
             'planoFlexibilizacao' => $planoFlexibilizacao,
         ])" />
     </div>
@@ -69,22 +68,28 @@ use App\Models\Disciplina;
         <x-button label="Voltar" type="link"
             href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-flexibilizacao.index') }}"
             color="tertiary" />
-        <x-button label="Editar" type="link" href="{{ route('planos-flexibilizacao.edit', $planoFlexibilizacao) }}"
-            color="yellow" />
-        <x-modal icon="delete" label="Excluir" color="red" title="Excluir Plano de Flexibilização">
 
-            <p class="mb-5 text-body-large">
-                Tem certeza que deseja excluir este plano de flexibilização?<br>
-                Você poderá restaurá-lo posteriormente.
-            </p>
-            <div class="flex justify-end gap-3 mb-2">
-                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                <form action="{{ route('planos-flexibilizacao.destroy', ['planoFlexibilizacao' => $planoFlexibilizacao]) }}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <x-button label="Confirmar" type="submit" color="red" />
-                </form>
-            </div>
-        </x-modal>
+        @can('update', $planoFlexibilizacao)
+            <x-button label="Editar" type="link" href="{{ route('planos-flexibilizacao.edit', $planoFlexibilizacao) }}"
+            color="yellow" />
+        @endcan
+
+        @can('delete', $planoFlexibilizacao)
+            <x-modal icon="delete" label="Excluir" color="red" title="Excluir Plano de Flexibilização">
+
+                <p class="mb-5 text-body-large">
+                    Tem certeza que deseja excluir este plano de flexibilização?<br>
+                    Você poderá restaurá-lo posteriormente.
+                </p>
+                <div class="flex justify-end gap-3 mb-2">
+                    <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                    <form action="{{ route('planos-flexibilizacao.destroy', ['planoFlexibilizacao' => $planoFlexibilizacao]) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <x-button label="Confirmar" type="submit" color="red" />
+                    </form>
+                </div>
+            </x-modal>
+        @endcan
     </div>
 </x-layouts.main>

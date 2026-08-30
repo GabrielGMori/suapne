@@ -23,9 +23,13 @@ Route::name('estudantes.')->prefix('/estudantes/{estudante}')->group(function ()
         Route::post('/','store')->name('store');
         Route::get('/{entrevistaFamiliar}/exportar','exportPdf')->withTrashed()->name('exportPdf');
         Route::get("/{entrevistaFamiliar}/visualizar", 'show')->name('show');
+        Route::get('/{entrevistaFamiliar}/editar', 'edit')->name('edit');
+        Route::patch('/{entrevistaFamiliar}', 'update')->name('update');
+        Route::delete('/{entrevistaFamiliar}', 'destroy')->name('destroy');
     });
     Route::controller(DocumentoController::class)->name('documentos.')->prefix("/documentos")->group(function () {
         Route::get("/adicionar/{tipoDocumento?}", 'create')->name('create');
         Route::post("/adicionar/{tipoDocumento?}", 'store')->name('store');
+        Route::delete("/{documento}", 'destroy')->name('destroy');
     });
 });

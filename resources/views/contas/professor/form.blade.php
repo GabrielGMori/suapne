@@ -10,7 +10,7 @@
 <x-layouts.main title="Editar conta de professor">
     <form action="{{ route('contas.professor.update', $user->id) }}" method="POST">
         @csrf
-        @method('PUT')
+        @method('PATCH')
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
             <h2 class="text-display-small">Dados do professor</h2>

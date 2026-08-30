@@ -123,7 +123,8 @@ test('AtendimentoSemanalPolicy permissions across roles', function () {
         ->and($this->tecnico->can('create', AtendimentoSemanal::class))->toBeTrue()
         ->and($this->tecnico->can('view', $atendimentoOwn))->toBeTrue()
         ->and($this->tecnico->can('view', $atendimentoOther))->toBeFalse()
-        ->and($this->tecnico->can('update', $atendimentoOwn))->toBeFalse()
+        ->and($this->tecnico->can('update', $atendimentoOwn))->toBeTrue()
+        ->and($this->tecnico->can('update', $atendimentoOther))->toBeFalse()
         ->and($this->professor->can('viewAny', AtendimentoSemanal::class))->toBeFalse();
 });
 

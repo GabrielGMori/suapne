@@ -27,7 +27,7 @@ test('admin can manage CNAPNE and Professor accounts', function () {
         ->assertStatus(200);
 
     $this->actingAs($this->admin)
-        ->put(route('contas.cnapne.update', $this->tecnico), [
+        ->patch(route('contas.cnapne.update', $this->tecnico), [
             'nome' => 'Tecnico Atualizado',
             'email' => 'tecnico.novo@ifpr.edu.br',
             'role' => RoleEnum::TECNICO->value,
@@ -41,7 +41,7 @@ test('admin can manage CNAPNE and Professor accounts', function () {
         ->assertStatus(200);
 
     $this->actingAs($this->admin)
-        ->put(route('contas.professor.update', $this->professor), [
+        ->patch(route('contas.professor.update', $this->professor), [
             'nome' => 'Professor Atualizado',
             'email' => 'prof.novo@ifpr.edu.br',
             'disciplinas' => [$this->disciplina->id],

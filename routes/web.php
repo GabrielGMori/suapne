@@ -23,10 +23,6 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('web')->group(base_path('routes/planos-flexibilizacao.php'));
 
-    Route::get('/planos-flexibilizacao/{id}/pdf',
-        [PlanoFlexibilizacaoCurricularController::class, 'exportPdf']
-    )->name('planos-flexibilizacao.pdf');
-
     Route::middleware('web')->group(base_path('routes/planos-trabalho.php'));
     Route::middleware('web')->group(base_path('routes/atendimentos.php'));
     Route::middleware('web')->group(base_path('routes/contas.php'));

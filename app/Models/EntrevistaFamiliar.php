@@ -19,6 +19,7 @@ class EntrevistaFamiliar extends Model implements Auditable
 
     protected $fillable = [
         'data',
+        'responsavel_preenchimento',
         'campos',
         'estudante_id',
         'user_id',

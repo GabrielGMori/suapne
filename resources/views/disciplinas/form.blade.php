@@ -7,7 +7,7 @@
         @csrf
 
         @if($disciplina !== null)
-            @method('PUT')
+            @method('PATCH')
         @endif
 
         <div class="space-y-4">

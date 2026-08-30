@@ -9,6 +9,7 @@ use App\Http\Requests\DocumentoRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentoController extends Controller
 {
@@ -39,5 +40,16 @@ class DocumentoController extends Controller
         return redirect()
             ->route('estudantes.show', ['estudante' => $estudante])
             ->with('status', 'Documentos salvos com sucesso.');
+    }
+
+    public function destroy(Request $request, Estudante $estudante, Documento $documento): RedirectResponse
+    {
+        abort_unless($request->user()->can('delete', $documento), 404);
+
+        $documento->delete();
+
+        return redirect()
+            ->route('estudantes.show', ['estudante' => $estudante])
+            ->with('status', 'Documento excluído com sucesso.');
     }
 }

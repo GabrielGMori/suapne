@@ -14,9 +14,9 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->atendimento->estudante_id ?? ($this->estudanteId ?? ''));
+        $this->estudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? ($this->estudanteId ?? ''));
 
-        $oldPerfil = old('campos.perfilDoEstudante') ?? $this->atendimento->campos['perfilDoEstudante'];
+        $oldPerfil = old('campos.perfilDoEstudante') ?? $this->atendimento?->campos['perfilDoEstudante'];
 
         if ($oldPerfil !== null) {
             $this->perfil = $oldPerfil;
@@ -59,10 +59,10 @@ new class extends Component {
         </div>
 
         <x-form.input label="Local" appearance="outlined" size="small" name="local" wire:ignore
-            :value="$this->atendimento->local ?? ''" />
+            :value="$atendimento?->local ?? ''" />
 
         <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" wire:ignore
-            :value="$this->atendimento->data ?? ''" />
+            :value="$atendimento?->data ?? ''" />
 
         <div wire:key='perfil-textarea-wrapper'>
             <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
@@ -72,17 +72,17 @@ new class extends Component {
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>
         <x-form.input type="textarea" name="campos[registroDoAtendimento]" appearance="outlined" size="full"
-            :value="$this->atendimento->campos['registroDoAtendimento'] ?? ''" />
+            :value="$atendimento?->campos['registroDoAtendimento'] ?? ''" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Encaminhamentos</h2>
         <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full"
-            :value="$this->atendimento->campos['encaminhamentos'] ?? ''" />
+            :value="$atendimento?->campos['encaminhamentos'] ?? ''" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">4. Observações adicionais</h2>
         <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full"
-            :value="$this->atendimento->campos['observacoesAdicionais'] ?? ''" />
+            :value="$atendimento?->campos['observacoesAdicionais'] ?? ''" />
     </div>
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="atendimentos.index" />

@@ -24,12 +24,6 @@ $disciplinas = Disciplina::with('curso')->get()->mapWithKeys(fn ($disc) => [$dis
                 <x-button label="Enviar solicitação de cadastro" type="submit" size="full"></x-button>
                 <x-button label="Voltar" type="link" href="{{ route('login') }}" size="full" color="secondary"></x-button>
             </div>
-
-            @if($errors)
-                @foreach ($errors as $error)
-                    {{ dump($error) }}
-                @endforeach
-            @endif
         </form>
     </x-auth-card>
 </x-layouts.auth>

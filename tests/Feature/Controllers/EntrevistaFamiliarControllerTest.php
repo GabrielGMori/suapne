@@ -168,3 +168,68 @@ test('unauthorized user cannot access entrevista familiar create', function () {
         ->get(route('estudantes.entrevistas-familiares.create', ['estudante' => $this->estudante]))
         ->assertStatus(404);
 });
+
+test('admin can edit, update and delete entrevista familiar', function () {
+    $entrevista = EntrevistaFamiliar::factory()->create([
+        'estudante_id' => $this->estudante->id,
+        'user_id' => $this->admin->id,
+        'campos' => [
+            'nomeCompleto' => 'Estudante Original',
+        ],
+    ]);
+
+    $this->actingAs($this->admin)
+        ->get(route('estudantes.entrevistas-familiares.edit', [
+            'estudante' => $this->estudante,
+            'entrevistaFamiliar' => $entrevista,
+        ]))
+        ->assertStatus(200);
+
+    $updatePayload = [
+        'data' => '2026-03-01',
+        'campos' => [
+            'nomeCompleto' => 'Estudante Editado',
+            'rotinaDiaria' => 'Nova rotina',
+        ],
+    ];
+
+    $response = $this->actingAs($this->admin)
+        ->patch(route('estudantes.entrevistas-familiares.update', [
+            'estudante' => $this->estudante,
+            'entrevistaFamiliar' => $entrevista,
+        ]), $updatePayload);
+
+    $response->assertRedirect(route('estudantes.entrevistas-familiares.show', [
+        'estudante' => $this->estudante,
+        'entrevistaFamiliar' => $entrevista,
+    ]));
+
+    expect($entrevista->fresh()->data->format('Y-m-d'))->toBe('2026-03-01');
+
+    $deleteResponse = $this->actingAs($this->admin)
+        ->delete(route('estudantes.entrevistas-familiares.destroy', [
+            'estudante' => $this->estudante,
+            'entrevistaFamiliar' => $entrevista,
+        ]));
+
+    $deleteResponse->assertRedirect(route('estudantes.show', ['estudante' => $this->estudante]));
+    $this->assertSoftDeleted('entrevistas_familiar', ['id' => $entrevista->id]);
+});
+
+test('admin can store entrevista familiar with nullable and partial fields', function () {
+    $payload = [
+        'data' => '2026-05-10',
+        'campos' => [
+            'nomeCompleto' => 'Apenas Nome',
+        ],
+    ];
+
+    $response = $this->actingAs($this->admin)
+        ->post(route('estudantes.entrevistas-familiares.store', ['estudante' => $this->estudante]), $payload);
+
+    $response->assertRedirect(route('estudantes.show', ['estudante' => $this->estudante->id]));
+    $this->assertDatabaseHas('entrevistas_familiar', [
+        'estudante_id' => $this->estudante->id,
+    ]);
+});
+

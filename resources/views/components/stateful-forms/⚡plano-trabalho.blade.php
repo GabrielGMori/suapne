@@ -19,7 +19,7 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->planoTrabalho->estudante_id ?? ($this->estudanteId ?? ''));
+        $this->estudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? ($this->estudanteId ?? ''));
         if (filled($this->estudanteId))
             $this->updatedEstudanteId($this->estudanteId);
 
@@ -89,7 +89,7 @@ new class extends Component {
 
 <form action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}" method="POST">
     @if($planoTrabalho)
-        @method('PUT')
+        @method('PATCH')
     @endif
     @csrf
 

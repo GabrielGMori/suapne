@@ -9,7 +9,7 @@
 <x-layouts.main title="Editar conta da CNAPNE">
     <form action="{{ route('contas.cnapne.update', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
+        @method('PATCH')
 
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
             <h2 class="text-display-small">Dados da conta da CNAPNE</h2>

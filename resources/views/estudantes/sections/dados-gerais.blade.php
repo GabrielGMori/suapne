@@ -14,7 +14,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
             @foreach ($displays[0] as $label => $value)
-                <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                @if (filled($value))
+                    <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                @endif
             @endforeach
         </div>
     </div>
@@ -24,7 +26,9 @@
             <div class="min-w-50"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
                 @foreach ($displays[1] as $label => $value)
-                    <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                    @if (filled($value))
+                        <x-display-dado label="{{ $label }}" value="{{ $value }}" />
+                    @endif
                 @endforeach
             </div>
         </div>

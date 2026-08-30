@@ -68,7 +68,7 @@ test('user can view and export pdf of plano de flexibilizacao', function () {
         ->assertStatus(200);
 
     $response = $this->actingAs($this->tecnico)
-        ->get(route('planos-flexibilizacao.pdf', ['id' => $plano->id]));
+        ->get(route('planos-flexibilizacao.exportPdf', ['planoFlexibilizacao' => $plano]));
 
     $response->assertStatus(200);
 });

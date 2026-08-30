@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->date('data');
+            $table->string('responsavel_preenchimento', 200);
 
             $table->json('campos');
 

@@ -51,7 +51,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
 
     public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao): RedirectResponse
     {
-        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
+        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
         $planoFlexibilizacao->update($request->validated());
 
         return redirect()->route('planos-flexibilizacao.index', ['planoFlexibilizacao' => $planoFlexibilizacao])->with('status', 'Plano de Flexibilização atualizado com sucesso!');

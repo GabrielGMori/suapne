@@ -7,7 +7,7 @@
         Adaptação e/ou flexibilização curricular
     </div>
 
-    <p class="mb-md">Período de realização do PTE: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }} a  {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</p>
+    <p class="mb-md">Período de realização: {{ $planoTrabalho->periodo_inicio->format('d/m/Y') }} a  {{ $planoTrabalho->periodo_fim->format('d/m/Y') }}</p>
 
     <table class="table">
         <tr>

@@ -15,7 +15,7 @@
 <x-layouts.main title="{{ $planoTrabalho->nome }}">
     @if ($preenchendo)
         <form action="{{ route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}" method="POST">
-            @method('PUT')
+            @method('PATCH')
             @csrf
             <input type="hidden" name="status" value="AGUARDANDO_REVISAO">
     @endif
