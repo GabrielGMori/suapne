@@ -9,6 +9,7 @@
     'appearance' => 'default',
     'mask' => null,
     'error' => null,
+    'passwordForgotUrl' => route('password.forgot'),
 ])
 
 @php
@@ -89,7 +90,7 @@
     </div>
 
     @if ($type === 'password_forgot' && !$helper)
-        <a href="{{ route('cadastro.enviado') }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
+        <a href="{{ $passwordForgotUrl }}" class="form-helper">Esqueceu ou deseja alterar sua senha?</a>
     @elseif ($helper)
         <p class="form-helper">{{ $helper }}</p>
     @endif

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 Route::controller(LoginController::class)->group(function () {
     Route::middleware('guest')->get('/login', 'index')->name('login.index');
@@ -25,5 +26,14 @@ Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastr
     Route::middleware('auth')->group(function () {
         Route::post('/aceitar/{solicitacao}', 'accept')->name('accept');
         Route::post('/recusar/{solicitacao}', 'decline')->name('decline');
+    });
+});
+
+Route::controller(PasswordResetController::class)->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/forgot-password', 'forgotPasswordForm')->name('password.forgot');
+        Route::post('/forgot-password', 'forgotPassword')->name('password.forgot.submit');
+        Route::get('/reset-password/{token}', 'resetPasswordForm')->name('password.reset');
+        Route::post('/reset-password', 'resetPassword')->name('password.reset.submit');
     });
 });

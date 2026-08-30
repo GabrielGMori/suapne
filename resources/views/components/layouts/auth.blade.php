@@ -9,6 +9,13 @@
         </div>
 
         <div class="py-20">
+            @if(session('status'))
+                <div
+                    class="flex items-center rounded-3xl mb-5 justify-center h-9 w-full text-center text-body-medium bg-primary-accent/20 text-primary-accent">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             {{ $slot }}
         </div>
     </main>

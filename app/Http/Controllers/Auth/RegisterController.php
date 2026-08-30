@@ -12,6 +12,7 @@ use App\Mail\VerificarEmail;
 use App\Models\SolicitacaoRegistro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
@@ -30,7 +31,7 @@ class RegisterController extends Controller
             'attempts' => 0,
         ]), now()->addMinutes(15));
 
-        Mail::to($validated['email'])->send(new VerificarEmail($validated['nome'], $code));
+        Mail::to($validated['email'])->queue(new VerificarEmail($validated['nome'], $code));
         session(['cadastro_email' => $validated['email']]);
 
         return redirect()->route('cadastro.verify.form');
@@ -58,14 +59,23 @@ class RegisterController extends Controller
         $cadastro_pendente = Crypt::decrypt($encrypted);
         if (!hash_equals($cadastro_pendente['code_hash'], hash('sha256', $validated['code']))) {
             $cadastro_pendente['attempts']++;
+
+            if ($cadastro_pendente['attempts'] >= 5) {
+                Cache::forget($cacheKey);
+                session()->forget('cadastro_email');
+                return redirect()->route('cadastro')->withErrors(['code' => 'Muitas tentativas falhas. Cadastre-se novamente.']);
+            }
+
             Cache::put($cacheKey, Crypt::encrypt($cadastro_pendente), now()->addMinutes(15));
             return back()->withErrors(['code' => 'Código expirado ou inválido.']);
         }
 
-        $solicitacao = SolicitacaoRegistro::create([...$cadastro_pendente, 'status' => StatusSolicitacaoRegistroEnum::PENDENTE]);
-        $solicitacao->disciplinas()->sync($cadastro_pendente['campos']['disciplinas'] ?? null);
+        DB::transaction(function () use ($cadastro_pendente) {
+            $solicitacao = SolicitacaoRegistro::create([...$cadastro_pendente, 'status' => StatusSolicitacaoRegistroEnum::PENDENTE]);
+            $solicitacao->disciplinas()->sync($cadastro_pendente['campos']['disciplinas'] ?? null);
+        });
 
-        Mail::to($email)->send(new SolicitacaoRegistroEnviada($cadastro_pendente['nome']));
+        Mail::to($email)->queue(new SolicitacaoRegistroEnviada($cadastro_pendente['nome']));
 
         Cache::forget($cacheKey);
         session()->forget('cadastro_email');
@@ -77,10 +87,13 @@ class RegisterController extends Controller
     {
         abort_unless($request->user()->can('update', $solicitacao), 404);
 
-        $newUser = $solicitacao->createUser();
-        $solicitacao->delete();
+        $newUser = null;
+        DB::transaction(function () use ($solicitacao, &$newUser) {
+            $newUser = $solicitacao->createUser();
+            $solicitacao->delete();
+        });
 
-        Mail::to($newUser->email)->send(new SolicitacaoRegistroAceita($newUser));
+        Mail::to($newUser->email)->queue(new SolicitacaoRegistroAceita($newUser));
 
         return redirect()->route('solicitacoes-registro.index')->with('status', "Usuário \"{$solicitacao->nome}\" cadastrado com sucesso!");
     }
@@ -89,7 +102,7 @@ class RegisterController extends Controller
     {
         abort_unless($request->user()->can('delete', $solicitacao), 404);
 
-        Mail::to($solicitacao->email)->send(new SolicitacaoRegistroRecusada(
+        Mail::to($solicitacao->email)->queue(new SolicitacaoRegistroRecusada(
             nome: $solicitacao->nome,
             observacao: $request->input('observacao')
         ));

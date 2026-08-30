@@ -5,8 +5,7 @@
 
             <div class="flex flex-col gap-2 mb-3">
                 <x-form.input label="E-mail:" name="email" placeholder="Digite seu e-mail"/>
-                <x-form.input type="password_forgot" label="Senha:" name="password"
-                                     placeholder="Digite sua senha"/>
+                <x-form.input type="password_forgot" label="Senha:" name="password" placeholder="Digite sua senha"/>
             </div>
 
             @error('credentials') <p class="text-error text-center">{{$message}}</p> @enderror
