@@ -53,7 +53,7 @@ class AtendimentoSemanalController extends Controller
         return redirect()->route('atendimentos.index')->with('status','Atendimento semanal editado com sucesso!');
     }
 
-    public function destroy(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
+    public function destroy(Request $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('delete', $atendimento), 404);
         $atendimento->delete();
