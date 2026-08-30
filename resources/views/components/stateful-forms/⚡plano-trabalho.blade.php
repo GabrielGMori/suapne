@@ -23,11 +23,11 @@ new class extends Component {
         if (filled($this->estudanteId))
             $this->updatedEstudanteId($this->estudanteId);
 
-        $this->selectedDisciplinas = old('disciplinas', [$this->planoTrabalho->disciplina_id] ?? $this->selectedDisciplinas);
+        $this->selectedDisciplinas = old('disciplinas', isset($this->planoTrabalho) ? [$this->planoTrabalho->disciplina_id] : $this->selectedDisciplinas);
         if (filled($this->selectedDisciplinas))
             $this->updatedSelectedDisciplinas($this->selectedDisciplinas);
 
-        $this->selectedProfessores = old('professores', [$this->planoTrabalho->user_professor_id] ?? $this->selectedProfessores);
+        $this->selectedProfessores = old('professores', isset($this->planoTrabalho) ? [$this->planoTrabalho->user_professor_id] : $this->selectedProfessores);
     }
 
     public function updatedEstudanteId($estId)
@@ -96,10 +96,10 @@ new class extends Component {
     <div wire:ignore>
         <h2 class="flex gap-5 mb-5 text-display-small">Período de realização:
             <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined"
-                :value="$planoTrabalho->periodo_inicio" />
+                :value="$planoTrabalho?->periodo_inicio" />
             a
             <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined"
-                :value="$planoTrabalho->periodo_fim" />
+                :value="$planoTrabalho?->periodo_fim" />
         </h2>
     </div>
 
@@ -130,16 +130,16 @@ new class extends Component {
 
         <div wire:ignore>
             <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
-                appearance="outlined" wire:ignore :value="$planoTrabalho->campos['cargaHoraria']" />
+                appearance="outlined" wire:ignore :value="$planoTrabalho?->campos['cargaHoraria'] ?? null" />
             <x-form.input label="Local" name="campos[local]" appearance="outlined" wire:ignore
-                :value="$planoTrabalho->campos['local']" />
+                :value="$planoTrabalho?->campos['local'] ?? null" />
         </div>
     </div>
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
         <h2 class="text-display-small">2. Particularidades do estudante </h2>
         <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full"
-            :value="$planoTrabalho->campos['particularidadesEstudante']" />
+            :value="$planoTrabalho?->campos['particularidadesEstudante'] ?? null" />
     </div>
 
 

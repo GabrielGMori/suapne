@@ -63,7 +63,7 @@ class RegisterController extends Controller
             if ($cadastro_pendente['attempts'] >= 5) {
                 Cache::forget($cacheKey);
                 session()->forget('cadastro_email');
-                return redirect()->route('cadastro')->withErrors(['code' => 'Muitas tentativas falhas. Cadastre-se novamente.']);
+                return redirect()->route('cadastro.index')->withErrors(['code' => 'Muitas tentativas falhas. Cadastre-se novamente.']);
             }
 
             Cache::put($cacheKey, Crypt::encrypt($cadastro_pendente), now()->addMinutes(15));

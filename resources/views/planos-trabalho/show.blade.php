@@ -60,7 +60,7 @@
                 <p>Carga horária de atendimento individualizado:
                     {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
                 </p>
-                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i ') . $planoTrabalho->campos['local'] }}</p>
+                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i ') . ($planoTrabalho->campos['local'] ?? '') }}</p>
 
                 <p class="mt-5">Necessidade educacional específica:</p>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
@@ -71,7 +71,7 @@
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">2. Particularidades do estudante</h2>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                    <p class="whitespace-pre-line">{{$planoTrabalho->campos['particularidadesEstudante']}}</p>
+                    <p class="whitespace-pre-line">{{$planoTrabalho->campos['particularidadesEstudante'] ?? '---'}}</p>
                 </div>
             </div>
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">

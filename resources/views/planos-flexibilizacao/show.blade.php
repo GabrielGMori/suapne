@@ -1,7 +1,8 @@
 <?php
     use App\Models\Disciplina;
 
-    $count = count($planoFlexibilizacao->campos['componentesCurriculares']);
+    $componentes = $planoFlexibilizacao->campos['componentesCurriculares'] ?? [];
+    $count = count($componentes);
 ?>
 
 <x-layouts.main title="{{ $planoFlexibilizacao->nome}}">
@@ -24,29 +25,29 @@
         <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular</h2>
         <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular)</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['acoesPedagogicas']}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['acoesPedagogicas'] ?? '---'}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
         <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou externos ao IFPR) que fazem o acompanhamento do estudante</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['atendimentoMultiprofissional']}}</p>
+            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['atendimentoMultiprofissional'] ?? '---'}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">4. Flexibilização Curricular, visando a implementação de 1 (uma) ou mais possibilidades</h2>
-        <p class="text-body-large">I - Diferenciação dos conteúdos previstos na ementa do componente curricular e que sejam registrados no PTE: {{$planoFlexibilizacao->campos['diferenciacaoCurricular']}}</p>
-        <p class="text-body-large">II - Atendimento educacional individualizado realizado pelo professor do componente curricular: {{$planoFlexibilizacao->campos['atendimentoIndividualizado']}}</p>
-        <p class="text-body-large">III - Dilação ou redução do prazo para a conclusão do curso: {{$planoFlexibilizacao->campos['alteracaoPrazo']}}</p>
-        <p class="text-body-large">IV  - Reorganização e/ou equivalência de componente curricular: {{$planoFlexibilizacao->campos['reorganizacaoCurricular']}}</p>
-        <p class="text-body-large">V - Definição de critérios diferenciados e adequados de avaliação, considerando as singularidades e especificidades dos estudantes: {{$planoFlexibilizacao->campos['criteriosDiferenciados']}}</p>
+        <p class="text-body-large">I - Diferenciação dos conteúdos previstos na ementa do componente curricular e que sejam registrados no PTE: {{$planoFlexibilizacao->campos['diferenciacaoCurricular'] ?? '---'}}</p>
+        <p class="text-body-large">II - Atendimento educacional individualizado realizado pelo professor do componente curricular: {{$planoFlexibilizacao->campos['atendimentoIndividualizado'] ?? '---'}}</p>
+        <p class="text-body-large">III - Dilação ou redução do prazo para a conclusão do curso: {{$planoFlexibilizacao->campos['alteracaoPrazo'] ?? '---'}}</p>
+        <p class="text-body-large">IV  - Reorganização e/ou equivalência de componente curricular: {{$planoFlexibilizacao->campos['reorganizacaoCurricular'] ?? '---'}}</p>
+        <p class="text-body-large">V - Definição de critérios diferenciados e adequados de avaliação, considerando as singularidades e especificidades dos estudantes: {{$planoFlexibilizacao->campos['criteriosDiferenciados'] ?? '---'}}</p>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
         <p class="text-body-large">
-            @foreach($planoFlexibilizacao->campos['componentesCurriculares'] as $index => $disciplinaId)
-                {{ Disciplina::find($disciplinaId)->nome . ($index === $count-1 ? '.' : ',') }}
+            @foreach($componentes as $index => $disciplinaId)
+                {{ (is_numeric($disciplinaId) ? (Disciplina::find($disciplinaId)?->nome ?? $disciplinaId) : $disciplinaId) . ($index === $count-1 ? '.' : ',') }}
             @endforeach
         </p>
     </div>

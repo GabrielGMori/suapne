@@ -44,7 +44,7 @@
                 <b>Carga horária de atendimento individualizado:</b> {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
             </td>
             <td>
-                <b>Dia/Horário/Local:</b> {{ $planoTrabalho->created_at->format('d/m/Y \à\s h:i ') . $planoTrabalho->campos['local'] }}
+                <b>Dia/Horário/Local:</b> {{ ($planoTrabalho->created_at ? $planoTrabalho->created_at->format('d/m/Y \à\s h:i ') : '') . ($planoTrabalho->campos['local'] ?? '') }}
             </td>
         </tr>
 
@@ -58,7 +58,7 @@
 
     <table class="table">
         <tr><td><b>2. Particularidades do estudante</b></td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['particularidadesEstudante'] }}</td></tr>
+        <tr><td class="textarea">{{ $planoTrabalho->campos['particularidadesEstudante'] ?? '---' }}</td></tr>
     </table>
 
     <table class="table">
@@ -68,7 +68,7 @@
 
     <table class="table">
         <tr><td><b>4. Objetivos específicos para o estudante neste período</b></td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['objetivosEspecificos'] }}</td></tr>
+        <tr><td class="textarea">{{ $planoTrabalho->campos['objetivosEspecificos'] ?? '---' }}</td></tr>
     </table>
 
     <table class="table">
@@ -76,7 +76,7 @@
             <b>5. Instrumentos avaliativos pretendidos e procedimentos adotados</b><br>
             (De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)
         </td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['instrumentosAvaliativos'] }}</td></tr>
+        <tr><td class="textarea">{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? '---' }}</td></tr>
     </table>
 
     <table class="table">
