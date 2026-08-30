@@ -2,6 +2,7 @@
 
 namespace App\Tables;
 
+use App\Enums\RoleEnum;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
@@ -15,7 +16,10 @@ class AtendimentoSemanalTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return AtendimentoSemanal::query()->orderBy('data', 'desc');
+        $query = AtendimentoSemanal::query()->orderBy('data', 'desc');
+        $user = Auth::user();
+        $query = $user->role === RoleEnum::TECNICO ? $query->where('user_id', $user->id) : $query;
+        return $query;
     }
     public function title(): ?string { return 'Atendimentos Semanais'; }
     public function canCreate(): bool { return Auth::user()->can('create', AtendimentoSemanal::class); }

@@ -7,7 +7,7 @@ use App\Models\Estudante;
 <x-layouts.main title="Entrevista Escolar Familiar de {{ $entrevistaFamiliar->estudante->nome}}">
     <div class="flex justify-between items-center mb-5">
         <h2 class="text-title-large ">Data da entrevista: {{$entrevistaFamiliar->data->format('d/m/Y')}}</h2>
-        <x-button label="Exportar como PDF" icon="file_export" iconPos="right" color="tertiary" type="link" :href="route('estudantes.entrevistas-familiares.exportPdf', ['entrevistaFamiliar' => $entrevistaFamiliar, 'estudante' => $estudante])"/>
+        <x-button label="Exportar como PDF" target="_blank" icon="file_export" iconPos="right" color="tertiary" type="link" :href="route('estudantes.entrevistas-familiares.exportPdf', ['entrevistaFamiliar' => $entrevistaFamiliar, 'estudante' => $estudante])"/>
     </div>
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">

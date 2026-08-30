@@ -20,6 +20,8 @@
     </table>
 
     {{ $slot }}
+
+    <p class="mt-md" style="font-size: 14px;">Documento gerado no dia {{ now()->format('d/m/Y \à\s H:i') }} por {{ Illuminate\Support\Facades\Auth::user()->nome }} no SUAPNE</p>
 </body>
 
 <style>
@@ -80,6 +82,10 @@
 
     .mb-lg {
         margin-bottom: 40px;
+    }
+
+    .mt-md {
+        margin-top: 20px;
     }
 </style>
 

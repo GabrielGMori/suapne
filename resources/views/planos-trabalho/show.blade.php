@@ -154,7 +154,7 @@
 
                         @case(StatusPlanoTrabalhoEnum::APROVADO)
                             @can('delete', $planoTrabalho)
-                                <x-modal title="Excluir Plano de Trabalho do Estudante" label="Excluir plano de trabalho" icon="delete" color="red">
+                                <x-modal title="Excluir Plano de Trabalho do Estudante" label="Excluir" icon="delete" color="red">
                                     <p class="mb-5 text-body-large">
                                         Tem certeza que deseja excluir este PTE?<br>
                                         Você poderá restaurá-lo posteriormente.

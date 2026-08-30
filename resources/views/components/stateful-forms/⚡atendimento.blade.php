@@ -2,9 +2,11 @@
 
 use Livewire\Component;
 use App\Models\Estudante;
+use App\Models\AtendimentoSemanal;
 
 new class extends Component {
-    public ?\App\Models\AtendimentoSemanal $atendimento = null;
+    public ?AtendimentoSemanal $atendimento = null;
+
     public null|string|array $estudanteId = null;
     public ?Estudante $estudante = null;
 
@@ -12,9 +14,10 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
+        $this->estudanteId = old('estudante_id', $this->atendimento->estudante_id ?? ($this->estudanteId ?? ''));
 
-        $oldPerfil = old('campos.perfilDoEstudante');
+        $oldPerfil = old('campos.perfilDoEstudante') ?? $this->atendimento->campos['perfilDoEstudante'];
+
         if ($oldPerfil !== null) {
             $this->perfil = $oldPerfil;
         } elseif (filled($this->estudanteId)) {
@@ -50,27 +53,36 @@ new class extends Component {
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
 
-        <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
-            wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()" />
+        <div wire:key='estudante-select-wrapper'>
+            <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
+                wire:key='estudante-select' wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()" />
+        </div>
 
-        <x-form.input label="Local" appearance="outlined" size="small" name="local" />
+        <x-form.input label="Local" appearance="outlined" size="small" name="local" wire:ignore
+            :value="$this->atendimento->local ?? ''" />
 
-        <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" />
+        <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" wire:ignore
+            :value="$this->atendimento->data ?? ''" />
 
-        <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
-            size="full" wire:model.blur="perfil"/>
+        <div wire:key='perfil-textarea-wrapper'>
+            <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
+             wire:key='perfil-textarea' size="full" wire:model.blur="perfil"/>
+        </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>
-        <x-form.input type="textarea" name="campos[registroDoAtendimento]" appearance="outlined" size="full" />
+        <x-form.input type="textarea" name="campos[registroDoAtendimento]" appearance="outlined" size="full"
+            :value="$this->atendimento->campos['registroDoAtendimento'] ?? ''" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Encaminhamentos</h2>
-        <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full" />
+        <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full"
+            :value="$this->atendimento->campos['encaminhamentos'] ?? ''" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">4. Observações adicionais</h2>
-        <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full" />
+        <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full"
+            :value="$this->atendimento->campos['observacoesAdicionais'] ?? ''" />
     </div>
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="atendimentos.index" />

@@ -6,7 +6,7 @@ use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
 
 new class extends Component {
-    public ?PlanoTrabalhoEstudante $planoTrabalho;
+    public ?PlanoTrabalhoEstudante $planoTrabalho = null;
 
     public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;

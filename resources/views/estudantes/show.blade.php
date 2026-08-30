@@ -58,7 +58,7 @@
 
     @can('delete', $estudante)
         <div class="flex justify-end gap-3 mt-5">
-            <x-modal title="Excluir estudante" label="Excluir estudante" icon="delete" color="red">
+            <x-modal title="Excluir Estudante" label="Excluir" icon="delete" color="red">
                 @php
                     $planosFlexibilizacao = count($estudante->planosFlexibilizacaoCurricular);
                     $planosTrabalho = count($estudante->planosTrabalho);
