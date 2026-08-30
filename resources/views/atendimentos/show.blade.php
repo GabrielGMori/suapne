@@ -5,7 +5,7 @@
             <h3 class="text-title-large">Feito por: {{ $atendimento->user->nome }}</h3>
         </div>
         <div class="flex justify-end">
-            <x-button label="Exportar como PDF" color="tertiary" icon="file_export" />
+            <x-button label="Exportar como PDF" color="tertiary" icon="file_export" type="link" :href="route('atendimentos.exportPdf', ['atendimento' => $atendimento,])"/>
         </div>
     </div>
 
@@ -41,5 +41,20 @@
 
     <div class="flex justify-end gap-2">
         <x-button.cancel label="Voltar" color="tertiary" fallback="atendimentos.index" />
+        <x-button label="Editar" color="yellow" type="link" href="{{ route('atendimentos.edit', $atendimento) }}"/>
+        <x-modal label="Excluir" icon="delete" color="red" title="Excluir atendimento semanal">
+            <p class="mb-5 text-body-large">
+                Tem certeza que deseja excluir este atendimento semanal?<br>
+                Você poderá restaurá-lo posteriormente.
+            </p>
+            <div class="flex justify-end gap-3 mb-2">
+                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                <form action="{{ route('atendimentos.destroy', ['atendimento' => $atendimento]) }}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <x-button label="Confirmar" type="submit" color="red" />
+                </form>
+            </div>    
+        </x-modal>    
     </div>
 </x-layouts.main>

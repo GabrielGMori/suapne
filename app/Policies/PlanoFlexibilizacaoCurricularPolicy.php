@@ -14,7 +14,7 @@ class PlanoFlexibilizacaoCurricularPolicy
     public function before(User $user, string $ability): bool|null
     {
         if (in_array($ability, $this->alwaysCheck)) {
-            return false;
+            return null;
         }
         return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
     }

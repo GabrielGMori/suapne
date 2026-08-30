@@ -1,14 +1,18 @@
 <?php
-    use App\Models\Disciplina;
+use App\Models\Disciplina;
 
     $componentes = $planoFlexibilizacao->campos['componentesCurriculares'] ?? [];
     $count = count($componentes);
 ?>
 
-<x-layouts.main title="{{ $planoFlexibilizacao->nome}}">
+<x-layouts.main title="{{ $planoFlexibilizacao->nome }}">
     <div class="flex items-center justify-between mb-5">
-        <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
-        <x-button label="Exportar como PDF" icon="file_export" color="tertiary"/>
+        <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a
+            {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
+        <x-button label="Exportar como PDF" icon="file_export" color="tertiary" type="link" :href="route('planos-flexibilizacao.exportPdf', [
+            'id' => $planoFlexibilizacao->id,
+            'planoFlexibilizacao' => $planoFlexibilizacao,
+        ])" />
     </div>
     <div class="flex flex-col bg-surface rounded-lg p-5 mb-5 mt-5">
         <h2 class="text-display-small mb-5">1. Dados do estudante</h2>
@@ -18,19 +22,22 @@
         <p class="mb-5">Laudo: {{ $planoFlexibilizacao->estudante->laudo !== null ? 'Sim' : 'Não' }}</p>
         <p>Necessidade educacional específica:</p>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5 mt-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->estudante->necessidades}}</p>
+            <p class="whitespace-pre-line">{{ $planoFlexibilizacao->estudante->necessidades }}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular</h2>
-        <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular)</h3>
+        <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de implementação
+            da flexibilização curricular</h2>
+        <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas já realizadas e
+            justificativa de implementação da flexibilização curricular)</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
             <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['acoesPedagogicas'] ?? '---'}}</p>
         </div>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
-        <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou externos ao IFPR) que fazem o acompanhamento do estudante</h3>
+        <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou externos
+            ao IFPR) que fazem o acompanhamento do estudante</h3>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
             <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['atendimentoMultiprofissional'] ?? '---'}}</p>
         </div>
@@ -54,11 +61,30 @@
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">6. Informações adicionais</h2>
         <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['informacoesAdicionais'] ?? '---'}}</p>
+            <p class="whitespace-pre-line">{{ $planoFlexibilizacao->campos['informacoesAdicionais'] ?? '---' }}</p>
         </div>
     </div>
 
     <div class="flex justify-end gap-2">
-        <x-button.cancel label="Voltar" color="tertiary" fallback="planos-flexibilizacao.index" color="tertiary" />
+        <x-button label="Voltar" type="link"
+            href="{{ url()->previous() !== url()->current() ? url()->previous() : route('planos-flexibilizacao.index') }}"
+            color="tertiary" />
+        <x-button label="Editar" type="link" href="{{ route('planos-flexibilizacao.edit', $planoFlexibilizacao) }}"
+            color="yellow" />
+        <x-modal icon="delete" label="Excluir" color="red" title="Excluir Plano de Flexibilização">
+            
+            <p class="mb-5 text-body-large">
+                Tem certeza que deseja excluir este plano de flexibilização?<br>
+                Você poderá restaurá-lo posteriormente.
+            </p>
+            <div class="flex justify-end gap-3 mb-2">
+                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                <form action="{{ route('planos-flexibilizacao.destroy', ['planoFlexibilizacao' => $planoFlexibilizacao]) }}" method="POST">
+                    @method('DELETE')
+                    @csrf
+                    <x-button label="Confirmar" type="submit" color="red" />
+                </form>
+            </div>
+        </x-modal>
     </div>
 </x-layouts.main>

@@ -20,10 +20,10 @@ Route::name('estudantes.')->prefix('/estudantes/{estudante}')->group(function ()
 
     Route::controller(EntrevistaFamiliarController::class)->name('entrevistas-familiares.')->prefix("/entrevistas-familiares")->group(function () {
         Route::get('/novo', 'create')->name('create');
-        Route::get("/{entrevistaFamiliar}/visualizar", 'show')->name('show');
         Route::post('/','store')->name('store');
+        Route::get('/{entrevistaFamiliar}/exportar','exportPdf')->withTrashed()->name('exportPdf');
+        Route::get("/{entrevistaFamiliar}/visualizar", 'show')->name('show');
     });
-
     Route::controller(DocumentoController::class)->name('documentos.')->prefix("/documentos")->group(function () {
         Route::get("/adicionar/{tipoDocumento?}", 'create')->name('create');
         Route::post("/adicionar/{tipoDocumento?}", 'store')->name('store');

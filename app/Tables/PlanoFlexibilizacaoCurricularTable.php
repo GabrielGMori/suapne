@@ -47,13 +47,14 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
                 ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['planoFlexibilizacao' => $item->id])),
+            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['planoFlexibilizacao' => $item->id]))->restoreOnTrashed(static fn(PlanoFlexibilizacaoCurricular $item)=> route('planos-flexibilizacao.restore',['planoFlexibilizacao' => $item]), 'Deseja restaurar este plano de flexibilização?'),
         ];
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AtendimentoSemanal;
 use App\Models\Estudante;
 use App\Http\Requests\AtendimentoSemanalRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -42,15 +43,31 @@ class AtendimentoSemanalController extends Controller
     public function edit(Request $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('update', $atendimento), 404);
+        return view('atendimentos.form', ['atendimento' => $atendimento]);
     }
 
     public function update(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('update', $atendimento), 404);
+        $atendimento->update();
+        return redirect()->route('atendimentos.index')->with('status','Atendimento semanal editado com sucesso!');
     }
 
-    public function destroy(Request $request, AtendimentoSemanal $atendimento)
+    public function destroy(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('delete', $atendimento), 404);
+        $atendimento->delete();
+        return redirect()->route('atendimentos.index')->with('status','Atendimento semanal excluido com sucesso!');
+    }
+
+    public function restore(Request $request, AtendimentoSemanal $atendimento)
+    {
+        abort_unless($request->user()->can('restore', $atendimento), 404);
+        $atendimento->restore();
+        return redirect()->back()->with('status','Atendimento semanal restaurado com sucesso!');
+    }
+    public function exportPdf(AtendimentoSemanal $atendimento)
+    {
+        return Pdf::loadView('atendimentos.pdf', ['atendimento'=> $atendimento])->stream($atendimento->estudante->nome.'.pdf');
     }
 }

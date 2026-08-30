@@ -44,13 +44,14 @@ class AtendimentoSemanalTable extends ListViewConfig
             ListViewFilter::make('local')->label('Local do atendimento'),
             ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('data'),
             ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('data'),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-        ListViewAction::make(static fn(AtendimentoSemanal $item) => route('atendimentos.show', ['atendimento' => $item->id])),
+        ListViewAction::make(static fn(AtendimentoSemanal $item) => route('atendimentos.show', ['atendimento' => $item->id]))->restoreOnTrashed(static fn(AtendimentoSemanal $item)=>route('atendimentos.restore',['atendimento'=>$item]),'Deseja restaurar esse atendimento semanal?'),
         ];
     }
 

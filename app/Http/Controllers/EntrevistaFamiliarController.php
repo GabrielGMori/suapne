@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\EntrevistaFamiliar;
 use App\Models\Estudante;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EntrevistaFamiliarController extends Controller
 {
@@ -51,5 +52,9 @@ class EntrevistaFamiliarController extends Controller
     public function destroy(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
     {
         abort_unless($request->user()->can('delete', $entrevistaFamiliar), 404);
+    }
+    public function exportPdf(Estudante $estudante,EntrevistaFamiliar $entrevistaFamiliar)
+    {
+        return Pdf::loadView('entrevistas-familiares.pdf', ['entrevistaFamiliar'=> $entrevistaFamiliar])->stream($entrevistaFamiliar->estudante->nome.'.pdf');
     }
 }

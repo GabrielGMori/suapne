@@ -4,10 +4,11 @@ use Livewire\Component;
 use App\Models\Estudante;
 
 new class extends Component {
+    public ?\App\Models\AtendimentoSemanal $atendimento = null;
     public null|string|array $estudanteId = null;
     public ?Estudante $estudante = null;
 
-    public ?string $perfil = "";
+    public ?string $perfil = '';
 
     public function mount(): void
     {
@@ -23,38 +24,41 @@ new class extends Component {
 
     public function updatedEstudanteId($newId)
     {
-        if (!filled($this->estudanteId))
+        if (!filled($this->estudanteId)) {
             return;
+        }
         $id = is_array($newId) ? $newId[0] : $newId;
         $this->estudante = Estudante::find($id);
 
         $ultimoAtendimento = $this->estudante->atendimentosSemanais()->latest()->first();
-        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '')
+        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '') {
             return;
-        $this->perfil = $ultimoAtendimento ? ($ultimoAtendimento->campos['perfilDoEstudante'] ?? '') : '';
+        }
+        $this->perfil = $ultimoAtendimento ? $ultimoAtendimento->campos['perfilDoEstudante'] ?? '' : '';
     }
 };
 ?>
 
 @props(['atendimento' => null])
 
-<form action="{{ route('atendimentos.store') }}" method="POST">
+<form action="{{ $atendimento == null ? route('atendimentos.store') : route('atendimentos.update', $atendimento) }}"
+    method="POST">
+    @if ($atendimento !== null)
+        @method('PATCH')
+    @endif
     @csrf
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
 
         <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
-            wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()"
-            :value="$atendimento?->estudante_id" />
+            wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()" />
 
-        <x-form.input label="Local" appearance="outlined" size="small" name="local"
-            :value="$atendimento?->local" />
+        <x-form.input label="Local" appearance="outlined" size="small" name="local" />
 
-        <x-form.input type="datetime" label="Dia" appearance="outlined" name="data"
-            :value="$atendimento?->data->format('Y-m-d H:i:s')" />
+        <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" />
 
         <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
-            size="full" wire:model.blur="perfil" />
+            size="full" wire:model.blur="perfil"/>
     </div>
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>

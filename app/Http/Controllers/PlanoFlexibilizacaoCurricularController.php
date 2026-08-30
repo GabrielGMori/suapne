@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PlanoFlexibilizacaoCurricularRequest;
 use App\Models\Estudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
-use App\Http\Requests\PlanoFlexibilizacaoCurricularRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class PlanoFlexibilizacaoCurricularController extends Controller
 {
@@ -46,27 +46,35 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     public function edit(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
         abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
+        return view('planos-flexibilizacao.form', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
-    public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao): RedirectResponse
     {
-        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
+        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->update($request->validated());
+
+        return redirect()->route('planos-flexibilizacao.index', ['planoFlexibilizacao' => $planoFlexibilizacao])->with('status', 'Plano de Flexibilização atualizado com sucesso!');
     }
 
     public function destroy(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
         abort_unless($request->user()->can('delete', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->delete();
+
+        return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização excluído com sucesso!');
     }
 
-    public function exportPdf(Request $request, int $id)
+    public function restore(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
-        $planoFlexibilizacao = PlanoFlexibilizacaoCurricular::with('estudante.curso')->findOrFail($id);
+        abort_unless($request->user()->can('restore', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->restore();
 
-        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
+        return redirect()->back()->with('status','Plano de Flexibilização restaurado com sucesso!');
+    }
 
-        $pdf = Pdf::loadView('planos-flexibilizacao.show', compact('planoFlexibilizacao'));
-        $pdf->setPaper('A4', 'portrait');
-
-        return $pdf->download("plano_flexibilizacao_{$planoFlexibilizacao->id}.pdf");
+    public function exportPdf(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    {
+        return Pdf::loadView('planos-flexibilizacao.pdf', ['planoFlexibilizacao' => $planoFlexibilizacao])->stream($planoFlexibilizacao->estudante->nome.'.pdf');
     }
 }
