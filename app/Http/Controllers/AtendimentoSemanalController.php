@@ -49,7 +49,7 @@ class AtendimentoSemanalController extends Controller
     public function update(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('update', $atendimento), 404);
-        $atendimento->update();
+        $atendimento->update($request->validated());
         return redirect()->route('atendimentos.index')->with('status','Atendimento semanal editado com sucesso!');
     }
 
