@@ -265,7 +265,8 @@ return [
         'observacao' => 'observação',
         'periodo_inicio' => 'data inicial',
         'periodo_fim' => 'data final',
-        'curso_periodo' => 'período no curso'
+        'curso_periodo' => 'período no curso',
+        'code' => ' ',
     ],
 
 ];

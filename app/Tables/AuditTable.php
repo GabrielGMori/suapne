@@ -68,7 +68,8 @@ class AuditTable extends ListViewConfig
         $label = ModelLabels::label($item->auditable_type);
 
         if ($item->auditable === null) {
-            $name = $item->old_values['nome'] ?? '';
+            $name = $item->old_values['nome'] ?? ($item->new_values['nome'] ?? '');
+            $name = $name === '' ? $name : "\"{$name}\"";
 
             return "{$label} {$name} (excluído)";
         }
@@ -78,23 +79,23 @@ class AuditTable extends ListViewConfig
         return "{$label} \"{$name}\"";
     }
 
-    private const EXCLUDED_ATTRIBUTES = ['id'];
+    private const EXCLUDED_ATTRIBUTES = ['id', 'password'];
 
     private function formatValue(string $attribute, mixed $value): mixed
     {
-        if ($value === null || !str_ends_with($attribute, '_id')) {
+        if ($value === null || ! str_ends_with($attribute, '_id')) {
             return $value;
         }
 
-        $modelClass = 'App\\Models\\' . Str::studly(Str::beforeLast($attribute, '_id'));
+        $modelClass = 'App\\Models\\'.Str::studly(Str::beforeLast($attribute, '_id'));
 
-        if (!class_exists($modelClass)) {
+        if (! class_exists($modelClass)) {
             return $value;
         }
 
         $cacheKey = "{$modelClass}:{$value}";
 
-        if (!array_key_exists($cacheKey, $this->modelNameCache)) {
+        if (! array_key_exists($cacheKey, $this->modelNameCache)) {
             $this->modelNameCache[$cacheKey] = $modelClass::find($value)?->nome;
         }
 
@@ -148,7 +149,7 @@ class AuditTable extends ListViewConfig
 
         return [
             ListViewColumn::make('user.nome')->label('Nome do autor')
-                ->format(fn ($value, $item) => $value ?? 'Usuário removido'),
+                ->format(fn ($value, $item) => $value ?? ($item['new_values']['nome'] ?? ($item['old_values']['nome'] ?? 'Autor não encontrado'))),
 
             ListViewColumn::make('event')->label('O que foi feito?')->size('small')
                 ->format(function ($value, $item) use (&$statusCache) {

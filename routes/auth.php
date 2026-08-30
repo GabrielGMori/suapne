@@ -15,8 +15,11 @@ Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastr
         Route::view('/professor', 'auth.cadastro.professor-regular')->name('professor');
         Route::view('/tecnico', 'auth.cadastro.cnapne', ['role' => 'TECNICO'])->name('tecnico');
         Route::view('/docente', 'auth.cadastro.cnapne', ['role' => 'DOCENTE_ESPECIAL'])->name('docente');
+
+        Route::post('/', 'submit')->name('submit');//->middleware('throttle:5,60');
+        Route::get('/confirmar', 'verifyForm')->name('verify.form');
+        Route::post('/confirmar', 'verify')->name('verify');//->middleware('throttle:10,15');;
         Route::view('/enviado', 'auth.cadastro.enviado')->name('enviado');
-        Route::post('/', 'submit')->name('submit');
     });
 
     Route::middleware('auth')->group(function () {

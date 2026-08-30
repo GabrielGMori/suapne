@@ -1,5 +1,5 @@
 <x-layouts.auth title="Solicitar Cadastro">
-    <x-auth-card title="Solcitar Cadastro" class="w-125 text-white">
+    <x-auth-card title="Solicitar Cadastro" class="w-125 text-white">
         <p>Escolha o tipo de cadastro que deseja fazer</p>
 
         <div class="flex flex-col w-full gap-2">

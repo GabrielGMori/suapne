@@ -6,11 +6,11 @@
 Sua solicitação de registro no SUAPNE foi recusada.
 
 @if(!empty($observacao))
-<h1 style="margin-top: 30px">Observação adicionada ao recusar:</h1>
+<h1 style="margin-top: 30px">Observação adicionada:</h1>
 
 <p style="white-space: pre-line;">{{ $observacao }}</p>
 @endif
 
-**Atenção:** Caso você não tenha feito esta solicitação, recomendamos que verifique seu e-mail e altere sua senha.
+**Atenção:** Caso você não tenha feito esta solicitação, isso pode indicar que sua conta de e-mail foi acessada por terceiros. Recomendamos verificar a segurança do seu e-mail e, se necessário, alterar sua senha.
 
 </x-mail::message>

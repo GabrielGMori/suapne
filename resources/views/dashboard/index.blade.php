@@ -67,8 +67,8 @@
                     @else
                         @foreach ($acoes as $acao)
                             @php
-                                $autor = $acao->user?->nome ?? 'Alguém';
-                                $nome = $acao->auditable?->nome ?? ($acao->old_values['nome'] ?? '');
+                                $autor = $acao->user?->nome ?? ($acao->auditable?->nome ?? 'Alguém');
+                                $nome = $acao->auditable?->nome ?? ($acao->old_values['nome'] ?? ModelLabels::label($acao->auditable_type));
                                 $verbo = match ($acao->event) {
                                     'created' => 'criou',
                                     'deleted' => 'excluiu',

@@ -6,23 +6,71 @@ use App\Enums\StatusSolicitacaoRegistroEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SolicitacaoRegistroRequest;
 use App\Mail\SolicitacaoRegistroAceita;
+use App\Mail\SolicitacaoRegistroEnviada;
 use App\Mail\SolicitacaoRegistroRecusada;
+use App\Mail\VerificarEmail;
 use App\Models\SolicitacaoRegistro;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
 
 class RegisterController extends Controller
 {
     public function submit(SolicitacaoRegistroRequest $request)
     {
         $validated = $request->validated();
-        $validated['password'] = Hash::make($validated['password']);
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        $solicitacao = SolicitacaoRegistro::create([...$validated, 'status' => StatusSolicitacaoRegistroEnum::PENDENTE]);
-        $solicitacao->disciplinas()->sync($validated['campos']['disciplinas'] ?? null);
+        Cache::put("cadastro_pendente:{$validated['email']}", Crypt::encrypt([
+            ...$validated,
+            'password' => Hash::make($validated['password']),
+            'code_hash' => hash('sha256', $code),
+            'attempts' => 0,
+        ]), now()->addMinutes(15));
 
-        return view('auth.cadastro.enviado');
+        Mail::to($validated['email'])->send(new VerificarEmail($validated['nome'], $code));
+        session(['cadastro_email' => $validated['email']]);
+
+        return redirect()->route('cadastro.verify.form');
+    }
+
+    public function verifyForm()
+    {
+        if (!filled(session('cadastro_email')))
+            return redirect()->route('login');
+
+        return view('auth.cadastro.verificar');
+    }
+
+    public function verify(Request $request)
+    {
+        $validated = $request->validate(['code' => 'required|string|size:6']);
+        $email = session('cadastro_email');
+
+        if (!filled($email)) return redirect()->route('login');
+
+        $cacheKey = "cadastro_pendente:{$email}";
+        $encrypted = Cache::get($cacheKey);
+        if (!$encrypted) return back()->withErrors(['code' => 'Código expirado ou inválido.']);
+
+        $cadastro_pendente = Crypt::decrypt($encrypted);
+        if (!hash_equals($cadastro_pendente['code_hash'], hash('sha256', $validated['code']))) {
+            $cadastro_pendente['attempts']++;
+            Cache::put($cacheKey, Crypt::encrypt($cadastro_pendente), now()->addMinutes(15));
+            return back()->withErrors(['code' => 'Código expirado ou inválido.']);
+        }
+
+        $solicitacao = SolicitacaoRegistro::create([...$cadastro_pendente, 'status' => StatusSolicitacaoRegistroEnum::PENDENTE]);
+        $solicitacao->disciplinas()->sync($cadastro_pendente['campos']['disciplinas'] ?? null);
+
+        Mail::to($email)->send(new SolicitacaoRegistroEnviada($cadastro_pendente['nome']));
+
+        Cache::forget($cacheKey);
+        session()->forget('cadastro_email');
+
+        return redirect()->route('cadastro.enviado');
     }
 
     public function accept(Request $request, SolicitacaoRegistro $solicitacao)

@@ -273,7 +273,6 @@ img {
 /* Panels */
 
 .panel {
-    border-left: #18181b solid 4px;
     margin: 21px 0;
 }
 
@@ -284,11 +283,19 @@ img {
 }
 
 .panel-content p {
+    width: 100%;
     color: #52525b;
 }
 
 .panel-item {
     padding: 0;
+}
+
+.panel-item h1 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 0;
+    color: #32643B;
 }
 
 .panel-item p:last-of-type {
