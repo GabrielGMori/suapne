@@ -17,6 +17,8 @@ test('admin can access create and show entrevista familiar', function () {
     $entrevista = EntrevistaFamiliar::factory()->create([
         'estudante_id' => $this->estudante->id,
         'user_id' => $this->admin->id,
+        'data' => '2026-03-01',
+        'responsavel_preenchimento' => 'José Teste',
         'campos' => [
             'nomeCompleto' => 'Estudante Teste',
             'nomeSocial' => 'Teste',
@@ -173,6 +175,8 @@ test('admin can edit, update and delete entrevista familiar', function () {
     $entrevista = EntrevistaFamiliar::factory()->create([
         'estudante_id' => $this->estudante->id,
         'user_id' => $this->admin->id,
+        'data' => '2025-03-01',
+        'responsavel_preenchimento' => 'José Teste Original',
         'campos' => [
             'nomeCompleto' => 'Estudante Original',
         ],
@@ -187,6 +191,7 @@ test('admin can edit, update and delete entrevista familiar', function () {
 
     $updatePayload = [
         'data' => '2026-03-01',
+        'responsavel_preenchimento' => 'José Teste Editado',
         'campos' => [
             'nomeCompleto' => 'Estudante Editado',
             'rotinaDiaria' => 'Nova rotina',
@@ -199,9 +204,8 @@ test('admin can edit, update and delete entrevista familiar', function () {
             'entrevistaFamiliar' => $entrevista,
         ]), $updatePayload);
 
-    $response->assertRedirect(route('estudantes.entrevistas-familiares.show', [
+    $response->assertRedirect(route('estudantes.show', [
         'estudante' => $this->estudante,
-        'entrevistaFamiliar' => $entrevista,
     ]));
 
     expect($entrevista->fresh()->data->format('Y-m-d'))->toBe('2026-03-01');
@@ -219,6 +223,7 @@ test('admin can edit, update and delete entrevista familiar', function () {
 test('admin can store entrevista familiar with nullable and partial fields', function () {
     $payload = [
         'data' => '2026-05-10',
+        'responsavel_preenchimento' => 'José Teste',
         'campos' => [
             'nomeCompleto' => 'Apenas Nome',
         ],
@@ -227,7 +232,7 @@ test('admin can store entrevista familiar with nullable and partial fields', fun
     $response = $this->actingAs($this->admin)
         ->post(route('estudantes.entrevistas-familiares.store', ['estudante' => $this->estudante]), $payload);
 
-    $response->assertRedirect(route('estudantes.show', ['estudante' => $this->estudante->id]));
+    $response->assertRedirect(route('estudantes.show', ['estudante' => $this->estudante]));
     $this->assertDatabaseHas('entrevistas_familiar', [
         'estudante_id' => $this->estudante->id,
     ]);

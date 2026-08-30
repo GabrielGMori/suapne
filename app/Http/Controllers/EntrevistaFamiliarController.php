@@ -29,7 +29,7 @@ class EntrevistaFamiliarController extends Controller
 
         EntrevistaFamiliar::create($request->validated());
 
-        return redirect()->route('estudantes.show', ['estudante' => $estudante->id])->with('status', 'Entrevista familiar cadastrada com sucesso!');
+        return redirect()->route('estudantes.show', ['estudante' => $estudante])->with('status', 'Entrevista familiar cadastrada com sucesso!');
     }
 
     public function show(Request $request, Estudante $estudante, EntrevistaFamiliar $entrevistaFamiliar)
