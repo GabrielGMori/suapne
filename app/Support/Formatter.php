@@ -3,6 +3,8 @@
 namespace App\Support;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Formatter
 {
@@ -25,6 +27,7 @@ class Formatter
             'periodo_inicio' => self::date($value),
             'periodo_fim' => self::date($value),
             'campos' => self::json($value),
+            'path' => self::path($value),
             default => (string) $value,
         };
     }
@@ -83,5 +86,14 @@ class Formatter
         }
 
         return json_encode(json_decode($value), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function path(?string $value): ?string
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        return Request::getSchemeAndHttpHost() . '/storage/' . ltrim($value, '/');
     }
 }

@@ -32,7 +32,7 @@ class AuditTable extends ListViewConfig
     public function icon(): \Closure
     {
         return fn ($item) => $item->user?->avatar || $item->auditable?->avatar
-            ? asset($item->user?->avatar ?? $item->auditable?->avatar)
+            ? asset($item->user ? ($item->user->avatar ?? 'storage/img/placeholder-user.png') : $item->auditable?->avatar)
             : asset('storage/img/placeholder-user.png');
     }
 
