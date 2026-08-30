@@ -18,7 +18,13 @@ class Formatter
             'telefone_pai',
             'telefone_mae',
             'telefone_responsavel' => self::telefone($value),
+            'data' => self::datetime($value),
             'data_nascimento' => self::date($value),
+            'created_at' => self::datetime($value),
+            'updated_at' => self::datetime($value),
+            'periodo_inicio' => self::date($value),
+            'periodo_fim' => self::date($value),
+            'campos' => self::json($value),
             default => (string) $value,
         };
     }
@@ -68,5 +74,14 @@ class Formatter
         }
 
         return Carbon::parse($value)->format('d/m/Y \à\s H:i');
+    }
+
+    public static function json(?string $value): ?string
+    {
+        if (!$value) {
+            return $value;
+        }
+
+        return json_encode(json_decode($value), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }

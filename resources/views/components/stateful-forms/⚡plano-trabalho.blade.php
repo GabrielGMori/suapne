@@ -3,8 +3,11 @@
 use Livewire\Component;
 use App\Models\Estudante;
 use App\Models\Disciplina;
+use App\Models\PlanoTrabalhoEstudante;
 
 new class extends Component {
+    public ?PlanoTrabalhoEstudante $planoTrabalho;
+
     public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;
 
@@ -16,15 +19,15 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
+        $this->estudanteId = old('estudante_id', $this->planoTrabalho->estudante_id ?? ($this->estudanteId ?? ''));
         if (filled($this->estudanteId))
             $this->updatedEstudanteId($this->estudanteId);
 
-        $this->selectedDisciplinas = old('disciplinas', $this->selectedDisciplinas);
+        $this->selectedDisciplinas = old('disciplinas', [$this->planoTrabalho->disciplina_id] ?? $this->selectedDisciplinas);
         if (filled($this->selectedDisciplinas))
             $this->updatedSelectedDisciplinas($this->selectedDisciplinas);
 
-        $this->selectedProfessores = old('professores', $this->selectedProfessores);
+        $this->selectedProfessores = old('professores', [$this->planoTrabalho->user_professor_id] ?? $this->selectedProfessores);
     }
 
     public function updatedEstudanteId($estId)
@@ -84,14 +87,19 @@ new class extends Component {
 };
 ?>
 
-<form action="{{ route('planos-trabalho.store') }}" method="POST">
+<form action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}" method="POST">
+    @if($planoTrabalho)
+        @method('PUT')
+    @endif
     @csrf
 
     <div wire:ignore>
         <h2 class="flex gap-5 mb-5 text-display-small">Período de realização:
-            <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined" />
+            <x-form.input type="date" size="small" name="periodo_inicio" appearance="outlined"
+                :value="$planoTrabalho->periodo_inicio" />
             a
-            <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined" />
+            <x-form.input type="date" size="small" name="periodo_fim" appearance="outlined"
+                :value="$planoTrabalho->periodo_fim" />
         </h2>
     </div>
 
@@ -101,30 +109,37 @@ new class extends Component {
         <div wire:key="selects-wrapper">
             <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined"
                 placeholder="Selecionar" :options="Estudante::pluck('nome', 'id')->toArray()"
-                wire:model.live="estudanteId" />
+                wire:model.live="estudanteId" :disabled="filled($this->planoTrabalho)" />
 
             <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
                 appearance="outlined" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
-                :options="$displayDisciplinas ?? []" :disabled="$estudante === null"
+                :options="$displayDisciplinas ?? []" :disabled="$this->planoTrabalho || $estudante === null"
                 wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
 
             <livewire:form.select type="multiselect" label="Docentes" name="professores" appearance="outlined"
-                size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'" :disabled="!filled($selectedDisciplinas)"
+                size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'"
+                :disabled="$this->planoTrabalho || !filled($selectedDisciplinas)"
                 no-result-message="Nenhum docente relacionado aos componentes selecionados foi encontrado"
                 wire:key="professores-select-{{ $this->estudante?->id }}" wire:model.live="selectedProfessores"
                 :options="$displayProfessores ?? []" />
+
+            @if($this->planoTrabalho)
+                <p class="text-label-medium my-5">Os campos acima não podem ser editados</p>
+            @endif
         </div>
 
         <div wire:ignore>
             <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
-                appearance="outlined" wire:ignore />
-            <x-form.input label="Local" name="campos[local]" appearance="outlined" wire:ignore />
+                appearance="outlined" wire:ignore :value="$planoTrabalho->campos['cargaHoraria']" />
+            <x-form.input label="Local" name="campos[local]" appearance="outlined" wire:ignore
+                :value="$planoTrabalho->campos['local']" />
         </div>
     </div>
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
         <h2 class="text-display-small">2. Particularidades do estudante </h2>
-        <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full" />
+        <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full"
+            :value="$planoTrabalho->campos['particularidadesEstudante']" />
     </div>
 
 
@@ -132,9 +147,13 @@ new class extends Component {
         <h2 class="text-display-small"> 3. Conteúdos do componente curricular que necessitam de adaptação e/ou
             flexibilização: </h2>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5 border border-on-surface">
-            <p class="text-label-large">
-                Preenchimento automático com base nas ementas dos componentes curriculares selecionados
-            </p>
+            @if(!$planoTrabalho)
+                <p class="text-label-large">
+                    Preenchimento automático com base nas ementas dos componentes curriculares selecionados
+                </p>
+            @else
+                <p>{{ $planoTrabalho->disciplina->ementa }}</p>
+            @endif
         </div>
     </div>
 
@@ -147,6 +166,6 @@ new class extends Component {
         <x-button label="Pré-visualização" color="tertiary" type="submit"
             formaction="{{ route('planos-trabalho.preview') }}" formmethod="POST" formtarget="_blank" />
 
-        <x-button label="Enviar para docentes" type="submit" />
+        <x-button :label="$planoTrabalho ? 'Confirmar edições' : 'Enviar para docentes'" type="submit" />
     </div>
 </form>

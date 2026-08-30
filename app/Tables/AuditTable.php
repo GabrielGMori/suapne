@@ -31,8 +31,8 @@ class AuditTable extends ListViewConfig
 
     public function icon(): \Closure
     {
-        return fn ($item) => $item->user?->avatar
-            ? asset($item->user->avatar)
+        return fn ($item) => $item->user?->avatar || $item->auditable?->avatar
+            ? asset($item->user?->avatar ?? $item->auditable?->avatar)
             : asset('storage/img/placeholder-user.png');
     }
 
@@ -149,7 +149,7 @@ class AuditTable extends ListViewConfig
 
         return [
             ListViewColumn::make('user.nome')->label('Nome do autor')
-                ->format(fn ($value, $item) => $value ?? ($item['new_values']['nome'] ?? ($item['old_values']['nome'] ?? 'Autor não encontrado'))),
+                ->format(fn ($value, $item) => $value ?? ($item['new_values']['nome'] ?? ($item['old_values']['nome'] ?? ($item->auditable?->nome ?? 'Alguém') ?? 'Autor não encontrado'))),
 
             ListViewColumn::make('event')->label('O que foi feito?')->size('small')
                 ->format(function ($value, $item) use (&$statusCache) {

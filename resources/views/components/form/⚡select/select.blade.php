@@ -1,5 +1,5 @@
 @php
-    $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/70' : '');
+    $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/30' : '');
     $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
     $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '') . ($disabled ? ' hidden' : '');
 @endphp
@@ -45,9 +45,11 @@
                         <div class="select-chips">
                             <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
-                                    <button type="button" class="select-chip-remove"
-                                        x-on:click.stop="removeOption(item.value)"
-                                        :aria-label="'Remover ' + item.label">&times;</button>
+                                    @if(!$disabled)
+                                        <button type="button" class="select-chip-remove"
+                                            x-on:click.stop="removeOption(item.value)"
+                                            :aria-label="'Remover ' + item.label">&times;</button>
+                                    @endif
                                     <span x-text="item.label" :title="item.label"></span>
                                 </span>
                             </template>
@@ -62,11 +64,12 @@
                 <span x-show="selected.length === 0" class="text-black/40">{{ $placeholder }}</span>
             </button>
 
-            <button type="button" class="select-clear"
-                @disabled($disabled)
-                x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
-                x-on:click="clearSelections()" aria-label="Limpar seleção">&times;
-            </button>
+            @if(!$disabled)
+                <button type="button" class="select-clear"
+                    x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
+                    x-on:click="clearSelections()" aria-label="Limpar seleção">&times;
+                </button>
+            @endif
 
             <div x-show="isOpen" x-cloak x-ref="menu" class="select-menu" role="listbox"
                 :aria-multiselectable="isMultiple">

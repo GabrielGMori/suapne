@@ -62,13 +62,15 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('status')->label('Status')->size('small')->type('multiselect')->options(StatusPlanoTrabalhoEnum::options())->equals(),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['planoTrabalho' => $item])),
+            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['planoTrabalho' => $item]))
+                ->restoreOnTrashed(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.restore', ['planoTrabalho' => $item]), 'Deseja restaurar este PTE?'),
         ];
     }
 }

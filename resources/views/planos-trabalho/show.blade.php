@@ -134,21 +134,50 @@
                     <x-button label="Voltar" color="tertiary" type="button" onclick="window.close()" />
                 @else
                     <x-button.cancel label="Voltar" color="tertiary" fallback="planos-trabalho.index" />
+
+                    @switch($planoTrabalho->status)
+                        @case(StatusPlanoTrabalhoEnum::PENDENTE)
+                            @if(!$isProfessorRegular)
+                                @can('update', $planoTrabalho)
+                                    <x-button type="link" label="Editar" color="yellow" href="{{ route('planos-trabalho.edit', ['planoTrabalho' => $planoTrabalho]) }}" />
+                                @endcan
+                            @else
+                                <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
+                            @endif
+                        @break
+
+                        @case(StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)
+                            @if (!$isProfessorRegular)
+                                <livewire:modal.stateful.revisar-plano-trabalho :plano-trabalho="$planoTrabalho" />
+                            @endif
+                        @break
+
+                        @case(StatusPlanoTrabalhoEnum::APROVADO)
+                            @can('delete', $planoTrabalho)
+                                <x-modal title="Excluir Plano de Trabalho do Estudante" label="Excluir plano de trabalho" icon="delete" color="red">
+                                    <p class="mb-5 text-body-large">
+                                        Tem certeza que deseja excluir este PTE?<br>
+                                        Você poderá restaurá-lo posteriormente.
+                                    </p>
+
+                                    <div class="flex justify-end gap-3 mb-2">
+                                        <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                                        <form action="{{ route('planos-trabalho.destroy', ['planoTrabalho' => $planoTrabalho]) }}" method="POST">
+                                            @method('DELETE')
+                                            @csrf
+                                            <x-button label="Confirmar" type="submit" color="red" />
+                                        </form>
+                                    </div>
+                                </x-modal>
+                            @endcan
+                        @break
+
+                        @default
+                            @if ($preenchendo)
+                                <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
+                            @endif
+                    @endswitch
                 @endif
-
-                @switch($planoTrabalho->status)
-                    @case(StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)
-                    @case(StatusPlanoTrabalhoEnum::APROVADO)
-                        @if (!$isProfessorRegular)
-                            <livewire:modal.stateful.revisar-plano-trabalho :plano-trabalho="$planoTrabalho" />
-                        @endif
-                    @break
-
-                    @default
-                        @if ($preenchendo)
-                            <x-button label="Salvar preenchimento" type="submit" size="dynamic" />
-                        @endif
-                @endswitch
             </div>
         </div>
         @if ($preenchendo)

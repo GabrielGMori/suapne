@@ -6,6 +6,7 @@ Route::controller(PlanoTrabalhoEstudanteController::class)->name('planos-trabalh
     Route::post('/preview', 'preview')->name('preview');
     Route::post('/preview/change', 'changePreview')->name('change-preview');
     Route::get('/novo/{estudante?}', 'create')->name('create');
+    Route::post('/{planoTrabalho}/restaurar', 'restore')->withTrashed()->name('restore');
     Route::get('/{planoTrabalho}/exportar', 'exportPdf')->name('export-pdf');
 });
 

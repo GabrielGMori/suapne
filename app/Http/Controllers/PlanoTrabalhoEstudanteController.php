@@ -75,6 +75,8 @@ class PlanoTrabalhoEstudanteController extends Controller
     public function edit(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
         abort_unless($request->user()->can('update', $planoTrabalho), 404);
+
+        return view('planos-trabalho.form', ['planoTrabalho' => $planoTrabalho]);
     }
 
     public function update(PlanoTrabalhoEstudanteRequest $request, PlanoTrabalhoEstudante $planoTrabalho)
@@ -95,6 +97,19 @@ class PlanoTrabalhoEstudanteController extends Controller
     public function destroy(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
     {
         abort_unless($request->user()->can('delete', $planoTrabalho), 404);
+
+        $planoTrabalho->delete();
+
+        return redirect()->route('planos-trabalho.index')->with('status', 'Plano de trabalho excluído com sucesso!');
+    }
+
+    public function restore(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('restore', $planoTrabalho), 404);
+
+        $planoTrabalho->restore();
+
+        return redirect()->back()->with('status', 'Plano de trabalho restaurado com sucesso!');
     }
 
     public function preview(PlanoTrabalhoEstudanteRequest $request)
