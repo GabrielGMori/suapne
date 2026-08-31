@@ -4,7 +4,7 @@
     use App\Models\Disciplina;
 
     $currDisciplinas = $user->disciplinas->map(fn($disc)=>$disc->id)->toArray();
-    $disciplinas = Disciplina::all()->mapWithKeys(fn($disc)=>[$disc->id => $disc->nome." - ".$disc->curso])->toArray();
+    $disciplinas = Disciplina::with('curso')->get()->mapWithKeys(fn($disc)=>[$disc->id => $disc->nome." - ".$disc->curso])->toArray();
 @endphp
 
 <x-layouts.main title="Editar conta de professor">

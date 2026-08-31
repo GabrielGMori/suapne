@@ -40,7 +40,7 @@
         <tr>
             <td>
                 <b>Perfil do estudante:</b><br>
-                <span class="textarea">{{ $atendimento->campos['perfilDoEstudante'] }}</span>
+                <span class="textarea">{{ $atendimento->campos['perfilDoEstudante'] ?? '---' }}</span>
             </td>
         </tr>
     </table>
@@ -51,7 +51,7 @@
         </tr>
 
         <tr>
-            <td class="textarea">{{ $atendimento->campos['registroDoAtendimento'] }}</td>
+            <td class="textarea">{{ $atendimento->campos['registroDoAtendimento'] ?? '---' }}</td>
         </tr>
     </table>
 
@@ -61,7 +61,7 @@
         </tr>
 
         <tr>
-            <td class="textarea">{{ $atendimento->campos['encaminhamentos'] }}</td>
+            <td class="textarea">{{ $atendimento->campos['encaminhamentos'] ?? '---' }}</td>
         </tr>
     </table>
 
@@ -71,7 +71,7 @@
         </tr>
 
         <tr>
-            <td class="textarea">{{ $atendimento->campos['observacoesAdicionais'] }}</td>
+            <td class="textarea">{{ $atendimento->campos['observacoesAdicionais'] ?? '---' }}</td>
         </tr>
     </table>
 </x-layouts.pdf>

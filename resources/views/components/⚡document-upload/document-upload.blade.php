@@ -2,7 +2,7 @@
     <div class="flex items-center justify-between {{ $maxDocuments > 1 ? 'mb-10' : '' }}">
         <div class="flex items-center gap-10">
             <x-form.input wire:model.live.debounce.300ms="nome_arquivo" name="nome_arquivo"
-                label="Nome_arquivo do documento" appearance="outlined" error="{{ $errors->first('nome_arquivo') }}" />
+                label="Nome do documento" appearance="outlined" error="{{ $errors->first('nome_arquivo') }}" />
 
             <x-form.file wire:model="arquivo" name="arquivo" id="arquivo-{{ $fileIteration }}" label="Arquivo"
                 appearance="outlined" error="{{ $errors->first('arquivo') }}" />

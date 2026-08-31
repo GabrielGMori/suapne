@@ -46,7 +46,7 @@ class ContasProfessorTable extends ListViewConfig
             ListViewFilter::make('nome')->label('Nome do professor'),
             ListViewFilter::make('email')->label('E-mail do professor')->size('large'),
             ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('xlarge')->type('multiselect')->equals()
-                ->options(Disciplina::all()->mapWithKeys(fn(Disciplina $disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso->nome}"])->toArray()),
+                ->options(Disciplina::with('curso')->get()->mapWithKeys(fn(Disciplina $disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso->nome}"])->toArray()),
         ];
     }
 
