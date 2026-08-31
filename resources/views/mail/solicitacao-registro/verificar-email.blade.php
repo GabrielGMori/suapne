@@ -9,6 +9,8 @@ Use o código abaixo para verificar seu e-mail e confirmar seu cadastro no SUAPN
 # {{ $code }}
 </x-mail::panel>
 
-**Atenção:** Caso você não tenha feito esta solicitação, pode ignorar este e-mail com segurança.
+Caso você não tenha feito esta solicitação, pode ignorar este e-mail com segurança.
+
+**Atenção:** O SUAPNE só pode ser acessado em um computador ligado à rede do IFPR Campus Curitiba.
 
 </x-mail::message>

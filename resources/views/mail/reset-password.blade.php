@@ -11,6 +11,8 @@ Modificar Senha
 
 Este link expira em 60 minutos.
 
-**Atenção:** Caso você não tenha feito esta solicitação, pode ignorar este e-mail com segurança.
+Caso você não tenha feito esta solicitação, pode ignorar este e-mail com segurança.
+
+**Atenção:** O SUAPNE só pode ser acessado em um computador ligado à rede do IFPR Campus Curitiba.
 
 </x-mail::message>

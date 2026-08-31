@@ -11,6 +11,8 @@ Você pode agora logar em usa conta acessando o SUAPNE em um computador ligado �
 Página de login
 </x-mail::button>
 
-**Atenção:** Caso você não tenha feito esta solicitação, isso pode indicar que sua conta de e-mail foi acessada por terceiros. Recomendamos verificar a segurança do seu e-mail e, se necessário, alterar sua senha.
+Caso você não tenha feito esta solicitação, isso pode indicar que sua conta de e-mail foi acessada por terceiros. Recomendamos verificar a segurança do seu e-mail e, se necessário, alterar sua senha.
+
+**Atenção:** O SUAPNE só pode ser acessado em um computador ligado à rede do IFPR Campus Curitiba.
 
 </x-mail::message>
