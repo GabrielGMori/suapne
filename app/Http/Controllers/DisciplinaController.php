@@ -1,64 +1,55 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Requests\DisciplinaRequest;
 use App\Models\Disciplina;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class DisciplinaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $disciplinas = Disciplina::paginate(10);
+        abort_unless($request->user()->can('viewAny', Disciplina::class), 404);
 
-        return view('disciplinas.index',  ['disciplinas' => $disciplinas]);
+        return view('disciplinas.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
+        abort_unless($request->user()->can('create', Disciplina::class), 404);
+
         return view('disciplinas.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-  public function store(DisciplinaRequest $request)
+    public function store(DisciplinaRequest $request) : RedirectResponse
     {
+        abort_unless($request->user()->can('create', Disciplina::class), 404);
+
         Disciplina::create($request->validated());
 
-        return redirect()->route('disciplinas.index')->with('status', 'Disciplina cadastrada com sucesso!');;
+        return redirect()->route('disciplinas.index')->with('status', 'Disciplina cadastrada com sucesso!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Disciplina $disciplina)
+    public function edit(Request $request, Disciplina $disciplina)
     {
+        abort_unless($request->user()->can('update', $disciplina), 404);
+
         return view('disciplinas.form', ['disciplina' => $disciplina]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(DisciplinaRequest $request, Disciplina $disciplina)
+    public function update(DisciplinaRequest $request, Disciplina $disciplina) : RedirectResponse
     {
+        abort_unless($request->user()->can('update', $disciplina), 404);
+
         $disciplina->update($request->validated());
 
         return redirect()->route('disciplinas.index')->with('status', 'Disciplina atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Disciplina $disciplina)
+    public function destroy(Request $request, Disciplina $disciplina)
     {
-
+        abort_unless($request->user()->can('delete', $disciplina), 404);
     }
 };

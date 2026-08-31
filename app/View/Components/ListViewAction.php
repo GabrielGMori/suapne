@@ -7,15 +7,22 @@ use function in_array;
 class ListViewAction
 {
     private string|Closure $url;
+    private string|Closure $defaultUrl;
     private string|Closure|null $method = null;
     private string|Closure $icon    = 'open_in_new';
     private string|Closure $color   = 'transparent';
     private bool|Closure $confirm   = false;
-    private string $confirmMessage = '';
+    private bool|Closure $filledConfirm = false;
+    private string|Closure $confirmMessage = '';
+    private bool|Closure $hasTextarea = false;
+    private string|Closure $textareaName = 'observacao';
+    private string|Closure $textareaLabel = 'Observação';
+    private string|Closure|null $textareaPlaceholder = null;
 
     private function __construct(string|Closure $url)
     {
         $this->url = $url;
+        $this->defaultUrl = $url;
     }
 
     public static function make(string|Closure $url): static
@@ -41,15 +48,56 @@ class ListViewAction
         return $this;
     }
 
-    public function confirm(bool|Closure $confirm): static
+    public function confirm(bool|Closure $confirm = true): static
     {
         $this->confirm = $confirm;
         return $this;
     }
 
-    public function confirmMessage(string $message): static
+    public function filledConfirm(bool|Closure $filled = true): static
+    {
+        $this->filledConfirm = $filled;
+        return $this;
+    }
+
+    public function confirmMessage(string|Closure $message): static
     {
         $this->confirmMessage = $message;
+        return $this;
+    }
+
+    public function textarea(
+        string|Closure $name = 'observacao',
+        string|Closure $label = 'Observação',
+        string|Closure|null $placeholder = null,
+        bool|Closure $condition = true
+    ): static {
+        $this->hasTextarea = $condition;
+        $this->textareaName = $name;
+        $this->textareaLabel = $label;
+        $this->textareaPlaceholder = $placeholder;
+        return $this;
+    }
+
+    public function restoreOnTrashed(string|Closure $restoreUrl, ?string $confirmMessage = null): static
+    {
+        $this->url = function (object $item) use ($restoreUrl) {
+            if (!method_exists($item, 'trashed') || !$item->trashed()) {
+                return is_callable($this->defaultUrl) ? ($this->defaultUrl)($item) : $this->defaultUrl;
+            }
+
+            return is_callable($restoreUrl) ? $restoreUrl($item) : $restoreUrl;
+        };
+
+        $this->method = fn(object $item) => $item->trashed() ? 'POST' : 'GET';
+        $this->icon = fn(object $item) => $item->trashed() ? 'restore' : 'open_in_new';
+        $this->color = fn(object $item) => $item->trashed() ? 'primary' : 'transparent';
+        $this->confirm = fn(object $item) => $item->trashed();
+
+        if ($confirmMessage !== null) {
+            $this->confirmMessage = $confirmMessage;
+        }
+
         return $this;
     }
 
@@ -60,5 +108,10 @@ class ListViewAction
     public function getMethod(object $item): ?string        { return is_callable($this->method) ? strtoupper(($this->method)($item)) : $this->method; }
     public function getIcon(object $item): string           { return is_callable($this->icon) ? ($this->icon)($item) : $this->icon; }
     public function getColor(object $item): string          { return is_callable($this->color) ? ($this->color)($item) : $this->color; }
-    public function getConfirmMessage(): string          { return $this->confirmMessage; }
+    public function isFilledConfirm($item): string          { return is_callable($this->filledConfirm) ? ($this->filledConfirm)($item) : $this->filledConfirm; }
+    public function getConfirmMessage($item): string          { return is_callable($this->confirmMessage) ? ($this->confirmMessage)($item) : $this->confirmMessage; }
+    public function hasTextarea(object $item): bool         { return is_callable($this->hasTextarea) ? ($this->hasTextarea)($item) : (bool)$this->hasTextarea; }
+    public function getTextareaName(object $item): string   { return is_callable($this->textareaName) ? ($this->textareaName)($item) : $this->textareaName; }
+    public function getTextareaLabel(object $item): string  { return is_callable($this->textareaLabel) ? ($this->textareaLabel)($item) : $this->textareaLabel; }
+    public function getTextareaPlaceholder(object $item): ?string { return is_callable($this->textareaPlaceholder) ? ($this->textareaPlaceholder)($item) : $this->textareaPlaceholder; }
 }

@@ -4,9 +4,8 @@
             @csrf
 
             <div class="flex flex-col gap-2 mb-3">
-                <livewire:form.input label="E-mail:" name="email" placeholder="Digite seu e-mail"/>
-                <livewire:form.input type="password_forgot" label="Senha:" name="password"
-                                     placeholder="Digite sua senha"/>
+                <x-form.input label="E-mail:" name="email" placeholder="Digite seu e-mail"/>
+                <x-form.input type="password_forgot" label="Senha:" name="password" placeholder="Digite sua senha"/>
             </div>
 
             @error('credentials') <p class="text-error text-center">{{$message}}</p> @enderror
@@ -16,7 +15,7 @@
 
         <div class="flex flex-col w-full">
             <p class="text-body-small text-white">Não possui uma conta?</p>
-            <x-button label="Solicitar cadastro" type="link" href="{{ route('cadastro.enviado') }}" size="full"/>
+            <x-button label="Solicitar cadastro" type="link" href="{{ route('cadastro.index') }}" size="full"/>
         </div>
     </x-auth-card>
 </x-layouts.auth>

@@ -8,25 +8,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CursoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return $this->user()->can('create', Curso::class);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $curso = $this->route('curso');
 
         return [
-            'nome' => ['required','string', 'max:200'],
+            'nome' => ['required','string', 'max:50'],
             'quantidade_periodos' => ['required','integer', 'min:1'],
         ];
     }

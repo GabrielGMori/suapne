@@ -19,10 +19,10 @@
     @endif
 
     <div class="form-control-wrap">
-        <input 
+        <input
             {{ $attributes->merge(['class' => $classes . ($error ? ' form-control-error' : '')]) }}
-            id="{{ $id }}" 
-            type="file" 
+            id="{{ $id }}"
+            type="file"
         />
 
         <p wire:loading wire:target="{{ $attributes->wire('model')->value() }}">
@@ -32,7 +32,7 @@
 
     <div class="h-5">
         @if ($error)
-            <p class="text-red text-center form-control-{{ $size }} self-center text-body-small">
+            <p class="text-error text-center form-control-{{ $size }} self-center text-body-small">
                 {{ $error }}
             </p>
         @endif

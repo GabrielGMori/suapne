@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AtendimentoSemanalRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return $this->user()->can('create',AtendimentoSemanal::class);
@@ -24,20 +21,17 @@ class AtendimentoSemanalRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $atendimento = $this->route('atendimentos');
 
         return [
-            'user_id' => ['required','integer','exists:users,id'],
-            'estudante_id' => ['required','integer','exists:estudantes,id'],
-            'local' => ['required','string'],
-            'data' => ['required','date'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
+            'local' => ['required', 'string', 'max:100'],
+            'data' => ['required', 'date'],
+            'campos' => ['required', 'array'],
+
             'campos.perfilDoEstudante' => ['required','string'],
             'campos.registroDoAtendimento' => ['required','string'],
             'campos.encaminhamentos' => ['required','string'],

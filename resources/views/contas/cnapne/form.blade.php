@@ -1,23 +1,43 @@
+@props(['user'])
+
+@php
+    use App\Enums\RoleEnum;
+
+    $isAuthUser = $user->id === Auth::user()->id;
+@endphp
+
 <x-layouts.main title="Editar conta da CNAPNE">
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small ">Dados da conta da CNAPNE</h2>
-        <hr class="text-on-surface mx-3"/>
-        <div class="grid grid-cols-3 ml-15">
-            <div class="grid grid-cols-1 gap-4">
-                <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário" class="h-50 w-50 object-cover rounded-full shrink-0">
-                <x-button label="Enviar arquivo" color="tertiary" icon="upload_file" iconPos="left"/>
-                <x-button label="Remover imagem" color="red"/>
-            </div>
-            <div class="gap-4">
-                <livewire:form.input type="text" label="Nome" appearance="outlined" disabled/>
-            </div>
-            <div>
-                <livewire:form.input type="email" label="E-mail" appearance="outlined" disabled/>
+    <form action="{{ route('contas.cnapne.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PATCH')
+
+        <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
+            <h2 class="text-display-small">Dados da conta da CNAPNE</h2>
+            <hr class="text-on-surface mb-10" />
+
+            <div class="grid grid-cols-3">
+                <livewire:avatar-upload :default-img-path="old('avatar', $user?->avatar)" class="row-span-3" />
+                <x-form.input name="nome" label="Nome" appearance="outlined" :value="$user->name"
+                    size="large" />
+                <x-form.input type="email" name="email" label="E-mail" appearance="outlined" :value="$user->email"
+                    size="large" />
+
+                <div>
+                    <livewire:form.select name="role" label="Função" appearance="outlined" :options="[
+                        RoleEnum::TECNICO->value => RoleEnum::TECNICO->label(),
+                        RoleEnum::DOCENTE_ESPECIAL->value => RoleEnum::DOCENTE_ESPECIAL->label()
+                    ]" :value="$user->role->value" :disabled="$isAuthUser" />
+
+                    @if($isAuthUser)
+                        <p class="text-body-small">Não é possível mudar a função da conta sendo utilizada no momento</p>
+                    @endif
+                </div>
             </div>
         </div>
+
+        <div class="flex justify-end gap-2">
+            <x-button.cancel fallback="contas.cnapne.index" />
+            <x-button label="Salvar alterações" type="submit" color="primary" />
         </div>
-    <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('contas.cnapne.index') }}" color="red"/>
-        <x-button label="Registrar (Em breve)" disabled/>
-    </div>
+    </form>
 </x-layouts.main>

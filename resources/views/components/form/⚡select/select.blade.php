@@ -1,7 +1,7 @@
 @php
-    $baseClass = "form-control form-control-{$appearance} form-control-{$size}";
+    $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/30' : '');
     $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
-    $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '');
+    $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '') . ($disabled ? ' hidden' : '');
 @endphp
 
 <div class="form-field {{ $size === 'full' ? '' : 'w-max' }}">
@@ -11,57 +11,76 @@
 
     <div class="form-control-wrap">
         <div class="select form-control-{{ $size }}" role="combobox" aria-haspopup="listbox" tabindex="0"
-            x-data="formSelectData(@js($options, JSON_THROW_ON_ERROR), @js($isMultiple, JSON_THROW_ON_ERROR), @entangle('selectedItems'))"
-            x-init="
+            aria-disabled="{{ $disabled ? 'true' : 'false' }}"
+            x-data="formSelectData(
+                @js($options, JSON_THROW_ON_ERROR),
+                @js($isMultiple, JSON_THROW_ON_ERROR),
+                @js($disabled, JSON_THROW_ON_ERROR)),
+                $wire
+            " x-init="
                 $watch('isOpen', v => {
-                    if (! v) { searchQuery = ''; resetNextType = false; highlightedIndex = 0; }
+                    if ($refs.menu) $refs.menu.scrollTop = 0;
+                    if (! v) {
+                        searchQuery = '';
+                        resetNextType = false;
+                        highlightedIndex = 0;
+                        return;
+                    }
                 });
                 $watch('searchQuery', () => {
                     highlightedIndex = 0;
                 });
+                $wire.on('updated-options', ({opt}) => {
+                    { options = normalizeOptions(opt) }
+                });
             " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
             <button
                 type="button"
+                @disabled($disabled)
                 class="select-control {{ $baseClass }} {{ $name && $errors->has($this->resolvedErrorName()) ? 'form-control-error' : ''}}"
                 x-on:click="isOpen = !isOpen"
             >
                 <div x-show="selected.length > 0" class="w-full text-left">
-                    <template x-if="isMultiple">
+                    @if ($isMultiple && $submittedName !== '')
                         <div class="select-chips">
                             <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
-                                    <button type="button" class="select-chip-remove"
-                                        x-on:click.stop="removeOption(item.value)"
-                                        :aria-label="'Remover ' + item.label">&times;</button>
+                                    @if(!$disabled)
+                                        <button type="button" class="select-chip-remove"
+                                            x-on:click.stop="removeOption(item.value)"
+                                            :aria-label="'Remover ' + item.label">&times;</button>
+                                    @endif
                                     <span x-text="item.label" :title="item.label"></span>
                                 </span>
                             </template>
                         </div>
-                    </template>
+                    @endif
 
-                    <template x-if="!isMultiple">
+                    @if (!$isMultiple)
                         <span class="block truncate" x-text="labelMap[selected[0]] ?? selected[0]"></span>
-                    </template>
+                    @endif
                 </div>
 
                 <span x-show="selected.length === 0" class="text-black/40">{{ $placeholder }}</span>
             </button>
 
-            <button type="button" class="select-clear"
-                x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
-                x-on:click="clearSelections()" aria-label="Limpar seleção">&times;
-            </button>
+            @if(!$disabled)
+                <button type="button" class="select-clear"
+                    x-show="selected.length > 0 && (isMultiple || {{ $clearable ? 'true' : 'false' }})"
+                    x-on:click="clearSelections()" aria-label="Limpar seleção">&times;
+                </button>
+            @endif
 
             <div x-show="isOpen" x-cloak x-ref="menu" class="select-menu" role="listbox"
                 :aria-multiselectable="isMultiple">
-                <div x-show="searchQuery.length > 0" class="px-3 py-2 text-sm border-b bg-black/5">
+                <div x-show="searchQuery.length > 0" class="px-3 py-2 text-sm border-b sticky top-0 z-10 bg-surface">
                     Pesquisando por:
                     <span class="font-medium" x-text="searchQuery"></span>
                 </div>
 
                 <template x-if="displayOptions.length === 0">
                     <div class="select-option text-black/50 cursor-not-allowed" role="option" aria-disabled="true">
-                        Sem resultados
+                        {{ $noResultMessage }}
                     </div>
                 </template>
 
@@ -69,7 +88,7 @@
                     <button type="button" class="select-option" role="option" :aria-selected="isSelected(option.value)"
                         x-bind:class="{
                             'select-option-selected': isSelected(option.value),
-                            'bg-black/5': highlightedIndex === index
+                            'select-option-highlighted': highlightedIndex === index
                         }" x-on:click="toggleOption(option)" x-on:mouseenter="highlightedIndex = index">
                         <span x-text="option.label"></span>
                         @if ($isMultiple)
@@ -100,23 +119,45 @@
 
     <div class="h-5">
         @error($this->resolvedErrorName())
-            <p class="text-red text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
+            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
     </div>
 </div>
 
 <script>
-    window.formSelectData = function (options, isMultiple, selected) {
+    window.formSelectData = function (options, isMultiple, disabled) {
+        const normalizeOptions = (options) => {
+            if (!Array.isArray(options)) {
+                return Object.entries(options ?? {}).map(([value, label]) => ({ value, label }));
+            }
+
+            return options.map((option) => {
+                if (option && typeof option === 'object' && 'value' in option && 'label' in option) {
+                    return option;
+                }
+
+                return { value: option, label: option };
+            });
+        };
+
         return {
             isOpen: false,
             searchQuery: '',
-            searchTimeout: null,
             resetNextType: false,
             highlightedIndex: 0,
             errorDismissed: false,
-            selected,
-            options,
+            normalizeOptions,
+            options: normalizeOptions(options),
             isMultiple,
+            disabled,
+
+            get selected() {
+                return this.$wire.selectedItems;
+            },
+
+            set selected(value) {
+                this.$wire.selectedItems = value;
+            },
 
             get selectedSet() {
                 return new Set(this.selected);
@@ -187,6 +228,8 @@
             },
 
             toggleOption(opt) {
+                if (this.disabled) return;
+
                 if (this.isMultiple) {
                     this.selected = this.isSelected(opt.value)
                         ? this.selected.filter(v => v !== opt.value)
@@ -200,19 +243,19 @@
             },
 
             removeOption(value) {
+                if (this.disabled) return;
 
                 this.selected = this.selected.filter(v => v !== value);
             },
 
             clearSelections() {
+                if (this.disabled) return;
 
                 this.selected = [];
             },
 
             resetSearch() {
                 this.resetNextType = true;
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = null;
             },
 
             scrollToHighlighted() {
@@ -226,18 +269,15 @@
             },
 
             handleKeydown(e) {
+                if (this.disabled) return;
+
                 if (e.key === 'Backspace') {
                     if (this.searchQuery.length > 0) {
                         e.preventDefault();
                         this.searchQuery = this.searchQuery.slice(0, -1);
                         this.isOpen = true;
-                        clearTimeout(this.searchTimeout);
                         if (this.searchQuery.length === 0) {
                             this.resetNextType = true;
-                        } else {
-                            this.searchTimeout = setTimeout(() => {
-                                this.resetNextType = true;
-                            }, 1000);
                         }
                     }
                     return;
@@ -246,13 +286,14 @@
                     if (!this.isOpen) { e.preventDefault(); this.isOpen = true; return; }
                     e.preventDefault();
                     if (e.key === 'ArrowDown' && this.displayOptions.length > 0) {
-                        this.highlightedIndex = (this.highlightedIndex + 1) % this.displayOptions.length;
+                        this.highlightedIndex = Math.min(
+                            this.highlightedIndex + 1,
+                            this.displayOptions.length - 1,
+                        );
                         this.scrollToHighlighted();
                     }
                     if (e.key === 'ArrowUp' && this.displayOptions.length > 0) {
-                        this.highlightedIndex = this.highlightedIndex - 1 < 0
-                            ? this.displayOptions.length - 1
-                            : this.highlightedIndex - 1;
+                        this.highlightedIndex = Math.max(this.highlightedIndex - 1, 0);
                         this.scrollToHighlighted();
                     }
                     if (e.key === 'Enter' && this.displayOptions.length > 0) {
@@ -264,8 +305,6 @@
                 if (this.resetNextType) { this.searchQuery = e.key; this.resetNextType = false; }
                 else { this.searchQuery += e.key; }
                 this.isOpen = true;
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = setTimeout(() => { this.resetNextType = true; }, 1000);
             }
         };
     };

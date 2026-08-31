@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->string('nome', 50);
             $table->text('ementa');
+            $table->integer('curso_periodo')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

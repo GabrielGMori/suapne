@@ -1,24 +1,35 @@
+@props(['user'])
+
+@php
+    use App\Models\Disciplina;
+
+    $currDisciplinas = $user->disciplinas->map(fn($disc)=>$disc->id)->toArray();
+    $disciplinas = Disciplina::all()->mapWithKeys(fn($disc)=>[$disc->id => $disc->nome." - ".$disc->curso])->toArray();
+@endphp
+
 <x-layouts.main title="Editar conta de professor">
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">Dados do professor</h2>
-        <hr>
+    <form action="{{ route('contas.professor.update', $user->id) }}" method="POST">
+        @csrf
+        @method('PATCH')
+
+        <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
+            <h2 class="text-display-small">Dados do professor</h2>
+            <hr class="text-on-surface mb-10" />
+
             <div class="grid grid-cols-3 ml-15">
-                <div class="grid grid-cols-1 gap-4">
-                    <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário" class="h-50 w-50 object-cover rounded-full shrink-0">
-                    <x-button label="Enviar arquivo" color="tertiary" icon="upload_file" iconPos="left"/>
-                    <x-button label="Remover imagem" color="red"/>
-                </div>
-                <div class="flex flex-col gap-4">
-                    <livewire:form.input label="Nome" appearance="outlined" disabled/>
-                    <livewire:form.input type="multiselect" label="Disciplinas" appearance="outlined" disabled />
-                </div>
-                <div>
-                    <livewire:form.input type="email" label="E-mail" appearance="outlined" disabled/>
-                </div>
+                <livewire:avatar-upload :default-img-path="old('avatar', $user?->avatar)" class="row-span-3" />
+                <x-form.input name="nome" label="Nome" appearance="outlined" :value="$user->name"
+                    size="large" />
+                <x-form.input type="email" name="email" label="E-mail" appearance="outlined" :value="$user->email"
+                    size="large" />
+
+                <livewire:form.select type="multiselect" name="disciplinas" appearance="outlined" size="xlarge"
+                :value="$currDisciplinas" :options="$disciplinas" />
             </div>
         </div>
-    <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('contas.professor.index') }}" color="red"/>
-        <x-button label="Registrar (Em breve)" disabled/>
-    </div>
+        <div class="flex justify-end gap-2">
+            <x-button.cancel fallback="contas.professor.index" />
+            <x-button label="Salvar alterações" type="submit" color="primary" />
+        </div>
+    </form>
 </x-layouts.main>

@@ -11,17 +11,19 @@ use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class DisciplinaTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return Disciplina::query();
+        return Disciplina::query()->latest();
     }
 
     public function title(): ?string { return 'Disciplinas registradas'; }
+    public function canCreate(): bool { return Auth::user()->can('create', Disciplina::class); }
     public function createUrl(): ?string { return route('disciplinas.create'); }
-    public function createLabel(): ?string { return 'Cadastrar Novo'; }
+    public function createLabel(): ?string { return 'Cadastrar Nova'; }
     public function emptyMessage(): string { return 'Nenhuma disciplina foi encontrada'; }
     public function icon(): string|\Closure { return "book"; }
 
@@ -30,6 +32,7 @@ class DisciplinaTable extends ListViewConfig
         return [
             ListViewColumn::make('nome')->label('Componente curricular')->size("large"),
             ListViewColumn::make('curso.nome')->label('Curso')->size("large"),
+            ListViewColumn::make('curso_periodo')->label('Período')->size("small"),
             ListViewColumn::make('ementa')->label('Ementa')->size("large")
             ->format(fn($value) => view('components.modal.simple-text', [
                 'label' => 'Ver ementa',

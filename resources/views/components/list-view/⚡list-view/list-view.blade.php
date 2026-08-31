@@ -52,7 +52,7 @@
                         </div>
 
                         @foreach ($columns as $column)
-                            <div class="list-view-size-{{ $column->getSize() }} text-center">
+                            <div class="list-view-size-{{ $column->getSize() }} text-center text-body-medium">
                                 {{ $column->getFormattedValue($item) }}
                             </div>
                         @endforeach
@@ -61,31 +61,47 @@
                             <div class="min-w-40 text-center flex items-center justify-center gap-2">
                                 @foreach ($actions as $action)
                                     @if($action->needsConfirmation($item))
-                                        <livewire:modal color="transparent" :icon="$action->getIcon($item)">
-                                            <p class="mb-10 text-body-large">{{ $action->getConfirmMessage() }}</p>
-                                            <div class="flex justify-end gap-3 mb-2">
-                                                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                                    @endif
-
-                                    @if(!$action->isLink($item))
-                                        <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
-                                            @if($action->needsDirective($item))
-                                                @method($action->getMethod($item))
+                                        <x-modal color="{{ $action->isFilledConfirm($item) ? $action->getColor($item) : 'transparent' }}" :icon="$action->getIcon($item)" title="Confirmar">
+                                            @if(!$action->isLink($item))
+                                                <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
+                                                    @csrf
+                                                    @if($action->needsDirective($item))
+                                                        @method($action->getMethod($item))
+                                                    @endif
                                             @endif
-                                            @csrf
-                                    @endif
 
-                                    <x-button :label="$action->needsConfirmation($item) ? 'Confirmar' : null" :size="$action->needsConfirmation($item) ? 'medium' : 'dynamic'"
-                                        :type="$action->isLink($item) ? 'link' : 'submit'" :color="$action->getColor($item)"
-                                        :icon="!$action->needsConfirmation($item) ? $action->getIcon($item) : null" :href="$action->getUrl($item)" />
+                                            <p class="{{ $action->hasTextarea($item) ? 'mb-4' : 'mb-10' }} text-body-large">{{ $action->getConfirmMessage($item) }}</p>
 
-                                    @if(!$action->isLink($item))
-                                        </form>
-                                    @endif
+                                            @if($action->hasTextarea($item))
+                                                <div class="mb-6 text-left">
+                                                    <x-form.input
+                                                        type="textarea"
+                                                        name="{{ $action->getTextareaName($item) }}"
+                                                        label="{{ $action->getTextareaLabel($item) }}"
+                                                        placeholder="{{ $action->getTextareaPlaceholder($item) }}"
+                                                        appearance="outlined"
+                                                        size="full"
+                                                    />
+                                                </div>
+                                            @endif
 
-                                    @if($action->needsConfirmation($item))
+                                            <div class="flex justify-center gap-3 mb-2">
+                                                <x-button label="Cancelar" color="secondary" type="button" x-on:click="show=false" />
+                                                <x-button
+                                                    label="Confirmar"
+                                                    size="medium"
+                                                    :type="$action->isLink($item) ? 'link' : 'submit'"
+                                                    :color="$action->getColor($item)"
+                                                    :href="$action->isLink($item) ? $action->getUrl($item) : null"
+                                                />
                                             </div>
-                                        </livewire:modal>
+
+                                            @if(!$action->isLink($item))
+                                                </form>
+                                            @endif
+                                        </x-modal>
+                                    @else
+                                        @include('components.list-view.⚡list-view.action-button', ['action' => $action])
                                     @endif
                                 @endforeach
                             </div>
@@ -101,7 +117,7 @@
 
     @if(method_exists($items, 'total') && $items->total() > 0)
         <div class="list-view-pagination">
-            {{ $items->links('components.paginacao') }}
+            {{ $items->links('components.paginacao.paginacao') }}
         </div>
     @endif
 </div>

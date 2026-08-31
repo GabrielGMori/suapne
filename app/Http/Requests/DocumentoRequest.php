@@ -8,28 +8,20 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DocumentoRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         $planosFlexibilizacao = $this->route('planos-flexibilizacao');
 
         return [
             'documentos' => ['required', 'array', 'min:1'],
-            'documentos.*.nome' => ['required', 'string', 'max:255'],
-            'documentos.*.path' => ['required', 'string'],
-            'documentos.*.extensao' => ['required', 'string'],
+            'documentos.*.nome_arquivo' => ['required', 'string', 'max:200'],
+            'documentos.*.path' => ['required', 'string', 'max:200'],
+            'documentos.*.extensao' => ['required', 'string', 'max:10'],
         ];
     }
 }

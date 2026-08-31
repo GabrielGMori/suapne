@@ -2,70 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PlanoFlexibilizacaoCurricular;
-use Illuminate\Http\Request;
 use App\Http\Requests\PlanoFlexibilizacaoCurricularRequest;
+use App\Models\Estudante;
+use App\Models\PlanoFlexibilizacaoCurricular;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class PlanoFlexibilizacaoCurricularController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $planos = PlanoFlexibilizacaoCurricular::paginate(10);
-        return view('planos-flexibilizacao.index', ['planos' => $planos]);
+        abort_unless($request->user()->can('viewAny', PlanoFlexibilizacaoCurricular::class), 404);
+
+        $count = Estudante::doesntHave('planosFlexibilizacaoCurricular')->count();
+
+        return view('planos-flexibilizacao.index', ['count' => $count]);
     }
 
-     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request, ?Estudante $estudante = null)
     {
-        return view('planos-flexibilizacao.form');
+        abort_unless($request->user()->can('create', PlanoFlexibilizacaoCurricular::class), 404);
+
+        return view('planos-flexibilizacao.form', ['estudanteId' => $estudante?->id]);
     }
 
-     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(PlanoFlexibilizacaoCurricularRequest $request) : RedirectResponse
+    public function store(PlanoFlexibilizacaoCurricularRequest $request): RedirectResponse
     {
+        abort_unless($request->user()->can('create', PlanoFlexibilizacaoCurricular::class), 404);
+
         PlanoFlexibilizacaoCurricular::create($request->validated());
 
         return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(PlanoFlexibilizacaoCurricular $planosFlexibilizacao)
+    public function show(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
-        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planosFlexibilizacao]);
+        abort_unless($request->user()->can('view', $planoFlexibilizacao), 404);
+
+        return view('planos-flexibilizacao.show', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit()
-    {   
-        //
+    public function edit(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    {
+        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
+        return view('planos-flexibilizacao.form', ['planoFlexibilizacao' => $planoFlexibilizacao]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update()
+    public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao): RedirectResponse
     {
-        //
+        abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->update($request->validated());
+
+        return redirect()->route('planos-flexibilizacao.index', ['planoFlexibilizacao' => $planoFlexibilizacao])->with('status', 'Plano de Flexibilização atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function destroy(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
     {
-        //
+        abort_unless($request->user()->can('delete', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->delete();
+
+        return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização excluído com sucesso!');
+    }
+
+    public function restore(Request $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    {
+        abort_unless($request->user()->can('restore', $planoFlexibilizacao), 404);
+        $planoFlexibilizacao->restore();
+
+        return redirect()->back()->with('status','Plano de Flexibilização restaurado com sucesso!');
+    }
+
+    public function exportPdf(PlanoFlexibilizacaoCurricular $planoFlexibilizacao)
+    {
+        return Pdf::loadView('planos-flexibilizacao.pdf', ['planoFlexibilizacao' => $planoFlexibilizacao])->stream($planoFlexibilizacao->estudante->nome.'.pdf');
     }
 }

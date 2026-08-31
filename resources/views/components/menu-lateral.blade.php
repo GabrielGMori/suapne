@@ -1,48 +1,65 @@
 @props([
-    'role' => 'docente_especial', // Define o role do usuário para mostrar os itens de navegação corretos. Pode ser: professor_regular|tecnico|docente_especial
-    'user' => null, // Nome do usuário logado para exibir no menu lateral
+    'user', // Usuário logado
 ])
 
 @php
-    use App\Enums\RoleEnum;
 
     $divider = ['divider' => true];
     $sidebarStorageKey = 'cnapne.sidebar.collapsed';
 
     $navItems = [
         ['label' => 'Início', 'href' => route('dashboard.index'), 'icon' => 'home'],
-        ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'],
     ];
 
-    if ($role === RoleEnum::PROFESSOR_REGULAR->value) {
-        $navItems = [...$navItems, ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment']];
+    if ($user->can('viewAny', App\Models\Estudante::class))
+        $navItems[] = ['label' => 'Estudantes', 'href' => route('estudantes.index'), 'icon' => 'school'];
+
+    if ($user->can('viewAny', App\Models\PlanoFlexibilizacaoCurricular::class))
+        $navItems[] = ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'];
+
+    if ($user->can('viewAny', App\Models\PlanoTrabalhoEstudante::class))
+        $navItems[] = ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment'];
+
+    if ($user->can('viewAny', App\Models\AtendimentoSemanal::class))
+        $navItems[] = ['label' => 'Atendimentos', 'href' => route('atendimentos.index'), 'icon' => 'article_person'];
+
+    $adminItems = [];
+
+    if ($user->can('viewAny', OwenIt\Auditing\Models\Audit::class))
+        $adminItems[] = ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history'];
+
+    if ($user->can('viewAny', App\Models\User::class))
+        $adminItems[] = ['label' => 'Contas da CNAPNE', 'href' => route('contas.cnapne.index'), 'icon' => 'server_person'];
+
+    if ($user->can('viewAny', App\Models\User::class))
+        $adminItems[] = ['label' => 'Contas de professores', 'href' => route('contas.professor.index'), 'icon' => 'person'];
+
+    if ($user->can('viewAny', App\Models\SolicitacaoRegistro::class))
+        $adminItems[] = ['label' => 'Solicitações de registro', 'href' => route('solicitacoes-registro.index'), 'icon' => 'pending_actions'];
+
+    if (!empty($adminItems)) {
+        $navItems = [...$navItems, $divider, ...$adminItems];
     }
 
-    if ($role === RoleEnum::TECNICO->value) {
-        $navItems = [...$navItems, ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history']];
+    $courseItems = [];
+
+    if ($user->can('viewAny', App\Models\Curso::class)) {
+        $courseItems[] = ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'];
     }
 
-    if ($role === RoleEnum::DOCENTE_ESPECIAL->value) {
-        $navItems = [
-            ...$navItems,
-            ['label' => 'Planos de flexibilização', 'href' => route('planos-flexibilizacao.index'), 'icon' => 'tune'],
-            ['label' => 'Planos de trabalho', 'href' => route('planos-trabalho.index'), 'icon' => 'assignment'],
-            ['label' => 'Atendimentos', 'href' => route('atendimentos.index'), 'icon' => 'article_person'],
-            $divider,
-            ['label' => 'Registro de auditoria', 'href' => route('registro-auditoria.index'), 'icon' => 'history'],
-            ['label' => 'Contas da CNAPNE', 'href' => route('contas.cnapne.index'), 'icon' => 'server_person'],
-            ['label' => 'Contas de professores', 'href' => route('contas.professor.index'), 'icon' => 'person'],
-            ['label' => 'Solicitações de registro', 'href' => route('solicitacoes-registro.index'), 'icon' => 'pending_actions'],
-            $divider,
-            ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'],
-            ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'],
-        ];
+    if ($user->can('viewAny', App\Models\Disciplina::class)) {
+        $courseItems[] = ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'];
     }
 
-     $navItems = [...$navItems,
-         $divider,
-         ['label' => 'Sair', 'href' => route('logout'), 'icon' => 'logout', 'red' => true, 'method' => 'POST'],
-     ];
+    if (!empty($courseItems)) {
+        $navItems = [...$navItems, $divider, ...$courseItems];
+    }
+
+    $navItems = [
+        ...$navItems,
+        $divider,
+        ['label' => 'Sair', 'href' => route('logout'), 'icon' => 'logout', 'red' => true, 'method' => 'POST'],
+    ];
 
     $dividerClasses = 'my-2 mx-1 border-t border-white/10';
     $navLinkClasses = 'w-full justify-start px-2 cursor-pointer
@@ -177,7 +194,7 @@
     x-bind:data-expanded="!collapsed ? 'true' : 'false'"
     data-compact="false"
     x-bind:data-compact="compact ? 'true' : 'false'"
-    {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-screen flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
+    {{ $attributes->merge(['class' => 'group/sidebar w-64 px-3 data-[expanded=false]:w-14 data-[expanded=false]:px-2 bg-secondary-container text-white sticky top-0 self-start h-[100vh] flex flex-col overflow-hidden shrink-0 transition-[width,padding] duration-300 ease-in-out']) }}>
 
     <a href="#"
        data-sidebar-logo-link
@@ -197,11 +214,11 @@
         <a href="#"
            data-sidebar-account
            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
-           title="{{ $user ?? 'Minha conta' }}">
-            <img src="{{ asset('storage/img/placeholder-user.png') }}" alt="Usuário"
+           title="{{ $user->nome }}">
+            <img src="{{ $user->avatar ? asset($user->avatar) : asset('storage/img/placeholder-user.png') }}" alt="Imagem do usuário"
                  class="h-10 w-10 object-cover rounded-full shrink-0">
             <span data-sidebar-label x-show="!collapsed"
-                  class="text-label-medium truncate">{{ $user ?? 'Minha conta' }}</span>
+                  class="text-label-medium truncate">{{ $user->nome }}</span>
         </a>
     </div>
 
@@ -219,25 +236,25 @@
                       data-sidebar-compact-link>
                     @csrf
                     <button type="submit" title="{{ $item['label'] }}" class="{{ $navLinkClasses }}">
-            @else
-                <a href="{{ $item['href'] ?? '#' }}" draggable="false"
-                   data-sidebar-compact-link
-                   title="{{ $item['label'] }}"
-                   class="{{ $navLinkClasses }}">
-            @endif
-                @if (isset($item['icon']))
-                    <x-icon
-                        class="{{($item['red'] ?? false) ? 'text-red group-hover:text-error pl-1' : 'text-primary group-hover:text-primary-accent'}} shrink-0"
-                        size="24">{{ $item['icon'] }}</x-icon>
-                @endif
-                <span data-sidebar-label x-show="!collapsed" class="truncate">
+                        @else
+                            <a href="{{ $item['href'] ?? '#' }}" draggable="false"
+                               data-sidebar-compact-link
+                               title="{{ $item['label'] }}"
+                               class="{{ $navLinkClasses }}">
+                                @endif
+                                @if (isset($item['icon']))
+                                    <x-icon
+                                        class="{{($item['red'] ?? false) ? 'text-red group-hover:text-error pl-1' : 'text-primary group-hover:text-primary-accent'}} shrink-0"
+                                        size="24">{{ $item['icon'] }}</x-icon>
+                                @endif
+                                <span data-sidebar-label x-show="!collapsed" class="truncate">
                     {{ $item['label'] }}
                 </span>
-            @if(($item['method'] ?? 'GET') !== 'GET')
+                            @if(($item['method'] ?? 'GET') !== 'GET')
                     </button>
                 </form>
-            @else
-                </a>
+                @else
+                    </a>
             @endif
         @endforeach
     </nav>

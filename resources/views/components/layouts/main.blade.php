@@ -1,12 +1,19 @@
-@props(['title' => 'SUAPNE', 'bg' => 'white', 'header' => null])
+@props([
+    'title' => 'SUAPNE',
+    'bg' => 'white',
+    'header' => null,
+])
 
 <x-layouts.app title="{{ $title }} - SUAPNE">
     <div class="flex flex-1">
-        <x-menu-lateral user="{{ Auth::user()->nome }}" role="{{ Auth::user()->role }}"/>
+        <div class="bg-secondary-container">
+            <x-menu-lateral :user="Auth::user()" />
+        </div>
 
         <main class="flex-1 bg-{{$bg}} mb-20">
             @if(session('status'))
-                <div class="flex items-center justify-center h-9 w-full text-center text-body-medium bg-primary-accent/20 text-primary-accent">
+                <div
+                    class="flex items-center justify-center h-9 w-full text-center text-body-medium bg-primary-accent/20 text-primary-accent">
                     {{ session('status') }}
                 </div>
             @endif
@@ -20,5 +27,5 @@
         </main>
     </div>
 
-    <x-footer/>
+    <x-footer />
 </x-layouts.app>

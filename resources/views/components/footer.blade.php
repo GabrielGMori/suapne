@@ -12,7 +12,7 @@
                 <h4 class="text-title-medium text-white mb-2">Sobre</h4>
                 <p class="text-body-medium text-on-surface leading-relaxed max-w-140">
                     O Sistema Unificado para Atendimento à Pessoas com
-                    Necessidades Específicas (SUAPNE) foi criado como projeto de
+                    Necessidades Específicas (SUAPNE) foi desenvolvido como projeto de
                     TCC de Informática no IFPR Campus Curitiba.
                 </p>
             </div>
@@ -23,7 +23,8 @@
                     <ul class="space-y-1">
                         <li><a href="{{ route('dashboard.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Início</a></li>
                         <li><a href="{{ route('estudantes.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Estudantes</a></li>
-                        <li><a href="{{ route('planos-trabalho.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Planos de Trabalho</a></li>
+                        <li><a href="{{ route('planos-trabalho.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">
+                            {{ Illuminate\Support\Facades\Auth::user()->role === App\Enums\RoleEnum::PROFESSOR_REGULAR ? 'Meus' : '' }} Planos de Trabalho</a></li>
                         <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Minha Conta</a></li>
                     </ul>
                 </div>
@@ -32,7 +33,7 @@
             <div>
                 <h4 class="text-title-medium text-white mb-2">Informações técnicas</h4>
                 <p class="text-body-medium text-on-surface">
-                    Última atualização: {{ now()->format('d/m/Y H:i') }}
+                    Última atualização: {{ now()->format('d/m/Y \à\s H:i') }}
                 </p>
             </div>
         </div>

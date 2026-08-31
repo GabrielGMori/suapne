@@ -11,14 +11,18 @@ use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 
 class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoFlexibilizacaoCurricular::query();
+        return PlanoFlexibilizacaoCurricular::query()->latest();
     }
     public function title(): ?string { return 'Planos de Flexibilização Curricular'; }
+    public function canCreate(): bool { return Auth::user()->can('create', PlanoFlexibilizacaoCurricular::class); }
     public function createUrl(): ?string { return route('planos-flexibilizacao.create'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de flexibilização foi encontrado'; }
@@ -29,7 +33,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large"),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->link(fn($item) => route('estudantes.show', $item)),
             ListViewColumn::make('estudante.curso')->label('Curso')->size('large'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
         ];
@@ -43,13 +47,14 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
                 ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $item->id])),
+            ListViewAction::make(static fn(PlanoFlexibilizacaoCurricular $item) => route('planos-flexibilizacao.show', ['planoFlexibilizacao' => $item->id]))->restoreOnTrashed(static fn(PlanoFlexibilizacaoCurricular $item)=> route('planos-flexibilizacao.restore',['planoFlexibilizacao' => $item]), 'Deseja restaurar este plano de flexibilização?'),
         ];
     }
 

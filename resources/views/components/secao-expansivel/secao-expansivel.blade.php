@@ -24,7 +24,7 @@
             @endif
 
             <div class="grid transition-[grid-template-rows] duration-300 ease-out" x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-                <div class="min-h-0 overflow-hidden">
+                <div class="min-h-0 overflow-hidden relative">
                     <hr class="mx-4 text-on-surface">
                     {{ $slot }}
                 </div>

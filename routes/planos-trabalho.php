@@ -1,11 +1,13 @@
 <?php
 
-Route::name('planos-trabalho.')->prefix('planos-trabalho')->group(function () {
-    Route::view('/', 'planos-trabalho.index')->name('index');
-    Route::view('/novo', 'planos-trabalho.form')->name('form');
-    Route::view('/preenchimento', 'planos-trabalho.preenchimento')->name('preenchimento');
-    Route::view('/previsualizacao', 'planos-trabalho.previsualizacao')->name('previsualizacao');
-    Route::view('/revisao', 'planos-trabalho.revisao')->name('revisao');
-    Route::get('/{id}/visualizar', static fn(int $id) => view("planos-trabalho.show", ['planoTrabalho' => App\Models\PlanoTrabalhoEstudante::find($id)]))->name('show');
-    
+use App\Http\Controllers\PlanoTrabalhoEstudanteController;
+
+Route::controller(PlanoTrabalhoEstudanteController::class)->name('planos-trabalho.')->prefix('/planos-trabalho')->group(function () {
+    Route::post('/preview', 'preview')->name('preview');
+    Route::post('/preview/change', 'changePreview')->name('change-preview');
+    Route::get('/novo/{estudante?}', 'create')->name('create');
+    Route::post('/{planoTrabalho}/restaurar', 'restore')->withTrashed()->name('restore');
+    Route::get('/{planoTrabalho}/exportar', 'exportPdf')->name('export-pdf');
 });
+
+Route::resource('planos-trabalho', PlanoTrabalhoEstudanteController::class)->except('create')->parameter('planos-trabalho', 'planoTrabalho');

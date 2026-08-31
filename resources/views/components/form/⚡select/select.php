@@ -1,26 +1,35 @@
 <?php
 
+use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 
 new class extends Component
 {
     #[Modelable]
     public array|string $selectedItems = [];
 
+    #[Reactive]
     public array  $options       = [];
+
     public bool   $isMultiple    = false;
     public bool   $clearable     = false;
     public string $name          = '';
     public ?string $label        = null;
     public string $appearance    = 'default';
     public string $size          = 'medium';
+    public string $noResultMessage = 'Sem resultados';
+
+    #[Reactive]
     public ?string $placeholder  = '';
-    public bool   $dispatchEvent = true;
+
+    #[Reactive]
+    public ?bool   $disabled      = false;
 
     public function mount(
         string  $type          = 'select',
-        array   $options       = [],
         mixed   $value         = null,
         string  $name          = '',
         ?string $label         = null,
@@ -28,7 +37,8 @@ new class extends Component
         string  $size          = 'medium',
         ?string $placeholder   = '',
         bool    $clearable     = false,
-        bool    $dispatchEvent = true,
+        bool    $disabled      = false,
+        string $noResultMessage = 'Sem resultados',
     ): void {
         $this->isMultiple    = $type === 'multiselect';
         $this->name          = $name;
@@ -37,32 +47,33 @@ new class extends Component
         $this->size          = $size;
         $this->placeholder   = $placeholder;
         $this->clearable     = $clearable;
-        $this->dispatchEvent = $dispatchEvent;
+        $this->disabled      = $disabled;
+        $this->noResultMessage = $noResultMessage;
 
-        // Preserve key => label pairs as [{value, label}] objects for Alpine
-        $this->options = collect($options)
-            ->map(fn($label, $key) => ['value' => (string) $key, 'label' => (string) $label])
-            ->values()
-            ->all();
-
-        $baseName = rtrim($name, '[]');
-        $resolved = ($value !== null && $value !== '')
-            ? $value
-            : (($baseName !== '') ? old($baseName) : null);
+        $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
+        $resolved = $oldName !== '' ? old($oldName, $value) : $value;
 
         $this->selectedItems = $this->normalize($resolved);
     }
 
-    public function updatedSelectedItems(): void
+    public function updatedOptions($opt): void
     {
-        $this->selectedItems = $this->normalize($this->selectedItems);
-        $this->emitChange();
+        $this->dispatch('updated-options', opt: $opt);
     }
 
     public function clear(): void
     {
+        if ($this->disabled) return;
+
         $this->selectedItems = [];
-        $this->emitChange();
+    }
+
+    #[On('select-all')]
+    public function selectAll(string $name): void
+    {
+        if ($this->disabled || !$this->isMultiple || $this->name !== $name) return;
+
+        $this->selectedItems = $this->normalize(array_keys($this->options));
     }
 
     private function normalize(mixed $value): array
@@ -76,17 +87,6 @@ new class extends Component
         }
 
         return [];
-    }
-
-    private function emitChange(): void
-    {
-        if (! $this->dispatchEvent) return;
-
-        $value = $this->isMultiple
-            ? $this->selectedItems
-            : ($this->selectedItems[0] ?? '');
-
-        $this->dispatch('form-input-updated', name: $this->name, value: $value);
     }
 
     public function resolvedErrorName(): string

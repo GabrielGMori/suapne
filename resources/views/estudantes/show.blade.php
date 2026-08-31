@@ -1,3 +1,5 @@
+@props(['estudante'])
+
 @php
     $displays = [
         [
@@ -9,60 +11,30 @@
             'Quant. de períodos do curso:' => $estudante->curso->quantidade_periodos,
             'E-mail pessoal:' => $estudante->email_pessoal,
             'E-mail acadêmico:' => $estudante->email_academico,
-            'Telefone:' => $estudante->telefone,
+            'Telefone:' => App\Support\Formatter::telefone($estudante->telefone),
             'Data de nascimento:' => $estudante->data_nascimento->format('d/m/Y'),
         ],
         [
             'Idade:' => $estudante->idade,
             'Situação acadêmica:' => $estudante->situacao->label(),
-            'CPF:' => $estudante->cpf,
+            'CPF:' => App\Support\Formatter::cpf($estudante->cpf),
             'Nacionalidade:' => $estudante->nacionalidade,
             'Naturalidade:' => $estudante->naturalidade,
             'Etnia:' => $estudante->etnia?->label(),
             'Sexo:' => $estudante->sexo->label(),
-            'empty' => '',
             'Nome do pai:' => $estudante->nome_pai,
-            'Telefone do pai:' => $estudante->telefone_pai,
+            'Telefone do pai:' => App\Support\Formatter::telefone($estudante->telefone_pai),
             'Nome da mãe:' => $estudante->nome_mae,
-            'Telefone da mãe:' => $estudante->telefone_mae,
+            'Telefone da mãe:' => App\Support\Formatter::telefone($estudante->telefone_mae),
             'Nome do responsável:' => $estudante->nome_responsavel,
-            'Telefone do responsável:' => $estudante->telefone_responsavel,
+            'Telefone do responsável:' => App\Support\Formatter::telefone($estudante->telefone_responsavel),
             'E-mail do responsável:' => $estudante->email_responsavel,
         ],
-    ]
+    ];
 @endphp
 
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
-    <x-secao-expansivel.bottom title="Dados Gerais">
-        @can('update', $estudante)
-            <x-slot:topActions>
-                <x-button type="link" href="{{ route('estudantes.edit', ['estudante' => $estudante]) }}" icon="edit"
-                    color="transparent" class="text-white" />
-            </x-slot:topActions>
-        @endcan
-
-        <div class="flex gap-20 justify-center items-center px-20">
-            <img src="{{ asset($estudante->avatar ?? 'storage/img/placeholder-user.png') }}"
-                class="h-50 w-50 object-cover rounded-full shrink-0" alt="{{ $estudante->avatar }}">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
-                @foreach ($displays[0] as $label => $value)
-                    <x-display-dado label="{{ $label }}" value="{{ $value }}" />
-                @endforeach
-            </div>
-        </div>
-
-        <x-slot:hidden>
-            <div class="flex gap-20 justify-center items-center px-20">
-                <div class="min-w-50"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 grow justify-items-stretch">
-                    @foreach ($displays[1] as $label => $value)
-                        <x-display-dado label="{{ $label }}" value="{{ $value }}" />
-                    @endforeach
-                </div>
-            </div>
-        </x-slot:hidden>
-    </x-secao-expansivel.bottom>
+    @include('estudantes.sections.dados-gerais', ['estudante' => $estudante, 'displays' => $displays])
 
     <div class="w-full flex justify-end my-4" x-data="{ expandAll: true }">
         <x-button type="button" x-on:click="expandAll = !expandAll; $dispatch('toggle-collapse', { expand: expandAll })"
@@ -75,240 +47,54 @@
         </x-button>
     </div>
 
-    <x-secao-expansivel title="Necessidades" class="mt-5">
-        <p class="p-5">{{ $estudante->necessidades }}</p>
-    </x-secao-expansivel>
+    @include('estudantes.sections.necessidades', ['estudante' => $estudante])
+    @include('estudantes.sections.observacoes', ['estudante' => $estudante])
+    @include('estudantes.sections.entrevistas', ['estudante' => $estudante])
+    @include('estudantes.sections.documentos', ['estudante' => $estudante])
+    @include('estudantes.sections.planos-flexibilizacao', ['estudante' => $estudante])
+    @include('estudantes.sections.planos-trabalho', ['estudante' => $estudante])
+    @include('estudantes.sections.atendimentos-semanais', ['estudante' => $estudante])
 
-    <x-secao-expansivel title="Observações" class="mt-5">
-        <x-slot:topActions>
-            <livewire:modal.stateful />
-        </x-slot:topActions>
-
-        <hr class="mx-4 text-on-surface">
-        <div class="grid transition-[grid-template-rows] duration-300 ease-out mb-2"
-            x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-            @if (count($estudante->observacoes) > 0)
-                <div class="flex flex-col gap-5 my-3">
-                    @foreach ($estudante->observacoes as $observacao)
-                        <div class="flex items-center justify-between">
-                            <div class="flex flex-col px-5">
-                                <div class="flex gap-1.5 items-center mb-0.5">
-                                    <p class="text-label-large">{{ $observacao->user->nome }}</p>
-                                    <p class="text-body-small text-secondary-accent">{{ $observacao->user->role->label() }}</p>
-                                    <p class="text-body-small text-secondary-accent">
-                                        {{ $observacao->created_at->format('d/m/Y H:i') }}
-                                    </p>
-                                </div>
-                                <p class="text-body-medium">{{ $observacao->observacao }}</p>
-                            </div>
-                            <div class="mr-5">
-                                <x-modal title="Remover observação" icon="delete" iconSize="1000" color="transparent">
-                                    <p class="mb-10 text-body-large">Tem certeza que deseja remover esta observação?
-                                        <br>Essa ação é irreversível.
-                                    </p>
-                                    <form
-                                        action="{{ route('estudantes.observacoes.destroy', ['estudante' => $estudante, 'observacaoEstudante' => $observacao]) }}"
-                                        method="POST" class="flex justify-end gap-3 mt-1 mb-2">
-                                        @method('DELETE')
-                                        @csrf
-                                        <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                                        <x-button label="Confirmar" type="submit" color="red" />
-                                    </form>
-                                </x-modal>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="p-5">Nenhuma observação registrada</p>
-            @endif
-    </x-secao-expansivel>
-
-    <x-secao-expansivel title="Entrevistas" class="mt-5">
-        <div class="p-5">
-            <p class="text-title-medium mb-2">Estudante</p>
-            @if ($estudante->entrevistaEstudante)
-                <x-documento name="Entrevista com o estudante" actionIcon="download" actionUrl="#" icon="edit_note">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->entrevistaEstudante->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->entrevistaEstudante->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
-                </x-documento>
-            @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
-            @endif
-            <p class="text-title-medium my-2">Familiar</p>
-            @if ($estudante->entrevistaFamiliar)
-                <x-documento name="Entrevista com familiar"
-                    actionUrl="{{route('estudantes.entrevistas-familiares.show', ['estudante' => $estudante, 'entrevistaFamiliar' => $estudante->entrevistaFamiliar])}}"
-                    icon="edit_note">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->entrevistaFamiliar->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->entrevistaFamiliar->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
-                </x-documento>
-            @else
-                <x-button.add href="{{route('estudantes.entrevistas-familiares.create', ['estudante' => $estudante])}}" />
-            @endif
-        </div>
-    </x-secao-expansivel>
-
-    <x-secao-expansivel title="Documentos" class="mt-5">
-        <div class="p-5">
-            <p class="text-title-medium mb-2">Laudo</p>
-            @if ($estudante->laudo)
-                <x-documento name="Laudo" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->laudo->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->laudo->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
-                </x-documento>
-            @else
-                <x-button.add
-                    href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'laudo'])}}" />
-            @endif
-            <p class="text-title-medium my-2">Estudo de Caso</p>
-            @if ($estudante->estudoDeCaso)
-                <x-documento name="Estudo de Caso" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->estudoDeCaso->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->estudoDeCaso->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
-                </x-documento>
-            @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'estudo_de_caso'])}}" />
-            @endif
-            <p class="text-title-medium my-2">Ficha CPAE</p>
-            @if ($estudante->fichaCpae)
-                <x-documento name="Ficha CPAE" actionIcon="download" actionUrl="#">
-                    <x-slot:metadata>
-                        <p>Enviada por: {{ $estudante->fichaCpae->user->nome }}</p>
-                        <p>Data de envio: {{ $estudante->fichaCpae->created_at->format('d/m/Y') }}</p>
-                    </x-slot:metadata>
-                </x-documento>
-            @else
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante, 'tipoDocumento' => 'ficha_cpae'])}}" />
-            @endif
-            <p class="text-title-medium my-2">Outros</p>
-            <div class="flex flex-col gap-2">
-                @foreach ($estudante->outrosDocumentos as $documento)
-                    <x-documento name="{{ $documento->nome . '.' . $documento->extensao }}">
-                        <x-slot:metadata>
-                            <p>Enviada por: {{ $documento->user->nome }}</p>
-                            <p>Data de envio: {{ $documento->created_at->format('d/m/Y m:i') }}</p>
-                            <x-button icon="download" color="transparent"
-                                @click="window.open('{{ Storage::disk('public')->url($documento->path) }}', '_blank')" />
-                        </x-slot:metadata>
-                    </x-documento>
-                @endforeach
-                <x-button.add href="{{route('estudantes.documentos.create', ['estudante' => $estudante])}}" />
-            </div>
-        </div>
-    </x-secao-expansivel>
-
-    <x-secao-expansivel title="Planos de Flexibilização Curricular" class="mt-5">
-        <div class="p-5 flex flex-col gap-2">
-            @if (count($estudante->planosFlexibilizacaoCurricular) > 0)
-                @foreach ($estudante->planosFlexibilizacaoCurricular as $plano)
-                    <x-documento name="{{ $plano->nome }}" icon="tune"
-                        actionUrl="{{route('planos-flexibilizacao.show', ['planos_flexibilizacao' => $plano])}}">
-                        <x-slot:metadata>
-                            <p>Criado por: {{ $plano->user->nome }}</p>
-                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
-                        </x-slot:metadata>
-                    </x-documento>
-                @endforeach
-            @else
-                <p>Nenhum plano foi criado no momento</p>
-                <x-button.add href="{{route('planos-flexibilizacao.create')}}" />
-            @endif
-        </div>
-
-        <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
-            <x-button icon="add" color="transparent"></x-button>
-        </x-slot:topActions>
-    </x-secao-expansivel>
-
-    <x-secao-expansivel title="Planos de Trabalho" class="mt-5">
-        <div class="p-5 flex flex-col gap-4">
-            @if (count($estudante->planosTrabalho) > 0)
+    @can('delete', $estudante)
+        <div class="flex justify-end gap-3 mt-5">
+            <x-modal title="Excluir Estudante" label="Excluir" icon="delete" color="red">
                 @php
-                    $planosPorAno = $estudante->planosTrabalho->groupBy(fn($plano) => $plano->created_at->format('Y'))->sortKeysDesc();
+                    $planosFlexibilizacao = count($estudante->planosFlexibilizacaoCurricular);
+                    $planosTrabalho = count($estudante->planosTrabalho);
+                    $atendimentos = count($estudante->atendimentosSemanais);
+                    $documentos = count($estudante->documentos->where('tipo', '!=', App\Enums\TipoDocumentoEnum::ENTREVISTA_ESTUDANTE->value));
+                    $entrevistas = ($estudante->entrevistaEstudante ? 1 : 0) + ($estudante->entrevistaFamiliar ? 1 : 0);
+                    $observacoes = count($estudante->observacoes);
                 @endphp
-                @foreach ($planosPorAno as $ano => $planos)
-                    <div x-data="{ expanded: true }" x-on:toggle-collapse.window="expanded = $event.detail.expand" class="p-2">
-                        <header class="flex justify-between items-center cursor-pointer select-none"
-                            x-on:click="expanded = !expanded">
-                            <p class="text-title-medium">{{ $ano }}</p>
-                            <button type="button"
-                                class="flex items-center text-black hover:opacity-70 transition-opacity cursor-pointer">
-                                <x-icon icon="keyboard_arrow_down" size="30" class="transition-transform duration-200"
-                                    x-bind:class="expanded ? 'rotate-180' : ''" />
-                            </button>
-                        </header>
-                        <div class="grid transition-[grid-template-rows] duration-300 ease-out"
-                            x-bind:class="expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-                            <div class="min-h-0 overflow-hidden flex flex-col gap-2 pt-3">
-                                @foreach ($planos as $plano)
-                                    <x-documento name="{{ $plano->nome }}" icon="assignment"
-                                        actionUrl="{{route('planos-trabalho.show', ['id' => $plano->id])}}">
-                                        <x-slot:metadata>
-                                            <p>Status: {{ $plano->status->label() }}</p>
-                                            <p>Criado por: {{ $plano->user->nome }}</p>
-                                            <p>Data de criação: {{ $plano->created_at->format('d/m/Y') }}</p>
-                                        </x-slot:metadata>
-                                    </x-documento>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <p>Nenhum plano foi criado no momento</p>
-                <x-button.add href="{{route('planos-trabalho.form')}}" />
-            @endif
+
+                <p class="mb-5 text-body-large">
+                    Tem certeza que deseja excluir este estudante?<br>
+                    Isso também removerá tudo relacionado ao estudante:
+                </p>
+
+                <ul class="mb-5 list-disc list-inside text-body-large">
+                    <li>{{ $planosFlexibilizacao }} plano{{ $planosFlexibilizacao != 1 ? 's' : '' }} de flexibilização
+                        curricular</li>
+                    <li>{{ $planosTrabalho }} plano{{ $planosTrabalho != 1 ? 's' : '' }} de trabalho</li>
+                    <li>{{ $atendimentos }} atendimento{{ $atendimentos != 1 ? 's' : '' }}
+                        semana{{ $atendimentos != 1 ? 'is' : 'l' }}</li>
+                    <li>{{ $entrevistas }} entrevista{{ $entrevistas != 1 ? 's' : '' }}</li>
+                    <li>{{ $documentos }} documento{{ $documentos != 1 ? 's' : '' }}</li>
+                    <li>{{ $observacoes }} observaç{{ $observacoes != 1 ? 'ões' : 'ão' }}</li>
+                </ul>
+
+                <p class="text-body-large mb-5">
+                    Você poderá restaurá-lo junto com os itens acima posteriormente.
+                </p>
+                <div class="flex justify-end gap-3 mb-2">
+                    <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                    <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <x-button label="Confirmar" type="submit" color="red" />
+                    </form>
+                </div>
+            </x-modal>
         </div>
-
-        <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
-            <x-button icon="add" color="transparent"></x-button>
-        </x-slot:topActions>
-    </x-secao-expansivel>
-
-    <x-secao-expansivel title="Atendimentos Semanais" class="m-5">
-        <div class="p-5 flex flex-col gap-4">
-            @if (count($estudante->atendimentosSemanais) > 0)
-                @foreach ($estudante->atendimentosSemanais as $atendimento)
-                    <x-documento name="{{ $atendimento->nome }}" icon="article_person"
-                        actionUrl="{{route('atendimentos.show', ['id' => $atendimento->id])}}">
-                        <x-slot:metadata>
-                            <p>Realizado por: {{ $atendimento->user->nome }}</p>
-                            <p>Data de realização: {{ $atendimento->created_at->format('d/m/Y') }}</p>
-                        </x-slot:metadata>
-                    </x-documento>
-                @endforeach
-            @endif
-        </div>
-
-        <x-slot:topActions>
-            <x-button icon="search" color="transparent"></x-button>
-            <x-button icon="add" color="transparent"></x-button>
-        </x-slot:topActions>
-    </x-secao-expansivel>
-
-    <div class="flex justify-end gap-3">
-        <x-modal title="Excluir estudante" label="Excluir estudante" icon="delete" color="red">
-            <p class="mb-10 text-body-large">Tem certeza que deseja excluir este estudante?<br>Você poderá restaurá-lo
-                posteriormente.</p>
-            <div class="flex justify-end gap-3 mb-2">
-                <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
-                <form action="{{ route('estudantes.destroy', ['estudante' => $estudante]) }}" method="POST">
-                    @method('DELETE')
-                    @csrf
-                    <x-button label="Confirmar" type="submit" color="red" />
-                </form>
-            </div>
-        </x-modal>
-    </div>
+    @endcan
 </x-layouts.main>

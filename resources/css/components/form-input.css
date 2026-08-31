@@ -77,6 +77,10 @@
         @apply w-150;
     }
 
+    .form-control-xxlarge {
+        @apply w-200;
+    }
+
     .form-control-full {
         @apply w-full;
     }
@@ -116,7 +120,7 @@
     }
 
     .select-control {
-        @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-3;
+        @apply min-h-11 rounded-lg text-left cursor-pointer appearance-none pl-5 py-2;
     }
 
     .select-chips {
@@ -132,7 +136,7 @@
     }
 
     .select-clear {
-        @apply absolute right-3.5 top-3.5 text-secondary-accent hover:text-secondary cursor-pointer text-xl;
+        @apply absolute right-2.5 top-2.5 text-secondary-accent hover:text-secondary cursor-pointer text-xl;
     }
 
     .select-menu {
@@ -144,6 +148,10 @@
     }
 
     .select-option-selected {
+        @apply bg-surface;
+    }
+
+    .select-option-highlighted {
         @apply bg-surface;
     }
 }

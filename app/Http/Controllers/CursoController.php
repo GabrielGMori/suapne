@@ -9,56 +9,46 @@ use Illuminate\Http\RedirectResponse;
 
 class CursoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $cursos = Curso::paginate(10);
+        abort_unless($request->user()->can('viewAny', Curso::class), 404);
 
-        return view('cursos.index', ['cursos' => $cursos]);
+        return view('cursos.index');
     }
 
-     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
+        abort_unless($request->user()->can('create', Curso::class), 404);
+
         return view('cursos.form');
     }
 
-     /**
-     * Store a newly created resource in storage.
-     */
     public function store(CursoRequest $request) : RedirectResponse
     {
+        abort_unless($request->user()->can('create', Curso::class), 404);
+
         Curso::create($request->validated());
 
         return redirect()->route('cursos.index')->with('status', 'Curso cadastrado com sucesso!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Curso $curso)
+    public function edit(Request $request, Curso $curso)
     {
+        abort_unless($request->user()->can('update', $curso), 404);
+
         return view('cursos.form', ['curso' => $curso]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CursoRequest $request, Curso $curso) : RedirectResponse
     {
+        abort_unless($request->user()->can('update', $curso), 404);
+
         $curso->update($request->validated());
         return redirect()->route('cursos.index',$curso)->with('status', 'Curso atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Curso $curso)
+    public function destroy(Request $request, Curso $curso)
     {
-        //
+        abort_unless($request->user()->can('delete', $curso), 404);
     }
 }

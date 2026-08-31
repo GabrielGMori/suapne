@@ -14,7 +14,7 @@ class SolicitacaoRegistroTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return SolicitacaoRegistro::query();
+        return SolicitacaoRegistro::query()->oldest();
     }
 
     public function title(): ?string { return 'Solicitações pendentes'; }
@@ -28,16 +28,15 @@ class SolicitacaoRegistroTable extends ListViewConfig
     {
         return [
             ListViewColumn::make('nome')->label('Nome'),
-            ListViewColumn::make('email')->label('E-mail')->size('large'),
-            ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label())->size('small'),
-            ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
-                ->format(fn($value) => $value->count() > 0
-                ? view('components.item-expansivel', [
-                    'items' => $value->map(fn($disciplina) => "$disciplina->nome - {$disciplina->curso->nome}")->toArray(),
-                    'label' => 'Disciplinas'
-                ])->render()
-                : '---'),
-            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y H:i'))->size('tiny'),
+            ListViewColumn::make('email')->label('E-mail'),
+            ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label()),
+            ListViewColumn::make('disciplinas')->label('Disciplinas')
+            ->format(fn($value) => $value->count() > 0 ? view('components.modal.simple-text', [
+                'label' => 'Ver disciplinas',
+                'title' => 'Disciplinas',
+                'value' => $value->map(fn($disciplina) => "• {$disciplina->nome} - {$disciplina->curso->nome}")->toArray()
+            ])->render() : '---'),
+            ListViewColumn::make('created_at')->label('Data')->format(fn($value) => $value->format('d/m/Y \à\s H:i'))->size('tiny'),
         ];
     }
 
@@ -47,10 +46,7 @@ class SolicitacaoRegistroTable extends ListViewConfig
             ListViewFilter::make('nome')->label('Nome'),
             ListViewFilter::make('email')->label('E-mail'),
             ListViewFilter::make('role')->label('Função')->type('select')
-            ->options([
-                RoleEnum::PROFESSOR_REGULAR->value => RoleEnum::PROFESSOR_REGULAR->label(),
-                RoleEnum::TECNICO->value => RoleEnum::TECNICO->label()
-            ])->equals(),
+            ->options(RoleEnum::options())->equals(),
             ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('created_at'),
             ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('created_at'),
         ];
@@ -59,8 +55,14 @@ class SolicitacaoRegistroTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make('#')->icon('person_remove')->color('red'),
-            ListViewAction::make('#')->icon('person_add')->color('primary')
+            ListViewAction::make(fn($item) => route('cadastro.decline', ['solicitacao' => $item]))->icon('person_remove')->color('red')
+                ->confirm()->confirmMessage(fn($item) => "Tem certeza de que deseja recusar esta solicitação de {$item->nome}?")
+                ->textarea(name: 'observacao', label: 'Observação (opcional)')
+                ->color('red')
+                ->filledConfirm()->method('POST'),
+            ListViewAction::make(fn($item) => route('cadastro.accept', ['solicitacao' => $item]))->icon('person_add')->color('primary')
+                ->confirm()->confirmMessage(fn($item) => "Tem certeza de que deseja aceitar esta solicitação de {$item->nome}?")
+                ->filledConfirm()->method('POST'),
         ];
     }
 }

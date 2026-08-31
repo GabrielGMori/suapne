@@ -2,25 +2,30 @@
 
 namespace App\Tables;
 
+use App\Enums\RoleEnum;
 use App\Enums\StatusPlanoTrabalhoEnum;
 use App\Models\Curso;
-use App\Models\Disciplina;
-use App\Models\Estudante;
 use App\Models\PlanoTrabalhoEstudante;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewConfig;
 use Illuminate\Database\Eloquent\Builder;
-
+use Illuminate\Support\Facades\Auth;
 class PlanoTrabalhoEstudanteTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return PlanoTrabalhoEstudante::query()->orderBy('status')->orderBy('periodo_inicio', 'desc');
+        $query = PlanoTrabalhoEstudante::query()->orderBy('status')->latest();
+        $user = Auth::user();
+        $query = $user->role === RoleEnum::PROFESSOR_REGULAR ? $query->where('user_professor_id', $user->id) : $query;
+        return $query;
     }
-    public function title(): ?string { return 'Planos de Trabalho do Estudante'; }
-    public function createUrl(): ?string { return route('planos-trabalho.form'); }
+    public function title(): ?string {
+        return (Auth::user()->role === RoleEnum::PROFESSOR_REGULAR ? 'Meus ' : '') . 'Planos de Trabalho do Estudante';
+    }
+    public function canCreate(): bool { return Auth::user()->can('create', PlanoTrabalhoEstudante::class); }
+    public function createUrl(): ?string { return route('planos-trabalho.create'); }
     public function createLabel(): ?string { return 'Criar Novo'; }
     public function emptyMessage(): string { return 'Nenhum plano de trabalho do estudante foi encontrado'; }
     public function icon(): string|\Closure { return "assignment"; }
@@ -30,7 +35,7 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante'),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item)),
             ListViewColumn::make('disciplina.nome')->label('Componente curricular'),
             ListViewColumn::make('disciplina.curso')->label('Curso'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
@@ -52,23 +57,20 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('disciplina_id')->label('Componente curricular')->size('xlarge')->type('multiselect')->equals()
-                ->options(Disciplina::all()->pluck('nome', 'id')->mapWithKeys(fn($value, $key) => [$key => "$value - " . Disciplina::find($key)->curso->nome])->toArray()),
+            ListViewFilter::make('disciplina')->foreignKey('curso_id')->label('Curso')->size('large')->type('select')->equals()
+                ->options(Curso::pluck('nome', 'id')->toArray()),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
-            ListViewFilter::make('status')->label('Status')->size('small')->type('select')->options(StatusPlanoTrabalhoEnum::options())->equals(),
+            ListViewFilter::make('status')->label('Status')->size('small')->type('multiselect')->options(StatusPlanoTrabalhoEnum::options())->equals(),
+            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['id' => $item->id])),
+            ListViewAction::make(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.show', ['planoTrabalho' => $item]))
+                ->restoreOnTrashed(static fn(PlanoTrabalhoEstudante $item) => route('planos-trabalho.restore', ['planoTrabalho' => $item]), 'Deseja restaurar este PTE?'),
         ];
-
-
     }
-
-
-
 }

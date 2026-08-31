@@ -14,7 +14,7 @@ class ContasCnapneTable extends ListViewConfig
 {
     public function query(): Builder
     {
-        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO]);
+        return User::query()->whereIn('role', [RoleEnum::DOCENTE_ESPECIAL, RoleEnum::TECNICO])->latest();
     }
 
     public function title(): ?string { return 'Contas da CNAPNE registradas'; }
@@ -49,7 +49,7 @@ class ContasCnapneTable extends ListViewConfig
     public function actions(): array
     {
         return [
-            ListViewAction::make(static fn(User $item) => route('contas.cnapne.form', ['id' => $item->id]))->icon('edit'),
+            ListViewAction::make(static fn(User $item) => route('contas.cnapne.edit', $item->id))->icon('edit'),
         ];
     }
 }

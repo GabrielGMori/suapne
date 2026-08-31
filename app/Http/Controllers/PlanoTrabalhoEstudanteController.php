@@ -1,10 +1,169 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Enums\RoleEnum;
+use App\Enums\StatusPlanoTrabalhoEnum;
+use App\Models\Disciplina;
+use App\Models\Estudante;
+use App\Models\PlanoTrabalhoEstudante;
+use App\Http\Requests\PlanoTrabalhoEstudanteRequest;
+use App\Models\User;
+use App\Notifications\PlanoTrabalhoAtribuido;
+use Barryvdh\DomPDF\Facade\Pdf;
+use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use function array_key_exists;
 
 class PlanoTrabalhoEstudanteController extends Controller
 {
-    //
+    public function index(Request $request)
+    {
+        abort_unless($request->user()->can('viewAny', PlanoTrabalhoEstudante::class), 404);
+
+        $user = $request->user();
+        $count = $user->role === RoleEnum::PROFESSOR_REGULAR
+            ? $user->planosTrabalhoProfessor->filter(fn($plano) => $plano->status === StatusPlanoTrabalhoEnum::PENDENTE || $plano->status === StatusPlanoTrabalhoEnum::DEVOLVIDO)->count()
+            : PlanoTrabalhoEstudante::where('status', StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO)->count();
+
+        return view('planos-trabalho.index', ['count' => $count]);
+    }
+
+    public function create(Request $request, ?Estudante $estudante = null)
+    {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
+        return view('planos-trabalho.form', ['estudanteId' => $estudante?->id]);
+    }
+
+    public function store(PlanoTrabalhoEstudanteRequest $request)
+    {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
+        $validated = $request->validated();
+        $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
+        $notifications = [];
+
+        DB::transaction(function () use ($validated, $professores, &$notifications) {
+            foreach($validated['disciplinas'] as $disciplinaId) {
+                $novoPlano = PlanoTrabalhoEstudante::create([
+                    ...$validated,
+                    'disciplina_id' => $disciplinaId,
+                    'user_professor_id' => $professores->first(fn($prof) => $prof->disciplinas->contains('id', $disciplinaId))->id
+                ]);
+                $professorId = $novoPlano->professor->id;
+                if (!array_key_exists($professorId, $notifications)) {
+                    $notifications[$professorId] = [];
+                }
+                $notifications[$professorId][] = $novoPlano;
+            }
+        });
+
+        foreach ($notifications as $professorId => $planos)
+            $professores->find($professorId)->notify(new PlanoTrabalhoAtribuido(collect($planos)));
+
+        return redirect()->route('planos-trabalho.index')->with('status', 'Planos de trabalho criado com sucesso!');
+    }
+
+    public function show(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('view', $planoTrabalho), 404);
+
+        return view('planos-trabalho.show', ['planoTrabalho' => $planoTrabalho]);
+    }
+
+    public function edit(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('update', $planoTrabalho), 404);
+
+        return view('planos-trabalho.form', ['planoTrabalho' => $planoTrabalho]);
+    }
+
+    public function update(PlanoTrabalhoEstudanteRequest $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('update', $planoTrabalho), 404);
+
+        $validated = $request->validated();
+        $validated['campos'] = [
+            ...($planoTrabalho->campos ?? []),
+            ...($validated['campos'] ?? []),
+        ];
+
+        $planoTrabalho->update($validated);
+
+        return redirect()->route('planos-trabalho.index')->with('status', 'Plano de trabalho atualizado com sucesso!');
+    }
+
+    public function destroy(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('delete', $planoTrabalho), 404);
+
+        $planoTrabalho->delete();
+
+        return redirect()->route('planos-trabalho.index')->with('status', 'Plano de trabalho excluído com sucesso!');
+    }
+
+    public function restore(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('restore', $planoTrabalho), 404);
+
+        $planoTrabalho->restore();
+
+        return redirect()->back()->with('status', 'Plano de trabalho restaurado com sucesso!');
+    }
+
+    public function preview(PlanoTrabalhoEstudanteRequest $request)
+    {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
+        $validated = $request->validated();
+        $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
+        $professor = $professores->first(
+            fn ($professor) => $professor->disciplinas->contains('id', $validated['disciplinas'][0])
+        );
+
+        $planoTrabalho = new PlanoTrabalhoEstudante([
+            ...$validated,
+            'disciplina_id' => $validated['disciplinas'][0],
+            'user_professor_id' => $professor->id,
+        ]);
+        $planoTrabalho->load(['estudante', 'disciplina', 'professor']);
+        $previewDisciplinas = Disciplina::whereIn('id', $validated['disciplinas'])->pluck('nome', 'id')->toArray();
+
+        return view('planos-trabalho.show', [
+            'planoTrabalho' => $planoTrabalho,
+            'preview' => true,
+            'previewDisciplinas' => $previewDisciplinas,
+            'previewProfessores' => $validated['professores'],
+        ]);
+    }
+
+    public function changePreview(PlanoTrabalhoEstudanteRequest $request)
+    {
+        abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
+
+        $validated = $request->validated();
+        $planoTrabalho = new PlanoTrabalhoEstudante($validated);
+        $planoTrabalho->disciplina_id = $validated['chosenDisciplina'] ?? $validated['previewDisciplinas'][0];
+        $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
+        $professor = $professores->first(
+            fn ($professor) => $professor->disciplinas->contains('id', $planoTrabalho->disciplina_id)
+        );
+        $planoTrabalho->user_professor_id = $professor->id;
+        $planoTrabalho->load(['estudante', 'disciplina', 'professor']);
+
+        return view('planos-trabalho.show', [
+            'planoTrabalho' => $planoTrabalho,
+            'preview' => true,
+            'previewDisciplinas' => Disciplina::whereIn('id', $validated['previewDisciplinas'])->pluck('nome', 'id')->toArray(),
+            'previewProfessores' => $validated['professores'],
+        ]);
+    }
+
+    public function exportPdf(Request $request, PlanoTrabalhoEstudante $planoTrabalho)
+    {
+        abort_unless($request->user()->can('view', $planoTrabalho), 404);
+
+        return Pdf::loadView('planos-trabalho.pdf', ['planoTrabalho' => $planoTrabalho])->stream($planoTrabalho->nome.'.pdf');
+    }
 }

@@ -6,71 +6,50 @@ use App\Enums\RoleEnum;
 use App\Models\AtendimentoSemanal;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use function in_array;
 
 class AtendimentoSemanalPolicy
 {
-    /**
-     * Perform pre-authorization checks.
-     */
+    private array $alwaysCheck = ['forceDelete', 'update'];
+
     public function before(User $user, string $ability): bool|null
     {
-        if ($ability === 'forceDelete') {
-            return false;
+        if (in_array($ability, $this->alwaysCheck)) {
+            return null;
         }
         return $user->role === RoleEnum::DOCENTE_ESPECIAL ? true : null;
     }
 
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $atendimentoSemanal->user_id === $user->id;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
-        return false;
+        return $user->role === RoleEnum::TECNICO;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
     public function forceDelete(User $user, AtendimentoSemanal $atendimentoSemanal): bool
     {
         return false;

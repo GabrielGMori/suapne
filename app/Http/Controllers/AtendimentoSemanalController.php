@@ -3,68 +3,71 @@
 namespace App\Http\Controllers;
 
 use App\Models\AtendimentoSemanal;
-use Illuminate\Http\Request;
+use App\Models\Estudante;
 use App\Http\Requests\AtendimentoSemanalRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AtendimentoSemanalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        $atendimentos = AtendimentoSemanal::paginate(10);
-        return view('atendimentos.index', ['atendimentos'=> $atendimentos]);
+        abort_unless($request->user()->can('viewAny', AtendimentoSemanal::class), 404);
+
+        return view('atendimentos.index');
     }
 
-     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request, ?Estudante $estudante = null)
     {
-        return view('atendimentos.form');
+        abort_unless($request->user()->can('create', AtendimentoSemanal::class), 404);
+
+        return view('atendimentos.form', ['estudanteId' => $estudante?->id]);
     }
 
-     /**
-     * Store a newly created resource in storage.
-     */
     public function store(AtendimentoSemanalRequest $request) : RedirectResponse
     {
-       AtendimentoSemanal::create($request->validated());
-       return redirect()->route('atendimentos.index')->with('status','Atendimento semanal cadastrado com sucesso!');
+        abort_unless($request->user()->can('create', AtendimentoSemanal::class), 404);
+
+        AtendimentoSemanal::create($request->validated());
+        return redirect()->route('atendimentos.index')->with('status','Atendimento semanal cadastrado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AtendimentoSemanal $atendimento)
+    public function show(Request $request, AtendimentoSemanal $atendimento)
     {
-       return view('atendimentos.show',['atendimento'=>$atendimento]);
+        abort_unless($request->user()->can('view', $atendimento), 404);
+
+        return view('atendimentos.show', ['atendimento' => $atendimento]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit()
-    {   
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update()
+    public function edit(Request $request, AtendimentoSemanal $atendimento)
     {
-        //
+        abort_unless($request->user()->can('update', $atendimento), 404);
+        return view('atendimentos.form', ['atendimento' => $atendimento]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    public function update(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
     {
-        //
+        abort_unless($request->user()->can('update', $atendimento), 404);
+        $atendimento->update($request->validated());
+        return redirect()->route('atendimentos.index')->with('status','Atendimento semanal editado com sucesso!');
+    }
+
+    public function destroy(Request $request, AtendimentoSemanal $atendimento)
+    {
+        abort_unless($request->user()->can('delete', $atendimento), 404);
+        $atendimento->delete();
+        return redirect()->route('atendimentos.index')->with('status','Atendimento semanal excluido com sucesso!');
+    }
+
+    public function restore(Request $request, AtendimentoSemanal $atendimento)
+    {
+        abort_unless($request->user()->can('restore', $atendimento), 404);
+        $atendimento->restore();
+        return redirect()->back()->with('status','Atendimento semanal restaurado com sucesso!');
+    }
+    public function exportPdf(AtendimentoSemanal $atendimento)
+    {
+        return Pdf::loadView('atendimentos.pdf', ['atendimento'=> $atendimento])->stream($atendimento->estudante->nome.'.pdf');
     }
 }

@@ -15,15 +15,15 @@ use App\Models\Curso;
         <hr class="text-on-surface">
         <div class="grid grid-cols-2">
             <div>
-                <livewire:form.input label="Nome do curso*" appearance="outlined" size="large" name="nome" required value="{{ $curso->nome ?? old('nome') }}"/>
+                <x-form.input label="Nome do curso*" appearance="outlined" size="large" name="nome" required :value="$curso->nome ?? null"/>
             </div>
             <div>
-                <livewire:form.input label="Quantidade de períodos*" appearance="outlined" size="large" name="quantidade_periodos" required value="{{ $curso->quantidade_periodos ?? old('quantidade_periodos') }}"/>
+                <x-form.input label="Quantidade de períodos*" appearance="outlined" size="large" name="quantidade_periodos" required :value="$curso->quantidade_periodos ?? null"/>
             </div>
         </div>
     </div>
     <div class="flex justify-end gap-2">
-        <x-button label="Cancelar" type="link" href="{{ url()->previous() !== url()->current() ? url()->previous() : route('cursos.index') }}" color="red"/>
+        <x-button.cancel fallback="cursos.index" color="red"/>
         <x-button label="Registrar" type="submit"/>
     </div>
     </form>

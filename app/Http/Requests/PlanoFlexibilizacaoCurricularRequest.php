@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PlanoFlexibilizacaoCurricularRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return $this->user()->can('create',PlanoFlexibilizacaoCurricular::class);
@@ -24,30 +21,24 @@ class PlanoFlexibilizacaoCurricularRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
-        $planosFlexibilizacao = $this->route('planos-flexibilizacao');
-
         return [
             'user_id' => ['required','integer','exists:users,id'],
             'estudante_id' => ['required','integer','exists:estudantes,id'],
             'periodo_inicio' => ['required','date'],
-            'periodo_fim' => ['required','date','after:periodo_inicio'],   
+            'periodo_fim' => ['required','date','after:periodo_inicio'],
             'campos' => ['required','array'],
+
             'campos.acoesPedagogicas' => ['required','string'],
             'campos.atendimentoMultiprofissional' => ['required','string'],
             'campos.diferenciacaoCurricular' => ['required','string'],
             'campos.atendimentoIndividualizado' => ['required','string'],
-            'campos.alteracaoPrazo' => ['required','string'], 
+            'campos.alteracaoPrazo' => ['required','string'],
             'campos.reorganizacaoCurricular' => ['required','string'],
-            'campos.criteriosDiferenciados' => ['required','string'], 
-            'campos.componentesCurriculares' => ['nullable','array'],
-            'campos.informacoesAdicionais' => ['nullable','string'],     
+            'campos.criteriosDiferenciados' => ['required','string'],
+            'campos.componentesCurriculares' => ['required','array'],
+            'campos.informacoesAdicionais' => ['nullable','string'],
         ];
     }
 }

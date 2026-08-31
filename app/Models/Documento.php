@@ -2,19 +2,25 @@
 
 namespace App\Models;
 
+use App\Enums\TipoDocumentoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Documento extends Model
+use App\Models\User;
+use App\Models\Estudante;
+class Documento extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'documentos';
 
     protected $fillable = [
         'tipo',
-        'nome',
+        'nome_arquivo',
         'extensao',
         'path',
         'estudante_id',
@@ -22,7 +28,7 @@ class Documento extends Model
     ];
 
     protected $casts = [
-        'tipo' => \App\Enums\TipoDocumentoEnum::class,
+        'tipo' => TipoDocumentoEnum::class,
     ];
 
     public function estudante()
@@ -33,5 +39,16 @@ class Documento extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getFullArquivoAttribute(): string
+    {
+        return $this->nome_arquivo . '.' . $this->extensao;
+    }
+
+    public function getNomeAttribute(): string
+    {
+        $tipo = $this->tipo !== TipoDocumentoEnum::DOCUMENTO ? ' ('.$this->tipo->label().') ' : '';
+        return $this->fullArquivo . $tipo;
     }
 }

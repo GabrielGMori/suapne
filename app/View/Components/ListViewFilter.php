@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class ListViewFilter implements \JsonSerializable
@@ -17,6 +18,7 @@ class ListViewFilter implements \JsonSerializable
     private bool $clearable = true;
     private ?string $placeholder = null;
     private bool $hidden = false;
+    private bool $trashedFilter = false;
 
     private ?Closure $applyUsing = null;
     private ?string $foreignKey = null;
@@ -98,6 +100,28 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
+    public function trashed(string $label = 'Excluído', array $options = [0 => 'Não', 1 => 'Sim']): static
+    {
+        $this->trashedFilter = true;
+        return $this
+            ->label($label)
+            ->size('small')
+            ->type('select')
+            ->options($options)
+            ->applyUsing(function (Builder $query, array $value) {
+                if (empty($value[0])) {
+                    return;
+                }
+
+                if ($value[0] === 'Sim' || (int)$value[0] === 1) {
+                    $query->onlyTrashed();
+                    return;
+                }
+
+                $query;
+            })
+            ->hidden();
+    }
 
     public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null) : static
     {
@@ -166,6 +190,7 @@ class ListViewFilter implements \JsonSerializable
     public function getPlaceholder(): ?string { return $this->placeholder; }
     public function getIdentifier(): ?string  { return $this->identifier; }
     public function isClearable(): bool       { return $this->clearable; }
+    public function isTrashedFilter(): bool       { return $this->trashedFilter; }
 
     public function jsonSerialize(): array
     {

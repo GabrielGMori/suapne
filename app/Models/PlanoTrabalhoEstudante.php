@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PlanoTrabalhoEstudante extends Model
+use App\Models\Estudante;
+use App\Models\User;
+use App\Models\Disciplina;
+use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
+use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
+class PlanoTrabalhoEstudante extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
 
     protected $table = 'planos_trabalho_estudante';
 
@@ -17,11 +23,11 @@ class PlanoTrabalhoEstudante extends Model
         'status',
         'periodo_inicio',
         'periodo_fim',
-        'campos',
         'estudante_id',
         'user_id',
-        'disciplina_id',
         'user_professor_id',
+        'disciplina_id',
+        'campos'
     ];
 
     protected $casts = [
@@ -58,6 +64,11 @@ class PlanoTrabalhoEstudante extends Model
     }
 
     public function getAnoAttribute()
+    {
+        return $this->created_at->format('Y');
+    }
+
+    public function getAnoCriacaoAttribute(): string
     {
         return $this->created_at->format('Y');
     }
