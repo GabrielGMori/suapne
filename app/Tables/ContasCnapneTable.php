@@ -27,7 +27,7 @@ class ContasCnapneTable extends ListViewConfig
     public function columns(): array
     {
         return [
-            ListViewColumn::make('name')->label('Nome')->size('large'),
+            ListViewColumn::make('name')->label('Nome')->size('large')->link(fn($item) => route('contas.cnapne.edit', $item)),
             ListViewColumn::make('email')->label('E-mail')->size('large'),
             ListViewColumn::make('role')->label('Função')->format(fn($value) => $value->label()),
         ];

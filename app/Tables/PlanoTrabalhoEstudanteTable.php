@@ -35,9 +35,9 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item)),
-            ListViewColumn::make('disciplina.nome')->label('Componente curricular'),
-            ListViewColumn::make('disciplina.curso')->label('Curso'),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item->estudante)),
+            ListViewColumn::make('disciplina.nome')->label('Componente curricular')->link(fn($item) => route('disciplinas.edit', $item->disciplina)),
+            ListViewColumn::make('disciplina.curso')->label('Curso')->link(fn($item) => route('cursos.edit', $item->estudante->curso)),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
             ListViewColumn::make('status')->label('Status')->size('small')->format(
                 function ($value) use (&$statusCache) {

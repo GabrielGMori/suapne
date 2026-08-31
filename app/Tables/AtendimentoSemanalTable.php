@@ -33,8 +33,8 @@ class AtendimentoSemanalTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item)),
-            ListViewColumn::make('user.nome')->label('Feito por'),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item->estudante)),
+            ListViewColumn::make('user.nome')->label('Feito por')->link(fn($item) => route('contas.cnapne.show', $item->user)),
             ListViewColumn::make('local')->label('Local')->size("medium"),
             ListViewColumn::make('data')->label('Data')->format(fn($value) => $value->format('d/m/Y \à\s H:i')),
         ];

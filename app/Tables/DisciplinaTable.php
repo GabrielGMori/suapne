@@ -30,8 +30,8 @@ class DisciplinaTable extends ListViewConfig
     public function columns(): array
     {
         return [
-            ListViewColumn::make('nome')->label('Componente curricular')->size("large"),
-            ListViewColumn::make('curso.nome')->label('Curso')->size("large"),
+            ListViewColumn::make('nome')->label('Componente curricular')->size("large")->link(fn($item) => route('disciplinas.edit', $item)),
+            ListViewColumn::make('curso.nome')->label('Curso')->size("large")->link(fn($item) => route('cursos.edit', $item->curso)),
             ListViewColumn::make('curso_periodo')->label('Período')->size("small"),
             ListViewColumn::make('ementa')->label('Ementa')->size("large")
             ->format(fn($value) => view('components.modal.simple-text', [

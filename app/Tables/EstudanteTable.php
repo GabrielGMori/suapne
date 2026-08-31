@@ -62,7 +62,7 @@ class EstudanteTable extends ListViewConfig
 
         return [
             ListViewColumn::make('nome')->label('Nome do estudante')->size('large')->link(fn($item) => route('estudantes.show', $item)),
-            ListViewColumn::make('curso')->label('Curso do estudante')->size('large'),
+            ListViewColumn::make('curso')->label('Curso do estudante')->size('large')->link(fn($item) => route('cursos.edit', $item->curso)),
             ListViewColumn::make('periodo')->label('Período')->size('small')->format(
                 fn($value) => $value . '°'
             ),

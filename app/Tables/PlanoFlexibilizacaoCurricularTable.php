@@ -33,8 +33,9 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->link(fn($item) => route('estudantes.show', $item)),
-            ListViewColumn::make('estudante.curso')->label('Curso')->size('large'),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->link(fn($item) => route('estudantes.show', $item->estudante)),
+            ListViewColumn::make('estudante.curso')->label('Curso do estudante')->size('large')->link(fn($item) => route('cursos.edit', $item->estudante->curso)),
+            ListViewColumn::make('estudante.periodo')->label('Período')->size('small')->format(fn($value) => $value . '°'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
         ];
     }
@@ -45,6 +46,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
             ListViewFilter::make('estudante')->foreignKey('nome')->identifier('estudanteNome')->label('Nome do estudante')->size('large'),
             ListViewFilter::make('estudante')->foreignKey('curso_id')->identifier('estudanteCurso')->label('Curso')->size('large')->type('select')
                 ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('estudante')->foreignKey('periodo')->identifier('estudantePeriodo')->label('Período')->size('tiny'),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('excluido')->trashed(),

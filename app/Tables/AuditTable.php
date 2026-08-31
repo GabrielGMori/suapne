@@ -9,6 +9,7 @@ use App\View\Components\ListViewFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use OwenIt\Auditing\Models\Audit;
+use App\Enums\RoleEnum;
 
 class AuditTable extends ListViewConfig
 {

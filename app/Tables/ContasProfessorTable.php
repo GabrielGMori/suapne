@@ -29,9 +29,9 @@ class ContasProfessorTable extends ListViewConfig
     public function columns(): array
     {
         return [
-            ListViewColumn::make('name')->label('Nome do professor'),
+            ListViewColumn::make('name')->label('Nome do professor')->size('large')->link(fn($item) => route('contas.professor.edit', $item)),
             ListViewColumn::make('email')->label('E-mail do professor')->size('large'),
-            ListViewColumn::make('disciplinas')->label('Disciplinas')->size('large')
+            ListViewColumn::make('disciplinas')->label('Disciplinas')
             ->format(fn($value) => $value->count() > 0 ? view('components.modal.simple-text', [
                 'label' => 'Ver disciplinas',
                 'title' => 'Disciplinas',

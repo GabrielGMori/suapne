@@ -27,7 +27,7 @@ class CursoTable extends ListViewConfig
     public function columns(): array
     {
         return [
-            ListViewColumn::make('nome')->label('Nome do curso')->size("full"),
+            ListViewColumn::make('nome')->label('Nome do curso')->size("full")->link(fn($item) => route('cursos.edit', $item)),
             ListViewColumn::make('quantidade_periodos')->label('Quantidade de períodos')->size("medium"),
         ];
     }
