@@ -17,9 +17,9 @@ Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastr
         Route::view('/tecnico', 'auth.cadastro.cnapne', ['role' => 'TECNICO'])->name('tecnico');
         Route::view('/docente', 'auth.cadastro.cnapne', ['role' => 'DOCENTE_ESPECIAL'])->name('docente');
 
-        Route::post('/', 'submit')->name('submit');//->middleware('throttle:5,60');
+        Route::post('/', 'submit')->name('submit')->middleware('throttle:20,60');
         Route::get('/confirmar', 'verifyForm')->name('verify.form');
-        Route::post('/confirmar', 'verify')->name('verify');//->middleware('throttle:10,15');;
+        Route::post('/confirmar', 'verify')->name('verify')->middleware('throttle:30,15');
         Route::view('/enviado', 'auth.cadastro.enviado')->name('enviado');
     });
 
@@ -32,8 +32,8 @@ Route::controller(RegisterController::class)->name('cadastro.')->prefix('cadastr
 Route::controller(PasswordResetController::class)->group(function () {
     Route::middleware('guest')->group(function () {
         Route::get('/forgot-password', 'forgotPasswordForm')->name('password.forgot');
-        Route::post('/forgot-password', 'forgotPassword')->name('password.forgot.submit');
+        Route::post('/forgot-password', 'forgotPassword')->name('password.forgot.submit')->middleware('throttle:20,60');
         Route::get('/reset-password/{token}', 'resetPasswordForm')->name('password.reset');
-        Route::post('/reset-password', 'resetPassword')->name('password.reset.submit');
+        Route::post('/reset-password', 'resetPassword')->name('password.reset.submit')->middleware('throttle:30,15');
     });
 });
