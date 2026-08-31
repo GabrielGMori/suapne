@@ -127,4 +127,3 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
         </div>
     </div>
 </form>
-@dd($planoFlexibilizacao)
