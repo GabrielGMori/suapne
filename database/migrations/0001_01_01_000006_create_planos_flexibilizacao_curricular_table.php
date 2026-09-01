@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     /**
      * Run the migrations.
      */
@@ -26,7 +28,7 @@ return new class extends Migration
                 ->constrained('estudantes')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            
+
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->onDelete('cascade')

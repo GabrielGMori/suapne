@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     /**
      * Run the migrations.
      */
@@ -15,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('solicitacao_registro_id')->constrained('solicitacoes_registro')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('disciplina_id')->constrained('disciplinas')->cascadeOnDelete()->cascadeOnUpdate();
-            
+
             $table->softDeletes();
             $table->timestamps();
         });

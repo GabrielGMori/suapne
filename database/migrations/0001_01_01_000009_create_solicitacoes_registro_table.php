@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public $withinTransaction = false;
+
     /**
      * Run the migrations.
      */
@@ -30,7 +32,7 @@ return new class extends Migration
                 'ACEITA',
                 'RECUSADA',
             ])->nullable();
-            
+
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
