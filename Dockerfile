@@ -24,4 +24,8 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 10000
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 10000
+CMD ["/entrypoint.sh"]
