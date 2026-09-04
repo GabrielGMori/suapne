@@ -25,7 +25,7 @@
 
                     <form action="{{ route('demo-login') }}" method="POST">
                         @csrf
-                        <input type="hidden" value="TECNICO_ESPECIAL" name="role">
+                        <input type="hidden" value="TECNICO" name="role">
                         <x-button type="submit" label="Logar como técnico de educação especial" size="full" />
                     </form>
 
