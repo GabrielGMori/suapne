@@ -15,6 +15,8 @@ Route::redirect('/', '/dashboard');
 
 Route::middleware('web')->group(base_path('routes/auth.php'));
 
+Route::middleware(['web', 'guest'])->post('/demo-login', [App\Http\Controllers\Auth\LoginController::class, 'demoLogin'])->name('demo-login');
+
 Route::middleware('auth')->group(function () {
 
     Route::view('/dashboard', 'dashboard.index')->name('dashboard.index');
