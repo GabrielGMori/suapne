@@ -4,6 +4,7 @@ use Livewire\Component;
 use App\Models\Estudante;
 use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
+use Livewire\Attributes\On;
 
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
@@ -11,7 +12,7 @@ new class extends Component {
     public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;
 
-    public ?array $displayDisciplinas = null;
+    public array $displayDisciplinas = [];
     public array $selectedDisciplinas = [];
 
     public ?array $displayProfessores = null;
@@ -19,6 +20,10 @@ new class extends Component {
 
     public function mount(): void
     {
+        $this->displayDisciplinas = Disciplina::with('curso')->get()
+            ->mapWithKeys(fn($disc) => [$disc->id => $disc->nome . ' - ' . $disc->curso?->nome])
+            ->toArray();
+
         $this->estudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? ($this->estudanteId ?? ''));
         if (filled($this->estudanteId))
             $this->updatedEstudanteId($this->estudanteId);
@@ -35,8 +40,6 @@ new class extends Component {
         $id = is_array($estId) ? $estId[0] : $estId;
         $this->estudante = Estudante::find($id);
 
-        $estudanteDisciplinas = $this->estudante?->disciplinas;
-        $this->displayDisciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
         $this->selectedDisciplinas = [];
         $this->selectedProfessores = [];
 
@@ -84,12 +87,33 @@ new class extends Component {
             )
         );
     }
+
+    #[On('disciplina-created')]
+    public function onDisciplinaCreated($id, $nome): void
+    {
+        $disciplina = Disciplina::with('curso')->find($id);
+        $this->displayDisciplinas[$id] = $disciplina->nome . ' - ' . $disciplina->curso?->nome;
+        $this->selectedDisciplinas[] = $id;
+        $this->updatedSelectedDisciplinas($this->selectedDisciplinas);
+    }
+
+    public function selecionarDisciplinasDoCurso(): void
+    {
+        if ($this->estudante === null) return;
+
+        $this->selectedDisciplinas = Disciplina::where('curso_id', $this->estudante->curso_id)->where('curso_periodo', $this->estudante->periodo)
+            ->pluck('id')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
+    }
 };
 ?>
 
-<form action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}" method="POST">
+<form
+    action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}"
+    method="POST">
     @if($planoTrabalho)
-        @method('PATCH')
+    @method('PATCH')
     @endif
     @csrf
 
@@ -111,20 +135,26 @@ new class extends Component {
                 placeholder="Selecionar" :options="Estudante::pluck('nome', 'id')->toArray()"
                 wire:model.live="estudanteId" :disabled="filled($this->planoTrabalho)" />
 
-            <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
-                appearance="outlined" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
-                :options="$displayDisciplinas ?? []" :disabled="$this->planoTrabalho || $estudante === null"
-                wire:key="disciplinas-select-{{ $this->estudante?->id }}" wire:model.live="selectedDisciplinas" />
+            <div class="flex items-center gap-5">
+                <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
+                    appearance="outlined" placeholder="Selecionar" :options="$displayDisciplinas ?? []"
+                    :disabled="filled($this->planoTrabalho)" wire:key="disciplinas-select" size="xlarge"
+                    wire:model.live="selectedDisciplinas" />
+                <livewire:modal.stateful.add-disciplina wire:key='add-disciplina-modal' />
+                <x-button type="button" size="dynamic" label="Selecionar todos do curso do estudante" color="secondary"
+                    wire:click="selecionarDisciplinasDoCurso" />
+            </div>
 
             <livewire:form.select type="multiselect" label="Docentes" name="professores" appearance="outlined"
-                size="xxlarge" :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'"
-                :disabled="$this->planoTrabalho || !filled($selectedDisciplinas)"
+                size="xxlarge"
+                :placeholder="filled($selectedDisciplinas) ? 'Selecionar' : 'Escolha um ou mais componentes curriculares'"
+                :disabled="filled($this->planoTrabalho) || !filled($selectedDisciplinas)"
                 no-result-message="Nenhum docente relacionado aos componentes selecionados foi encontrado"
                 wire:key="professores-select-{{ $this->estudante?->id }}" wire:model.live="selectedProfessores"
                 :options="$displayProfessores ?? []" />
 
             @if($this->planoTrabalho)
-                <p class="text-label-medium my-5">Os campos acima não podem ser editados</p>
+            <p class="text-label-medium my-5">Os campos acima não podem ser editados</p>
             @endif
         </div>
 
@@ -148,11 +178,11 @@ new class extends Component {
             flexibilização: </h2>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5 border border-on-surface">
             @if(!$planoTrabalho)
-                <p class="text-label-large">
-                    Preenchimento automático com base nas ementas dos componentes curriculares selecionados
-                </p>
+            <p class="text-label-large">
+                Preenchimento automático com base nas ementas dos componentes curriculares selecionados
+            </p>
             @else
-                <p>{{ $planoTrabalho->disciplina->ementa }}</p>
+            <p>{{ $planoTrabalho->disciplina->ementa }}</p>
             @endif
         </div>
     </div>

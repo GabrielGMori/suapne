@@ -2,7 +2,9 @@
 
 use Livewire\Component;
 use App\Models\Estudante;
+use App\Models\Disciplina;
 use App\Models\PlanoFlexibilizacaoCurricular;
+use Livewire\Attributes\On;
 
 new class extends Component {
     public ?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null;
@@ -10,11 +12,15 @@ new class extends Component {
     public null|string|array $estudanteId = '';
     public ?Estudante $estudante = null;
 
-    public ?array $displayDisciplinas = null;
+    public array $displayDisciplinas = [];
     public array $selectedDisciplinas = [];
 
     public function mount(): void
     {
+        $this->displayDisciplinas = Disciplina::with('curso')->get()
+            ->mapWithKeys(fn($disc) => [$disc->id => $disc->nome . ' - ' . $disc->curso?->nome])
+            ->toArray();
+
         $this->estudanteId = old('estudante_id', $this->planoFlexibilizacao?->estudante_id ?? ($this->estudanteId ?? ''));
 
         if (filled($this->estudanteId)) {
@@ -28,10 +34,25 @@ new class extends Component {
     {
         $id = is_array($estId) ? $estId[0] : $estId;
         $this->estudante = Estudante::find($id);
-
-        $estudanteDisciplinas = $this->estudante?->disciplinas;
-        $this->displayDisciplinas = $estudanteDisciplinas ? $estudanteDisciplinas->pluck('nome', 'id')->toArray() : [];
         $this->selectedDisciplinas = [];
+    }
+
+    #[On('disciplina-created')]
+    public function onDisciplinaCreated($id, $nome): void
+    {
+        $disciplina = Disciplina::with('curso')->find($id);
+        $this->displayDisciplinas[$id] = $disciplina->nome . ' - ' . $disciplina->curso?->nome;
+        $this->selectedDisciplinas[] = $id;
+    }
+
+    public function selecionarDisciplinasDoCurso(): void
+    {
+        if ($this->estudante === null) return;
+
+        $this->selectedDisciplinas = Disciplina::where('curso_id', $this->estudante->curso_id)->where('curso_periodo', $this->estudante->periodo)
+            ->pluck('id')
+            ->map(fn($id) => (string) $id)
+            ->toArray();
     }
 };
 
@@ -43,7 +64,7 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
     action="{{ $planoFlexibilizacao == null ? route('planos-flexibilizacao.store') : route('planos-flexibilizacao.update', ['planoFlexibilizacao' => $planoFlexibilizacao]) }}"
     method="POST">
     @if ($planoFlexibilizacao !== null)
-        @method('PATCH')
+    @method('PATCH')
     @endif
     @csrf
 
@@ -58,8 +79,8 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">1. Dados do estudante</h2>
-            <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined"
-                size="large" placeholder="Selecionar" :options="Estudante::all()
+            <livewire:form.select type="select" label="Estudante" name="estudante_id" appearance="outlined" size="large"
+                placeholder="Selecionar" :options="Estudante::all()
                     ->mapWithKeys(function ($estudante) {
                         $semPlano = $estudante->planosFlexibilizacaoCurricular->where('ano', now()->year)->isEmpty();
                         return [$estudante->id => $estudante->nome . ($semPlano ? ' (Sem plano!)' : '')];
@@ -79,8 +100,8 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
             <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
             <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou
                 externos ao IFPR) que fazem o acompanhamento do estudante</h3>
-            <x-form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined"
-                size="full" :value="old('campos.atendimentoMultiprofissional', $planoFlexibilizacao?->campos['atendimentoMultiprofissional'] ?? '')" />
+            <x-form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined" size="full"
+                :value="old('campos.atendimentoMultiprofissional', $planoFlexibilizacao?->campos['atendimentoMultiprofissional'] ?? '')" />
         </div>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
             <h2 class="text-display-small">4. Flexibilização Curricular, visando a impletenção de 1(uma) ou mais
@@ -91,7 +112,8 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
                 :value="old('campos.diferenciacaoCurricular', $planoFlexibilizacao?->campos['diferenciacaoCurricular'] ?? '')" />
             <livewire:form.select
                 label="II - Atendimento educacional individualizado realizado pelo professor do componente curricular"
-                name="campos[atendimentoIndividualizado]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']"
+                name="campos[atendimentoIndividualizado]" appearance="outlined"
+                :options="['Sim' => 'Sim', 'Não' => 'Não']"
                 :value="old('campos.atendimentoIndividualizado', $planoFlexibilizacao?->campos['atendimentoIndividualizado'] ?? '')" />
             <livewire:form.select label="III - Dilação ou redução do prazo para a conclusão do curso"
                 name="campos[alteracaoPrazo]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']"
@@ -104,15 +126,17 @@ $count = count($planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
                 name="campos[criteriosDiferenciados]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']"
                 :value="old('campos.criteriosDiferenciados', $planoFlexibilizacao?->campos['criteriosDiferenciados'] ?? '')" />
         </div>
+
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
             <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
             <div class="flex items-center gap-5" wire:key="disciplinas-select-wrapper">
                 <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
-                    appearance="outlined" name="campos[componentesCurriculares]" :disabled="$estudante === null" :placeholder="$estudante !== null ? 'Selecionar' : 'Escolha um estudante'"
-                    :options="$displayDisciplinas ?? []" wire:key="disciplinas-select-{{ $this->estudante?->id }}"
-                    wire:model.live="selectedDisciplinas" :value="$selectedDisciplinas"/>
-                <x-button type="button" size="dynamic" label="Selecionar todos" color="secondary"
-                    x-on:click="$dispatch('select-all', { name: 'campos[componentesCurriculares]' })" />
+                    appearance="outlined" name="campos[componentesCurriculares]" :options="$displayDisciplinas"
+                    size="xlarge" wire:key="disciplinas-select" wire:model.live="selectedDisciplinas"
+                    :value="$selectedDisciplinas" />
+                <livewire:modal.stateful.add-disciplina wire:key="add-disciplina-modal" />
+                <x-button type="button" size="dynamic" label="Selecionar todos do curso do estudante selecionado" color="secondary"
+                    wire:click="selecionarDisciplinasDoCurso" />
             </div>
         </div>
 
