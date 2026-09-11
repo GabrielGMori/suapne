@@ -37,12 +37,12 @@
             <button
                 type="button"
                 @disabled($disabled)
-                class="select-control {{ $baseClass }} {{ $name && $errors->has($this->resolvedErrorName()) ? 'form-control-error' : ''}}"
+                class="select-control {{ $baseClass }} {{ $error || ($name && $errors->has($this->resolvedErrorName())) ? 'form-control-error' : ''}}"
                 x-on:click="isOpen = !isOpen"
             >
                 <div x-show="selected.length > 0" class="w-full text-left">
                     @if ($isMultiple && $submittedName !== '')
-                        <div class="select-chips">
+                        <div class="select-chips" wire:ignore>
                             <template x-for="item in selectedWithLabels" :key="item.value">
                                 <span class="select-chip">
                                     @if(!$disabled)
@@ -72,7 +72,7 @@
             @endif
 
             <div x-show="isOpen" x-cloak x-ref="menu" class="select-menu" role="listbox"
-                :aria-multiselectable="isMultiple">
+                :aria-multiselectable="isMultiple" wire:ignore>
                 <div x-show="searchQuery.length > 0" class="px-3 py-2 text-sm border-b sticky top-0 z-10 bg-surface">
                     Pesquisando por:
                     <span class="font-medium" x-text="searchQuery"></span>
@@ -119,6 +119,9 @@
 
     <div class="h-5">
         @error($this->resolvedErrorName())
+            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
+        @enderror
+        @error($error)
             <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
     </div>

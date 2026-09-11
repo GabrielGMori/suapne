@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
 
             CursoSeeder::class,
-            // DisciplinaSeeder::class,
-            // UserSeeder::class,
-            // EstudanteSeeder::class,
+            DisciplinaSeeder::class,
+            UserSeeder::class,
+            EstudanteSeeder::class,
             // PlanoFlexibilizacaoCurricularSeeder::class,
             // PlanoTrabalhoEstudanteSeeder::class,
             // AtendimentoSemanalSeeder::class,

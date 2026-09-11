@@ -28,6 +28,9 @@ new class extends Component
     #[Reactive]
     public ?bool   $disabled      = false;
 
+    #[Reactive]
+    public ?string $error        = null;
+
     public function mount(
         string  $type          = 'select',
         mixed   $value         = null,
@@ -39,6 +42,7 @@ new class extends Component
         bool    $clearable     = false,
         bool    $disabled      = false,
         string $noResultMessage = 'Sem resultados',
+        ?string $error         = null,
     ): void {
         $this->isMultiple    = $type === 'multiselect';
         $this->name          = $name;
@@ -49,6 +53,7 @@ new class extends Component
         $this->clearable     = $clearable;
         $this->disabled      = $disabled;
         $this->noResultMessage = $noResultMessage;
+        $this->error         = $error;
 
         $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
         $resolved = $oldName !== '' ? old($oldName, $value) : $value;
