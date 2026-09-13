@@ -211,7 +211,7 @@
     </a>
 
     <div class="flex justify-center py-2">
-        <a href="#"
+        <a href="{{ route('contas.perfil') }}"
            data-sidebar-account
            class="w-full justify-start gap-3 pr-3 bg-secondary hover:bg-white/5 group-data-[expanded=false]/sidebar:w-10 group-data-[expanded=false]/sidebar:aspect-square group-data-[expanded=false]/sidebar:justify-start group-data-[expanded=false]/sidebar:p-0 group-data-[expanded=false]/sidebar:bg-transparent group-data-[expanded=false]/sidebar:hover:bg-transparent flex items-center h-10 overflow-hidden rounded-full transition-[width,padding,background-color] duration-300 ease-in-out text-white"
            title="{{ $user->nome }}">

@@ -67,6 +67,21 @@ class User extends Authenticatable implements Auditable, CanResetPassword
         return $this->hasMany(PlanoTrabalhoEstudante::class, 'user_professor_id');
     }
 
+    public function planosTrabalhoCriados(): HasMany
+    {
+        return $this->hasMany(PlanoTrabalhoEstudante::class);
+    }
+
+    public function planosFlexibilizacaoCurricular(): HasMany
+    {
+        return $this->hasMany(PlanoFlexibilizacaoCurricular::class);
+    }
+
+    public function atendimentosSemanais(): HasMany
+    {
+        return $this->hasMany(AtendimentoSemanal::class);
+    }
+
     public function getNameAttribute()
     {
         return $this->nome;

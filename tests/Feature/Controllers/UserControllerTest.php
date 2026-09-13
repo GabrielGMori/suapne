@@ -13,6 +13,16 @@ beforeEach(function () {
     $this->disciplina = Disciplina::factory()->create(['curso_id' => $this->curso->id]);
 });
 
+test('any authenticated user can see their own profile', function () {
+    foreach ([$this->admin, $this->tecnico, $this->professor] as $user) {
+        $this->actingAs($user)
+            ->get(route('contas.perfil'))
+            ->assertStatus(200)
+            ->assertSee($user->nome)
+            ->assertSee($user->email);
+    }
+});
+
 test('admin can manage CNAPNE and Professor accounts', function () {
     $this->actingAs($this->admin)
         ->get(route('contas.cnapne.index'))

@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function perfil(Request $request)
+    {
+        return view('contas.perfil', ['user' => $request->user()]);
+    }
+
     public function indexCnapne(Request $request)
     {
         abort_unless($request->user()->can('viewAny', User::class), 404);

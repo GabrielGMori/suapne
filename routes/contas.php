@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 
 Route::prefix('contas')->name('contas.')->group(function () {
 
+    Route::get('/perfil', [UserController::class, 'perfil'])->name('perfil');
+
     // Contas CNAPNE
     Route::prefix('cnapne')->name('cnapne.')->group(function () {
         Route::get('/', [UserController::class, 'indexCnapne'])->name('index');
