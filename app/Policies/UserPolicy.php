@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 use function in_array;
 
 class UserPolicy
@@ -36,7 +37,7 @@ class UserPolicy
 
     public function update(User $user, User $model): bool
     {
-        return false;
+        return Auth::user()->id === $model->id;
     }
 
     public function delete(User $user, User $model): bool

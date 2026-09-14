@@ -21,13 +21,13 @@ class DatabaseSeeder extends Seeder
             DisciplinaSeeder::class,
             UserSeeder::class,
             EstudanteSeeder::class,
-            // PlanoFlexibilizacaoCurricularSeeder::class,
-            // PlanoTrabalhoEstudanteSeeder::class,
-            // AtendimentoSemanalSeeder::class,
-            // SolicitacaoRegistroSeeder::class,
-            // DocumentoSeeder::class,
-            // EntrevistaFamiliarSeeder::class,
-            // ObservacaoEstudanteSeeder::class,
+            PlanoFlexibilizacaoCurricularSeeder::class,
+            PlanoTrabalhoEstudanteSeeder::class,
+            AtendimentoSemanalSeeder::class,
+            SolicitacaoRegistroSeeder::class,
+            DocumentoSeeder::class,
+            EntrevistaFamiliarSeeder::class,
+            ObservacaoEstudanteSeeder::class,
         ]);
     }
 }

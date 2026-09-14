@@ -24,6 +24,7 @@ class EntrevistaFamiliarFactory extends Factory
 
         return [
             'data' => $this->faker->dateTimeBetween('-10 year'),
+            'responsavel_preenchimento' => $this->faker->name(),
             'estudante_id' => $estudante->id,
             'user_id' => $user->id,
             'campos' => [],
