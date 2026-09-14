@@ -16,18 +16,17 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminSeeder::class,
-
             CursoSeeder::class,
-            DisciplinaSeeder::class,
-            UserSeeder::class,
-            EstudanteSeeder::class,
-            PlanoFlexibilizacaoCurricularSeeder::class,
-            PlanoTrabalhoEstudanteSeeder::class,
-            AtendimentoSemanalSeeder::class,
-            SolicitacaoRegistroSeeder::class,
-            DocumentoSeeder::class,
-            EntrevistaFamiliarSeeder::class,
-            ObservacaoEstudanteSeeder::class,
+            // DisciplinaSeeder::class,
+            // UserSeeder::class,
+            // EstudanteSeeder::class,
+            // PlanoFlexibilizacaoCurricularSeeder::class,
+            // PlanoTrabalhoEstudanteSeeder::class,
+            // AtendimentoSemanalSeeder::class,
+            // SolicitacaoRegistroSeeder::class,
+            // DocumentoSeeder::class,
+            // EntrevistaFamiliarSeeder::class,
+            // ObservacaoEstudanteSeeder::class,
         ]);
     }
 }
