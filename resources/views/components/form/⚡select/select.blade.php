@@ -33,7 +33,8 @@
                 $wire.on('updated-options', ({opt}) => {
                     { options = normalizeOptions(opt) }
                 });
-            " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false">
+            " x-bind:aria-expanded="isOpen" x-on:keydown="handleKeydown" x-on:click.outside="isOpen = false"
+            x-on:focusout="if (! $el.contains($event.relatedTarget)) { isOpen = false; }">
             <button
                 type="button"
                 @disabled($disabled)
