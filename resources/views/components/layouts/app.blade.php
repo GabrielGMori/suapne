@@ -13,9 +13,10 @@
     @livewireStyles
 </head>
 
-<body class="min-h-screen bg-white font-sans text-black antialised flex flex-col">
+<body class="min-h-screen bg-white font-sans text-black antialised flex flex-col w-full min-w-[min-content]">
+    
     {{ $slot }}
-
+    
     @livewireScripts
 </body>
 

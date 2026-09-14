@@ -2,7 +2,7 @@
     'full' => true, // Exibe ou oculta a seção de "Links úteis". Pode ser: true|false
 ])
 
-<footer {{ $attributes->merge(['class' => 'bg-secondary-container text-white w-full']) }}>
+<footer {{ $attributes->merge(['class' => 'bg-secondary-container text-white w-full min-w-max']) }}>
     <div class="pl-35 pr-60 pt-10 pb-15 ">
         <div class="flex flex-col md:flex-row justify-between items-start gap-15">
             <img src="{{ asset('storage/img/logo-cnapne-sem-texto.png') }}"
@@ -25,7 +25,7 @@
                         <li><a href="{{ route('estudantes.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Estudantes</a></li>
                         <li><a href="{{ route('planos-trabalho.index') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">
                             {{ Illuminate\Support\Facades\Auth::user()->role === App\Enums\RoleEnum::PROFESSOR_REGULAR ? 'Meus' : '' }} Planos de Trabalho</a></li>
-                        <li><a href="#" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Minha Conta</a></li>
+                        <li><a href="{{ route('contas.perfil') }}" class="text-body-medium text-on-surface hover:text-white transition-colors duration-150">Minha Conta</a></li>
                     </ul>
                 </div>
             @endif

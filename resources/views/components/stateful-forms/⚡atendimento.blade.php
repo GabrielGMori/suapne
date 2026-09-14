@@ -50,7 +50,7 @@ new class extends Component {
         @method('PATCH')
     @endif
     @csrf
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
+    <div class="flex flex-col min-h bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
 
         <div wire:key='estudante-select-wrapper'>
