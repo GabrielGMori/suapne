@@ -23,6 +23,7 @@ class Estudante extends Model implements Auditable
 
     protected $fillable = [
         'nome',
+        'nome_social',
         'matricula',
         'ingresso_ano',
         'ingresso_periodo',

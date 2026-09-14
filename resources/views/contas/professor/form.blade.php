@@ -23,7 +23,7 @@
                 <x-form.input type="email" name="email" label="E-mail" appearance="outlined" :value="$user->email"
                     size="large" />
 
-                <livewire:form.select type="multiselect" name="disciplinas" appearance="outlined" size="xlarge"
+                <livewire:form.select label="Disciplinas" type="multiselect" name="disciplinas" appearance="outlined" size="xlarge"
                 :value="$currDisciplinas" :options="$disciplinas" />
             </div>
         </div>

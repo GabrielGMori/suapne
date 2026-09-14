@@ -48,7 +48,7 @@ new class extends Component {
 
         <livewire:form.select type="select" label="Curso" name="curso_id" appearance="outlined" placeholder="Selecionar"
             :options="Curso::pluck('nome', 'id')->toArray()" wire:model="curso_id" size="large"
-            wire:key="add-disciplina-curso-select" :error="$errors->first('curso_id')" />
+            wire:key="add-disciplina-curso-select" :parentError="$errors->first('curso_id')" />
 
         <x-form.input type="number" name="curso_periodo" label="Período no curso" appearance="outlined" size="small"
             wire:model="curso_periodo" />

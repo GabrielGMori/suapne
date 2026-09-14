@@ -36,6 +36,7 @@ class EstudanteRequest extends FormRequest
 
         return [
             'nome' => ['required', 'string', 'max:200'],
+            'nome_social' => ['nullable', 'string', 'max:200'],
             'matricula' => ['required', 'string', 'max:50', Rule::unique('estudantes', 'matricula')->ignore($estudante?->id)],
             'ingresso_ano' => ['required', 'integer', 'digits:4'],
             'ingresso_periodo' => ['required', 'integer', 'digits:1'],

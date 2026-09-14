@@ -38,7 +38,7 @@
             <button
                 type="button"
                 @disabled($disabled)
-                class="select-control {{ $baseClass }} {{ $error || ($name && $errors->has($this->resolvedErrorName())) ? 'form-control-error' : ''}}"
+                class="select-control {{ $baseClass }} {{ $parentError || ($name && $errors->has($this->resolvedErrorName())) ? 'form-control-error' : ''}}"
                 x-on:click="isOpen = !isOpen"
             >
                 <div x-show="selected.length > 0" class="w-full text-left">
@@ -122,9 +122,9 @@
         @error($this->resolvedErrorName())
             <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
         @enderror
-        @error($error)
-            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $message }}</p>
-        @enderror
+        @if(filled($parentError))
+            <p class="text-error text-center form-control-{{$size}} self-center text-body-small">{{ $parentError }}</p>
+        @endif
     </div>
 </div>
 

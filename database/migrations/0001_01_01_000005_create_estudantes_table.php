@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('nome', 200);
+            $table->string('nome_social', 200)->nullable();
             $table->string('matricula', 50);
 
             $table->string('cpf', 20);

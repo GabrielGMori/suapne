@@ -4,7 +4,7 @@
     'header' => null,
 ])
 
-<x-layouts.app title="{{ $title }} - SUAPNE">
+<x-layouts.app title="{{ $title }}">
     <div class="flex flex-1">
         <div class="bg-secondary-container">
             <x-menu-lateral :user="Auth::user()" />
