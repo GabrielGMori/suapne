@@ -15,13 +15,18 @@
             <h2 class="text-display-small">Dados da conta da CNAPNE</h2>
             <hr class="text-on-surface mb-10" />
 
-            <div class="grid grid-cols-3">
-                <livewire:avatar-upload :default-img-path="old('avatar', $user?->avatar)" class="row-span-3" />
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="row-span-3">
+                    <livewire:avatar-upload :default-img-path="old('avatar', $user?->avatar)"/>
+                </div>
+                <div>
                 <x-form.input name="nome" label="Nome" appearance="outlined" :value="$user->name"
-                    size="large" />
+                    size="full" />
+                </div>
+                <div>
                 <x-form.input type="email" name="email" label="E-mail" appearance="outlined" :value="$user->email"
-                    size="large" />
-
+                    size="full" />
+                </div>
                 <div>
                     <livewire:form.select name="role" label="Função" appearance="outlined" :options="[
                         RoleEnum::TECNICO->value => RoleEnum::TECNICO->label(),
@@ -32,6 +37,7 @@
                         <p class="text-body-small">Não é possível mudar a função da conta sendo utilizada no momento</p>
                     @endif
                 </div>
+            
             </div>
         </div>
 

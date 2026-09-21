@@ -13,7 +13,7 @@ use App\Models\Curso;
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">Informações do curso</h2>
         <hr class="text-on-surface">
-        <div class="grid grid-cols-2">
+        <div class="grid grid-cols-1 md:grid-cols-2">
             <div>
                 <x-form.input label="Nome do curso*" appearance="outlined" size="large" name="nome" required :value="$curso->nome ?? null"/>
             </div>
