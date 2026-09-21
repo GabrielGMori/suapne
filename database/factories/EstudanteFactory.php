@@ -38,7 +38,8 @@ class EstudanteFactory extends Factory
             'cpf' => $this->faker->unique()->numerify('###.###.###-##'),
             'situacao' => $this->faker->randomElement([
                 SituacaoEstudanteEnum::MATRICULADO->value,
-                SituacaoEstudanteEnum::FORMADO->value,
+                SituacaoEstudanteEnum::CONCLUIDO->value,
+                SituacaoEstudanteEnum::TRANSFERIDO->value,
                 SituacaoEstudanteEnum::CANCELADO->value
             ]),
             'sexo' => $this->faker->randomElement([

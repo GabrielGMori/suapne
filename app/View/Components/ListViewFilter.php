@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class ListViewFilter implements \JsonSerializable
 {
@@ -26,7 +26,6 @@ class ListViewFilter implements \JsonSerializable
     private function __construct(string $key)
     {
         $this->key = $key;
-        $this->includes();
     }
 
     public static function make(string $key): static
@@ -103,36 +102,36 @@ class ListViewFilter implements \JsonSerializable
     public function trashed(string $label = 'Excluído', array $options = [0 => 'Não', 1 => 'Sim']): static
     {
         $this->trashedFilter = true;
+
         return $this
             ->label($label)
             ->size('small')
             ->type('select')
             ->options($options)
-            ->applyUsing(function (Builder $query, array $value) {
-                if (empty($value[0])) {
-                    return;
-                }
+            ->applyUsing(static function (Builder $query, mixed $value) {
+                $val = is_array($value) ? ($value[0] ?? null) : $value;
 
-                if ($value[0] === 'Sim' || (int)$value[0] === 1) {
+                if ($val === '1' || $val === 1 || $val === 'Sim') {
                     $query->onlyTrashed();
-                    return;
                 }
-
-                $query;
             })
             ->hidden();
     }
 
-    public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null) : static
+    public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null): static
     {
-        return $this->applyUsing(function ($query, $value) use ($useKey, $operation, $transform) {
+        return $this->applyUsing(function (Builder $query, mixed $value) use ($useKey, $operation, $transform) {
             $isArray = is_array($value);
-            $value = ($transform && !$isArray) ? $transform($value) : $value;
+            if ($transform && !$isArray) {
+                $value = $transform($value);
+            }
 
             if ($this->foreignKey) {
-                $query->whereHas($useKey, fn($q) => $isArray
-                    ? $q->whereIn($this->foreignKey, $value)
-                    : $q->where($this->foreignKey, $operation, $value)
+                $query->whereRelation(
+                    $useKey,
+                    fn(Builder $q) => $isArray
+                        ? $q->whereIn($this->foreignKey, $value)
+                        : $q->where($this->foreignKey, $operation, $value)
                 );
             } else {
                 $isArray
@@ -154,43 +153,91 @@ class ListViewFilter implements \JsonSerializable
 
     public function includes(): static
     {
-        return $this->applyOperation('like', fn($value) => "%{$value}%");
+        return $this->applyOperation('like', static fn($value) => "%{$value}%");
     }
 
-    public function startingDateInterval(string $useKey)
+    public function startingDateInterval(string $useKey): static
     {
-        return $this->applyOperationWithKey($useKey, '>=', fn($value) => Carbon::parse($value)->startOfDay());
+        return $this->applyOperationWithKey(
+            $useKey,
+            '>=',
+            static fn($value) => strlen($value) === 10 ? "{$value} 00:00:00" : $value
+        );
     }
 
-    public function endingDateInterval(string $useKey)
+    public function endingDateInterval(string $useKey): static
     {
-        return $this->applyOperationWithKey($useKey, '<=', fn($value) => Carbon::parse($value)->endOfDay());
+        return $this->applyOperationWithKey(
+            $useKey,
+            '<=',
+            static fn($value) => strlen($value) === 10 ? "{$value} 23:59:59" : $value
+        );
     }
 
     public function apply(mixed $query, mixed $value): void
     {
+        if ($value === null || $value === '' || $value === []) {
+            return;
+        }
+
         if (isset($this->applyUsing)) {
             ($this->applyUsing)($query, $value);
             return;
         }
 
         if (is_array($value)) {
-            if (empty($value)) return;
             $query->whereIn($this->key, $value);
+        } else {
+            $query->where($this->key, 'like', "%{$value}%");
         }
     }
 
-    public function isHidden() : bool         { return $this->hidden; }
-    public function getKey(): string          { return $this->key; }
-    public function getLabel(): string        { return $this->label ?? \Illuminate\Support\Str::headline($this->key); }
-    public function getType(): string         { return $this->type; }
-    public function getSize(): string         { return $this->size; }
-    public function getDefault(): mixed       { return $this->default; }
-    public function getOptions(): array       { return $this->options; }
-    public function getPlaceholder(): ?string { return $this->placeholder; }
-    public function getIdentifier(): ?string  { return $this->identifier; }
-    public function isClearable(): bool       { return $this->clearable; }
-    public function isTrashedFilter(): bool       { return $this->trashedFilter; }
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label ??= Str::headline($this->key);
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+    public function getSize(): string
+    {
+        return $this->size;
+    }
+    public function getDefault(): mixed
+    {
+        return $this->default;
+    }
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+    public function getPlaceholder(): ?string
+    {
+        return $this->placeholder;
+    }
+    public function getIdentifier(): ?string
+    {
+        return $this->identifier;
+    }
+    public function isClearable(): bool
+    {
+        return $this->clearable;
+    }
+    public function isTrashedFilter(): bool
+    {
+        return $this->trashedFilter;
+    }
 
     public function jsonSerialize(): array
     {

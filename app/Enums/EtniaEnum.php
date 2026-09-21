@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum EtniaEnum: string
 {
+    use EnumTrait;
+
     case BRANCA = 'BRANCA';
     case PRETA = 'PRETA';
     case PARDA = 'PARDA';
@@ -21,14 +23,5 @@ enum EtniaEnum: string
             self::INDIGENA => 'Indígena',
             self::NAO_DECLARADA => 'Não declarada',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
     }
 }

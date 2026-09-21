@@ -14,7 +14,7 @@ class EstudanteSeeder extends Seeder
     public function run(): void
     {
         Estudante::factory(7)->create(['situacao' => 'MATRICULADO']);
-        Estudante::factory(2)->create(['situacao' => 'FORMADO']);
-        Estudante::factory(1)->create(['situacao' => 'CANCELADO']);
+        Estudante::factory(2)->create(['situacao' => 'CONCLUIDO']);
+        Estudante::factory(1)->create(['situacao' => 'TRANSFERIDO']);
     }
 }

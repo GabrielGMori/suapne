@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\RoleEnum;
+use App\Enums\StatusSolicitacaoRegistroEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,17 +21,8 @@ return new class extends Migration
             $table->string('password', 200);
             $table->json('campos')->nullable();
 
-            $table->enum('role', [
-                'PROFESSOR_REGULAR',
-                'DOCENTE_ESPECIAL',
-                'TECNICO',
-            ]);
-
-            $table->enum('status', [
-                'PENDENTE',
-                'ACEITA',
-                'RECUSADA',
-            ])->nullable();
+            $table->enum('role', RoleEnum::values());
+            $table->enum('status', StatusSolicitacaoRegistroEnum::values())->nullable();
             
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();

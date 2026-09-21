@@ -4,25 +4,20 @@ namespace App\Enums;
 
 enum SituacaoEstudanteEnum: string
 {
+    use EnumTrait;
+
     case MATRICULADO = 'MATRICULADO';
-    case FORMADO = 'FORMADO';
+    case CONCLUIDO = 'CONCLUIDO';
+    case TRANSFERIDO = 'TRANSFERIDO';
     case CANCELADO = 'CANCELADO';
 
     public function label(): string
     {
         return match ($this) {
             self::MATRICULADO => 'Matriculado',
-            self::FORMADO => 'Formado',
+            self::CONCLUIDO => 'Concluído',
+            self::TRANSFERIDO => 'Transferido',
             self::CANCELADO => 'Cancelado',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
     }
 }

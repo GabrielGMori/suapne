@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum StatusPlanoTrabalhoEnum: string
 {
+    use EnumTrait;
+    
     case PENDENTE = 'PENDENTE';
     case AGUARDANDO_REVISAO = 'AGUARDANDO_REVISAO';
     case DEVOLVIDO = 'DEVOLVIDO';
@@ -37,14 +39,5 @@ enum StatusPlanoTrabalhoEnum: string
             self::DEVOLVIDO => 'Devolvido',
             self::APROVADO => 'Aprovado',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
     }
 }

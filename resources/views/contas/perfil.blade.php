@@ -4,28 +4,11 @@
     use App\Enums\RoleEnum;
 
     $isProfessorRegular = $user->role === RoleEnum::PROFESSOR_REGULAR;
-
     $planosTrabalho = $isProfessorRegular ? $user->planosTrabalhoProfessor : $user->planosTrabalhoCriados;
-
-    $displays = [
-        [
-            'Nome:' => $user->nome,
-            'E-mail:' => $user->email,
-            'Função:' => $user->role->label(),
-            'Conta criada em:' => $user->created_at->format('d/m/Y'),
-        ],
-        [
-            'Última atualização da conta:' => $user->updated_at->format('d/m/Y'),
-            'Disciplinas vinculadas:' => count($user->disciplinas),
-            ($isProfessorRegular ? 'Planos de trabalho atribuídos:' : 'Planos de trabalho criados:') => count($planosTrabalho),
-            'Planos de flexibilização criados:' => count($user->planosFlexibilizacaoCurricular),
-            'Atendimentos registrados:' => count($user->atendimentosSemanais),
-        ],
-    ];
 @endphp
 
 <x-layouts.main title="Meu Perfil">
-    @include('contas.sections.dados-gerais', ['user' => $user, 'displays' => $displays])
+    @include('contas.sections.dados-gerais', ['user' => $user])
 
     <div class="w-full flex justify-end my-4" x-data="{ expandAll: true }">
         <x-button type="button" x-on:click="expandAll = !expandAll; $dispatch('toggle-collapse', { expand: expandAll })"

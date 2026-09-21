@@ -1,91 +1,126 @@
 <?php
 
 use Livewire\Component;
+use Livewire\Attributes\Computed;
 use App\Models\Estudante;
 use App\Models\AtendimentoSemanal;
 
 new class extends Component {
     public ?AtendimentoSemanal $atendimento = null;
 
-    public null|string|array $estudanteId = null;
-    public ?Estudante $estudante = null;
-
+    public array|string|int|null $estudanteId = null;
     public ?string $perfil = '';
 
-    public function mount(): void
+    public function mount(?AtendimentoSemanal $atendimento = null, mixed $estudanteId = null): void
     {
-        $this->estudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? ($this->estudanteId ?? ''));
+        $this->atendimento = $atendimento;
 
-        $oldPerfil = old('campos.perfilDoEstudante') ?? $this->atendimento?->campos['perfilDoEstudante'];
+        // Priority order: old input > model attribute > passed prop
+        $rawEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
+        $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+
+        // Priority order: old input > current record > latest student profile
+        $oldPerfil = old('campos.perfilDoEstudante');
 
         if ($oldPerfil !== null) {
             $this->perfil = $oldPerfil;
+        } elseif ($this->atendimento?->campos['perfilDoEstudante'] ?? null) {
+            $this->perfil = $this->atendimento->campos['perfilDoEstudante'];
         } elseif (filled($this->estudanteId)) {
-            $this->updatedEstudanteId($this->estudanteId);
+            $this->loadPerfilForEstudante($this->estudanteId);
         }
     }
 
-    public function updatedEstudanteId($newId)
+    public function updatedEstudanteId($value): void
     {
-        if (!filled($this->estudanteId)) {
-            return;
-        }
-        $id = is_array($newId) ? $newId[0] : $newId;
-        $this->estudante = Estudante::find($id);
+        $id = $this->getScalarEstudanteId($value);
+        $this->loadPerfilForEstudante($id);
+    }
 
-        $ultimoAtendimento = $this->estudante->atendimentosSemanais()->latest()->first();
-        if ($ultimoAtendimento?->campos['perfilDoEstudante'] == '') {
+    private function loadPerfilForEstudante(?string $id): void
+    {
+        if (!filled($id)) {
+            $this->perfil = '';
             return;
         }
-        $this->perfil = $ultimoAtendimento ? $ultimoAtendimento->campos['perfilDoEstudante'] ?? '' : '';
+
+        $estudante = Estudante::find($id);
+
+        if (!$estudante) {
+            $this->perfil = '';
+            return;
+        }
+
+        $ultimoAtendimento = $estudante->atendimentosSemanais()->orderBy('data', 'DESC')->first();
+
+        $this->perfil = $ultimoAtendimento?->campos['perfilDoEstudante'] ?? '';
+    }
+
+    private function getScalarEstudanteId(mixed $value = null): ?string
+    {
+        $val = $value ?? $this->estudanteId;
+
+        if (is_array($val)) {
+            $val = reset($val) ?: null;
+        }
+
+        return filled($val) ? (string) $val : null;
+    }
+
+    #[Computed]
+    public function estudanteOptions(): array
+    {
+        return Estudante::orderBy('nome')->pluck('nome', 'id')->toArray();
     }
 };
 ?>
 
 @props(['atendimento' => null])
 
-<form action="{{ $atendimento == null ? route('atendimentos.store') : route('atendimentos.update', $atendimento) }}"
+<form action="{{ $atendimento ? route('atendimentos.update', $atendimento) : route('atendimentos.store') }}"
     method="POST">
-    @if ($atendimento !== null)
+    @csrf
+    @if ($atendimento)
         @method('PATCH')
     @endif
-    @csrf
+
     <div class="flex flex-col min-h bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">1. Dados do estudante</h2>
 
-        <div wire:key='estudante-select-wrapper'>
-            <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
-                wire:key='estudante-select' wire:model.live="estudanteId" :options="Estudante::pluck('nome', 'id')->toArray()" />
-        </div>
+        <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
+            wire:key="estudante-select-{{ $atendimento?->id ?? 'new' }}" wire:model.live="estudanteId"
+            :options="$this->estudanteOptions" />
 
         <x-form.input label="Local" appearance="outlined" size="small" name="local" wire:ignore
-            :value="$atendimento?->local ?? ''" />
+            :value="old('local', $atendimento?->local ?? '')" />
 
         <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" wire:ignore
-            :value="$atendimento?->data ?? ''" />
+            :value="old('data', $atendimento?->data ?? '')" />
 
-        <div wire:key='perfil-textarea-wrapper'>
-            <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
-             wire:key='perfil-textarea' size="full" wire:model.blur="perfil"/>
-        </div>
+        <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
+            wire:key="perfil-textarea" size="full" wire:model.blur="perfil" />
     </div>
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">2. Registro do Atendimento</h2>
         <x-form.input type="textarea" name="campos[registroDoAtendimento]" appearance="outlined" size="full"
-            :value="$atendimento?->campos['registroDoAtendimento'] ?? ''" />
+            wire:ignore :value="old('campos.registroDoAtendimento', $atendimento?->campos['registroDoAtendimento'] ?? '')" />
     </div>
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">3. Encaminhamentos</h2>
-        <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full"
-            :value="$atendimento?->campos['encaminhamentos'] ?? ''" />
+        <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full" wire:ignore
+            :value="old('campos.encaminhamentos', $atendimento?->campos['encaminhamentos'] ?? '')" />
     </div>
+
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <h2 class="text-display-small">4. Observações adicionais</h2>
         <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full"
-            :value="$atendimento?->campos['observacoesAdicionais'] ?? ''" />
+            wire:ignore :value="old('campos.observacoesAdicionais', $atendimento?->campos['observacoesAdicionais'] ?? '')" />
     </div>
+
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="atendimentos.index" />
-        <x-button type="submit" label="Registrar" />
+        <x-button type="submit" label="{{ $atendimento ? 'Salvar Alterações' : 'Registrar' }}" />
     </div>
 </form>

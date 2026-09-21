@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
@@ -9,56 +8,62 @@ use Livewire\Attributes\Reactive;
 new class extends Component
 {
     #[Modelable]
-    public array|string $selectedItems = [];
+    public array|string|int|null $selectedItems = [];
 
     #[Reactive]
-    public array  $options       = [];
+    public array $options = [];
 
-    public bool   $isMultiple    = false;
-    public bool   $clearable     = false;
-    public string $name          = '';
-    public ?string $label        = null;
-    public string $appearance    = 'default';
-    public string $size          = 'medium';
+    public bool $isMultiple = false;
+    public bool $clearable = false;
+    public string $name = '';
+    public ?string $label = null;
+    public string $appearance = 'default';
+    public string $size = 'medium';
     public string $noResultMessage = 'Sem resultados';
 
     #[Reactive]
-    public ?string $placeholder  = '';
+    public ?string $placeholder = '';
 
     #[Reactive]
-    public ?bool   $disabled      = false;
+    public ?bool $disabled = false;
 
     #[Reactive]
-    public ?string $parentError        = null;
+    public ?string $parentError = null;
 
     public function mount(
-        string  $type          = 'select',
-        mixed   $value         = null,
-        string  $name          = '',
-        ?string $label         = null,
-        string  $appearance    = 'default',
-        string  $size          = 'medium',
-        ?string $placeholder   = '',
-        bool    $clearable     = false,
-        bool    $disabled      = false,
+        string $type = 'select',
+        mixed $value = null,
+        string $name = '',
+        ?string $label = null,
+        string $appearance = 'default',
+        string $size = 'medium',
+        ?string $placeholder = '',
+        bool $clearable = false,
+        bool $disabled = false,
         string $noResultMessage = 'Sem resultados',
-        ?string $parentError         = null,
+        ?string $parentError = null,
     ): void {
-        $this->isMultiple    = $type === 'multiselect';
-        $this->name          = $name;
-        $this->label         = $label;
-        $this->appearance    = $appearance;
-        $this->size          = $size;
-        $this->placeholder   = $placeholder;
-        $this->clearable     = $clearable;
-        $this->disabled      = $disabled;
-        $this->noResultMessage = $noResultMessage;
-        $this->parentError         = $parentError;
+        $this->fill(compact(
+            'name',
+            'label',
+            'appearance',
+            'size',
+            'placeholder',
+            'clearable',
+            'disabled',
+            'noResultMessage',
+            'parentError',
+        ));
 
-        $oldName = trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
-        $resolved = $oldName !== '' ? old($oldName, $value) : $value;
+        $this->isMultiple = $type === 'multiselect';
+        $this->selectedItems = $this->normalize($this->resolveInitialValue($name, $value));
+    }
 
-        $this->selectedItems = $this->normalize($resolved);
+    public function updatedSelectedItems($value): void
+    {
+        if (!is_array($value)) {
+            $this->selectedItems = $this->normalize($value);
+        }
     }
 
     public function updatedOptions($opt): void
@@ -81,10 +86,26 @@ new class extends Component
         $this->selectedItems = $this->normalize(array_keys($this->options));
     }
 
+    public function resolvedErrorName(): string
+    {
+        return $this->dotName($this->name);
+    }
+
+    private function resolveInitialValue(string $name, mixed $value): mixed
+    {
+        $dotName = $this->dotName($name);
+        return $dotName !== '' ? old($dotName, $value) : $value;
+    }
+
+    private function dotName(string $name): string
+    {
+        return trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
+    }
+
     private function normalize(mixed $value): array
     {
         if (is_array($value)) {
-            return array_values(array_map('strval', array_filter($value, fn($v) => $v !== '')));
+            return array_values(array_map('strval', array_filter($value, fn($v) => $v !== '' && $v !== null)));
         }
 
         if ($value !== null && $value !== '') {
@@ -92,10 +113,5 @@ new class extends Component
         }
 
         return [];
-    }
-
-    public function resolvedErrorName(): string
-    {
-        return preg_replace('/\[(.*?)\]/', '.$1', $this->name);
     }
 };

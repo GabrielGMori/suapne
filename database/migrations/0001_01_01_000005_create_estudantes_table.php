@@ -1,5 +1,8 @@
 <?php
 
+use App\Enums\EtniaEnum;
+use App\Enums\SexoEnum;
+use App\Enums\SituacaoEstudanteEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +18,6 @@ return new class extends Migration
             $table->id();
 
             $table->string('nome', 200);
-            $table->string('nome_social', 200)->nullable();
             $table->string('matricula', 50);
 
             $table->string('cpf', 20);
@@ -34,25 +36,9 @@ return new class extends Migration
             $table->text('necessidades');
 
 
-            $table->enum('situacao', [
-                'MATRICULADO',
-                'FORMADO',
-                'CANCELADO',
-            ]);
-
-            $table->enum('sexo', [
-                'MASCULINO',
-                'FEMININO',
-            ]);
-
-            $table->enum('etnia', [
-                'BRANCA',
-                'PRETA',
-                'PARDA',
-                'AMARELA',
-                'INDIGENA',
-                'NAO_DECLARADA',
-            ])->nullable();
+            $table->enum('situacao', SituacaoEstudanteEnum::values());
+            $table->enum('sexo', SexoEnum::values());
+            $table->enum('etnia', EtniaEnum::values())->nullable();
 
             $table->string('nacionalidade', 45)->nullable();
             $table->string('naturalidade', 45)->nullable();

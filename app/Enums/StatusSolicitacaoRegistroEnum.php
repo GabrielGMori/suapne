@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum StatusSolicitacaoRegistroEnum: string
 {
+    use EnumTrait;
+    
     case PENDENTE = 'PENDENTE';
     case ACEITA = 'ACEITA';
     case RECUSADA = 'RECUSADA';
@@ -24,14 +26,5 @@ enum StatusSolicitacaoRegistroEnum: string
             self::ACEITA => 'success',
             self::RECUSADA => 'danger',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
     }
 }

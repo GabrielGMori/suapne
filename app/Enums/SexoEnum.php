@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum SexoEnum: string
 {
+    use EnumTrait;
+
     case MASCULINO = 'MASCULINO';
     case FEMININO = 'FEMININO';
 
@@ -13,14 +15,5 @@ enum SexoEnum: string
             self::MASCULINO => 'Masculino',
             self::FEMININO => 'Feminino',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
     }
 }

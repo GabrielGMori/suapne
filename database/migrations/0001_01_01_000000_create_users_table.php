@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoleEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,11 +19,7 @@ return new class extends Migration
             $table->string('email', 200);
             $table->string('password', 200);
 
-            $table->enum('role', [
-                'PROFESSOR_REGULAR',
-                'DOCENTE_ESPECIAL',
-                'TECNICO',
-            ]);
+            $table->enum('role', RoleEnum::values());
 
             $table->string('avatar', 255)->nullable();
 

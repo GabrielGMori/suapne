@@ -1,42 +1,7 @@
 @props(['estudante'])
 
-@php
-    $displays = [
-        [
-            'Nome completo:' => $estudante->nome,
-            'Nome social:' => $estudante->nome_social,
-            'CPF:' => App\Support\Formatter::cpf($estudante->cpf),
-            'Data de nascimento:' => $estudante->data_nascimento?->format('d/m/Y'),
-            'Idade:' => $estudante->idade,
-            'Sexo:' => $estudante->sexo?->label(),
-            'Etnia:' => $estudante->etnia?->label(),
-            'Nacionalidade:' => $estudante->nacionalidade,
-            'Naturalidade:' => $estudante->naturalidade,
-            'Matrícula:' => $estudante->matricula,
-        ],
-
-        [
-            'Situação acadêmica:' => $estudante->situacao?->label(),
-            'Curso:' => $estudante->curso?->nome,
-            'Quant. de períodos do curso:' => $estudante->curso?->quantidade_periodos,
-            'Período:' => $estudante->periodo,
-            'Ingresso:' => $estudante->ingresso_ano . '/' . $estudante->ingresso_periodo,
-            'E-mail acadêmico:' => $estudante->email_academico,
-            'E-mail pessoal:' => $estudante->email_pessoal,
-            'Telefone:' => App\Support\Formatter::telefone($estudante->telefone),
-            'Nome da mãe:' => $estudante->nome_mae,
-            'Telefone da mãe:' => App\Support\Formatter::telefone($estudante->telefone_mae),
-            'Nome do pai:' => $estudante->nome_pai,
-            'Telefone do pai:' => App\Support\Formatter::telefone($estudante->telefone_pai),
-            'Nome do responsável:' => $estudante->nome_responsavel,
-            'Telefone do responsável:' => App\Support\Formatter::telefone($estudante->telefone_responsavel),
-            'E-mail do responsável:' => $estudante->email_responsavel,
-        ],
-    ];
-@endphp
-
 <x-layouts.main title="{{ Str::headline($estudante->nome) }}">
-    @include('estudantes.sections.dados-gerais', ['estudante' => $estudante, 'displays' => $displays])
+    @include('estudantes.sections.dados-gerais', ['estudante' => $estudante])
 
     <div class="w-full flex justify-end my-4" x-data="{ expandAll: true }">
         <x-button type="button" x-on:click="expandAll = !expandAll; $dispatch('toggle-collapse', { expand: expandAll })"

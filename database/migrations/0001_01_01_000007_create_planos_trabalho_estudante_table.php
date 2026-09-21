@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusPlanoTrabalhoEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,12 +15,7 @@ return new class extends Migration
         Schema::create('planos_trabalho_estudante', static function (Blueprint $table) {
             $table->id();
 
-            $table->enum('status', [
-                'PENDENTE',
-                'AGUARDANDO_REVISAO',
-                'DEVOLVIDO',
-                'APROVADO',
-            ]);
+            $table->enum('status', StatusPlanoTrabalhoEnum::values());
 
             $table->date('periodo_inicio');
             $table->date('periodo_fim');

@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum TipoDocumentoEnum: string
 {
+    use EnumTrait;
+
     case DOCUMENTO = 'DOCUMENTO';
     case ENTREVISTA_ESTUDANTE = 'ENTREVISTA_ESTUDANTE';
     case LAUDO = 'LAUDO';
@@ -19,19 +21,5 @@ enum TipoDocumentoEnum: string
             self::ESTUDO_DE_CASO => 'Estudo de Caso',
             self::FICHA_CPAE => 'Ficha CPAE',
         };
-    }
-
-    public static function options(): array
-    {
-        $options = [];
-        foreach (self::cases() as $case) {
-            $options[$case->value] = $case->label();
-        }
-        return $options;
-    }
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
     }
 }

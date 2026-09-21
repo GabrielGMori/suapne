@@ -1,12 +1,5 @@
 @props(['role'])
 
-@php
-use App\Models\Disciplina;
-
-$disciplinas = Disciplina::with('curso')->get()->mapWithKeys(fn ($disc) => [$disc->id => "{$disc->nome} -
-{$disc->curso->nome}"])->toArray();
-@endphp
-
 <x-layouts.auth title="Solicitar Cadastro - Professor">
     <x-auth-card title="{{ App\Enums\RoleEnum::from($role)->label() }}" class="w-150 text-white">
         <form action="{{ route('cadastro.submit') }}" method="POST">
