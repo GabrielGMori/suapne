@@ -188,6 +188,10 @@ new class extends Component {
 
 @props(['planoTrabalho' => null])
 
+@php
+    $idEstudante = is_array($estudanteId) ? (reset($estudanteId) ?: null) : $estudanteId;
+@endphp
+
 <form
     action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}"
     method="POST">
@@ -241,19 +245,14 @@ new class extends Component {
             @endif
         </div>
 
-        <div wire:ignore>
-            <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
-                appearance="outlined" :value="old('campos.cargaHoraria', $planoTrabalho?->campos['cargaHoraria'] ?? '')" />
-            <x-form.input label="Local" name="campos[local]" appearance="outlined"
-                :value="old('campos.local', $planoTrabalho?->campos['local'] ?? '')" />
-        </div>
+        <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+            :estudante-id="$estudanteId" :registro="$planoTrabalho" secao="dadosEstudante" etapa="criacao"
+            :mostrar-adicionar="false" wire:key="campos-dados-estudante-{{ $idEstudante ?? 'sem' }}" />
     </div>
 
-    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
-        <h2 class="text-display-small">2. Particularidades do estudante</h2>
-        <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full"
-            :value="old('campos.particularidadesEstudante', $planoTrabalho?->campos['particularidadesEstudante'] ?? '')" />
-    </div>
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="criacao" :mostrar-adicionar="false"
+        wire:key="campos-criacao-{{ $idEstudante ?? 'sem' }}" />
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
         <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:</h2>
@@ -267,6 +266,13 @@ new class extends Component {
             @endif
         </div>
     </div>
+
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="livre" wire:key="campos-livres-{{ $idEstudante ?? 'sem' }}" />
+
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="preenchimento" :apenas-definicoes="true"
+        wire:key="campos-definicoes-docente-{{ $idEstudante ?? 'sem' }}" />
 
     <input type="hidden" name="status" value="PENDENTE">
 
