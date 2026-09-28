@@ -19,6 +19,7 @@ class ListViewFilter implements \JsonSerializable
     private ?string $placeholder = null;
     private bool $hidden = false;
     private bool $trashedFilter = false;
+    private ?string $mask = null;
 
     private ?Closure $applyUsing = null;
     private ?string $foreignKey = null;
@@ -239,11 +240,23 @@ class ListViewFilter implements \JsonSerializable
         return $this->trashedFilter;
     }
 
+    public function mask(?string $mask): static
+    {
+        $this->mask = $mask;
+        return $this;
+    }
+
+    public function getMask(): ?string
+    {
+        return $this->mask;
+    }
+
     public function jsonSerialize(): array
     {
         return [
             'key' => $this->key,
             'default' => $this->default,
+            'mask' =>$this->mask,
         ];
     }
 }
