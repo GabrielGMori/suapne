@@ -7,15 +7,7 @@ As instruções a seguir englobam tudo que é necessário para preparar e execut
 
 Utilize o sistema operacional Windows 10 ou 11.
 
-## Instalador
-
-Você pode executar o arquivo `QuickSetup.bat` na raíz do projeto para instalar automaticamente todos os requisitos, preparar o ambiente e iniciar a aplicação.
-
-## Instalação Manual
-
-Caso você deseje realizar o processo manualmente, abaixo estão todas as dependências necessárias.
-
-### Requisitos
+## Requisitos
 
 - PHP ≥ v8.2.12
 - Composer ≥ v2.9.4
@@ -23,9 +15,24 @@ Caso você deseje realizar o processo manualmente, abaixo estão todas as depend
 - NPM ≥ v11.6.2
 - MySQL ≥ v9.5
 
+> [!WARNING]
+> A extensão **GD** do PHP precisa estar habilitada. Sem ela, a geração de PDFs com imagens falha e o `composer install` pode reclamar de `ext-gd` ausente.
+>
+> Para verificar, execute: `php -m | findstr /I /X gd`.
+>
+> Se não aparecer nada, abra o `php.ini` (o caminho aparece usando: `php --ini`), remova o `;` do início da linha `;extension=gd` para que fique `extension=gd`, salve o arquivo e reinicie o terminal e o servidor.
+
+## Instalador
+
+Após instalar os requisitos acima, você pode executar o arquivo `QuickSetup.bat` na raiz do projeto para instalar as dependências, preparar o ambiente e iniciar a aplicação.
+
+## Instalação Manual
+
+Caso você deseje realizar o processo manualmente, siga as instruções abaixo.
+
 ### Preparar ambiente
 
-Abra um terminal e execute os comandos na raíz do projeto:
+Abra um terminal e execute os comandos na raiz do projeto:
 ```
 composer install # Instala dependências do Composer
 npm install # Instala dependências do NPM
@@ -34,15 +41,15 @@ php artisan key:generate # Gera uma nova APP_KEY do .env da aplicação
 php artisan storage:link # Cria symlink de 'storage/app/public' para 'public/storage'
 ```
 
-Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário. 
+Inicie o servidor MySQL e modifique suas credenciais no arquivo `.env` caso necessário.
 
-Primeiro, crie a database. Você pode fazer isso com o seguinte comando modificando as váriaveis em "<>", mas apenas caso o `mysql.exe` (Normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) estiver em seu PATH:
+Primeiro, crie a database. Você pode fazer isso com o seguinte comando, modificando as variáveis entre "<>", mas apenas caso o `mysql.exe` (normalmente em `C:\Program Files\MySQL\MySQL Server 9.5\bin`) esteja em seu PATH:
 ```
-mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE suapne_db;" # Cria a database "suapne_db" no servidor MySQL
+mysql -u <DB_USERNAME> -p<DB_PASSWORD> -e "CREATE DATABASE IF NOT EXISTS suapne_db;" # Cria a database "suapne_db" no servidor MySQL
 ```
-Ou manualmente com um gerenciador de banco de dados, como o MySQL Workbench e PHPMyAdmin:
+Ou manualmente com um gerenciador de banco de dados, como o MySQL Workbench ou o phpMyAdmin:
 ```
-CREATE DATABASE suapne_db # Cria a database no servidor com nome igual a DB_DATABASE
+CREATE DATABASE IF NOT EXISTS suapne_db; # Cria a database com nome igual a DB_DATABASE
 ```
 Depois, execute:
 ```

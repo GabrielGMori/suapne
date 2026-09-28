@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\View\Components\ListView;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -30,5 +32,9 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+
+        RateLimiter::for('emails', function ($job) {
+            return Limit::perMinute(5);
+        });
     }
 }

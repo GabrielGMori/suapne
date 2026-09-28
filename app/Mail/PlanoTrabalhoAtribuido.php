@@ -9,12 +9,14 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Queue\InteractsWithQueue;
 
 class PlanoTrabalhoAtribuido extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels, MailableTrait;
 
     /**
      * Create a new message instance.

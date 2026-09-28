@@ -8,11 +8,16 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\Middleware\RateLimited;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 
 class SolicitacaoRegistroRecusada extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use InteractsWithQueue, Queueable, SerializesModels, MailableTrait;
+
+    public $tries = 20;
+
 
     /**
      * Create a new message instance.
