@@ -40,7 +40,7 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
 
-        $validated = $request->validated();
+        $validated = $request->dadosValidados();
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
         $notifications = [];
 
@@ -83,11 +83,15 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         abort_unless($request->user()->can('update', $planoTrabalho), 404);
 
-        $validated = $request->validated();
+        $validated = $request->dadosValidados();
         $validated['campos'] = [
             ...($planoTrabalho->campos ?? []),
-            ...($validated['campos'] ?? []),
+            ...$validated['campos'],
         ];
+        $validated['campos_extras'] = PlanoTrabalhoEstudante::mesclarCamposExtras(
+            $planoTrabalho->camposAdicionais(),
+            $request->camposExtras(),
+        );
 
         $planoTrabalho->update($validated);
 
@@ -116,7 +120,7 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
 
-        $validated = $request->validated();
+        $validated = $request->dadosValidados();
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();
         $professor = $professores->first(
             fn ($professor) => $professor->disciplinas->contains('id', $validated['disciplinas'][0])
@@ -142,7 +146,7 @@ class PlanoTrabalhoEstudanteController extends Controller
     {
         abort_unless($request->user()->can('create', PlanoTrabalhoEstudante::class), 404);
 
-        $validated = $request->validated();
+        $validated = $request->dadosValidados();
         $planoTrabalho = new PlanoTrabalhoEstudante($validated);
         $planoTrabalho->disciplina_id = $validated['chosenDisciplina'] ?? $validated['previewDisciplinas'][0];
         $professores = User::with('disciplinas')->whereIn('id', $validated['professores'])->get();

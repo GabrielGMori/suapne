@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Enums\StatusPlanoTrabalhoEnum;
+use App\Enums\TipoFormularioEnum;
 use App\Models\Disciplina;
+use App\Models\PlanoTrabalhoEstudante;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +13,8 @@ use Illuminate\Validation\Rule;
 
 class PlanoTrabalhoEstudanteRequest extends FormRequest
 {
+    use ComCamposAdicionais;
+
     public function authorize(): bool
     {
         return true;
@@ -21,6 +25,7 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
         $this->merge([
             'user_id' => Auth::id(),
         ]);
+        $this->prepararCampos();
     }
 
     public function rules(): array
@@ -38,18 +43,29 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
             'professores' => ['required_with:disciplinas', 'array'],
             'professores.*' => ['required_with:disciplinas', 'exists:users,id'],
 
-            'campos' => ['sometimes', 'required', 'array'],
-            'campos.cargaHoraria' => ['nullable', 'string'],
-            'campos.local' => ['sometimes', 'required', 'string'],
-            'campos.particularidadesEstudante' => ['sometimes', 'required', 'string'],
-            'campos.objetivosEspecificos' => ['sometimes', 'required', 'string'],
-            'campos.instrumentosAvaliativos' => ['sometimes', 'required', 'string'],
-            'campos.outrasConsideracoes' => ['nullable', 'string'],
+            ...$this->regrasCamposAdicionais($this->chavesPermitidas()),
 
             'chosenDisciplina' => ['sometimes', 'nullable', 'exists:disciplinas,id'],
             'previewDisciplinas' => ['sometimes', 'nullable', 'array'],
             'previewDisciplinas.*' => ['sometimes', 'exists:disciplinas,id']
         ];
+    }
+
+    public function attributes(): array
+    {
+        return $this->rotulosCamposAdicionais();
+    }
+
+    private function chavesPermitidas(): array
+    {
+        $registro = $this->route('planoTrabalho');
+        $registro = $registro instanceof PlanoTrabalhoEstudante ? $registro : null;
+
+        return $this->chavesPermitidasPara(
+            TipoFormularioEnum::PLANO_TRABALHO,
+            $registro,
+            $registro?->estudante_id ?? $this->input('estudante_id'),
+        );
     }
 
     public function after(): array
