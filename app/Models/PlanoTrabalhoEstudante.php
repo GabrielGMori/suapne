@@ -13,9 +13,14 @@ use App\Models\Disciplina;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Enums\TipoFormularioEnum;
+use App\Models\Concerns\TemCamposAdicionais;
 class PlanoTrabalhoEstudante extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
+    use TemCamposAdicionais;
+
+    public const TIPO_FORMULARIO = TipoFormularioEnum::PLANO_TRABALHO;
 
     protected $table = 'planos_trabalho_estudante';
 
@@ -27,11 +32,13 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
         'user_id',
         'user_professor_id',
         'disciplina_id',
-        'campos'
+        'campos',
+        'campos_extras',
     ];
 
     protected $casts = [
         'campos' => 'array',
+        'campos_extras' => 'array',
         'periodo_inicio' => 'date',
         'periodo_fim' => 'date',
         'status' => StatusPlanoTrabalhoEnum::class,

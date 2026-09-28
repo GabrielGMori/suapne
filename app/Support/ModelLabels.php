@@ -8,6 +8,7 @@ use App\Models\Disciplina;
 use App\Models\Documento;
 use App\Models\EntrevistaFamiliar;
 use App\Models\Estudante;
+use App\Models\ModeloFormulario;
 use App\Models\ObservacaoEstudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Models\PlanoTrabalhoEstudante;
@@ -23,6 +24,7 @@ class ModelLabels
         Documento::class => ['Documento', 'o'],
         EntrevistaFamiliar::class => ['Entrevista Familiar', 'a'],
         Estudante::class => ['Estudante', 'a'],
+        ModeloFormulario::class => ['Campos do Formulário', 'os'],
         ObservacaoEstudante::class => ['Observação do Estudante', 'a'],
         PlanoFlexibilizacaoCurricular::class => ['Plano de Flexibilização Curricular', 'o'],
         PlanoTrabalhoEstudante::class => ['Plano de Trabalho do Estudante', 'o'],
