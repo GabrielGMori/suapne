@@ -24,45 +24,22 @@ use App\Models\Disciplina;
             <p class="whitespace-pre-line">{{ $planoFlexibilizacao->estudante->necessidades }}</p>
         </div>
     </div>
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de implementação
-            da flexibilização curricular</h2>
-        <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas já realizadas e
-            justificativa de implementação da flexibilização curricular)</h3>
-        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['acoesPedagogicas'] ?? '---'}}</p>
+    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" :ordem-max="4" />
+
+    @if ($planoFlexibilizacao->temCampo('componentesCurriculares'))
+        <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
+            <h2 class="text-display-small">{{ $planoFlexibilizacao->campoAdicional('componentesCurriculares')['rotulo'] }}</h2>
+            <p class="text-body-large">
+                @forelse($componentes as $index => $disciplinaId)
+                    {{ (is_numeric($disciplinaId) ? (Disciplina::find($disciplinaId)?->nome ?? $disciplinaId) : $disciplinaId) . ($index === $count-1 ? '.' : ',') }}
+                @empty
+                    ---
+                @endforelse
+            </p>
         </div>
-    </div>
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
-        <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou externos
-            ao IFPR) que fazem o acompanhamento do estudante</h3>
-        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{$planoFlexibilizacao->campos['atendimentoMultiprofissional'] ?? '---'}}</p>
-        </div>
-    </div>
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">4. Flexibilização Curricular, visando a implementação de 1 (uma) ou mais possibilidades</h2>
-        <p class="text-body-large">I - Diferenciação dos conteúdos previstos na ementa do componente curricular e que sejam registrados no PTE: {{$planoFlexibilizacao->campos['diferenciacaoCurricular'] ?? '---'}}</p>
-        <p class="text-body-large">II - Atendimento educacional individualizado realizado pelo professor do componente curricular: {{$planoFlexibilizacao->campos['atendimentoIndividualizado'] ?? '---'}}</p>
-        <p class="text-body-large">III - Dilação ou redução do prazo para a conclusão do curso: {{$planoFlexibilizacao->campos['alteracaoPrazo'] ?? '---'}}</p>
-        <p class="text-body-large">IV  - Reorganização e/ou equivalência de componente curricular: {{$planoFlexibilizacao->campos['reorganizacaoCurricular'] ?? '---'}}</p>
-        <p class="text-body-large">V - Definição de critérios diferenciados e adequados de avaliação, considerando as singularidades e especificidades dos estudantes: {{$planoFlexibilizacao->campos['criteriosDiferenciados'] ?? '---'}}</p>
-    </div>
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
-        <p class="text-body-large">
-            @foreach($componentes as $index => $disciplinaId)
-                {{ (is_numeric($disciplinaId) ? (Disciplina::find($disciplinaId)?->nome ?? $disciplinaId) : $disciplinaId) . ($index === $count-1 ? '.' : ',') }}
-            @endforeach
-        </p>
-    </div>
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">6. Informações adicionais</h2>
-        <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-            <p class="whitespace-pre-line">{{ $planoFlexibilizacao->campos['informacoesAdicionais'] ?? '---' }}</p>
-        </div>
-    </div>
+    @endif
+
+    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" :ordem-min="5" />
 
     <div class="flex justify-end gap-2">
         <x-button label="Voltar" type="link"

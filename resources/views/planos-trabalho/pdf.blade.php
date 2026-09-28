@@ -39,14 +39,24 @@
             </td>
         </tr>
 
-        <tr>
-            <td>
-                <b>Carga horária de atendimento individualizado:</b> {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
-            </td>
-            <td>
-                <b>Dia/Horário/Local:</b> {{ ($planoTrabalho->created_at ? $planoTrabalho->created_at->format('d/m/Y \à\s h:i ') : '') . ($planoTrabalho->campos['local'] ?? '') }}
-            </td>
-        </tr>
+        @foreach (array_chunk($planoTrabalho->camposAdicionaisFiltrados('dadosEstudante', 'criacao'), 2) as $linha)
+            <tr>
+                @foreach ($linha as $campo)
+                    @php
+                        $valor = $planoTrabalho->valorCampo($campo['chave']);
+                        if ($campo['chave'] === 'local') {
+                            $valor = ($planoTrabalho->created_at ? $planoTrabalho->created_at->format('d/m/Y \à\s h:i ') : '') . ($valor ?? '');
+                        }
+                    @endphp
+                    <td>
+                        <b>{{ $campo['rotulo'] }}:</b> {{ filled($valor) ? $valor : '---' }}
+                    </td>
+                @endforeach
+                @if (count($linha) === 1)
+                    <td></td>
+                @endif
+            </tr>
+        @endforeach
 
         <tr>
             <td colspan="2" class="no-border-top">
@@ -56,31 +66,13 @@
         </tr>
     </table>
 
-    <table class="table">
-        <tr><td><b>2. Particularidades do estudante</b></td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['particularidadesEstudante'] ?? '---' }}</td></tr>
-    </table>
+    <x-campos-adicionais-pdf :registro="$planoTrabalho" etapa="criacao" />
 
     <table class="table">
         <tr><td><b>3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização</b></td></tr>
         <tr><td class="textarea">{{ $planoTrabalho->disciplina->ementa }}</td></tr>
     </table>
 
-    <table class="table">
-        <tr><td><b>4. Objetivos específicos para o estudante neste período</b></td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['objetivosEspecificos'] ?? '---' }}</td></tr>
-    </table>
-
-    <table class="table">
-        <tr><td>
-            <b>5. Instrumentos avaliativos pretendidos e procedimentos adotados</b><br>
-            (De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)
-        </td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? '---' }}</td></tr>
-    </table>
-
-    <table class="table">
-        <tr><td><b>6. Outras considerações relevantes</b></td></tr>
-        <tr><td class="textarea">{{ $planoTrabalho->campos['outrasConsideracoes'] ?? '---' }}</td></tr>
-    </table>
+    <x-campos-adicionais-pdf :registro="$planoTrabalho" etapa="preenchimento" />
+    <x-campos-adicionais-pdf :registro="$planoTrabalho" etapa="livre" />
 </x-layouts.pdf>

@@ -10,6 +10,8 @@
 
     $created_at = $planoTrabalho->created_at ?? now();
     $updated_at = $planoTrabalho->updated_at ?? $created_at;
+
+    $aguardandoDocente = in_array($planoTrabalho->status, [StatusPlanoTrabalhoEnum::PENDENTE, StatusPlanoTrabalhoEnum::DEVOLVIDO], true);
 @endphp
 
 <x-layouts.main title="{{ $planoTrabalho->nome }}">
@@ -57,10 +59,15 @@
                 <p>Série/Ano: {{ $planoTrabalho->estudante->periodo }}</p>
                 <p>Componente curricular: {{ $planoTrabalho->disciplina->nome }}</p>
                 <p>Docente: {{ $planoTrabalho->professor->nome }}</p>
-                <p>Carga horária de atendimento individualizado:
-                    {{ $planoTrabalho->campos['cargaHoraria'] ?? '---' }}
-                </p>
-                <p>Dia/Horário/Local: {{ $created_at->format('d/m/Y \à\s h:i ') . ($planoTrabalho->campos['local'] ?? '') }}</p>
+                @foreach ($planoTrabalho->camposAdicionaisFiltrados('dadosEstudante', 'criacao') as $campo)
+                    @php
+                        $valor = $planoTrabalho->valorCampo($campo['chave']);
+                        if ($campo['chave'] === 'local') {
+                            $valor = $created_at->format('d/m/Y \à\s h:i ') . ($valor ?? '');
+                        }
+                    @endphp
+                    <p>{{ $campo['rotulo'] }}: {{ filled($valor) ? $valor : '---' }}</p>
+                @endforeach
 
                 <p class="mt-5">Necessidade educacional específica:</p>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
@@ -68,12 +75,8 @@
                 </div>
             </div>
 
-            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">2. Particularidades do estudante</h2>
-                <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
-                    <p class="whitespace-pre-line">{{$planoTrabalho->campos['particularidadesEstudante'] ?? '---'}}</p>
-                </div>
-            </div>
+            <x-campos-adicionais-exibicao :registro="$planoTrabalho" etapa="criacao" />
+
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
                 <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
                     flexibilização:</h2>
@@ -83,49 +86,19 @@
             </div>
 
 
-            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">4. Objetivos específicos para o estudante neste período</h2>
+            @if ($preenchendo)
+                <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+                    :estudante-id="$planoTrabalho->estudante_id" :registro="$planoTrabalho" etapa="preenchimento"
+                    :mostrar-adicionar="false" wire:key="campos-preenchimento" />
 
-                @if(!$preenchendo)
-                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                    {{ array_key_exists('objetivosEspecificos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['objetivosEspecificos'] ?? 'A ser preenchido pelo docente...' }}</p>
-                    </div>
-                @else
-                    <x-form.input type="textarea" name="campos[objetivosEspecificos]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['objetivosEspecificos'] ?? ''" />
-                @endif
-            </div>
-
-            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">5. Instrumentos avaliativos pretendidos e procedimentos adotados:</h2>
-                <p>(De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)</p>
-
-                @if(!$preenchendo)
-                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                    {{ array_key_exists('instrumentosAvaliativos', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['instrumentosAvaliativos'] ?? 'A ser preenchido pelo docente...' }}</p>
-                    </div>
-                @else
-                    <x-form.input type="textarea" name="campos[instrumentosAvaliativos]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['instrumentosAvaliativos'] ?? ''" />
-                @endif
-            </div>
-
-            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">6. Outras considerações relevantes:</h2>
-
-                @if(!$preenchendo)
-                    <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5
-                                    {{ array_key_exists('outrasConsideracoes', $planoTrabalho->campos) ? '' : 'italic' }}">
-                        <p class="whitespace-pre-line">{{ $planoTrabalho->campos['outrasConsideracoes'] ?? ($planoTrabalho->status === StatusPlanoTrabalhoEnum::AGUARDANDO_REVISAO ? '---' : 'A ser preenchido pelo docente...') }}
-                        </p>
-                    </div>
-                @else
-                    <x-form.input type="textarea" name="campos[outrasConsideracoes]" appearance="outlined" size="full"
-                        placeholder="Preencha aqui..." :value="$planoTrabalho->campos['outrasConsideracoes'] ?? ''" />
-                @endif
-            </div>
+                <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+                    :estudante-id="$planoTrabalho->estudante_id" :registro="$planoTrabalho" etapa="livre"
+                    wire:key="campos-livres" />
+            @else
+                @php $vazioDocente = $aguardandoDocente ? 'A ser preenchido pelo docente...' : '---'; @endphp
+                <x-campos-adicionais-exibicao :registro="$planoTrabalho" etapa="preenchimento" :vazio="$vazioDocente" :italico-vazio="true" />
+                <x-campos-adicionais-exibicao :registro="$planoTrabalho" etapa="livre" :vazio="$vazioDocente" :italico-vazio="true" />
+            @endif
 
             <p>Atualizado pela última vez: {{ $updated_at->format('d/m/Y \à\s H:i') }}</p>
 

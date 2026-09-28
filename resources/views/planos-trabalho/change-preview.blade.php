@@ -16,6 +16,9 @@
     @foreach (($planoTrabalho->campos ?? []) as $campo => $valor)
         <input type="hidden" name="campos[{{ $campo }}]" value="{{ $valor }}">
     @endforeach
+    @foreach (($planoTrabalho->campos_extras ?? []) as $campo)
+        <x-campo-extra-hidden :campo="$campo" />
+    @endforeach
     @foreach (array_keys($previewDisciplinas) as $disciplinaId)
         <input type="hidden" name="previewDisciplinas[]" value="{{ $disciplinaId }}">
     @endforeach
