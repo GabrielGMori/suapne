@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('web')->group(base_path('routes/planos-trabalho.php'));
     Route::middleware('web')->group(base_path('routes/atendimentos.php'));
     Route::middleware('web')->group(base_path('routes/contas.php'));
+    Route::middleware('web')->group(base_path('routes/templates.php'));
 
     Route::name('registro-auditoria.')->group(function () {
         Route::view('/registro-auditoria', 'registro-auditoria.index')->name('index');
