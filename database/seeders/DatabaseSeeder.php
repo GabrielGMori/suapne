@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CursoSeeder::class,
             DisciplinaSeeder::class,
+            TemplateFormularioSeeder::class,
             // UserSeeder::class,
             // EstudanteSeeder::class,
             // PlanoFlexibilizacaoCurricularSeeder::class,
