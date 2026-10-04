@@ -34,11 +34,12 @@ class PlanoFlexibilizacaoCurricularRequest extends FormRequest
             'estudante_id' => ['required','integer','exists:estudantes,id'],
             'periodo_inicio' => ['required','date'],
             'periodo_fim' => ['required','date','after:periodo_inicio'],
+            'template_formulario_id' => ['nullable', 'integer', 'exists:templates_formulario,id'],
 
             ...$this->regrasCamposAdicionais($this->chavesPermitidasPara(
                 TipoFormularioEnum::PLANO_FLEXIBILIZACAO,
                 $registro instanceof PlanoFlexibilizacaoCurricular ? $registro : null,
-                $this->input('estudante_id'),
+                $this->input('template_formulario_id'),
             )),
         ];
     }

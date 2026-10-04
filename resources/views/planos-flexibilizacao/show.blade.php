@@ -24,7 +24,7 @@ use App\Models\Disciplina;
             <p class="whitespace-pre-line">{{ $planoFlexibilizacao->estudante->necessidades }}</p>
         </div>
     </div>
-    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" :ordem-max="4" />
+    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" ate="componentesCurriculares" />
 
     @if ($planoFlexibilizacao->temCampo('componentesCurriculares'))
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
@@ -39,7 +39,7 @@ use App\Models\Disciplina;
         </div>
     @endif
 
-    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" :ordem-min="5" />
+    <x-campos-adicionais-exibicao :registro="$planoFlexibilizacao" depois="componentesCurriculares" />
 
     <div class="flex justify-end gap-2">
         <x-button label="Voltar" type="link"

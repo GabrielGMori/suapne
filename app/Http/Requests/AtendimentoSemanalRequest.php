@@ -34,11 +34,12 @@ class AtendimentoSemanalRequest extends FormRequest
             'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
             'local' => ['required', 'string', 'max:100'],
             'data' => ['required', 'date'],
+            'template_formulario_id' => ['nullable', 'integer', 'exists:templates_formulario,id'],
 
             ...$this->regrasCamposAdicionais($this->chavesPermitidasPara(
                 TipoFormularioEnum::ATENDIMENTO_SEMANAL,
                 $registro instanceof AtendimentoSemanal ? $registro : null,
-                $this->input('estudante_id'),
+                $this->input('template_formulario_id'),
             )),
         ];
     }

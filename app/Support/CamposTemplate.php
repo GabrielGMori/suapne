@@ -3,6 +3,8 @@
 namespace App\Support;
 
 use App\Enums\TipoFormularioEnum;
+use App\Models\TemplateFormulario;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class CamposTemplate
@@ -23,8 +25,37 @@ class CamposTemplate
         };
     }
 
-    public static function filtrar(array $campos, string $secao = '', string $etapa = ''): array
+    public static function camposParaFormulario(TipoFormularioEnum $tipo, ?int $templateId, ?Model $registro, array $valores = []): array
     {
+        $doTemplate = self::doTemplate($tipo, $templateId);
+        $chavesAtuais = array_column($doTemplate, 'chave');
+
+        $doRegistro = array_filter(
+            $registro?->camposAdicionais() ?? [],
+            fn($campo) => in_array($campo['chave'], $chavesAtuais, true) || filled($valores[$campo['chave']] ?? null)
+        );
+
+        $porChave = [];
+        foreach ([...$doRegistro, ...$doTemplate] as $campo) {
+            $porChave[$campo['chave']] ??= $campo;
+        }
+
+        return array_values($porChave);
+    }
+
+    public static function doTemplate(TipoFormularioEnum $tipo, ?int $templateId): array
+    {
+        $template = $templateId
+            ? TemplateFormulario::query()->doTipo($tipo)->whereKey($templateId)->first()
+            : null;
+
+        return ($template ?? TemplateFormulario::padraoDe($tipo))->campos ?: self::campos($tipo);
+    }
+
+    public static function filtrar(array $campos, string $secao = '', string $etapa = '', string $ate = '', string $depois = ''): array
+    {
+        $campos = self::cortar($campos, $ate, $depois);
+
         return array_values(array_filter($campos, function ($campo) use ($secao, $etapa) {
             $etapaOk = match ($etapa) {
                 '' => true,
@@ -34,6 +65,25 @@ class CamposTemplate
 
             return ($campo['secao'] ?? '') === $secao && $etapaOk;
         }));
+    }
+
+    private static function cortar(array $campos, string $ate, string $depois): array
+    {
+        $chave = $ate !== '' ? $ate : $depois;
+
+        if ($chave === '') {
+            return $campos;
+        }
+
+        $posicao = array_search($chave, array_column($campos, 'chave'), true);
+
+        if ($posicao === false) {
+            return $campos;
+        }
+
+        return $ate !== ''
+            ? array_slice($campos, 0, $posicao)
+            : array_slice($campos, $posicao + 1);
     }
 
     public static function agrupar(array $campos): array

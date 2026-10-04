@@ -27,6 +27,7 @@ class AtendimentoSemanal extends Model implements Auditable
         'local',
         'campos',
         'campos_extras',
+        'template_formulario_id',
         'data',
         'estudante_id',
         'user_id',

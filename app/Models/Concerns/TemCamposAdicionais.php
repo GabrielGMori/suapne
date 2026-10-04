@@ -2,23 +2,23 @@
 
 namespace App\Models\Concerns;
 
-use App\Support\FormularioPadrao;
+use App\Support\CamposTemplate;
 
 trait TemCamposAdicionais
 {
     public function camposAdicionais(): array
     {
-        return $this->campos_extras ?? FormularioPadrao::camposAdicionais(static::TIPO_FORMULARIO);
+        return $this->campos_extras ?? CamposTemplate::doTemplate(static::TIPO_FORMULARIO, $this->template_formulario_id);
     }
 
-    public function camposAdicionaisFiltrados(string $secao = '', string $etapa = '', int $ordemMin = 0, ?int $ordemMax = null): array
+    public function camposAdicionaisFiltrados(string $secao = '', string $etapa = '', string $ate = '', string $depois = ''): array
     {
-        return FormularioPadrao::filtrar($this->camposAdicionais(), $secao, $etapa, $ordemMin, $ordemMax);
+        return CamposTemplate::filtrar($this->camposAdicionais(), $secao, $etapa, $ate, $depois);
     }
 
-    public function camposAdicionaisAgrupados(string $secao = '', string $etapa = '', int $ordemMin = 0, ?int $ordemMax = null): array
+    public function camposAdicionaisAgrupados(string $secao = '', string $etapa = '', string $ate = '', string $depois = ''): array
     {
-        return FormularioPadrao::agrupar($this->camposAdicionaisFiltrados($secao, $etapa, $ordemMin, $ordemMax));
+        return CamposTemplate::agrupar($this->camposAdicionaisFiltrados($secao, $etapa, $ate, $depois));
     }
 
     public function temCampo(string $chave): bool

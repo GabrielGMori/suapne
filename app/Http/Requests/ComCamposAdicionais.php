@@ -3,8 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\TipoFormularioEnum;
-use App\Models\ModeloFormulario;
-use App\Support\FormularioPadrao;
+use App\Support\CamposTemplate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -16,18 +15,18 @@ trait ComCamposAdicionais
             'campos' => ['present', 'array'],
             'campos_extras' => ['nullable', 'array'],
             'campos_extras.*.chave' => ['required', 'string', Rule::in($chavesPermitidas)],
-            'campos_extras.*.rotulo' => ['required', 'string', 'max:150'],
+            'campos_extras.*.rotulo' => ['required', 'string', 'max:300'],
             'campos_extras.*.tipo' => ['required', 'string', 'max:30'],
             'campos_extras.*.obrigatorio' => ['nullable', 'boolean'],
-            'campos_extras.*.padrao' => ['nullable', 'boolean'],
+            'campos_extras.*.fixo' => ['nullable', 'boolean'],
             'campos_extras.*.snapshot' => ['nullable', 'boolean'],
-            'campos_extras.*.ordem' => ['nullable', 'integer'],
             'campos_extras.*.secao' => ['nullable', 'string', 'max:50'],
             'campos_extras.*.etapa' => ['nullable', 'string', 'max:50'],
             'campos_extras.*.grupo' => ['nullable', 'string', 'max:50'],
             'campos_extras.*.grupoTitulo' => ['nullable', 'string', 'max:300'],
             'campos_extras.*.descricao' => ['nullable', 'string', 'max:300'],
-            'campos_extras.*.rotuloFormulario' => ['nullable', 'string', 'max:150'],
+            'campos_extras.*.rotuloFormulario' => ['nullable', 'string', 'max:300'],
+            'campos_extras.*.motivoFixo' => ['nullable', 'string', 'max:300'],
             'campos_extras.*.regra' => ['nullable', 'string', 'max:30'],
             'campos_extras.*.opcoes' => ['nullable', 'array'],
         ];
@@ -41,7 +40,7 @@ trait ComCamposAdicionais
                 continue;
             }
 
-            $regra = FormularioPadrao::regra($campo);
+            $regra = CamposTemplate::regra($campo);
 
             $regras["campos.{$campo['chave']}"] = filter_var($campo['obrigatorio'] ?? false, FILTER_VALIDATE_BOOLEAN)
                 ? ['required', $regra]
@@ -64,12 +63,12 @@ trait ComCamposAdicionais
         return $rotulos;
     }
 
-    protected function chavesPermitidasPara(TipoFormularioEnum $tipo, ?Model $registro, mixed $estudanteId): array
+    protected function chavesPermitidasPara(TipoFormularioEnum $tipo, ?Model $registro, mixed $templateId): array
     {
-        $modelo = ModeloFormulario::para($tipo, filled($estudanteId) ? (int) $estudanteId : null);
+        $doTemplate = CamposTemplate::doTemplate($tipo, filled($templateId) ? (int) $templateId : null);
         $doRegistro = $registro ? array_column($registro->camposAdicionais(), 'chave') : [];
 
-        return array_values(array_unique([...$modelo->chaves(), ...$doRegistro]));
+        return array_values(array_unique([...array_column($doTemplate, 'chave'), ...$doRegistro]));
     }
 
     protected function prepararCampos(): void
@@ -100,11 +99,10 @@ trait ComCamposAdicionais
                 'rotulo' => $campo['rotulo'],
                 'tipo' => $campo['tipo'],
                 'obrigatorio' => filter_var($campo['obrigatorio'] ?? false, FILTER_VALIDATE_BOOLEAN),
-                'padrao' => filter_var($campo['padrao'] ?? false, FILTER_VALIDATE_BOOLEAN),
-                'ordem' => (int) ($campo['ordem'] ?? FormularioPadrao::ORDEM_PERSONALIZADO),
+                'fixo' => filter_var($campo['fixo'] ?? false, FILTER_VALIDATE_BOOLEAN),
             ];
 
-            foreach (['secao', 'etapa', 'grupo', 'grupoTitulo', 'descricao', 'rotuloFormulario', 'regra', 'opcoes'] as $opcional) {
+            foreach (['secao', 'etapa', 'grupo', 'grupoTitulo', 'descricao', 'rotuloFormulario', 'motivoFixo', 'regra', 'opcoes'] as $opcional) {
                 if (filled($campo[$opcional] ?? null)) {
                     $item[$opcional] = $campo[$opcional];
                 }
@@ -112,8 +110,6 @@ trait ComCamposAdicionais
 
             $lista[] = $item;
         }
-
-        usort($lista, fn($a, $b) => $a['ordem'] <=> $b['ordem']);
 
         return $lista;
     }

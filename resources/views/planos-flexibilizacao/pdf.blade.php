@@ -20,7 +20,7 @@
         <tr><td colspan="2" class="no-border-top"><b>Necessidades educacionais específicas:</b><br><span class="textarea">{{ $planoFlexibilizacao->estudante->necessidades }}</span></td></tr>
     </table>
 
-    <x-campos-adicionais-pdf :registro="$planoFlexibilizacao" :ordem-max="4" />
+    <x-campos-adicionais-pdf :registro="$planoFlexibilizacao" ate="componentesCurriculares" />
 
     @if ($planoFlexibilizacao->temCampo('componentesCurriculares'))
         <table class="table">
@@ -29,5 +29,5 @@
         </table>
     @endif
 
-    <x-campos-adicionais-pdf :registro="$planoFlexibilizacao" :ordem-min="5" />
+    <x-campos-adicionais-pdf :registro="$planoFlexibilizacao" depois="componentesCurriculares" />
 </x-layouts.pdf>

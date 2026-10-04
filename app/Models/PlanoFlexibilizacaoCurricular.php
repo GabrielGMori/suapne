@@ -28,6 +28,7 @@ class PlanoFlexibilizacaoCurricular extends Model implements Auditable
         'periodo_fim',
         'campos',
         'campos_extras',
+        'template_formulario_id',
         'estudante_id',
         'user_id',
     ];

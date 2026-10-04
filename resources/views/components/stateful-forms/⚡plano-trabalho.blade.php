@@ -6,11 +6,14 @@ use Livewire\Attributes\On;
 use App\Models\Estudante;
 use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
+use App\Models\TemplateFormulario;
+use App\Enums\TipoFormularioEnum;
 
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
 
     public array|string|int|null $estudanteId = null;
+    public array|string|int|null $templateId = null;
     public ?Estudante $estudante = null;
 
     public array $displayDisciplinas = [];
@@ -27,6 +30,8 @@ new class extends Component {
 
         $rawEstudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? $this->estudanteId);
         $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+
+        $this->templateId = $this->escalar(old('template_formulario_id', $this->planoTrabalho?->template_formulario_id));
 
         if (filled($this->estudanteId)) {
             $this->estudante = Estudante::with('planosFlexibilizacaoCurricular')->find($this->estudanteId);
@@ -164,6 +169,15 @@ new class extends Component {
             ->toArray();
     }
 
+    private function escalar(mixed $valor): ?string
+    {
+        if (is_array($valor)) {
+            $valor = reset($valor) ?: null;
+        }
+
+        return filled($valor) ? (string) $valor : null;
+    }
+
     private function getScalarEstudanteId(mixed $value = null): ?string
     {
         $val = $value ?? $this->estudanteId;
@@ -183,6 +197,12 @@ new class extends Component {
             ->mapWithKeys(fn($estudante) => [(string) $estudante->id => $estudante->nome])
             ->toArray();
     }
+
+    #[Computed]
+    public function templateOptions(): array
+    {
+        return TemplateFormulario::opcoesDe(TipoFormularioEnum::PLANO_TRABALHO);
+    }
 };
 ?>
 
@@ -190,6 +210,7 @@ new class extends Component {
 
 @php
     $idEstudante = is_array($estudanteId) ? (reset($estudanteId) ?: null) : $estudanteId;
+    $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
 @endphp
 
 <form
@@ -219,6 +240,10 @@ new class extends Component {
                 placeholder="Selecionar" :options="$this->estudanteOptions" wire:model.live="estudanteId"
                 :disabled="filled($this->planoTrabalho)" wire:key="estudante-select-{{ $planoTrabalho?->id ?? 'new' }}" />
 
+            <livewire:form.select label="Template do formulário" name="template_formulario_id" appearance="outlined"
+                placeholder="Template padrão" wire:key="template-select-{{ $planoTrabalho?->id ?? 'new' }}"
+                wire:model.live="templateId" :options="$this->templateOptions" />
+
             <div class="flex items-center gap-5">
                 <livewire:form.select type="multiselect" label="Componentes curriculares" name="disciplinas"
                     appearance="outlined" placeholder="Selecionar" :options="$displayDisciplinas"
@@ -246,13 +271,13 @@ new class extends Component {
         </div>
 
         <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-            :estudante-id="$estudanteId" :registro="$planoTrabalho" secao="dadosEstudante" etapa="criacao"
-            :mostrar-adicionar="false" wire:key="campos-dados-estudante-{{ $idEstudante ?? 'sem' }}" />
+            :template-id="$templateId" :registro="$planoTrabalho" secao="dadosEstudante" etapa="criacao"
+            wire:key="campos-dados-estudante-{{ $idTemplate ?? 'padrao' }}" />
     </div>
 
     <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="criacao" :mostrar-adicionar="false"
-        wire:key="campos-criacao-{{ $idEstudante ?? 'sem' }}" />
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="criacao"
+        wire:key="campos-criacao-{{ $idTemplate ?? 'padrao' }}" />
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
         <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:</h2>
@@ -268,11 +293,11 @@ new class extends Component {
     </div>
 
     <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="livre" wire:key="campos-livres-{{ $idEstudante ?? 'sem' }}" />
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="livre" wire:key="campos-livres-{{ $idTemplate ?? 'padrao' }}" />
 
     <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-        :estudante-id="$estudanteId" :registro="$planoTrabalho" etapa="preenchimento" :apenas-definicoes="true"
-        wire:key="campos-definicoes-docente-{{ $idEstudante ?? 'sem' }}" />
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="preenchimento" :apenas-definicoes="true"
+        wire:key="campos-definicoes-docente-{{ $idTemplate ?? 'padrao' }}" />
 
     <input type="hidden" name="status" value="PENDENTE">
 

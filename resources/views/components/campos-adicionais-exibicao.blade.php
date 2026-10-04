@@ -2,8 +2,8 @@
     'registro',
     'secao' => '',
     'etapa' => '',
-    'ordemMin' => 0,
-    'ordemMax' => null,
+    'ate' => '',
+    'depois' => '',
     'vazio' => '---',
     'vazioObrigatorio' => null,
     'italicoVazio' => false,
@@ -12,7 +12,7 @@
 @php
     use Illuminate\Support\Carbon;
 
-    $itens = $registro->camposAdicionaisAgrupados($secao, $etapa, $ordemMin, $ordemMax);
+    $itens = $registro->camposAdicionaisAgrupados($secao, $etapa, $ate, $depois);
 
     $formatar = function (array $campo) use ($registro) {
         $valor = $registro->valorCampo($campo['chave']);

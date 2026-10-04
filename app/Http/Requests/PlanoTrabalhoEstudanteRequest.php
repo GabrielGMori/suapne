@@ -43,6 +43,8 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
             'professores' => ['required_with:disciplinas', 'array'],
             'professores.*' => ['required_with:disciplinas', 'exists:users,id'],
 
+            'template_formulario_id' => ['nullable', 'integer', 'exists:templates_formulario,id'],
+
             ...$this->regrasCamposAdicionais($this->chavesPermitidas()),
 
             'chosenDisciplina' => ['sometimes', 'nullable', 'exists:disciplinas,id'],
@@ -64,7 +66,7 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
         return $this->chavesPermitidasPara(
             TipoFormularioEnum::PLANO_TRABALHO,
             $registro,
-            $registro?->estudante_id ?? $this->input('estudante_id'),
+            $registro?->template_formulario_id ?? $this->input('template_formulario_id'),
         );
     }
 

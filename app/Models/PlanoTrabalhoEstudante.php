@@ -34,6 +34,7 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
         'disciplina_id',
         'campos',
         'campos_extras',
+        'template_formulario_id',
     ];
 
     protected $casts = [
