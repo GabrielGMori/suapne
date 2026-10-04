@@ -32,7 +32,8 @@
 
                     <div class="grow min-w-60">
                         <div class="flex flex-wrap items-center gap-3">
-                            <h2 class="text-title-small">{{ $template->nome }}</h2>
+                            <a href="{{ route('templates.show', ['templateFormulario' => $template]) }}"
+                                class="text-title-small hover:text-primary transition-colors">{{ $template->nome }}</a>
                             @if ($template->padrao)
                                 <x-status label="Padrão" color="info" :filled="false" />
                                 <span class="flex items-center text-secondary-accent"
@@ -51,6 +52,10 @@
                     </div>
 
                     <div class="flex items-center gap-2">
+                        @can('view', $template)
+                            <x-button type="link" icon="visibility" color="transparent" title="Visualizar template"
+                                href="{{ route('templates.show', ['templateFormulario' => $template]) }}" />
+                        @endcan
 
                         @can('update', $template)
                             <x-button type="link" icon="edit" color="transparent" title="Editar template"

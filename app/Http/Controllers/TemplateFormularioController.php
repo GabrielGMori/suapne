@@ -27,6 +27,15 @@ class TemplateFormularioController extends Controller
         ]);
     }
 
+    public function show(Request $request, TemplateFormulario $templateFormulario)
+    {
+        abort_unless($request->user()->can('view', $templateFormulario), 404);
+
+        return view('templates.show', [
+            'template' => $templateFormulario->load('user'),
+        ]);
+    }
+
     public function create(Request $request, TipoFormularioEnum $tipo)
     {
         abort_unless($request->user()->can('create', TemplateFormulario::class), 404);

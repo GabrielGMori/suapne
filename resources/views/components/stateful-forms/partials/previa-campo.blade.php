@@ -19,9 +19,8 @@
             </div>
         </div>
     @elseif ($tipo === 'especial')
-        <div class="flex items-center gap-3 rounded-lg border border-on-surface p-5 text-secondary-accent">
-            <x-icon size="24">auto_awesome</x-icon>
-            <p class="text-body-medium">
+        <div class="rounded-lg border border-on-surface p-5">
+            <p class="text-body-medium text-secondary-accent">
                 {{ $campo['motivoFixo'] ?? 'Campo com preenchimento próprio do sistema.' }}
             </p>
         </div>
