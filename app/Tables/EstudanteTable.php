@@ -3,6 +3,8 @@
 namespace App\Tables;
 
 use App\Enums\SituacaoEstudanteEnum;
+use App\Enums\EtniaEnum;
+use App\Enums\SexoEnum;
 use App\Models\Curso;
 use App\Models\Estudante;
 use App\View\Components\ListViewAction;
@@ -86,7 +88,17 @@ class EstudanteTable extends ListViewConfig
             ListViewFilter::make('periodo')->label('Período')->size('tiny'),
             ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
+            ListViewFilter::make('cpf')->label('CPF')->mask('999.999.999-99')->placeholder('000.000.000-00')->applyOperation('like', fn ($value)=> '%' . preg_replace('/\D/', '', $value). '%')->hidden(),
+            ListViewFilter::make('data_nascimento')->label('Data de nascimento')->type('date')->hidden(),
+            ListViewFilter::make('sexo')->label('Sexo')->size('small')->type('multiselect')->options(SexoEnum::options())->hidden(),
+            ListViewFilter::make('etnia')->label('Etnia')->type('multiselect')->options(EtniaEnum::options())->hidden(),
+            ListViewFilter::make('nacionalidade')->label('Nacionalidade')->hidden(),
+            ListViewFilter::make('naturalidade')->label('Naturalidade')->hidden(),
+            ListViewFilter::make('nome_mae')->label('Nome da mãe')->hidden(),
+            ListViewFilter::make('nome_pai')->label('Nome do pai')->hidden(),
+            ListViewFilter::make('nome_responsavel')->label('Nome do responsável')->hidden(),
             ListViewFilter::make('excluido')->trashed(),
+            
         ];
     }
 

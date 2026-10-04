@@ -43,12 +43,21 @@
 
     $courseItems = [];
 
+    if ($user->can('viewAny', App\Models\Disciplina::class)) {
+        $courseItems[] = ['label' => 'Templates', 'href' => route('dashboard.index'), 'icon' => 'design_services'];
+    }
+    
     if ($user->can('viewAny', App\Models\Curso::class)) {
         $courseItems[] = ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'];
     }
 
     if ($user->can('viewAny', App\Models\Disciplina::class)) {
         $courseItems[] = ['label' => 'Disciplinas', 'href' => route('disciplinas.index'), 'icon' => 'book'];
+    }
+
+
+    if ($user->can('viewAny', App\Models\Disciplina::class)) {
+        $courseItems[] = ['label' => 'Lixeira', 'href' => route('dashboard.index'), 'icon' => 'delete'];
     }
 
     if (!empty($courseItems)) {

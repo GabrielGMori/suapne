@@ -4,7 +4,7 @@
         <div class="flex flex-col gap-4">
             <div class="flex flex-wrap gap-4">
                 @foreach(collect($filters)->filter(fn($f) => !$f->isHidden()) as $filter)
-                    @include('components.list-view.⚡list-view.filter-input', [
+                    @include('components.⚡list-view.filter-input', [
                         'filter' => $filter,
                         'prefix' => 'filter-',
                     ])
@@ -16,7 +16,7 @@
             <x-slot:hidden>
                 <div class="flex flex-wrap gap-4">
                     @foreach(collect($filters)->filter(fn($f) => $f->isHidden()) as $filter)
-                        @include('components.list-view.⚡list-view.filter-input', [
+                        @include('components.⚡list-view.filter-input', [
                             'filter' => $filter,
                             'prefix' => 'filter-hidden-',
                         ])

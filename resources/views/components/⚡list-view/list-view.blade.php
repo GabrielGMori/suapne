@@ -9,7 +9,7 @@
 @endphp
 
 <div class="list-view-wrapper">
-    @include('components.list-view.⚡list-view.filters', [
+    @include('components.⚡list-view.filters', [
         'filters' => $filters,
         'filtersExpanded' => $filtersExpanded,
     ])
@@ -101,7 +101,7 @@
                                             @endif
                                         </x-modal>
                                     @else
-                                        @include('components.list-view.⚡list-view.action-button', ['action' => $action])
+                                        @include('components.⚡list-view.action-button', ['action' => $action])
                                     @endif
                                 @endforeach
                             </div>

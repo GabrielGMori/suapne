@@ -50,6 +50,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('excluido')->trashed(),
+            
         ];
     }
 
