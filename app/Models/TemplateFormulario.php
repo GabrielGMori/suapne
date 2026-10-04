@@ -4,11 +4,10 @@ namespace App\Models;
 
 use App\Enums\TipoFormularioEnum;
 use App\Support\CamposTemplate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -37,14 +36,14 @@ class TemplateFormulario extends Model implements Auditable
         return $this->belongsTo(User::class);
     }
 
-    public function estudantes(): BelongsToMany
+    public function scopeDoTipo(Builder $query, TipoFormularioEnum $tipo): Builder
     {
-        return $this->belongsToMany(Estudante::class, 'estudante_template_formulario');
+        return $query->where('tipo', $tipo);
     }
 
     public static function padraoDe(TipoFormularioEnum $tipo): static
     {
-        return static::query()->where('tipo', $tipo)->where('padrao', true)->first()
+        return static::query()->doTipo($tipo)->where('padrao', true)->first()
             ?? new static([
                 'nome' => 'Template padrão',
                 'tipo' => $tipo,
@@ -53,34 +52,12 @@ class TemplateFormulario extends Model implements Auditable
             ]);
     }
 
-    public static function doEstudante(TipoFormularioEnum $tipo, ?int $estudanteId): static
+    public static function opcoesDe(TipoFormularioEnum $tipo): array
     {
-        $template = $estudanteId
-            ? static::query()
-                ->where('tipo', $tipo)
-                ->whereHas('estudantes', fn($q) => $q->where('estudantes.id', $estudanteId))
-                ->first()
-            : null;
-
-        return $template ?? static::padraoDe($tipo);
-    }
-
-    public function associarEstudantes(array $estudanteIds): void
-    {
-        $this->estudantes()->sync($estudanteIds);
-    }
-
-    public static function doEstudanteTodos(TipoFormularioEnum $tipo, ?int $estudanteId)
-    {
-        if (!$estudanteId) {
-            return collect();
-        }
-
-        return static::query()
-            ->where('tipo', $tipo)
-            ->whereHas('estudantes', fn($q) => $q->where('estudantes.id', $estudanteId))
-            ->orderBy('nome')
-            ->get();
+        return static::query()->doTipo($tipo)->orderByDesc('padrao')->orderBy('nome')
+            ->pluck('nome', 'id')
+            ->mapWithKeys(fn($nome, $id) => [(string) $id => $nome])
+            ->toArray();
     }
 
     public function chaves(): array

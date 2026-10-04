@@ -33,9 +33,6 @@ class TemplateFormularioRequest extends FormRequest
             'campos.*.motivoFixo' => ['nullable', 'string', 'max:300'],
             'campos.*.regra' => ['nullable', 'string', 'max:30'],
             'campos.*.opcoes' => ['nullable', 'array'],
-
-            'estudantes' => ['nullable', 'array'],
-            'estudantes.*' => ['exists:estudantes,id'],
         ];
     }
 

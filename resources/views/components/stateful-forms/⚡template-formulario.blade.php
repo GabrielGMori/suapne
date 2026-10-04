@@ -1,10 +1,8 @@
 <?php
 
 use App\Enums\TipoFormularioEnum;
-use App\Models\Estudante;
 use App\Models\TemplateFormulario;
 use App\Support\CamposTemplate;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 new class extends Component {
@@ -13,7 +11,6 @@ new class extends Component {
 
     public string $nome = '';
     public array $campos = [];
-    public array $estudantes = [];
 
     public bool $adicionando = false;
     public string $novoRotulo = '';
@@ -27,7 +24,6 @@ new class extends Component {
 
         $this->nome = old('nome', $this->template?->nome ?? '');
         $this->campos = old('campos', $this->template?->campos ?? CamposTemplate::campos($this->tipoEnum()));
-        $this->estudantes = array_map('strval', old('estudantes', $this->template?->estudantes->pluck('id')->all() ?? []));
     }
 
     public function adicionar(): void
@@ -94,12 +90,6 @@ new class extends Component {
         return TipoFormularioEnum::from($this->tipo);
     }
 
-    #[Computed]
-    public function estudanteOptions(): array
-    {
-        return Estudante::orderBy('nome')->pluck('nome', 'id')
-            ->mapWithKeys(fn($nome, $id) => [(string) $id => $nome])->toArray();
-    }
 };
 ?>
 
@@ -121,14 +111,8 @@ new class extends Component {
         <h2 class="text-display-small">Dados do template</h2>
         <hr class="text-on-surface">
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <x-form.input label="Nome do template" name="nome" appearance="outlined" size="large"
-                wire:model="nome" :value="$nome" :error="$errors->first('nome')" />
-
-            <livewire:form.select type="multiselect" label="Estudantes que usam este template" name="estudantes"
-                appearance="outlined" size="xlarge" placeholder="Selecionar"
-                wire:model="estudantes" :options="$this->estudanteOptions" wire:key="estudantes-select" />
-        </div>
+        <x-form.input label="Nome do template" name="nome" appearance="outlined" size="large"
+            wire:model="nome" :value="$nome" :error="$errors->first('nome')" />
     </div>
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">

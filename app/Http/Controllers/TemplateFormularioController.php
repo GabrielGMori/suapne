@@ -23,7 +23,7 @@ class TemplateFormularioController extends Controller
 
         return view('templates.tipo', [
             'tipo' => $tipo,
-            'templates' => TemplateFormulario::with('estudantes')->where('tipo', $tipo)->latest()->get(),
+            'templates' => TemplateFormulario::with('user')->doTipo($tipo)->latest()->get(),
         ]);
     }
 
@@ -45,13 +45,11 @@ class TemplateFormularioController extends Controller
     {
         abort_unless($request->user()->can('create', TemplateFormulario::class), 404);
 
-        $template = TemplateFormulario::create([
+        TemplateFormulario::create([
             ...$request->validated(),
             'tipo' => $tipo,
             'user_id' => $request->user()->id,
         ]);
-
-        $template->associarEstudantes($request->validated()['estudantes'] ?? []);
 
         return redirect()->route('templates.tipo', ['tipo' => $tipo])
             ->with('status', 'Template criado com sucesso!');
@@ -72,7 +70,6 @@ class TemplateFormularioController extends Controller
         abort_unless($request->user()->can('update', $templateFormulario), 404);
 
         $templateFormulario->update($request->validated());
-        $templateFormulario->associarEstudantes($request->validated()['estudantes'] ?? []);
 
         return redirect()->route('templates.tipo', ['tipo' => $templateFormulario->tipo])
             ->with('status', 'Template atualizado com sucesso!');

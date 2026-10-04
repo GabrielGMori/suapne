@@ -36,7 +36,7 @@
                             @if ($template->padrao)
                                 <x-status label="Padrão" color="info" :filled="false" />
                                 <span class="flex items-center text-secondary-accent"
-                                    title="Template usado por quem não tem outro associado. Não pode ser alterado nem excluído.">
+                                    title="Template usado quando nenhum outro é escolhido. Não pode ser alterado nem excluído.">
                                     <x-icon size="20">lock</x-icon>
                                 </span>
                             @endif
@@ -44,17 +44,14 @@
 
                         <p class="text-body-small text-secondary-accent">
                             {{ $template->quantidade_campos }} {{ $template->quantidade_campos === 1 ? 'campo' : 'campos' }}
-                            ·
-                            @if ($template->estudantes->isEmpty())
-                                nenhum estudante associado
-                            @else
-                                {{ $template->estudantes->count() }} {{ $template->estudantes->count() === 1 ? 'estudante' : 'estudantes' }}:
-                                {{ $template->estudantes->take(3)->pluck('nome')->join(', ') }}{{ $template->estudantes->count() > 3 ? '…' : '' }}
+                            @if ($template->user)
+                                · criado por {{ $template->user->nome }}
                             @endif
                         </p>
                     </div>
 
                     <div class="flex items-center gap-2">
+
                         @can('update', $template)
                             <x-button type="link" icon="edit" color="transparent" title="Editar template"
                                 href="{{ route('templates.edit', ['templateFormulario' => $template]) }}" />
