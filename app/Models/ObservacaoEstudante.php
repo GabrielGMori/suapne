@@ -25,7 +25,7 @@ class ObservacaoEstudante extends Model implements Auditable
 
     public function estudante()
     {
-        return $this->belongsTo(Estudante::class, 'estudante_id');
+        return $this->belongsTo(Estudante::class, 'estudante_id')->withTrashed();
     }
 
     public function user()
@@ -35,6 +35,13 @@ class ObservacaoEstudante extends Model implements Auditable
 
     public function getNomeAttribute(): string
     {
-        return "Observação sobre estudante {$this->estudante->nome}";
+        $estudante = $this->estudante;
+        $nomeEstudante = $estudante?->nome ?? 'Estudante excluído';
+
+        if ($estudante && $estudante->trashed()) {
+            $nomeEstudante .= ' (Excluído)';
+        }
+
+        return "Observação sobre estudante {$nomeEstudante}";
     }
 }

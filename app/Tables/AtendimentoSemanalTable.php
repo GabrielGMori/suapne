@@ -33,8 +33,18 @@ class AtendimentoSemanalTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item->estudante)),
-            ListViewColumn::make('user.nome')->label('Feito por')->link(fn($item) => route('contas.cnapne.edit', $item->user)),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->format(function ($value, $item) {
+                $label = (string) $value;
+                if ($item->estudante && $item->estudante->trashed()) {
+                    $label .= ' (Excluído)';
+                    return $label;
+                }
+
+                return $item->estudante
+                    ? view('components.link', ['label' => $label, 'href' => route('estudantes.show', $item->estudante)])->render()
+                    : $label;
+            }),
+            ListViewColumn::make('user.nome')->label('Feito por')->link(fn($item) => $item->user ? route('contas.cnapne.edit', $item->user) : ''),
             ListViewColumn::make('local')->label('Local')->size("medium"),
             ListViewColumn::make('data')->label('Data')->format(fn($value) => $value->format('d/m/Y \à\s H:i')),
         ];
@@ -48,7 +58,6 @@ class AtendimentoSemanalTable extends ListViewConfig
             ListViewFilter::make('local')->label('Local do atendimento'),
             ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('data'),
             ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('data'),
-            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 

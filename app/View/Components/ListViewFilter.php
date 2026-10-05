@@ -100,25 +100,6 @@ class ListViewFilter implements \JsonSerializable
         return $this;
     }
 
-    public function trashed(string $label = 'Excluído', array $options = [0 => 'Não', 1 => 'Sim']): static
-    {
-        $this->trashedFilter = true;
-
-        return $this
-            ->label($label)
-            ->size('small')
-            ->type('select')
-            ->options($options)
-            ->applyUsing(static function (Builder $query, mixed $value) {
-                $val = is_array($value) ? ($value[0] ?? null) : $value;
-
-                if ($val === '1' || $val === 1 || $val === 'Sim') {
-                    $query->onlyTrashed();
-                }
-            })
-            ->hidden();
-    }
-
     public function applyOperationWithKey(string $useKey, string $operation, ?Closure $transform = null): static
     {
         return $this->applyUsing(function (Builder $query, mixed $value) use ($useKey, $operation, $transform) {

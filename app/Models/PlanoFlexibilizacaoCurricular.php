@@ -40,7 +40,7 @@ class PlanoFlexibilizacaoCurricular extends Model implements Auditable
 
     public function estudante() : BelongsTo
     {
-        return $this->belongsTo(Estudante::class, 'estudante_id');
+        return $this->belongsTo(Estudante::class, 'estudante_id')->withTrashed();
     }
 
     public function user() : BelongsTo
@@ -50,7 +50,14 @@ class PlanoFlexibilizacaoCurricular extends Model implements Auditable
 
     public function getNomeAttribute(): string
     {
-        return "Plano de Flexibilização Curricular de {$this->estudante->nome} - {$this->periodo_inicio->year}";
+        $estudante = $this->estudante;
+        $nomeEstudante = $estudante?->nome ?? 'Estudante excluído';
+
+        if ($estudante && $estudante->trashed()) {
+            $nomeEstudante .= ' (Excluído)';
+        }
+
+        return "Plano de Flexibilização Curricular de {$nomeEstudante} - {$this->periodo_inicio->year}";
     }
 
 }

@@ -45,12 +45,12 @@ class ObservacaoEstudantePolicy
         return $observacaoEstudante->user_id === $user->id;
     }
 
-    public function restore(User $user, ObservacaoEstudante $observacaoEstudante): bool
+    public function restore(User $user, mixed $observacaoEstudante = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, ObservacaoEstudante $observacaoEstudante): bool
+    public function forceDelete(User $user, mixed $observacaoEstudante = null): bool
     {
         return false;
     }

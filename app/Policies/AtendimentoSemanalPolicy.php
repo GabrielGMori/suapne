@@ -45,12 +45,12 @@ class AtendimentoSemanalPolicy
         return $atendimentoSemanal->user_id === $user->id;
     }
 
-    public function restore(User $user, AtendimentoSemanal $atendimentoSemanal): bool
+    public function restore(User $user, mixed $atendimentoSemanal = null): bool
     {
         return $user->role === RoleEnum::TECNICO;
     }
 
-    public function forceDelete(User $user, AtendimentoSemanal $atendimentoSemanal): bool
+    public function forceDelete(User $user, mixed $atendimentoSemanal = null): bool
     {
         return false;
     }

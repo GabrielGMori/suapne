@@ -35,9 +35,19 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->link(fn($item) => route('estudantes.show', $item->estudante)),
-            ListViewColumn::make('disciplina.nome')->label('Componente curricular')->link(fn($item) => route('disciplinas.edit', $item->disciplina)),
-            ListViewColumn::make('disciplina.curso')->label('Curso')->link(fn($item) => route('cursos.edit', $item->estudante->curso)),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->format(function ($value, $item) {
+                $label = (string) $value;
+                if ($item->estudante && $item->estudante->trashed()) {
+                    $label .= ' (Excluído)';
+                    return $label;
+                }
+
+                return $item->estudante
+                    ? view('components.link', ['label' => $label, 'href' => route('estudantes.show', $item->estudante)])->render()
+                    : $label;
+            }),
+            ListViewColumn::make('disciplina.nome')->label('Componente curricular')->link(fn($item) => $item->disciplina ? route('disciplinas.edit', $item->disciplina) : ''),
+            ListViewColumn::make('disciplina.curso')->label('Curso')->link(fn($item) => $item->trashed() || ! $item->estudante || $item->estudante->trashed() || ! $item->estudante?->curso ? null : route('cursos.edit', $item->estudante->curso)),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
             ListViewColumn::make('status')->label('Status')->size('small')->format(
                 function ($value) use (&$statusCache) {
@@ -62,7 +72,6 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('status')->label('Status')->size('small')->type('multiselect')->options(StatusPlanoTrabalhoEnum::options())->equals(),
-            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 

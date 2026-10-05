@@ -44,12 +44,12 @@ class DocumentoPolicy
         return false;
     }
 
-    public function restore(User $user, Documento $documento): bool
+    public function restore(User $user, mixed $documento = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Documento $documento): bool
+    public function forceDelete(User $user, mixed $documento = null): bool
     {
         return false;
     }

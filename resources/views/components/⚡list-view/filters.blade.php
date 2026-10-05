@@ -1,5 +1,5 @@
 @if(count($filters) > 0)
-    <x-secao-expansivel.bottom class="mb-10" title="Filtros" :expanded="$filtersExpanded">
+    <x-secao-expansivel.bottom class="mb-10" title="Filtros" :color="$filtersColor">
 
         <div class="flex flex-col gap-4">
             <div class="flex flex-wrap gap-4">

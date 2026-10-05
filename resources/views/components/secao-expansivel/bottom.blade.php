@@ -1,6 +1,7 @@
 @props([
     'title' => '', // Título que aparece no topo da seção
     'expanded' => false, // Define se a seção começa expandida ou recolhida. Pode ser: true|false
+    'color' => 'primary' // Cor do topo da seção
 ])
 
 <section
@@ -9,7 +10,7 @@
          {{ $attributes->merge(['class' => 'flex flex-col bg-surface rounded-xl overflow-visible']) }}>
 
     @if($title)
-        <header class="flex justify-between items-center bg-primary text-white px-5 py-3 text-title-small rounded-t-xl">
+        <header class="flex justify-between items-center bg-{{ $color }} text-white px-5 py-3 text-title-small rounded-t-xl">
             <div>{{ $title }}</div>
             @if(isset($topActions))
                 <div class="grow flex justify-end">{{ $topActions }}</div>

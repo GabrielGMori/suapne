@@ -63,8 +63,8 @@ class EstudanteTable extends ListViewConfig
         $statusCache = [];
 
         return [
-            ListViewColumn::make('nome')->label('Nome do estudante')->size('large')->link(fn($item) => route('estudantes.show', $item)),
-            ListViewColumn::make('curso')->label('Curso do estudante')->size('large')->link(fn($item) => route('cursos.edit', $item->curso)),
+            ListViewColumn::make('nome')->label('Nome do estudante')->size('large')->link(fn($item) => $item->trashed() ? null : route('estudantes.show', $item)),
+            ListViewColumn::make('curso')->label('Curso do estudante')->size('large')->link(fn($item) => $item->trashed() || ! $item->curso ? null : route('cursos.edit', $item->curso)),
             ListViewColumn::make('periodo')->label('Período')->size('small')->format(
                 fn($value) => $value . '°'
             ),
@@ -89,7 +89,7 @@ class EstudanteTable extends ListViewConfig
             ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('nome_social')->label('Nome social')->hidden(),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
-            ListViewFilter::make('cpf')->label('CPF')->mask('999.999.999-99')->placeholder('000.000.000-00')->applyOperation('=', fn ($value)=>preg_replace('/\D/', '', $value))->hidden(),
+            ListViewFilter::make('cpf')->label('CPF')->mask('999.999.999-99')->placeholder('000.000.000-00')->applyOperation('=', fn ($value)=> preg_replace('/\D/', '', $value))->hidden(),
             ListViewFilter::make('data_nascimento')->label('Data de nascimento')->type('date')->hidden(),
             ListViewFilter::make('sexo')->label('Sexo')->size('small')->type('multiselect')->options(SexoEnum::options())->hidden(),
             ListViewFilter::make('etnia')->label('Etnia')->type('multiselect')->options(EtniaEnum::options())->hidden(),
@@ -108,7 +108,6 @@ class EstudanteTable extends ListViewConfig
             ListViewFilter::make('nome_pai')->label('Nome do pai')->hidden(),
             ListViewFilter::make('nome_responsavel')->label('Nome do responsável')->hidden(),
             ListViewFilter::make('necessidades')->label('Necessidades do estudante')->hidden(),
-            ListViewFilter::make('excluido')->trashed(),
         ];
     }
 

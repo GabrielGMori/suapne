@@ -44,12 +44,12 @@ class PlanoFlexibilizacaoCurricularPolicy
         return false;
     }
 
-    public function restore(User $user, PlanoFlexibilizacaoCurricular $planoFlexibilizacaoCurricular): bool
+    public function restore(User $user, mixed $planoFlexibilizacaoCurricular = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, PlanoFlexibilizacaoCurricular $planoFlexibilizacaoCurricular): bool
+    public function forceDelete(User $user, mixed $planoFlexibilizacaoCurricular = null): bool
     {
         return false;
     }

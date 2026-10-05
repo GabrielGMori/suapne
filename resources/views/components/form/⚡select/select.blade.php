@@ -1,4 +1,5 @@
 @php
+    $options = array_filter((array) ($options ?? []), fn ($option) => !is_null($option));
     $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/30' : '');
     $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
     $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '') . ($disabled ? ' hidden' : '');
@@ -138,17 +139,23 @@
     if (typeof window.formSelectData === 'undefined') {
         window.formSelectData = function (options, isMultiple, disabled) {
             const normalizeOptions = (opts) => {
+                if (!opts) return [];
+
                 if (!Array.isArray(opts)) {
-                    return Object.entries(opts ?? {}).map(([value, label]) => ({ value, label }));
+                    return Object.entries(opts)
+                        .filter(([value, label]) => value !== null && value !== 'null' && label !== null && label !== undefined)
+                        .map(([value, label]) => ({ value, label }));
                 }
 
-                return opts.map((option) => {
-                    if (option && typeof option === 'object' && 'value' in option && 'label' in option) {
-                        return option;
-                    }
-
-                    return { value: option, label: option };
-                });
+                return opts
+                    .filter(option => option !== null && option !== undefined)
+                    .map((option) => {
+                        if (option && typeof option === 'object' && 'value' in option && 'label' in option) {
+                            return option;
+                        }
+                        return { value: option, label: option };
+                    })
+                    .filter(option => option.value !== null && option.value !== 'null' && option.value !== undefined);
             };
 
             return {
@@ -299,7 +306,7 @@
                         if (e.key === 'ArrowDown' && this.displayOptions.length > 0) {
                             this.highlightedIndex = Math.min(
                                 this.highlightedIndex + 1,
-                                this.displayOptions.length - 1,
+                                this.displayOptions.length - 1
                             );
                             this.scrollToHighlighted();
                         }

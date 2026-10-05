@@ -44,12 +44,12 @@ class SolicitacaoRegistroPolicy
         return false;
     }
 
-    public function restore(User $user, SolicitacaoRegistro $solicitacaoRegistro): bool
+    public function restore(User $user, mixed $solicitacaoRegistro = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, SolicitacaoRegistro $solicitacaoRegistro): bool
+    public function forceDelete(User $user, mixed $solicitacaoRegistro = null): bool
     {
         return false;
     }

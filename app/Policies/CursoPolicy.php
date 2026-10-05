@@ -45,12 +45,12 @@ class CursoPolicy
         return false;
     }
 
-    public function restore(User $user, Curso $curso): bool
+    public function restore(User $user, mixed $curso = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Curso $curso): bool
+    public function forceDelete(User $user, mixed $curso = null): bool
     {
         return false;
     }

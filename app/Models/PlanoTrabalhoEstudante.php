@@ -39,7 +39,7 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
 
     public function estudante()
     {
-        return $this->belongsTo(Estudante::class, 'estudante_id');
+        return $this->belongsTo(Estudante::class, 'estudante_id')->withTrashed();
     }
 
     public function user()
@@ -60,7 +60,7 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
 
     public function getCursoAttribute()
     {
-        return $this->estudante->curso;
+        return optional($this->estudante)->curso;
     }
 
     public function getAnoAttribute()
@@ -75,7 +75,15 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
 
     public function getNomeAttribute(): string
     {
-        return "PTE de {$this->estudante->nome} - {$this->disciplina->nome} - {$this->periodo_inicio->year}";
+        $estudante = $this->estudante;
+        $nomeEstudante = $estudante?->nome ?? 'Estudante excluído';
+        $nomeDisciplina = optional($this->disciplina)->nome ?? 'Disciplina excluída';
+
+        if ($estudante && $estudante->trashed()) {
+            $nomeEstudante .= ' (Excluído)';
+        }
+
+        return "PTE de {$nomeEstudante} - {$nomeDisciplina} - {$this->periodo_inicio->year}";
     }
 }
 

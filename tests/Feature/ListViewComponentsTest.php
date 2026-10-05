@@ -3,17 +3,6 @@
 use App\View\Components\ListViewAction;
 use App\View\Components\ListViewFilter;
 
-it('adds the shared trashed filter config', function () {
-    $filter = ListViewFilter::make('excluido')->trashed();
-
-    expect($filter->getType())->toBe('select')
-        ->and($filter->getOptions())->toMatchArray([
-            0 => 'Não',
-            1 => 'Sim',
-        ])
-        ->and($filter->isHidden())->toBeTrue();
-});
-
 it('adds the shared restore action behavior for trashed items', function () {
     $item = new class {
         public function trashed(): bool

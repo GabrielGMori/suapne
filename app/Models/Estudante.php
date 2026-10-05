@@ -96,6 +96,11 @@ class Estudante extends Model implements Auditable
         'etnia' => EtniaEnum::class,
     ];
 
+    public function getNomeAttribute(?string $value): ?string
+    {
+        return $value;
+    }
+
     public function getReadableFillable(string $key): ?string
     {
         return $this->readableFillable[$key] ?? null;

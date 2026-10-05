@@ -45,12 +45,12 @@ class EntrevistaFamiliarPolicy
         return false;
     }
 
-    public function restore(User $user, EntrevistaFamiliar $entrevistaFamiliar): bool
+    public function restore(User $user, mixed $entrevistaFamiliar = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, EntrevistaFamiliar $entrevistaFamiliar): bool
+    public function forceDelete(User $user, mixed $entrevistaFamiliar = null): bool
     {
         return false;
     }

@@ -44,12 +44,12 @@ class PlanoTrabalhoEstudantePolicy
         return false;
     }
 
-    public function restore(User $user, PlanoTrabalhoEstudante $planoTrabalhoEstudante): bool
+    public function restore(User $user, mixed $planoTrabalhoEstudante = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, PlanoTrabalhoEstudante $planoTrabalhoEstudante): bool
+    public function forceDelete(User $user, mixed $planoTrabalhoEstudante = null): bool
     {
         return false;
     }

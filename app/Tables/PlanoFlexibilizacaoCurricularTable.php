@@ -33,8 +33,18 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         $cache = [];
 
         return [
-            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->link(fn($item) => route('estudantes.show', $item->estudante)),
-            ListViewColumn::make('estudante.curso')->label('Curso do estudante')->size('large')->link(fn($item) => route('cursos.edit', $item->estudante->curso)),
+            ListViewColumn::make('estudante.nome')->label('Nome do estudante')->size("large")->format(function ($value, $item) {
+                $label = (string) $value;
+                if ($item->estudante && $item->estudante->trashed()) {
+                    $label .= ' (Excluído)';
+                    return $label;
+                }
+
+                return $item->estudante
+                    ? view('components.link', ['label' => $label, 'href' => route('estudantes.show', $item->estudante)])->render()
+                    : $label;
+            }),
+            ListViewColumn::make('estudante.curso')->label('Curso do estudante')->size('large')->link(fn($item) => $item->trashed() || ! $item->estudante || $item->estudante->trashed() || ! $item->estudante?->curso ? null : route('cursos.edit', $item->estudante->curso)),
             ListViewColumn::make('estudante.periodo')->label('Período')->size('small')->format(fn($value) => $value . '°'),
             ListViewColumn::make('ano')->label('Ano')->size('small'),
         ];
@@ -50,7 +60,6 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('disciplina')->label('Disciplina')->type('multiselect')->options(Disciplina::with('curso')->get()->mapWithKeys(fn ($disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso?->nome}"])->toArray())->applyUsing(fn(Builder $query, $value)=> $query->when($value, fn ($q)=> $q->where(fn ($sub)=>collect($value)->each(fn ($id)=> $sub->orWhereJsonContains('campos->componentesCurriculares',(string) $id)))))->size('xlarge')->hidden(),
-            ListViewFilter::make('excluido')->trashed(),
             
         ];
     }

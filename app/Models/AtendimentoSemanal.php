@@ -33,7 +33,7 @@ class AtendimentoSemanal extends Model implements Auditable
 
     public function estudante() : BelongsTo
     {
-        return $this->belongsTo(Estudante::class, 'estudante_id');
+        return $this->belongsTo(Estudante::class, 'estudante_id')->withTrashed();
     }
 
     public function user() : BelongsTo
@@ -43,6 +43,13 @@ class AtendimentoSemanal extends Model implements Auditable
 
     public function getNomeAttribute() : string
     {
-        return "Atendimento Semanal com {$this->estudante->nome} - {$this->data->format('d/m/Y')}";
+        $estudante = $this->estudante;
+        $nomeEstudante = $estudante?->nome ?? 'Estudante excluído';
+
+        if ($estudante && $estudante->trashed()) {
+            $nomeEstudante .= ' (Excluído)';
+        }
+
+        return "Atendimento Semanal com {$nomeEstudante} - {$this->data->format('d/m/Y')}";
     }
 }

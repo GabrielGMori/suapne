@@ -27,12 +27,16 @@ Route::middleware('auth')->group(function () {
     Route::middleware('web')->group(base_path('routes/atendimentos.php'));
     Route::middleware('web')->group(base_path('routes/contas.php'));
 
-    Route::name('registro-auditoria.')->group(function () {
+    Route::middleware('web')->name('registro-auditoria.')->group(function () {
         Route::view('/registro-auditoria', 'registro-auditoria.index')->name('index');
     });
 
-    Route::name('solicitacoes-registro.')->group(function () {
+    Route::middleware('web')->name('solicitacoes-registro.')->group(function () {
         Route::view('/solicitacoes-registro', 'solicitacoes-registro.index')->name('index');
+    });
+
+    Route::middleware('web')->name('lixeira.')->prefix('/lixeira')->group(function () {
+        Route::view('/', 'lixeira.index')->name('index');
     });
 
     Route::middleware('web')->group(base_path('routes/cursos.php'));

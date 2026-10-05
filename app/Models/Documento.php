@@ -33,7 +33,7 @@ class Documento extends Model implements Auditable
 
     public function estudante()
     {
-        return $this->belongsTo(Estudante::class, 'estudante_id');
+        return $this->belongsTo(Estudante::class, 'estudante_id')->withTrashed();
     }
 
     public function user()

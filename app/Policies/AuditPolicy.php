@@ -44,12 +44,12 @@ class AuditPolicy
         return false;
     }
 
-    public function restore(User $user, Audit $audit): bool
+    public function restore(User $user, mixed $audit = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, Audit $audit): bool
+    public function forceDelete(User $user, mixed $audit = null): bool
     {
         return false;
     }

@@ -3,6 +3,7 @@
 use App\Enums\RoleEnum;
 use App\Enums\SexoEnum;
 use App\Enums\SituacaoEstudanteEnum;
+use App\Models\AtendimentoSemanal;
 use App\Models\Curso;
 use App\Models\Estudante;
 use App\Models\User;
@@ -98,6 +99,69 @@ test('admin can soft delete and restore estudante', function () {
 
     $restoreResponse->assertRedirect();
     expect(Estudante::find($estudante->id))->not->toBeNull();
+});
+
+test('lixeira can render trashed records from a deleted student without crashing', function () {
+    $estudante = Estudante::factory()->create(['curso_id' => $this->curso->id]);
+    $atendimento = AtendimentoSemanal::factory()->create([
+        'estudante_id' => $estudante->id,
+        'user_id' => $this->tecnico->id,
+    ]);
+
+    $estudante->delete();
+    $atendimento->delete();
+
+    $trashedAtendimento = AtendimentoSemanal::withTrashed()->find($atendimento->id);
+
+    expect($trashedAtendimento->nome)->toContain($estudante->nome)
+        ->and($trashedAtendimento->nome)->toContain('(Excluído)')
+        ->and($trashedAtendimento->estudante)->not->toBeNull()
+        ->and($trashedAtendimento->estudante->nome)->toBe($estudante->nome);
+
+    $this->actingAs($this->admin)
+        ->get('/lixeira?model=' . urlencode(AtendimentoSemanal::class))
+        ->assertOk();
+});
+
+test('related tables show deleted student names with suffix, while direct student table does not', function () { 
+    $activeEstudante = Estudante::factory()->create(['curso_id' => $this->curso->id, 'nome' => 'Aluno Ativo']);
+    $trashedEstudante = Estudante::factory()->create(['curso_id' => $this->curso->id, 'nome' => 'Aluno de Teste']);
+    $atendimento = AtendimentoSemanal::factory()->create([
+        'estudante_id' => $trashedEstudante->id,
+        'user_id' => $this->tecnico->id,
+    ]);
+
+    $this->actingAs($this->admin)
+        ->get(route('estudantes.index'))
+        ->assertOk()
+        ->assertSee('Aluno Ativo')
+        ->assertDontSee('Aluno Ativo (Excluído)');
+
+    $trashedEstudante->delete();
+
+    expect(AtendimentoSemanal::withTrashed()->find($atendimento->id)->nome)
+        ->toContain('Aluno de Teste')
+        ->toContain('(Excluído)');
+
+    $atendimento->delete();
+});
+
+test('restoring a student restores related soft deleted records', function () {
+    $estudante = Estudante::factory()->create(['curso_id' => $this->curso->id]);
+    $atendimento = AtendimentoSemanal::factory()->create([
+        'estudante_id' => $estudante->id,
+        'user_id' => $this->tecnico->id,
+    ]);
+
+    $estudante->delete();
+    $atendimento->delete();
+
+    $this->actingAs($this->admin)
+        ->post(route('estudantes.restore', $estudante))
+        ->assertRedirect();
+
+    expect(AtendimentoSemanal::withTrashed()->find($atendimento->id))->not->toBeNull()
+        ->and(AtendimentoSemanal::find($atendimento->id))->not->toBeNull();
 });
 
 test('professor regular cannot create or delete estudante', function () {

@@ -1,28 +1,38 @@
 <?php
 
 use App\View\Components\ListViewConfig;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Computed;
 
 new class extends Component {
     use WithPagination;
 
     public string $config;
 
+    public ?string $modelClass = null;
+    public ?string $tableName = null;
+    public array $queryWheres = [];
+    public array $queryBindings = [];
+    public array $queryOrders = [];
+
     public ?string $title = null;
     public ?string $emptyMessage = null;
-    public bool|Closure $canCreate = true;
+    public bool $canCreate = true;
     public ?string $createUrl = null;
     public ?string $createLabel = null;
     public bool $filtersExpanded = false;
+    public ?string $filtersColor = null;
 
     public int $perPage = 10;
 
     #[Url(as: 'filter')]
     public array $filtersStates = [];
 
-    protected function getConfigInstance(): ListViewConfig
+    public function getConfigInstance(): ListViewConfig
     {
         return new ($this->config);
     }
@@ -37,19 +47,51 @@ new class extends Component {
             ->toArray();
     }
 
-    public function mount(): void
-    {
-        $config = $this->getConfigInstance();
-        $this->perPage = $config->perPage();
-        $this->title = $config->title();
-        $this->canCreate = $config->canCreate();
-        $this->createUrl = $config->createUrl();
-        $this->createLabel = $config->createLabel();
-        $this->emptyMessage = $config->emptyMessage();
+    public function mount(
+        string $config,
+        null|QueryBuilder|EloquentBuilder $query = null,
+        ?bool $canCreate = null,
+        ?string $title = null,
+        ?string $emptyMessage = null,
+        ?string $createUrl = null,
+        ?string $createLabel = null,
+        ?int $perPage = null,
+        ?string $filtersColor = null
+    ): void {
+        $this->config = $config;
+        $configInstance = $this->getConfigInstance();
+
+        if ($query) {
+            if ($query instanceof EloquentBuilder) {
+                $this->modelClass = get_class($query->getModel());
+                $rawQuery = $query->getQuery();
+            } else {
+                $this->tableName = $query->from;
+                $rawQuery = $query;
+            }
+
+            $this->queryWheres = $rawQuery->wheres ?? [];
+            $this->queryBindings = $rawQuery->getRawBindings() ?? [];
+            $this->queryOrders = $rawQuery->orders ?? [];
+        }
+
+        $this->perPage = $perPage ?? $configInstance->perPage();
+        $this->title = $title ?? $configInstance->title();
+        $this->createUrl = $createUrl ?? $configInstance->createUrl();
+        $this->createLabel = $createLabel ?? $configInstance->createLabel();
+        $this->emptyMessage = $emptyMessage ?? $configInstance->emptyMessage();
+        $this->filtersColor = $filtersColor;
+
+        if ($canCreate !== null) {
+            $this->canCreate = $canCreate;
+        } else {
+            $canCreateValue = $configInstance->canCreate();
+            $this->canCreate = is_callable($canCreateValue) ? (bool) $canCreateValue() : (bool) $canCreateValue;
+        }
 
         $this->filtersStates = array_merge(
             $this->buildDefaultFiltersStates(),
-            $this->filtersStates,
+            $this->filtersStates
         );
     }
 
@@ -69,12 +111,54 @@ new class extends Component {
         $this->resetPage();
     }
 
-    public function getItemsProperty()
+    #[Computed]
+    public function baseQuery(): EloquentBuilder|QueryBuilder
     {
-        $config = $this->getConfigInstance();
-        $query = $config->query();
+        if ($this->modelClass && class_exists($this->modelClass)) {
+            $query = $this->modelClass::withoutGlobalScopes();
 
-        foreach ($config->filters() as $filter) {
+            if (! empty($this->queryWheres)) {
+                $query->getQuery()->wheres = $this->queryWheres;
+
+                foreach ($this->queryBindings as $type => $bindings) {
+                    $query->getQuery()->setBindings($bindings, $type);
+                }
+            }
+
+            if (! empty($this->queryOrders)) {
+                $query->getQuery()->orders = $this->queryOrders;
+            }
+
+            return $query;
+        }
+
+        if ($this->tableName) {
+            $query = \Illuminate\Support\Facades\DB::table($this->tableName);
+
+            if (! empty($this->queryWheres)) {
+                $query->wheres = $this->queryWheres;
+
+                foreach ($this->queryBindings as $type => $bindings) {
+                    $query->setBindings($bindings, $type);
+                }
+            }
+
+            if (! empty($this->queryOrders)) {
+                $query->orders = $this->queryOrders;
+            }
+
+            return $query;
+        }
+
+        return $this->getConfigInstance()->query();
+    }
+
+    #[Computed]
+    public function items()
+    {
+        $query = clone $this->baseQuery;
+
+        foreach ($this->getConfigInstance()->filters() as $filter) {
             $value = $this->filtersStates[$filter->getIdentifier() ?? $filter->getKey()] ?? null;
 
             if ($value === null || $value === '' || (is_array($value) && empty($value))) {
@@ -87,7 +171,8 @@ new class extends Component {
         return $query->paginate($this->perPage);
     }
 
-    public function getUrlFiltersProperty(): array
+    #[Computed]
+    public function urlFilters(): array
     {
         return collect($this->filtersStates)
             ->filter(

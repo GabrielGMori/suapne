@@ -12,6 +12,7 @@
     @include('components.⚡list-view.filters', [
         'filters' => $filters,
         'filtersExpanded' => $filtersExpanded,
+        'filtersColor' => $filtersColor,
     ])
 
     <div class="list-view-card" wire:loading.class="opacity-50 transition-opacity duration-200">
@@ -38,7 +39,8 @@
 
             <div class="list-view-items">
                 @foreach($items as $item)
-                    <div class="list-view-item">
+                    {{-- Adicionado wire:key dinâmico para garantir diffing correto do Livewire --}}
+                    <div class="list-view-item" wire:key="item-{{ $item->getKey() }}">
                         <div class="min-w-30 text-center shrink-0 flex justify-center">
                             @php
                                 $resolvedIcon = is_callable($icon) ? $icon($item) : $icon;
@@ -59,9 +61,14 @@
 
                         @if(count($actions) > 0)
                             <div class="min-w-40 text-center flex items-center justify-center gap-2">
-                                @foreach ($actions as $action)
+                                @foreach ($actions as $actionIndex => $action)
                                     @if($action->needsConfirmation($item))
-                                        <x-modal color="{{ $action->isFilledConfirm($item) ? $action->getColor($item) : 'transparent' }}" :icon="$action->getIcon($item)" title="Confirmar">
+                                        <x-modal 
+                                            wire:key="action-modal-{{ $item->getKey() }}-{{ $actionIndex }}"
+                                            color="{{ $action->isFilledConfirm($item) ? $action->getColor($item) : 'transparent' }}" 
+                                            :icon="$action->getIcon($item)" 
+                                            title="Confirmar">
+                                            
                                             @if(!$action->isLink($item))
                                                 <form action="{{ $action->getUrl($item) }}" method="{{ $action->getMethod($item) === 'GET' ? 'GET' : 'POST' }}">
                                                     @csrf
@@ -101,7 +108,7 @@
                                             @endif
                                         </x-modal>
                                     @else
-                                        @include('components.⚡list-view.action-button', ['action' => $action])
+                                        @include('components.⚡list-view.action-button', ['action' => $action, 'item' => $item])
                                     @endif
                                 @endforeach
                             </div>

@@ -1,3 +1,9 @@
-@props(['label', 'href'])
+@props(['label', 'href' => '#'])
 
-<a class="text-body-medium" href="{{ $href }}">{{ $label }}</a>
+@php
+    $resolvedHref = Route::has($href) 
+        ? route($href) 
+        : (str_contains($href, '/') || str_starts_with($href, '#') || str_starts_with($href, 'http') ? $href : '#');
+@endphp
+
+<a class="text-body-medium" href="{{ $resolvedHref }}">{{ $label }}</a>

@@ -45,12 +45,12 @@ class UserPolicy
         return false;
     }
 
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, mixed $model = null): bool
     {
         return false;
     }
 
-    public function forceDelete(User $user, User $model): bool
+    public function forceDelete(User $user, mixed $model = null): bool
     {
         return false;
     }
