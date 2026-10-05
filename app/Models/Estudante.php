@@ -84,7 +84,6 @@ class Estudante extends Model implements Auditable
         'documentos',
         'entrevistaFamiliar',
         'observacoes',
-        'modelosFormulario',
     ];
 
     protected $casts = [
@@ -115,11 +114,6 @@ class Estudante extends Model implements Auditable
     public function planosTrabalho(): HasMany
     {
         return $this->hasMany(PlanoTrabalhoEstudante::class, 'estudante_id');
-    }
-
-    public function modelosFormulario(): HasMany
-    {
-        return $this->hasMany(ModeloFormulario::class, 'estudante_id');
     }
 
     public function atendimentosSemanais(): HasMany
