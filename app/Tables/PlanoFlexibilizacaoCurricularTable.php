@@ -49,6 +49,7 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
             ListViewFilter::make('estudante')->foreignKey('periodo')->identifier('estudantePeriodo')->label('Período')->size('tiny'),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
+            ListViewFilter::make('disciplina')->label('Disciplina')->type('multiselect')->options(Disciplina::with('curso')->get()->mapWithKeys(fn ($disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso?->nome}"])->toArray())->applyUsing(fn(Builder $query, $value)=> $query->when($value, fn ($q)=> $q->where(fn ($sub)=>collect($value)->each(fn ($id)=> $sub->orWhereJsonContains('campos->componentesCurriculares',(string) $id)))))->size('xlarge')->hidden(),
             ListViewFilter::make('excluido')->trashed(),
             
         ];
