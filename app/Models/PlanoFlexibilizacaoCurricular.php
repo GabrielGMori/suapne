@@ -56,6 +56,11 @@ class PlanoFlexibilizacaoCurricular extends Model implements Auditable
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function templateFormulario(): BelongsTo
+    {
+        return $this->belongsTo(TemplateFormulario::class);
+    }
+
     public function getNomeAttribute(): string
     {
         return "Plano de Flexibilização Curricular de {$this->estudante->nome} - {$this->periodo_inicio->year}";

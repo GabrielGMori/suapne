@@ -100,6 +100,10 @@
                 <x-campos-adicionais-exibicao :registro="$planoTrabalho" etapa="livre" :vazio="$vazioDocente" :italico-vazio="true" />
             @endif
 
+            @if ($planoTrabalho->templateFormulario)
+                <p>Template: {{ $planoTrabalho->templateFormulario->nome }}</p>
+            @endif
+
             <p>Atualizado pela última vez: {{ $updated_at->format('d/m/Y \à\s H:i') }}</p>
 
             <div class="flex justify-end gap-2">

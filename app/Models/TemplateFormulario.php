@@ -81,6 +81,11 @@ class TemplateFormulario extends Model implements Auditable
         return array_values(array_filter($this->campos ?? [], fn($campo) => $campo['fixo'] ?? false));
     }
 
+    public function getCriadoPorAttribute(): ?string
+    {
+        return $this->padrao ? 'Sistema' : $this->user?->nome;
+    }
+
     public function getQuantidadeCamposAttribute(): int
     {
         return count($this->campos ?? []);

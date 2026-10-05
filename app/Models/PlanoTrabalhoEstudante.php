@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\StatusPlanoTrabalhoEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Estudante;
@@ -53,6 +54,11 @@ class PlanoTrabalhoEstudante extends Model implements Auditable
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function templateFormulario(): BelongsTo
+    {
+        return $this->belongsTo(TemplateFormulario::class);
     }
 
     public function disciplina()

@@ -3,6 +3,9 @@
         <div>
             <h3 class="text-title-large">Data do atendimento: {{ $atendimento->data->format('d/m/Y \à\s H:i') }}</h3>
             <h3 class="text-title-large">Feito por: {{ $atendimento->user->nome }}</h3>
+            @if ($atendimento->templateFormulario)
+                <h3 class="text-title-large">Template: {{ $atendimento->templateFormulario->nome }}</h3>
+            @endif
         </div>
         <div class="flex justify-end">
             <x-button label="Exportar como PDF" target="_blank" color="tertiary" icon="file_export" type="link" :href="route('atendimentos.exportPdf', ['atendimento' => $atendimento,])"/>

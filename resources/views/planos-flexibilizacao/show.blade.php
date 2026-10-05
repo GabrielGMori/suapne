@@ -7,8 +7,13 @@ use App\Models\Disciplina;
 
 <x-layouts.main title="{{ $planoFlexibilizacao->nome }}">
     <div class="flex items-center justify-between mb-5">
-        <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a
-            {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
+        <div>
+            <h2 class="text-title-large">Período de realização: {{ $planoFlexibilizacao->periodo_inicio->format('d/m/Y') }} a
+                {{ $planoFlexibilizacao->periodo_fim->format('d/m/Y') }}</h2>
+            @if ($planoFlexibilizacao->templateFormulario)
+                <h2 class="text-title-large">Template: {{ $planoFlexibilizacao->templateFormulario->nome }}</h2>
+            @endif
+        </div>
         <x-button label="Exportar como PDF" icon="file_export" color="tertiary" type="link" target="_blank" :href="route('planos-flexibilizacao.exportPdf', [
             'planoFlexibilizacao' => $planoFlexibilizacao,
         ])" />

@@ -45,7 +45,9 @@
 
                         <p class="text-body-small text-secondary-accent">
                             {{ $template->quantidade_campos }} {{ $template->quantidade_campos === 1 ? 'campo' : 'campos' }}
-                            @if ($template->user)
+                            @if ($template->padrao)
+                                · criado pelo sistema
+                            @elseif ($template->user)
                                 · criado por {{ $template->user->nome }}
                             @endif
                         </p>

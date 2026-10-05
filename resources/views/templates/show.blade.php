@@ -48,7 +48,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
             <x-display-dado label="Formulário:" :value="$template->tipo->label()" />
             <x-display-dado label="Quantidade de campos:" :value="$template->quantidade_campos" />
-            <x-display-dado label="Criado por:" :value="$template->user?->nome" />
+            <x-display-dado label="Criado por:" :value="$template->criado_por" />
             <x-display-dado label="Criado em:" :value="$template->created_at->format('d/m/Y')" />
         </div>
     </div>
