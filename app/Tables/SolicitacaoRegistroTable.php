@@ -3,6 +3,8 @@
 namespace App\Tables;
 
 use App\Enums\RoleEnum;
+use App\Enums\StatusSolicitacaoRegistroEnum;
+use App\Models\Disciplina;
 use App\Models\SolicitacaoRegistro;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
@@ -46,7 +48,11 @@ class SolicitacaoRegistroTable extends ListViewConfig
             ListViewFilter::make('nome')->label('Nome'),
             ListViewFilter::make('email')->label('E-mail'),
             ListViewFilter::make('role')->label('Função')->type('select')
-            ->options(RoleEnum::options())->equals(),
+                ->options(RoleEnum::options())->equals(),
+            ListViewFilter::make('status')->label('Status')->type('select')
+                ->options(StatusSolicitacaoRegistroEnum::options())->equals(),
+            ListViewFilter::make('disciplinas')->foreignKey('disciplinas.id')->label('Disciplinas')->size('xlarge')->type('multiselect')->equals()
+                ->options(Disciplina::with('curso')->get()->mapWithKeys(fn(Disciplina $d) => [$d->id => "{$d->nome} - {$d->curso?->nome}"])->toArray())->hidden(),
             ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('created_at'),
             ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('created_at'),
         ];

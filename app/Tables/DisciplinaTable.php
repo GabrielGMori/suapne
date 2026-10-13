@@ -46,9 +46,10 @@ class DisciplinaTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do componente curricular')->size('large'),
-            ListViewFilter::make('curso')->foreignKey('id')->label('Nome do curso')->size('large')->type('multiselect')
-            ->options(Curso::all()->pluck('nome', 'id')->toArray()),
-            ListViewFilter::make('curso_periodo')->label('Período')->size('tiny'),
+            ListViewFilter::make('curso_id')->label('Curso')->size('large')->type('multiselect')
+                ->options(Curso::pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('curso_periodo')->label('Período')->size('tiny')->type('number')->equals(),
+            ListViewFilter::make('ementa')->label('Ementa')->size('large')->hidden(),
         ];
     }
 

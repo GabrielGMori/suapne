@@ -55,12 +55,14 @@ class PlanoFlexibilizacaoCurricularTable extends ListViewConfig
         return [
             ListViewFilter::make('estudante')->foreignKey('nome')->identifier('estudanteNome')->label('Nome do estudante')->size('large'),
             ListViewFilter::make('estudante')->foreignKey('curso_id')->identifier('estudanteCurso')->label('Curso')->size('large')->type('select')
-                ->options(Curso::all()->pluck('nome', 'id')->toArray())->equals(),
-            ListViewFilter::make('estudante')->foreignKey('periodo')->identifier('estudantePeriodo')->label('Período')->size('tiny'),
+                ->options(Curso::pluck('nome', 'id')->toArray())->equals(),
+            ListViewFilter::make('estudante')->foreignKey('periodo')->identifier('estudantePeriodo')->label('Período')->size('tiny')->type('number')->equals(),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('disciplina')->label('Disciplina')->type('multiselect')->options(Disciplina::with('curso')->get()->mapWithKeys(fn ($disciplina) => [$disciplina->id => "{$disciplina->nome} - {$disciplina->curso?->nome}"])->toArray())->applyUsing(fn(Builder $query, $value)=> $query->when($value, fn ($q)=> $q->where(fn ($sub)=>collect($value)->each(fn ($id)=> $sub->orWhereJsonContains('campos->componentesCurriculares',(string) $id)))))->size('xlarge')->hidden(),
-            
+            ListViewFilter::make('user')->foreignKey('nome')->label('Criado por')->size('large')->hidden(),
+            ListViewFilter::make('periodo_inicio')->label('Início do período')->type('date')->size('small')->hidden(),
+            ListViewFilter::make('periodo_fim')->label('Fim do período')->type('date')->size('small')->hidden(),
         ];
     }
 

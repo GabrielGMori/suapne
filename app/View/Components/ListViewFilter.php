@@ -167,6 +167,16 @@ class ListViewFilter implements \JsonSerializable
             return;
         }
 
+        if ($this->foreignKey) {
+            $query->whereRelation(
+                $this->key,
+                fn(Builder $q) => is_array($value)
+                    ? $q->whereIn($this->foreignKey, $value)
+                    : $q->where($this->foreignKey, 'like', "%{$value}%")
+            );
+            return;
+        }
+
         if (is_array($value)) {
             $query->whereIn($this->key, $value);
         } else {

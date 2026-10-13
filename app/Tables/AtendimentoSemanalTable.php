@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\AtendimentoSemanal;
+use App\Models\Curso;
 
 class AtendimentoSemanalTable extends ListViewConfig
 {
@@ -58,6 +59,8 @@ class AtendimentoSemanalTable extends ListViewConfig
             ListViewFilter::make('local')->label('Local do atendimento'),
             ListViewFilter::make('created_at_inicial')->label('Data inicial')->type('date')->size('small')->startingDateInterval('data'),
             ListViewFilter::make('created_at_final')->label('Data final')->type('date')->size('small')->endingDateInterval('data'),
+            ListViewFilter::make('estudante')->foreignKey('curso_id')->identifier('estudanteCurso')->label('Curso do estudante')->size('large')->type('select')
+                ->options(Curso::pluck('nome', 'id')->toArray())->equals()->hidden(),
         ];
     }
 

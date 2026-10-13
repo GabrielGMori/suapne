@@ -5,10 +5,21 @@ use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 
+/**
+ * Reusable select / multiselect.
+ *
+ * Model contract (what the parent receives through wire:model):
+ *  - type="select"      => ?string          (null when nothing is selected)
+ *  - type="multiselect" => array<int,string>
+ *
+ * The parent's property and this component's $selectedItems are kept in sync by
+ * Alpine's x-modelable, so both sides MUST share the same shape. Never coerce the
+ * bound value into another shape on the parent side.
+ */
 new class extends Component
 {
     #[Modelable]
-    public array|string|int|null $selectedItems = [];
+    public array|string|null $selectedItems = null;
 
     #[Reactive]
     public array $options = [];
@@ -56,26 +67,28 @@ new class extends Component
         ));
 
         $this->isMultiple = $type === 'multiselect';
-        $this->selectedItems = $this->normalize($this->resolveInitialValue($name, $value));
+
+        // When bound through wire:model, Livewire has already filled $selectedItems
+        // with the parent's value; otherwise fall back to old() / the "value" prop.
+        $initial = filled($this->selectedItems) ? $this->selectedItems : $this->resolveInitialValue($name, $value);
+        $this->selectedItems = $this->normalize($initial);
     }
 
-    public function updatedSelectedItems($value): void
+    public function updatedSelectedItems(mixed $value): void
     {
-        if (!is_array($value)) {
-            $this->selectedItems = $this->normalize($value);
-        }
+        $this->selectedItems = $this->normalize($value);
     }
 
-    public function updatedOptions($opt): void
+    public function updatedOptions(): void
     {
-        $this->dispatch('updated-options', opt: $opt);
+        $this->dispatch('select-options-updated', options: $this->optionList())->self();
     }
 
     public function clear(): void
     {
         if ($this->disabled) return;
 
-        $this->selectedItems = [];
+        $this->selectedItems = $this->normalize(null);
     }
 
     #[On('select-all')]
@@ -91,6 +104,25 @@ new class extends Component
         return $this->dotName($this->name);
     }
 
+    /**
+     * Options as an ordered list of {value, label}.
+     *
+     * Sending a list (instead of the raw associative array) preserves the server-side
+     * ordering: JS objects always iterate integer-like keys in ascending order, which
+     * would otherwise reorder e.g. students sorted by name into "sorted by id".
+     */
+    public function optionList(): array
+    {
+        $list = [];
+
+        foreach ($this->options as $value => $label) {
+            if ($label === null) continue;
+            $list[] = ['value' => (string) $value, 'label' => (string) $label];
+        }
+
+        return $list;
+    }
+
     private function resolveInitialValue(string $name, mixed $value): mixed
     {
         $dotName = $this->dotName($name);
@@ -102,16 +134,16 @@ new class extends Component
         return trim(preg_replace('/\[([^\]]*)\]/', '.$1', $name), '.');
     }
 
-    private function normalize(mixed $value): array
+    /**
+     * Coerce any input into the shape dictated by the model contract.
+     */
+    private function normalize(mixed $value): array|string|null
     {
-        if (is_array($value)) {
-            return array_values(array_map('strval', array_filter($value, fn($v) => $v !== '' && $v !== null)));
-        }
+        $values = array_values(array_map(
+            'strval',
+            array_filter((array) $value, fn($v) => $v !== '' && $v !== null && !is_array($v)),
+        ));
 
-        if ($value !== null && $value !== '') {
-            return [strval($value)];
-        }
-
-        return [];
+        return $this->isMultiple ? $values : ($values[0] ?? null);
     }
 };

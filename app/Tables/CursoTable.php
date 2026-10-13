@@ -36,7 +36,7 @@ class CursoTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('nome')->label('Nome do curso')->size('large'),
-            ListViewFilter::make('quantidade_periodos')->label('Quantidade de períodos')->size('small'),
+            ListViewFilter::make('quantidade_periodos')->label('Quantidade de períodos')->size('small')->type('number')->equals(),
         ];
     }
 

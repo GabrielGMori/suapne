@@ -10,7 +10,7 @@ use App\Models\PlanoTrabalhoEstudante;
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
 
-    public array|string|int|null $estudanteId = null;
+    public ?string $estudanteId = null;
     public ?Estudante $estudante = null;
 
     public array $displayDisciplinas = [];
@@ -25,8 +25,8 @@ new class extends Component {
 
         $this->loadDisciplinas();
 
-        $rawEstudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? $this->estudanteId);
-        $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+        $initialEstudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? $this->estudanteId);
+        $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
 
         if (filled($this->estudanteId)) {
             $this->estudante = Estudante::with('planosFlexibilizacaoCurricular')->find($this->estudanteId);
@@ -49,17 +49,14 @@ new class extends Component {
         $this->selectedProfessores = array_map('strval', (array) $rawProfessores);
     }
 
-    public function updatedEstudanteId($value): void
+    public function updatedEstudanteId(?string $value): void
     {
-        $scalarId = $this->getScalarEstudanteId($value);
-        $this->estudanteId = $scalarId;
-
-        if (!filled($scalarId)) {
+        if (!filled($value)) {
             $this->estudante = null;
             return;
         }
 
-        $this->estudante = Estudante::with('planosFlexibilizacaoCurricular')->find($scalarId);
+        $this->estudante = Estudante::with('planosFlexibilizacaoCurricular')->find($value);
 
         if (!$this->estudante) {
             return;
@@ -133,12 +130,11 @@ new class extends Component {
 
     public function selecionarDisciplinasDoCurso(): void
     {
-        $id = $this->getScalarEstudanteId();
-        if (!filled($id)) {
+        if (!filled($this->estudanteId)) {
             return;
         }
 
-        $estudante = $this->estudante ?? Estudante::find($id);
+        $estudante = $this->estudante ?? Estudante::find($this->estudanteId);
         if (!$estudante) {
             return;
         }
@@ -162,17 +158,6 @@ new class extends Component {
                 ],
             )
             ->toArray();
-    }
-
-    private function getScalarEstudanteId(mixed $value = null): ?string
-    {
-        $val = $value ?? $this->estudanteId;
-
-        if (is_array($val)) {
-            $val = reset($val) ?: null;
-        }
-
-        return filled($val) ? (string) $val : null;
     }
 
     #[Computed]

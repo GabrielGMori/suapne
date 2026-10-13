@@ -10,26 +10,26 @@ use App\Models\PlanoFlexibilizacaoCurricular;
 new class extends Component {
     public ?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null;
 
-    public array|string|int|null $estudanteId = null;
-    public array $displayDisciplinas = [];
+    // Bound to a single <livewire:form.select>, which emits ?string.
+    public ?string $estudanteId = null;
+
+    // Bound to a multiselect, which emits array<string>.
     public array $selectedDisciplinas = [];
+
+    public array $displayDisciplinas = [];
 
     public function mount(?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null, mixed $estudanteId = null): void
     {
         $this->planoFlexibilizacao = $planoFlexibilizacao;
 
-        $rawEstudanteId = old('estudante_id', $this->planoFlexibilizacao?->estudante_id ?? $estudanteId);
-        $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+        // Priority order: old input > current record > passed prop
+        $initialEstudanteId = old('estudante_id', $planoFlexibilizacao?->estudante_id ?? $estudanteId);
+        $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
 
-        $this->selectedDisciplinas = old('campos.componentesCurriculares', $this->planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
+        $initialDisciplinas = old('campos.componentesCurriculares', $planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
+        $this->selectedDisciplinas = array_map('strval', (array) $initialDisciplinas);
 
         $this->loadDisciplinas();
-    }
-
-    public function updatedEstudanteId($value): void
-    {
-        $this->estudanteId = $this->getScalarEstudanteId($value);
-        // Do NOT clear $this->selectedDisciplinas here so selections persist
     }
 
     #[On('disciplina-created')]
@@ -50,12 +50,8 @@ new class extends Component {
 
     public function selecionarDisciplinasDoCurso(): void
     {
-        $id = $this->getScalarEstudanteId();
-        if (!filled($id)) {
-            return;
-        }
+        $estudante = filled($this->estudanteId) ? Estudante::find($this->estudanteId) : null;
 
-        $estudante = Estudante::find($id);
         if (!$estudante) {
             return;
         }
@@ -79,17 +75,6 @@ new class extends Component {
             ->toArray();
     }
 
-    private function getScalarEstudanteId(mixed $value = null): ?string
-    {
-        $val = $value ?? $this->estudanteId;
-
-        if (is_array($val)) {
-            $val = reset($val) ?: null;
-        }
-
-        return filled($val) ? (string) $val : null;
-    }
-
     #[Computed]
     public function estudanteOptions(): array
     {
@@ -107,8 +92,6 @@ new class extends Component {
     }
 };
 ?>
-
-@props(['planoFlexibilizacao' => null])
 
 <form
     action="{{ $planoFlexibilizacao ? route('planos-flexibilizacao.update', $planoFlexibilizacao) : route('planos-flexibilizacao.store') }}"

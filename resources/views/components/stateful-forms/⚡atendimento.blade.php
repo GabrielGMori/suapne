@@ -8,7 +8,7 @@ use App\Models\AtendimentoSemanal;
 new class extends Component {
     public ?AtendimentoSemanal $atendimento = null;
 
-    public array|string|int|null $estudanteId = null;
+    public ?string $estudanteId = null;
     public ?string $perfil = '';
 
     public function mount(?AtendimentoSemanal $atendimento = null, mixed $estudanteId = null): void
@@ -16,8 +16,8 @@ new class extends Component {
         $this->atendimento = $atendimento;
 
         // Priority order: old input > model attribute > passed prop
-        $rawEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
-        $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+        $initialEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
+        $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
 
         // Priority order: old input > current record > latest student profile
         $oldPerfil = old('campos.perfilDoEstudante');
@@ -31,10 +31,9 @@ new class extends Component {
         }
     }
 
-    public function updatedEstudanteId($value): void
+    public function updatedEstudanteId(?string $value): void
     {
-        $id = $this->getScalarEstudanteId($value);
-        $this->loadPerfilForEstudante($id);
+        $this->loadPerfilForEstudante($value);
     }
 
     private function loadPerfilForEstudante(?string $id): void
@@ -54,17 +53,6 @@ new class extends Component {
         $ultimoAtendimento = $estudante->atendimentosSemanais()->orderBy('data', 'DESC')->first();
 
         $this->perfil = $ultimoAtendimento?->campos['perfilDoEstudante'] ?? '';
-    }
-
-    private function getScalarEstudanteId(mixed $value = null): ?string
-    {
-        $val = $value ?? $this->estudanteId;
-
-        if (is_array($val)) {
-            $val = reset($val) ?: null;
-        }
-
-        return filled($val) ? (string) $val : null;
     }
 
     #[Computed]

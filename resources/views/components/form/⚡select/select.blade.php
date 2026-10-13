@@ -1,5 +1,5 @@
 @php
-    $options = array_filter((array) ($options ?? []), fn ($option) => !is_null($option));
+    $optionList = $this->optionList();
     $baseClass = "form-control form-control-{$appearance} form-control-{$size}" . ($disabled ? ' bg-white/30' : '');
     $submittedName = $isMultiple && $name && !str_ends_with($name, '[]') ? "{$name}[]" : $name;
     $caretClass = 'form-caret' . ($size === 'small' ? ' form-caret-small' : '') . ($disabled ? ' hidden' : '');
@@ -13,7 +13,7 @@
     <div class="form-control-wrap">
         <div class="select form-control-{{ $size }}"
             x-data="formSelectData(
-                @js($options, JSON_THROW_ON_ERROR),
+                @js($optionList, JSON_THROW_ON_ERROR),
                 @js($isMultiple, JSON_THROW_ON_ERROR),
                 @js($disabled, JSON_THROW_ON_ERROR)
             )"
@@ -27,8 +27,8 @@
                     }
                 });
                 $watch('searchQuery', () => { highlightedIndex = 0; });
-                $wire.on('updated-options', ({ opt }) => {
-                    options = normalizeOptions(opt);
+                $wire.on('select-options-updated', ({ options: opts }) => {
+                    options = normalizeOptions(opts);
                 });
             "
             x-on:keydown="handleKeydown"
@@ -151,9 +151,9 @@
                     .filter(option => option !== null && option !== undefined)
                     .map((option) => {
                         if (option && typeof option === 'object' && 'value' in option && 'label' in option) {
-                            return option;
+                            return { value: String(option.value), label: option.label };
                         }
-                        return { value: option, label: option };
+                        return { value: String(option), label: option };
                     })
                     .filter(option => option.value !== null && option.value !== 'null' && option.value !== undefined);
             };
@@ -169,12 +169,17 @@
                 isMultiple,
                 disabled,
 
+                // Internally the selection is always handled as an array of strings,
+                // regardless of the model shape (?string for single, array for multiple).
                 get selected() {
-                    return this.$wire.selectedItems ?? [];
+                    const raw = this.$wire.selectedItems;
+                    if (raw === null || raw === undefined || raw === '') return [];
+                    return (Array.isArray(raw) ? raw : [raw]).map(String);
                 },
 
+                // Write back in the shape dictated by the model contract.
                 set selected(value) {
-                    this.$wire.selectedItems = value;
+                    this.$wire.selectedItems = this.isMultiple ? value : (value[0] ?? null);
                 },
 
                 get selectedSet() {

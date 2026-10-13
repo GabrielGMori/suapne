@@ -82,28 +82,39 @@ class EstudanteTable extends ListViewConfig
 
     public function filters(): array
     {
+        $applyDigitsField = fn (string $field) => function (Builder $query, string $value) use ($field) {
+            $digits = preg_replace('/\D/', '', $value);
+            $query->where(function (Builder $q) use ($field, $value, $digits) {
+                $q->where($field, 'like', "%{$value}%")
+                  ->when($digits, function (Builder $sub) use ($field, $digits) {
+                      $sub->orWhere($field, 'like', "%{$digits}%")
+                          ->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE({$field}, '.', ''), '-', ''), '(', ''), ')', ''), ' ', '') LIKE ?", ["%{$digits}%"]);
+                  });
+            });
+        };
+
         return [
             ListViewFilter::make('nome')->label('Nome do estudante')->size('large'),
-            ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::all()->pluck('nome', 'id')->toArray()),
-            ListViewFilter::make('periodo')->label('Período')->size('tiny'),
+            ListViewFilter::make('curso_id')->label('Curso do estudante')->size('large')->type('multiselect')->options(Curso::pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('periodo')->label('Período')->size('tiny')->type('number')->equals(),
             ListViewFilter::make('situacao')->label('Situação')->type('multiselect')->options(SituacaoEstudanteEnum::options()),
             ListViewFilter::make('nome_social')->label('Nome social')->hidden(),
             ListViewFilter::make('matricula')->label('Matrícula')->hidden(),
-            ListViewFilter::make('cpf')->label('CPF')->mask('999.999.999-99')->placeholder('000.000.000-00')->applyOperation('=', fn ($value)=> preg_replace('/\D/', '', $value))->hidden(),
+            ListViewFilter::make('cpf')->label('CPF')->mask('999.999.999-99')->placeholder('000.000.000-00')->applyUsing($applyDigitsField('cpf'))->hidden(),
             ListViewFilter::make('data_nascimento')->label('Data de nascimento')->type('date')->hidden(),
             ListViewFilter::make('sexo')->label('Sexo')->size('small')->type('multiselect')->options(SexoEnum::options())->hidden(),
             ListViewFilter::make('etnia')->label('Etnia')->type('multiselect')->options(EtniaEnum::options())->hidden(),
             ListViewFilter::make('nacionalidade')->label('Nacionalidade')->hidden(),
             ListViewFilter::make('naturalidade')->label('Naturalidade')->hidden(),
-            ListViewFilter::make('ingresso_ano')->label('Ano de ingresso')->hidden(),
-            ListViewFilter::make('ingresso_periodo')->label('Período de ingresso')->hidden(),
+            ListViewFilter::make('ingresso_ano')->label('Ano de ingresso')->size('small')->type('number')->equals()->hidden(),
+            ListViewFilter::make('ingresso_periodo')->label('Período de ingresso')->size('tiny')->type('number')->equals()->hidden(),
             ListViewFilter::make('email_academico')->label('Email acadêmico')->hidden(),
             ListViewFilter::make('email_pessoal')->label('Email pessoal')->hidden(),
             ListViewFilter::make('email_responsavel')->label('Email principal (pai, mãe ou responsável)')->hidden(),
-            ListViewFilter::make('telefone')->label('Telefone do estudante')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyOperation('=', fn($value)=> preg_replace('/\D/', '', $value))->hidden(),
-            ListViewFilter::make('telefone_mae')->label('Telefone da mãe')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyOperation('=', fn($value)=>preg_replace('/\D/', '', $value))->hidden(),
-            ListViewFilter::make('telefone_pai')->label('Telefone do pai')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyOperation('=', fn($value)=>preg_replace('/\D/', '', $value))->hidden(),
-            ListViewFilter::make('telefone_responsavel')->label('Telefone principal (pai, mãe ou responsável)')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyOperation('=', fn($value)=>preg_replace('/\D/', '', $value))->hidden(),
+            ListViewFilter::make('telefone')->label('Telefone do estudante')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyUsing($applyDigitsField('telefone'))->hidden(),
+            ListViewFilter::make('telefone_mae')->label('Telefone da mãe')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyUsing($applyDigitsField('telefone_mae'))->hidden(),
+            ListViewFilter::make('telefone_pai')->label('Telefone do pai')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyUsing($applyDigitsField('telefone_pai'))->hidden(),
+            ListViewFilter::make('telefone_responsavel')->label('Telefone principal (pai, mãe ou responsável)')->mask('+99 (99) 99999-9999')->placeholder('+55 (00) 00000-0000')->applyUsing($applyDigitsField('telefone_responsavel'))->hidden(),
             ListViewFilter::make('nome_mae')->label('Nome da mãe')->hidden(),
             ListViewFilter::make('nome_pai')->label('Nome do pai')->hidden(),
             ListViewFilter::make('nome_responsavel')->label('Nome do responsável')->hidden(),

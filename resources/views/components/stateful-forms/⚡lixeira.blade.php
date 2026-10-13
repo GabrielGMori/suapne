@@ -11,28 +11,26 @@ new class extends Component
     public ?string $config = null;
 
     #[Url(as: 'model', keep: true)]
-    public null|string|array $model = null;
+    public ?string $model = null;
 
     public function mount(): void
     {
         $this->resolveConfig($this->model);
     }
 
-    public function updatedModel($modelName): void
+    public function updatedModel(?string $modelName): void
     {   
         $this->resolveConfig($modelName);
     }
 
-    private function resolveConfig($modelName): void
+    private function resolveConfig(?string $modelName): void
     {
-        $selected = is_array($modelName) ? ($modelName[0] ?? null) : $modelName;
-
-        if (empty($selected)) {
+        if (empty($modelName)) {
             $this->config = null;
             return;
         }
 
-        $tableName = str_replace('Models', 'Tables', $selected . 'Table');
+        $tableName = str_replace('Models', 'Tables', $modelName . 'Table');
         $this->config = class_exists($tableName) ? $tableName : null;
     }
 

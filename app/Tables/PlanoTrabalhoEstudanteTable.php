@@ -5,6 +5,7 @@ namespace App\Tables;
 use App\Enums\RoleEnum;
 use App\Enums\StatusPlanoTrabalhoEnum;
 use App\Models\Curso;
+use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
 use App\View\Components\ListViewColumn;
 use App\View\Components\ListViewFilter;
@@ -67,11 +68,17 @@ class PlanoTrabalhoEstudanteTable extends ListViewConfig
     {
         return [
             ListViewFilter::make('estudante')->foreignKey('nome')->label('Nome do estudante')->size('large'),
+            ListViewFilter::make('disciplina_id')->label('Componente curricular')->size('xlarge')->type('multiselect')
+                ->options(Disciplina::with('curso')->get()->mapWithKeys(fn(Disciplina $d) => [$d->id => $d->nome . ($d->curso ? " - {$d->curso->nome}" : '')])->toArray()),
             ListViewFilter::make('disciplina')->foreignKey('curso_id')->label('Curso')->size('large')->type('select')->equals()
                 ->options(Curso::pluck('nome', 'id')->toArray()),
+            ListViewFilter::make('professor')->foreignKey('nome')->label('Docente')->size('large'),
             ListViewFilter::make('ano')->label('Ano')->size('tiny')
                 ->applyUsing(fn(Builder $query, string $value) => $query->whereYear('periodo_inicio', $value)),
             ListViewFilter::make('status')->label('Status')->size('small')->type('multiselect')->options(StatusPlanoTrabalhoEnum::options())->equals(),
+            ListViewFilter::make('user')->foreignKey('nome')->label('Criado por')->size('large')->hidden(),
+            ListViewFilter::make('periodo_inicio')->label('Início do período')->type('date')->size('small')->hidden(),
+            ListViewFilter::make('periodo_fim')->label('Fim do período')->type('date')->size('small')->hidden(),
         ];
     }
 

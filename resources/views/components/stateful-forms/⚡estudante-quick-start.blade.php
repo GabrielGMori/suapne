@@ -6,18 +6,18 @@ use App\Models\AtendimentoSemanal;
 use App\Models\PlanoTrabalhoEstudante;
 
 new class extends Component {
-    public null|string|array $estudanteId = '';
+    public ?string $estudanteId = null;
     public ?Estudante $estudante = null;
 
     public function mount(): void
     {
-        $this->estudanteId = old('estudante_id', $this->estudanteId ?? '');
+        $initialEstudanteId = old('estudante_id');
+        $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
     }
 
-    public function updatedEstudanteId($estId)
+    public function updatedEstudanteId(?string $value): void
     {
-        $id = is_array($estId) ? $estId[0] : $estId;
-        $this->estudante = Estudante::find($id);
+        $this->estudante = filled($value) ? Estudante::find($value) : null;
     }
 };
 ?>

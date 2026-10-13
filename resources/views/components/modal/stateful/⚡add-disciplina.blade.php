@@ -11,13 +11,8 @@ use Livewire\Component;
 new class extends Component {
     public string $nome = '';
     public string $ementa = '';
-    public array|string $curso_id = [];
+    public ?string $curso_id = null;
     public ?int $curso_periodo = null;
-
-    public function updatedCursoId($cursoId)
-    {
-        $this->curso_id = is_array($cursoId) ? $cursoId[0] : $cursoId;
-    }
 
     public function save(): void
     {
