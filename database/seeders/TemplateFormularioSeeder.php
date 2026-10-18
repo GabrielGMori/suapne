@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\TipoFormularioEnum;
 use App\Models\TemplateFormulario;
-use App\Models\User;
 use App\Support\CamposTemplate;
 use Illuminate\Database\Seeder;
 
@@ -15,8 +14,6 @@ class TemplateFormularioSeeder extends Seeder
      */
     public function run(): void
     {
-        $autor = User::orderBy('id')->first();
-
         foreach (TipoFormularioEnum::cases() as $tipo) {
             if (TemplateFormulario::where('tipo', $tipo)->where('padrao', true)->exists()) {
                 continue;
@@ -27,7 +24,6 @@ class TemplateFormularioSeeder extends Seeder
                 'tipo' => $tipo,
                 'campos' => CamposTemplate::campos($tipo),
                 'padrao' => true,
-                'user_id' => $autor->id,
             ]);
         }
     }

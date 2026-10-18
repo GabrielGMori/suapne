@@ -18,10 +18,6 @@ return new class extends Migration
     public function up(): void
     {
         foreach ($this->tabelas as $tabela) {
-            if (Schema::hasColumn($tabela, 'template_formulario_id')) {
-                continue;
-            }
-
             Schema::table($tabela, function (Blueprint $table) {
                 $table->foreignId('template_formulario_id')
                     ->nullable()
@@ -37,10 +33,6 @@ return new class extends Migration
     public function down(): void
     {
         foreach ($this->tabelas as $tabela) {
-            if (!Schema::hasColumn($tabela, 'template_formulario_id')) {
-                continue;
-            }
-
             Schema::table($tabela, function (Blueprint $table) {
                 $table->dropConstrainedForeignId('template_formulario_id');
             });

@@ -1,7 +1,8 @@
 <?php
 
+use App\Models\TemplateFormulario;
+use Database\Seeders\TemplateFormularioSeeder;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('modelos_formulario');
+        (new TemplateFormularioSeeder())->run();
     }
 
     /**
@@ -18,5 +19,6 @@ return new class extends Migration
      */
     public function down(): void
     {
+        TemplateFormulario::withTrashed()->where('padrao', true)->forceDelete();
     }
 };

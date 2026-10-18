@@ -23,8 +23,9 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreignId('user_id')
+                ->nullable()
                 ->constrained('users')
-                ->onDelete('cascade')
+                ->nullOnDelete()
                 ->onUpdate('cascade');
 
             $table->index(['tipo', 'padrao']);
