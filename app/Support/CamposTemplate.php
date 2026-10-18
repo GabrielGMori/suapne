@@ -6,6 +6,7 @@ use App\Enums\TipoFormularioEnum;
 use App\Models\TemplateFormulario;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class CamposTemplate
 {
@@ -142,6 +143,7 @@ class CamposTemplate
         return match ($campo['tipo'] ?? 'text') {
             'date' => 'date',
             'number' => 'numeric',
+            'select' => (string) Rule::in(array_keys($campo['opcoes'] ?? [])),
             default => 'string',
         };
     }
@@ -169,13 +171,16 @@ class CamposTemplate
             'grupo' => 'flexibilizacao',
             'grupoTitulo' => 'Flexibilização Curricular, visando a implementação de 1 (uma) ou mais possibilidades',
             'opcoes' => ['Sim' => 'Sim', 'Não' => 'Não'],
+            'obrigatorio' => true,
         ];
 
         return [
             self::campo('acoesPedagogicas', 'Histórico de ações pedagógicas já realizadas e justificativa de implementação da flexibilização curricular', 'textarea', [
+                'obrigatorio' => true,
                 'descricao' => '(Registrar todas as ações pedagógicas e tentativas de adaptações realizadas até o momento)',
             ]),
             self::campo('atendimentoMultiprofissional', 'Atendimento multiprofissional', 'textarea', [
+                'obrigatorio' => true,
                 'descricao' => 'Profissionais, instituições ou serviços (internos ou externos ao IFPR) que fazem o acompanhamento do estudante',
             ]),
             self::campo('diferenciacaoCurricular', 'I - Diferenciação dos conteúdos previstos na ementa do componente curricular e que sejam registrados no PTE', 'select', $grupo),
@@ -185,6 +190,7 @@ class CamposTemplate
             self::campo('criteriosDiferenciados', 'V - Definição de critérios diferenciados e adequados de avaliação, considerando as singularidades e especificidades dos estudantes.', 'select', $grupo),
             self::campo('componentesCurriculares', 'Componentes curriculares a serem flexibilizados', 'especial', [
                 'regra' => 'array',
+                'obrigatorio' => true,
                 'fixo' => true,
                 'motivoFixo' => 'O plano de trabalho do estudante preenche os componentes curriculares a partir deste campo.',
             ]),
@@ -203,16 +209,20 @@ class CamposTemplate
             self::campo('local', 'Dia/Horário/Local', 'text', [
                 'secao' => 'dadosEstudante',
                 'etapa' => 'criacao',
+                'obrigatorio' => true,
                 'rotuloFormulario' => 'Local',
             ]),
             self::campo('particularidadesEstudante', 'Particularidades do estudante', 'textarea', [
                 'etapa' => 'criacao',
+                'obrigatorio' => true,
             ]),
             self::campo('objetivosEspecificos', 'Objetivos específicos para o estudante neste período', 'textarea', [
                 'etapa' => 'preenchimento',
+                'obrigatorio' => true,
             ]),
             self::campo('instrumentosAvaliativos', 'Instrumentos avaliativos pretendidos e procedimentos adotados', 'textarea', [
                 'etapa' => 'preenchimento',
+                'obrigatorio' => true,
                 'descricao' => '(De acordo com a especificidade do componente. Consultar o Art. 9 da Res. 50/2017)',
             ]),
             self::campo('outrasConsideracoes', 'Outras considerações relevantes', 'textarea', [
@@ -226,11 +236,12 @@ class CamposTemplate
         return [
             self::campo('perfilDoEstudante', 'Perfil do Estudante', 'especial', [
                 'secao' => 'dadosEstudante',
+                'obrigatorio' => true,
                 'fixo' => true,
                 'motivoFixo' => 'Este campo é preenchido automaticamente com o conteúdo do último atendimento do estudante.',
             ]),
-            self::campo('registroDoAtendimento', 'Registro do Atendimento'),
-            self::campo('encaminhamentos', 'Encaminhamentos'),
+            self::campo('registroDoAtendimento', 'Registro do Atendimento', 'textarea', ['obrigatorio' => true]),
+            self::campo('encaminhamentos', 'Encaminhamentos', 'textarea', ['obrigatorio' => true]),
             self::campo('observacoesAdicionais', 'Observações adicionais'),
         ];
     }

@@ -15,8 +15,17 @@ class TemplateFormularioRequest extends FormRequest
 
     public function rules(): array
     {
+        $template = $this->route('templateFormulario');
+        $tipo = $this->route('tipo') ?? $template?->tipo;
+
         return [
-            'nome' => ['required', 'string', 'max:150'],
+            'nome' => [
+                'required', 'string', 'max:150',
+                Rule::unique('templates_formulario', 'nome')
+                    ->where('tipo', $tipo?->value)
+                    ->whereNull('deleted_at')
+                    ->ignore($template),
+            ],
 
             'campos' => ['required', 'array', 'min:1'],
             'campos.*.chave' => ['required', 'string', 'max:60'],
@@ -39,6 +48,15 @@ class TemplateFormularioRequest extends FormRequest
     public function attributes(): array
     {
         return ['nome' => 'nome do template', 'campos' => 'campos'];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nome.unique' => 'Já existe um template com este nome para este formulário.',
+            'campos.required' => 'Adicione pelo menos um campo ao template.',
+            'campos.min' => 'Adicione pelo menos um campo ao template.',
+        ];
     }
 
     public function after(): array
