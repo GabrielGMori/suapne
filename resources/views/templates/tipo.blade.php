@@ -35,7 +35,6 @@
                             <a href="{{ route('templates.show', ['templateFormulario' => $template]) }}"
                                 class="text-title-small hover:text-primary transition-colors">{{ $template->nome }}</a>
                             @if ($template->padrao)
-                                <x-status label="Padrão" color="info" :filled="false" />
                                 <span class="flex items-center text-secondary-accent"
                                     title="Template usado quando nenhum outro é escolhido. Não pode ser alterado nem excluído.">
                                     <x-icon size="20">lock</x-icon>
@@ -46,7 +45,7 @@
                         <p class="text-body-small text-secondary-accent">
                             {{ $template->quantidade_campos }} {{ $template->quantidade_campos === 1 ? 'campo' : 'campos' }}
                             @if ($template->padrao)
-                                · criado pelo sistema
+                                · criado automático
                             @elseif ($template->user)
                                 · criado por {{ $template->user->nome }}
                             @endif

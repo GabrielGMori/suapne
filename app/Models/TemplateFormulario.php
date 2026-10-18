@@ -83,7 +83,7 @@ class TemplateFormulario extends Model implements Auditable
 
     public function getCriadoPorAttribute(): ?string
     {
-        return $this->padrao ? 'Sistema' : $this->user?->nome;
+        return $this->padrao ? 'Automático' :$this->user?->nome;
     }
 
     public function getQuantidadeCamposAttribute(): int

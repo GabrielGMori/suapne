@@ -12,6 +12,7 @@ use App\Models\ObservacaoEstudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\SolicitacaoRegistro;
+use App\Models\TemplateFormulario;
 use App\Models\User;
 
 class ModelLabels
@@ -27,6 +28,7 @@ class ModelLabels
         PlanoFlexibilizacaoCurricular::class => ['Plano de Flexibilização Curricular', 'o'],
         PlanoTrabalhoEstudante::class => ['Plano de Trabalho do Estudante', 'o'],
         SolicitacaoRegistro::class => ['Solicitação de Registro', 'a'],
+        TemplateFormulario::class => ['Template de Formulário', 'o'],
         User::class => ['Conta de Usuário', 'da'],
     ];
 

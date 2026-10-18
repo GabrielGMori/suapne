@@ -33,7 +33,7 @@
                 <p class="text-body-medium text-secondary-accent text-center grow">{{ $info['resumo'] }}</p>
 
                 <x-status :filled="false" :color="$total > 0 ? 'success' : 'dark'"
-                    :label="$total . ' ' . ($total === 1 ? 'modelo' : 'modelos')" />
+                    :label="$total . ' ' . ($total === 1 ? 'template' : 'templates')" />
 
                 <span class="flex items-center gap-1 text-label-medium text-primary">
                     Abrir

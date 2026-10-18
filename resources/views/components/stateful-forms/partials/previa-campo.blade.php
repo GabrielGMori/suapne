@@ -19,11 +19,9 @@
             </div>
         </div>
     @elseif ($tipo === 'especial')
-        <div class="rounded-lg border border-on-surface p-5">
-            <p class="text-body-medium text-secondary-accent">
-                {{ $campo['motivoFixo'] ?? 'Campo com preenchimento próprio do sistema.' }}
-            </p>
-        </div>
+        <p class="text-body-medium text-secondary-accent">
+            {{ $campo['motivoFixo'] ?? 'Campo com preenchimento automático.' }}
+        </p>
     @else
         <x-form.input :type="$tipo" :name="$nomePreview" appearance="outlined"
             :size="$tipo === 'textarea' ? 'full' : 'medium'" disabled />

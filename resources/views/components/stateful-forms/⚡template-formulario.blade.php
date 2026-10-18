@@ -149,7 +149,7 @@ new class extends Component {
             @foreach ($campos as $indice => $campo)
                 @php
                     $fixo = $campo['fixo'] ?? false;
-                    $rotuloTipo = CamposTemplate::TIPOS_CAMPO[$campo['tipo']] ?? 'Campo do sistema';
+                    $rotuloTipo = CamposTemplate::TIPOS_CAMPO[$campo['tipo']] ?? 'Campo automático';
                 @endphp
 
                 <div wire:key="campo-{{ $campo['chave'] }}" data-indice="{{ $indice }}"
@@ -222,7 +222,7 @@ new class extends Component {
             @endforeach
         </div>
 
-        <div class="flex flex-col gap-5 rounded-lg border-2 border-dashed border-on-surface p-5" wire:key="novo-campo">
+        <div @class(['flex flex-col gap-5 rounded-lg', 'bg-on-surface p-4' => $adicionando]) wire:key="novo-campo">
             @if (!$adicionando)
                 <div class="flex justify-center">
                     <x-button type="button" icon="add" label="Adicionar campo" color="secondary" size="dynamic"
