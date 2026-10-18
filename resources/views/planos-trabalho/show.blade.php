@@ -78,8 +78,7 @@
             <x-campos-adicionais-exibicao :registro="$planoTrabalho" etapa="criacao" />
 
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou
-                    flexibilização:</h2>
+                <h2 class="text-display-small">{{ App\Support\CamposTemplate::titulo($planoTrabalho->numeracaoCampos()[App\Support\CamposTemplate::CONTEUDOS], 'Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:') }}</h2>
                 <div class="flex flex-col bg-surface border border-on-surface rounded-lg p-5">
                     <p class="whitespace-pre-line">{{$planoTrabalho->disciplina->ementa}}</p>
                 </div>

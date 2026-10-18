@@ -181,7 +181,7 @@ new class extends Component {
 
         @if ($componentesCampo)
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="componentes-curriculares">
-                <h2 class="text-display-small">{{ $componentesCampo['rotulo'] }}</h2>
+                <h2 class="text-display-small">{{ App\Support\CamposTemplate::titulo($this->numeroDoCampo('componentesCurriculares'), $componentesCampo['rotulo']) }}</h2>
 
                 <div class="flex items-center gap-5">
                     <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"

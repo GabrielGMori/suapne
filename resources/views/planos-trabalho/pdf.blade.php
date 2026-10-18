@@ -69,7 +69,7 @@
     <x-campos-adicionais-pdf :registro="$planoTrabalho" etapa="criacao" />
 
     <table class="table">
-        <tr><td><b>3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização</b></td></tr>
+        <tr><td><b>{{ App\Support\CamposTemplate::titulo($planoTrabalho->numeracaoCampos()[App\Support\CamposTemplate::CONTEUDOS], 'Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização') }}</b></td></tr>
         <tr><td class="textarea">{{ $planoTrabalho->disciplina->ementa }}</td></tr>
     </table>
 

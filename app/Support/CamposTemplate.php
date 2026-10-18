@@ -15,7 +15,10 @@ class CamposTemplate
         'text' => 'Texto curto',
         'date' => 'Data',
         'number' => 'Número',
+        'select' => 'Caixa de seleção',
     ];
+
+    public const CONTEUDOS = 'conteudosComponente';
 
     public static function campos(TipoFormularioEnum $tipo): array
     {
@@ -112,7 +115,54 @@ class CamposTemplate
         return $itens;
     }
 
-    public static function novoCampo(string $rotulo, string $tipo, bool $obrigatorio, array $camposExistentes): array
+    public static function ordenar(array $campos): array
+    {
+        $noTopo = array_filter($campos, fn($campo) => filled($campo['secao'] ?? null));
+
+        return array_values([...$noTopo, ...array_diff_key($campos, $noTopo)]);
+    }
+
+    public static function numeracao(TipoFormularioEnum $tipo, array $campos): array
+    {
+        $campos = self::filtrar($campos);
+
+        if ($tipo === TipoFormularioEnum::PLANO_TRABALHO) {
+            $campos = [
+                ...self::filtrar($campos, etapa: 'criacao'),
+                ['chave' => self::CONTEUDOS],
+                ...self::filtrar($campos, etapa: 'preenchimento'),
+                ...self::filtrar($campos, etapa: 'livre'),
+            ];
+        }
+
+        $numeros = [];
+        $numero = 1;
+
+        foreach (self::agrupar($campos) as $item) {
+            $numero++;
+
+            foreach ($item['campos'] ?? [$item['campo']] as $campo) {
+                $numeros[$campo['chave']] = $numero;
+            }
+        }
+
+        return $numeros;
+    }
+
+    public static function formato(array $campo): string
+    {
+        return match ($campo['tipo'] ?? 'text') {
+            'especial' => ($campo['regra'] ?? null) === 'array' ? 'Seleção múltipla' : 'Texto longo',
+            default => self::TIPOS_CAMPO[$campo['tipo']] ?? 'Texto curto',
+        };
+    }
+
+    public static function titulo(?int $numero, string $texto): string
+    {
+        return $numero ? "{$numero}. {$texto}" : $texto;
+    }
+
+    public static function novoCampo(string $rotulo, string $tipo, bool $obrigatorio, array $camposExistentes, array $opcoes = []): array
     {
         $chaves = array_column($camposExistentes, 'chave');
         $base = Str::of($rotulo)->slug('_')->limit(40, '')->toString();
@@ -131,6 +181,7 @@ class CamposTemplate
             'tipo' => $tipo,
             'obrigatorio' => $obrigatorio,
             'fixo' => false,
+            ...($tipo === 'select' ? ['opcoes' => array_combine($opcoes, $opcoes)] : []),
         ];
     }
 

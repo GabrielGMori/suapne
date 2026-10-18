@@ -3,7 +3,9 @@
 @php
     use App\Support\CamposTemplate;
 
-    $itens = CamposTemplate::agrupar($template->campos ?? []);
+    $campos = CamposTemplate::ordenar($template->campos ?? []);
+    $itens = CamposTemplate::agrupar($campos);
+    $numeros = CamposTemplate::numeracao($template->tipo, $campos);
 @endphp
 
 <x-layouts.main title="{{ $template->nome }}" header="{{ $template->nome }}">
@@ -61,7 +63,7 @@
     @foreach ($itens as $item)
         @if (isset($item['grupo']))
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-                <h2 class="text-display-small">{{ $item['titulo'] }}</h2>
+                <h2 class="text-display-small">{{ CamposTemplate::titulo($numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
 
                 @foreach ($item['campos'] as $campo)
                     <div class="form-field">
@@ -74,7 +76,10 @@
                 @endforeach
             </div>
         @else
-            @include('components.stateful-forms.partials.previa-campo', ['campo' => $item['campo']])
+            @include('components.stateful-forms.partials.previa-campo', [
+                'campo' => $item['campo'],
+                'numero' => $numeros[$item['campo']['chave']] ?? null,
+            ])
             <div class="mb-5"></div>
         @endif
     @endforeach

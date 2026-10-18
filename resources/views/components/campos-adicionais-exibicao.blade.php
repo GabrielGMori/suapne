@@ -10,9 +10,11 @@
 ])
 
 @php
+    use App\Support\CamposTemplate;
     use Illuminate\Support\Carbon;
 
     $itens = $registro->camposAdicionaisAgrupados($secao, $etapa, $ate, $depois);
+    $numeros = $registro->numeracaoCampos();
 
     $formatar = function (array $campo) use ($registro) {
         $valor = $registro->valorCampo($campo['chave']);
@@ -30,7 +32,7 @@
         @php $grupoCampos = array_filter($item['campos'], fn($c) => $c['tipo'] !== 'especial'); @endphp
         @if (count($grupoCampos))
             <div class="flex flex-col bg-surface rounded-lg gap-3 mb-5 p-5">
-                <h2 class="text-display-small mb-2">{{ $item['titulo'] }}</h2>
+                <h2 class="text-display-small mb-2">{{ CamposTemplate::titulo($numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
                 @foreach ($grupoCampos as $campo)
                     @php $valor = $formatar($campo); @endphp
                     <p>{{ $campo['rotulo'] }}: <b>{{ filled($valor) ? $valor : $vazio }}</b></p>
@@ -45,7 +47,7 @@
             $textoVazio = ($campo['obrigatorio'] ?? false) && $vazioObrigatorio !== null ? $vazioObrigatorio : $vazio;
         @endphp
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">{{ $campo['rotulo'] }}</h2>
+            <h2 class="text-display-small">{{ CamposTemplate::titulo($numeros[$campo['chave']] ?? null, $campo['rotulo']) }}</h2>
 
             @if (!empty($campo['descricao']))
                 <p>{{ $campo['descricao'] }}</p>

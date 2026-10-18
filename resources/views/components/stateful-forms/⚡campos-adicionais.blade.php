@@ -25,16 +25,26 @@ new class extends Component {
     }
 
     #[Computed]
-    public function campos(): array
+    public function todos(): array
     {
-        $todos = CamposTemplate::camposParaFormulario(
+        return CamposTemplate::camposParaFormulario(
             TipoFormularioEnum::from($this->tipo),
             $this->templateIdInt(),
             $this->registro,
             $this->valores,
         );
+    }
 
-        return CamposTemplate::filtrar($todos, $this->secao, $this->etapa, $this->ate, $this->depois);
+    #[Computed]
+    public function campos(): array
+    {
+        return CamposTemplate::filtrar($this->todos, $this->secao, $this->etapa, $this->ate, $this->depois);
+    }
+
+    #[Computed]
+    public function numeros(): array
+    {
+        return CamposTemplate::numeracao(TipoFormularioEnum::from($this->tipo), $this->todos);
     }
 
     #[Computed]
@@ -65,7 +75,7 @@ new class extends Component {
         @foreach ($this->itens as $item)
             @if (isset($item['grupo']))
                 <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="grupo-{{ $item['grupo'] }}">
-                    <h2 class="text-display-small">{{ $item['titulo'] }}</h2>
+                    <h2 class="text-display-small">{{ CamposTemplate::titulo($this->numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
 
                     @foreach ($item['campos'] as $campo)
                         @include('components.stateful-forms.partials.campo-adicional-input', [
@@ -82,7 +92,7 @@ new class extends Component {
             @else
                 @php $campo = $item['campo']; @endphp
                 <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="campo-{{ $campo['chave'] }}">
-                    <h2 class="text-display-small">{{ $campo['rotulo'] }}</h2>
+                    <h2 class="text-display-small">{{ CamposTemplate::titulo($this->numeros[$campo['chave']] ?? null, $campo['rotulo']) }}</h2>
 
                     @if (!empty($campo['descricao']))
                         <h3 class="text-body-large text-secondary-accent">{{ $campo['descricao'] }}</h3>

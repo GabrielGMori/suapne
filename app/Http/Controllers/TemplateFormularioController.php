@@ -56,6 +56,7 @@ class TemplateFormularioController extends Controller
 
         TemplateFormulario::create([
             ...$request->validated(),
+            'campos' => CamposTemplate::ordenar($request->validated('campos')),
             'tipo' => $tipo,
             'user_id' => $request->user()->id,
         ]);
@@ -78,7 +79,10 @@ class TemplateFormularioController extends Controller
     {
         abort_unless($request->user()->can('update', $templateFormulario), 404);
 
-        $templateFormulario->update($request->validated());
+        $templateFormulario->update([
+            ...$request->validated(),
+            'campos' => CamposTemplate::ordenar($request->validated('campos')),
+        ]);
 
         return redirect()->route('templates.tipo', ['tipo' => $templateFormulario->tipo])
             ->with('status', 'Template atualizado com sucesso!');

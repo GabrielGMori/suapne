@@ -8,9 +8,11 @@
 ])
 
 @php
+    use App\Support\CamposTemplate;
     use Illuminate\Support\Carbon;
 
     $itens = $registro->camposAdicionaisAgrupados($secao, $etapa, $ate, $depois);
+    $numeros = $registro->numeracaoCampos();
 
     $formatar = function (array $campo) use ($registro) {
         $valor = $registro->valorCampo($campo['chave']);
@@ -28,7 +30,7 @@
         @php $grupoCampos = array_filter($item['campos'], fn($c) => $c['tipo'] !== 'especial'); @endphp
         @if (count($grupoCampos))
             <table class="table">
-                <tr><td><b>{{ $item['titulo'] }}</b></td></tr>
+                <tr><td><b>{{ CamposTemplate::titulo($numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</b></td></tr>
                 @foreach ($grupoCampos as $campo)
                     @php $valor = $formatar($campo); @endphp
                     <tr><td>{{ $campo['rotulo'] }}: <b>{{ filled($valor) ? $valor : $vazio }}</b></td></tr>
@@ -40,7 +42,7 @@
         <table class="table">
             <tr>
                 <td>
-                    <b>{{ rtrim($campo['rotulo'], ':') }}</b>
+                    <b>{{ CamposTemplate::titulo($numeros[$campo['chave']] ?? null, rtrim($campo['rotulo'], ':')) }}</b>
                     @if (!empty($campo['descricao']))
                         <br>{{ $campo['descricao'] }}
                     @endif

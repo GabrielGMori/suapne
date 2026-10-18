@@ -23,6 +23,11 @@ trait GerenciaCamposAdicionais
         return $this->campoDoFormulario($chave) !== null;
     }
 
+    public function numeroDoCampo(string $chave): ?int
+    {
+        return CamposTemplate::numeracao($this->contextoCampos()[0], $this->camposDoFormulario)[$chave] ?? null;
+    }
+
     public function campoDoFormulario(string $chave): ?array
     {
         foreach ($this->camposDoFormulario as $campo) {

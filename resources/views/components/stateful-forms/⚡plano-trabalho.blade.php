@@ -8,6 +8,7 @@ use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\TemplateFormulario;
 use App\Enums\TipoFormularioEnum;
+use App\Support\CamposTemplate;
 
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
@@ -211,6 +212,10 @@ new class extends Component {
 @php
     $idEstudante = is_array($estudanteId) ? (reset($estudanteId) ?: null) : $estudanteId;
     $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
+    $numeros = CamposTemplate::numeracao(
+        TipoFormularioEnum::PLANO_TRABALHO,
+        CamposTemplate::camposParaFormulario(TipoFormularioEnum::PLANO_TRABALHO, $idTemplate ? (int) $idTemplate : null, $planoTrabalho)
+    );
 @endphp
 
 <form
@@ -280,7 +285,7 @@ new class extends Component {
         wire:key="campos-criacao-{{ $idTemplate ?? 'padrao' }}" />
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-        <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:</h2>
+        <h2 class="text-display-small">{{ CamposTemplate::titulo($numeros[CamposTemplate::CONTEUDOS], 'Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:') }}</h2>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5 border border-on-surface">
             @if (!$planoTrabalho)
                 <p class="text-label-large">

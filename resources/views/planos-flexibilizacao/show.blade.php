@@ -33,7 +33,7 @@ use App\Models\Disciplina;
 
     @if ($planoFlexibilizacao->temCampo('componentesCurriculares'))
         <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-            <h2 class="text-display-small">{{ $planoFlexibilizacao->campoAdicional('componentesCurriculares')['rotulo'] }}</h2>
+            <h2 class="text-display-small">{{ App\Support\CamposTemplate::titulo($planoFlexibilizacao->numeracaoCampos()['componentesCurriculares'] ?? null, $planoFlexibilizacao->campoAdicional('componentesCurriculares')['rotulo']) }}</h2>
             <p class="text-body-large">
                 @forelse($componentes as $index => $disciplinaId)
                     {{ (is_numeric($disciplinaId) ? (Disciplina::find($disciplinaId)?->nome ?? $disciplinaId) : $disciplinaId) . ($index === $count-1 ? '.' : ',') }}

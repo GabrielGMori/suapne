@@ -21,6 +21,11 @@ trait TemCamposAdicionais
         return CamposTemplate::agrupar($this->camposAdicionaisFiltrados($secao, $etapa, $ate, $depois));
     }
 
+    public function numeracaoCampos(): array
+    {
+        return CamposTemplate::numeracao(static::TIPO_FORMULARIO, $this->camposAdicionais());
+    }
+
     public function temCampo(string $chave): bool
     {
         return in_array($chave, array_column($this->camposAdicionais(), 'chave'), true);

@@ -24,7 +24,7 @@
 
     @if ($planoFlexibilizacao->temCampo('componentesCurriculares'))
         <table class="table">
-            <tr><td><b>{{ $planoFlexibilizacao->campoAdicional('componentesCurriculares')['rotulo'] }}</b></td></tr>
+            <tr><td><b>{{ App\Support\CamposTemplate::titulo($planoFlexibilizacao->numeracaoCampos()['componentesCurriculares'] ?? null, $planoFlexibilizacao->campoAdicional('componentesCurriculares')['rotulo']) }}</b></td></tr>
             <tr><td class="textarea">@forelse ($componentes as $index => $disciplinaId){{ is_numeric($disciplinaId) ? (Disciplina::find($disciplinaId)?->nome ?? $disciplinaId) : $disciplinaId }}{{ $index === $count - 1 ? '.' : ', ' }}@empty---@endforelse</td></tr>
         </table>
     @endif

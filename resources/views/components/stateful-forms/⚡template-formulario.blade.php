@@ -16,6 +16,7 @@ new class extends Component {
     public string $novoRotulo = '';
     public array|string|null $novoTipo = ['textarea'];
     public bool $novoObrigatorio = false;
+    public string $novasOpcoes = '';
 
     public function mount(?TemplateFormulario $template = null, string $tipo = ''): void
     {
@@ -23,7 +24,7 @@ new class extends Component {
         $this->tipo = $tipo ?: ($template?->tipo?->value ?? TipoFormularioEnum::ATENDIMENTO_SEMANAL->value);
 
         $this->nome = (string) old('nome', $this->template?->nome);
-        $this->campos = (array) old('campos', $this->template?->campos ?? CamposTemplate::campos($this->tipoEnum()));
+        $this->campos = CamposTemplate::ordenar((array) old('campos', $this->template?->campos ?? CamposTemplate::campos($this->tipoEnum())));
     }
 
     public function adicionar(): void
@@ -33,11 +34,19 @@ new class extends Component {
         $this->validate([
             'novoRotulo' => ['required', 'string', 'max:300'],
             'novoTipo' => ['required', 'in:' . implode(',', array_keys(CamposTemplate::TIPOS_CAMPO))],
-        ], [], ['novoRotulo' => 'nome do campo', 'novoTipo' => 'tipo']);
+            'novasOpcoes' => ['required_if:novoTipo,select', 'string', 'max:500'],
+        ], [], ['novoRotulo' => 'nome do campo', 'novoTipo' => 'tipo', 'novasOpcoes' => 'opções']);
 
-        $this->campos[] = CamposTemplate::novoCampo($this->novoRotulo, $this->novoTipo, $this->novoObrigatorio, $this->campos);
+        $opcoes = array_values(array_unique(array_filter(array_map('trim', explode(',', $this->novasOpcoes)))));
 
-        $this->reset('adicionando', 'novoRotulo', 'novoTipo', 'novoObrigatorio');
+        if ($this->novoTipo === 'select' && count($opcoes) < 2) {
+            $this->addError('novasOpcoes', 'Informe pelo menos duas opções, separadas por vírgula.');
+            return;
+        }
+
+        $this->campos[] = CamposTemplate::novoCampo($this->novoRotulo, $this->novoTipo, $this->novoObrigatorio, $this->campos, $opcoes);
+
+        $this->reset('adicionando', 'novoRotulo', 'novoTipo', 'novoObrigatorio', 'novasOpcoes');
         $this->novoTipo = ['textarea'];
     }
 
@@ -55,32 +64,44 @@ new class extends Component {
     {
         $novos = [];
 
-        foreach ($ordem as $indice) {
-            if (isset($this->campos[(int) $indice])) {
-                $novos[] = $this->campos[(int) $indice];
+        foreach (array_unique(array_map('intval', $ordem)) as $indice) {
+            if (isset($this->campos[$indice])) {
+                $novos[] = $this->campos[$indice];
             }
         }
 
         if (count($novos) === count($this->campos)) {
-            $this->campos = $novos;
+            $this->campos = CamposTemplate::ordenar($novos);
         }
     }
 
-    public function mover(int $de, int $para): void
+    public function itens(): array
     {
-        if (!isset($this->campos[$de]) || !isset($this->campos[$para])) {
-            return;
+        $itens = [];
+
+        foreach ($this->campos as $indice => $campo) {
+            $grupo = $campo['grupo'] ?? null;
+            $ultimo = array_key_last($itens);
+
+            if ($grupo !== null && $ultimo !== null && $itens[$ultimo]['grupo'] === $grupo) {
+                $itens[$ultimo]['indices'][] = $indice;
+                continue;
+            }
+
+            $itens[] = [
+                'grupo' => $grupo,
+                'titulo' => $campo['grupoTitulo'] ?? null,
+                'indices' => [$indice],
+                'noTopo' => filled($campo['secao'] ?? null),
+            ];
         }
 
-        $campo = $this->campos[$de];
-        unset($this->campos[$de]);
-        $this->campos = array_values($this->campos);
-        array_splice($this->campos, $para, 0, [$campo]);
+        return $itens;
     }
 
     public function cancelarNovo(): void
     {
-        $this->reset('adicionando', 'novoRotulo', 'novoObrigatorio');
+        $this->reset('adicionando', 'novoRotulo', 'novoObrigatorio', 'novasOpcoes');
         $this->novoTipo = ['textarea'];
         $this->resetValidation();
     }
@@ -128,17 +149,19 @@ new class extends Component {
             <p class="text-body-medium text-error">{{ $message }}</p>
         @enderror
 
+        @php $numeros = CamposTemplate::numeracao($this->tipoEnum(), $campos); @endphp
+
         <div wire:key="lista-campos"
             x-data="{
                 origem: null,
                 sobre: null,
-                ordem() { return [...$el.querySelectorAll('[data-indice]')].map(e => e.dataset.indice) },
+                ordem() { return [...$el.querySelectorAll('[data-item]')].map(e => e.dataset.item) },
                 soltar() {
                     if (this.origem === null || this.sobre === null || this.origem === this.sobre) { this.limpar(); return }
                     const atual = this.ordem()
                     const [movido] = atual.splice(atual.indexOf(this.origem), 1)
                     atual.splice(atual.indexOf(this.sobre), 0, movido)
-                    $wire.reordenar(atual)
+                    $wire.reordenar(atual.flatMap(item => $el.querySelector(`[data-item='${item}']`).dataset.indices.split(',')))
                     this.limpar()
                 },
                 limpar() { this.origem = null; this.sobre = null },
@@ -146,79 +169,56 @@ new class extends Component {
             x-on:dragend="limpar()"
             class="flex flex-col gap-3">
 
-            @foreach ($campos as $indice => $campo)
-                @php
-                    $fixo = $campo['fixo'] ?? false;
-                    $rotuloTipo = CamposTemplate::TIPOS_CAMPO[$campo['tipo']] ?? 'Campo automático';
-                @endphp
+            @foreach ($this->itens() as $posicao => $item)
+                @php $primeiro = $campos[$item['indices'][0]]; @endphp
 
-                <div wire:key="campo-{{ $campo['chave'] }}" data-indice="{{ $indice }}"
-                    x-data="{ aberto: false, arrastavel: true }"
-                    x-bind:draggable="arrastavel"
-                    x-on:dragstart="origem = '{{ $indice }}'; $event.dataTransfer.effectAllowed = 'move'"
-                    x-on:dragover.prevent="sobre = '{{ $indice }}'"
-                    x-on:drop.prevent="soltar()"
-                    x-bind:class="{
-                        'opacity-40': origem === '{{ $indice }}',
-                        'ring-2 ring-primary-accent': sobre === '{{ $indice }}' && origem !== '{{ $indice }}',
-                    }"
-                    class="rounded-lg bg-on-surface p-4 transition-colors hover:bg-on-surface/70 cursor-grab active:cursor-grabbing">
-
-                    <div class="flex flex-wrap items-center gap-4">
-                        <div class="grow min-w-60">
-                            <p class="text-body-large">{{ $campo['rotuloFormulario'] ?? $campo['rotulo'] }}</p>
-                            @if (!empty($campo['descricao']))
-                                <p class="text-body-small text-secondary-accent">{{ $campo['descricao'] }}</p>
-                            @endif
-                        </div>
-
-                        <div class="flex items-center gap-2" x-on:mouseenter="arrastavel = false" x-on:mouseleave="arrastavel = true">
-                            <x-status :label="$rotuloTipo" color="dark" :filled="false" />
-
-                            @if ($campo['obrigatorio'] ?? false)
-                                <x-status label="Obrigatório" color="warning" :filled="false" />
-                            @endif
-
-                            <button type="button" x-on:click="aberto = !aberto"
-                                x-bind:title="aberto ? 'Recolher pré-visualização' : 'Ver como aparece no formulário'"
-                                class="flex items-center text-secondary-accent hover:text-primary transition-colors cursor-pointer">
-                                <x-icon size="24" class="transition-transform duration-200"
-                                    x-bind:class="aberto ? 'rotate-180' : ''">keyboard_arrow_down</x-icon>
-                            </button>
-
-                            @if ($fixo)
-                                <span title="{{ $campo['motivoFixo'] ?? 'Campo que não pode ser removido.' }}"
-                                    class="flex items-center text-secondary-accent">
-                                    <x-icon size="22">lock</x-icon>
-                                </span>
-                            @else
-                                <button type="button" title="Remover campo" wire:click="remover({{ $indice }})"
-                                    class="flex items-center text-secondary-accent hover:text-red transition-colors cursor-pointer">
-                                    <x-icon size="22">close</x-icon>
-                                </button>
-                            @endif
-                        </div>
+                @if ($item['noTopo'])
+                    <div wire:key="item-{{ $primeiro['chave'] }}" data-item="{{ $posicao }}"
+                        data-indices="{{ implode(',', $item['indices']) }}" x-data="{ arrastavel: false }"
+                        class="rounded-lg bg-on-surface p-4">
+                        @include('components.stateful-forms.partials.campo-template', [
+                            'campo' => $primeiro,
+                            'indice' => $item['indices'][0],
+                            'numero' => null,
+                        ])
                     </div>
+                @else
+                    <div wire:key="item-{{ $primeiro['chave'] }}" data-item="{{ $posicao }}"
+                        data-indices="{{ implode(',', $item['indices']) }}"
+                        x-data="{ arrastavel: true }"
+                        x-bind:draggable="arrastavel"
+                        x-on:dragstart="origem = '{{ $posicao }}'; $event.dataTransfer.effectAllowed = 'move'"
+                        x-on:dragover.prevent="sobre = '{{ $posicao }}'"
+                        x-on:drop.prevent="soltar()"
+                        x-bind:class="{
+                            'opacity-40': origem === '{{ $posicao }}',
+                            'ring-2 ring-primary-accent': sobre === '{{ $posicao }}' && origem !== '{{ $posicao }}',
+                        }"
+                        class="rounded-lg bg-on-surface p-4 transition-colors hover:bg-on-surface/70 cursor-grab active:cursor-grabbing">
 
-                    <div class="grid transition-[grid-template-rows] duration-300 ease-out"
-                        x-bind:class="aberto ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
-                        <div class="min-h-0 overflow-hidden">
-                            <div class="mt-4 cursor-default" x-on:mouseenter="arrastavel = false" x-on:mouseleave="arrastavel = true">
-                                @include('components.stateful-forms.partials.previa-campo', ['campo' => $campo])
+                        @if ($item['grupo'] !== null)
+                            <div class="flex flex-col gap-3">
+                                <p class="text-title-small">{{ CamposTemplate::titulo($numeros[$primeiro['chave']] ?? null, $item['titulo']) }}</p>
+
+                                @foreach ($item['indices'] as $indice)
+                                    <div wire:key="campo-{{ $campos[$indice]['chave'] }}" class="rounded-lg bg-surface p-4">
+                                        @include('components.stateful-forms.partials.campo-template', [
+                                            'campo' => $campos[$indice],
+                                            'indice' => $indice,
+                                            'numero' => null,
+                                        ])
+                                    </div>
+                                @endforeach
                             </div>
-                        </div>
-                    </div>
-
-                    @foreach ($campo as $atributo => $valor)
-                        @if (is_array($valor))
-                            @foreach ($valor as $chaveOpcao => $valorOpcao)
-                                <input type="hidden" name="campos[{{ $indice }}][{{ $atributo }}][{{ $chaveOpcao }}]" value="{{ $valorOpcao }}">
-                            @endforeach
                         @else
-                            <input type="hidden" name="campos[{{ $indice }}][{{ $atributo }}]" value="{{ is_bool($valor) ? (int) $valor : $valor }}">
+                            @include('components.stateful-forms.partials.campo-template', [
+                                'campo' => $primeiro,
+                                'indice' => $item['indices'][0],
+                                'numero' => $numeros[$primeiro['chave']] ?? null,
+                            ])
                         @endif
-                    @endforeach
-                </div>
+                    </div>
+                @endif
             @endforeach
         </div>
 
@@ -236,7 +236,13 @@ new class extends Component {
                         wire:model="novoRotulo" wire:keydown.enter.prevent="adicionar" :error="$errors->first('novoRotulo')" />
 
                     <livewire:form.select label="Tipo" name="novo_tipo" appearance="outlined" placeholder="Selecionar"
-                        wire:model="novoTipo" :options="CamposTemplate::TIPOS_CAMPO" wire:key="novo-tipo" />
+                        wire:model.live="novoTipo" :options="CamposTemplate::TIPOS_CAMPO" wire:key="novo-tipo" />
+
+                    @if (in_array('select', (array) $novoTipo, true))
+                        <x-form.input label="Opções (separadas por vírgula)" name="novas_opcoes" appearance="outlined" size="large"
+                            placeholder="Ex.: Sim, Não" wire:model="novasOpcoes" wire:keydown.enter.prevent="adicionar"
+                            :error="$errors->first('novasOpcoes')" />
+                    @endif
 
                     <label class="flex items-center gap-2 mb-3 cursor-pointer">
                         <input type="checkbox" class="h-5 w-5 accent-primary" wire:model="novoObrigatorio">
