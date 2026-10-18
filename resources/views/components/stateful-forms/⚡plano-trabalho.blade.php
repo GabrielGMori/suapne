@@ -210,7 +210,6 @@ new class extends Component {
 @props(['planoTrabalho' => null])
 
 @php
-    $idEstudante = is_array($estudanteId) ? (reset($estudanteId) ?: null) : $estudanteId;
     $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
     $numeros = CamposTemplate::numeracao(
         TipoFormularioEnum::PLANO_TRABALHO,

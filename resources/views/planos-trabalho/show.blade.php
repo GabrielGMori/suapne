@@ -87,11 +87,10 @@
 
             @if ($preenchendo)
                 <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-                    :estudante-id="$planoTrabalho->estudante_id" :registro="$planoTrabalho" etapa="preenchimento"
-                    :mostrar-adicionar="false" wire:key="campos-preenchimento" />
+                    :registro="$planoTrabalho" etapa="preenchimento" wire:key="campos-preenchimento" />
 
                 <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
-                    :estudante-id="$planoTrabalho->estudante_id" :registro="$planoTrabalho" etapa="livre"
+                    :registro="$planoTrabalho" etapa="livre"
                     wire:key="campos-livres" />
             @else
                 @php $vazioDocente = $aguardandoDocente ? 'A ser preenchido pelo docente...' : '---'; @endphp

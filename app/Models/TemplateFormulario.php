@@ -60,39 +60,13 @@ class TemplateFormulario extends Model implements Auditable
             ->toArray();
     }
 
-    public function chaves(): array
-    {
-        return array_column($this->campos ?? [], 'chave');
-    }
-
-    public function campo(string $chave): ?array
-    {
-        foreach ($this->campos ?? [] as $campo) {
-            if ($campo['chave'] === $chave) {
-                return $campo;
-            }
-        }
-
-        return null;
-    }
-
-    public function camposFixos(): array
-    {
-        return array_values(array_filter($this->campos ?? [], fn($campo) => $campo['fixo'] ?? false));
-    }
-
     public function getCriadoPorAttribute(): ?string
     {
-        return $this->padrao ? 'Automático' :$this->user?->nome;
+        return $this->padrao ? 'Automático' : $this->user?->nome;
     }
 
     public function getQuantidadeCamposAttribute(): int
     {
         return count($this->campos ?? []);
-    }
-
-    public function getNomeCompletoAttribute(): string
-    {
-        return "{$this->tipo->label()} - {$this->nome}";
     }
 }

@@ -44,7 +44,6 @@ new class extends Component {
     public function updatedTemplateId(): void
     {
         unset($this->camposDoFormulario);
-        $this->dispatch('campos-alterados');
     }
 
     #[On('disciplina-created')]

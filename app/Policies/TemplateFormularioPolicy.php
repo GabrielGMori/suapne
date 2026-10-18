@@ -60,9 +60,4 @@ class TemplateFormularioPolicy
     {
         return false;
     }
-
-    public function associar(User $user, TemplateFormulario $templateFormulario): bool
-    {
-        return false;
-    }
 }

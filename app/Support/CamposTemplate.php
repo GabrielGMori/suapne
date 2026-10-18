@@ -199,11 +199,6 @@ class CamposTemplate
         };
     }
 
-    public static function motivoFixo(array $campo): ?string
-    {
-        return $campo['motivoFixo'] ?? null;
-    }
-
     private static function campo(string $chave, string $rotulo, string $tipo = 'textarea', array $extra = []): array
     {
         return [

@@ -47,7 +47,6 @@ new class extends Component {
     public function updatedTemplateId(): void
     {
         unset($this->camposDoFormulario);
-        $this->dispatch('campos-alterados');
     }
 
     private function loadPerfilForEstudante(?string $id): void
