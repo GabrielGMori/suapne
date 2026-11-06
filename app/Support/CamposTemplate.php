@@ -115,6 +115,11 @@ class CamposTemplate
         return $itens;
     }
 
+    public static function decodificar(array $campos): array
+    {
+        return array_map(fn($campo) => is_string($campo) ? json_decode($campo, true) : $campo, $campos);
+    }
+
     public static function ordenar(array $campos): array
     {
         $noTopo = array_filter($campos, fn($campo) => filled($campo['secao'] ?? null));

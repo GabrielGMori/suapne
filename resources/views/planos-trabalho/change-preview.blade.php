@@ -17,7 +17,7 @@
         <input type="hidden" name="campos[{{ $campo }}]" value="{{ $valor }}">
     @endforeach
     @foreach (($planoTrabalho->campos_extras ?? []) as $campo)
-        <x-campo-extra-hidden :campo="$campo" />
+        <x-campo-extra-hidden :campo="$campo" :snapshot="true" />
     @endforeach
     @foreach (array_keys($previewDisciplinas) as $disciplinaId)
         <input type="hidden" name="previewDisciplinas[]" value="{{ $disciplinaId }}">

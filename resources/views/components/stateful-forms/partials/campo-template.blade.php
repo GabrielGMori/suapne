@@ -51,13 +51,5 @@
         </div>
     </div>
 
-    @foreach ($campo as $atributo => $valor)
-        @if (is_array($valor))
-            @foreach ($valor as $chaveOpcao => $valorOpcao)
-                <input type="hidden" name="campos[{{ $indice }}][{{ $atributo }}][{{ $chaveOpcao }}]" value="{{ $valorOpcao }}">
-            @endforeach
-        @else
-            <input type="hidden" name="campos[{{ $indice }}][{{ $atributo }}]" value="{{ is_bool($valor) ? (int) $valor : $valor }}">
-        @endif
-    @endforeach
+    <input type="hidden" name="campos[{{ $indice }}]" value="{{ json_encode($campo) }}">
 </div>

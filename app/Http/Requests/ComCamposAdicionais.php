@@ -74,6 +74,10 @@ trait ComCamposAdicionais
     protected function prepararCampos(): void
     {
         $this->merge(['campos' => (array) $this->input('campos', [])]);
+
+        if ($this->has('campos_extras')) {
+            $this->merge(['campos_extras' => CamposTemplate::decodificar((array) $this->input('campos_extras'))]);
+        }
     }
 
     public function dadosValidados(): array

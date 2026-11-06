@@ -24,7 +24,7 @@ new class extends Component {
         $this->tipo = $tipo ?: ($template?->tipo?->value ?? TipoFormularioEnum::ATENDIMENTO_SEMANAL->value);
 
         $this->nome = (string) old('nome', $this->template?->nome);
-        $this->campos = CamposTemplate::ordenar((array) old('campos', $this->template?->campos ?? CamposTemplate::campos($this->tipoEnum())));
+        $this->campos = CamposTemplate::ordenar(CamposTemplate::decodificar((array) old('campos', $this->template?->campos ?? CamposTemplate::campos($this->tipoEnum()))));
     }
 
     public function adicionar(): void

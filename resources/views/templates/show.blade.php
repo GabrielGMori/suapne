@@ -66,13 +66,7 @@
                 <h2 class="text-display-small">{{ CamposTemplate::titulo($numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
 
                 @foreach ($item['campos'] as $campo)
-                    <div class="form-field">
-                        <label class="form-label form-label-outlined">{{ $campo['rotulo'] }}</label>
-                        <div class="form-control form-control-outlined form-control-medium flex items-center justify-between gap-3 opacity-60">
-                            <span>{{ implode(' / ', array_values($campo['opcoes'] ?? [])) }}</span>
-                            <x-icon size="22">expand_more</x-icon>
-                        </div>
-                    </div>
+                    @include('components.stateful-forms.partials.previa-controle', ['campo' => $campo])
                 @endforeach
             </div>
         @else

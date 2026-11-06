@@ -1,8 +1,3 @@
-@php
-    $tipo = $campo['tipo'] ?? 'text';
-    $nomePreview = 'previa_' . $campo['chave'];
-@endphp
-
 <div class="flex flex-col bg-surface rounded-lg gap-5 p-5">
     <h2 class="text-display-small">{{ App\Support\CamposTemplate::titulo($numero ?? null, $campo['grupoTitulo'] ?? $campo['rotulo']) }}</h2>
 
@@ -10,20 +5,5 @@
         <h3 class="text-body-large text-secondary-accent">{{ $campo['descricao'] }}</h3>
     @endif
 
-    @if ($tipo === 'select')
-        <div class="form-field">
-            <label class="form-label form-label-outlined">{{ $campo['rotulo'] }}</label>
-            <div class="form-control form-control-outlined form-control-medium flex items-center justify-between gap-3 opacity-60">
-                <span>{{ implode(' / ', array_values($campo['opcoes'] ?? [])) }}</span>
-                <x-icon size="22">expand_more</x-icon>
-            </div>
-        </div>
-    @elseif ($tipo === 'especial')
-        <p class="text-body-medium text-secondary-accent">
-            {{ $campo['motivoFixo'] ?? 'Campo com preenchimento automático.' }}
-        </p>
-    @else
-        <x-form.input :type="$tipo" :name="$nomePreview" appearance="outlined"
-            :size="$tipo === 'textarea' ? 'full' : 'medium'" disabled />
-    @endif
+    @include('components.stateful-forms.partials.previa-controle', ['campo' => $campo])
 </div>

@@ -13,6 +13,11 @@ class TemplateFormularioRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge(['campos' => CamposTemplate::decodificar((array) $this->input('campos', []))]);
+    }
+
     public function rules(): array
     {
         $template = $this->route('templateFormulario');
