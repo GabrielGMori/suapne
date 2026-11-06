@@ -43,10 +43,15 @@ class TemplateFormularioRequest extends FormRequest
             'campos.*.grupo' => ['nullable', 'string', 'max:50'],
             'campos.*.grupoTitulo' => ['nullable', 'string', 'max:300'],
             'campos.*.descricao' => ['nullable', 'string', 'max:300'],
-            'campos.*.rotuloFormulario' => ['nullable', 'string', 'max:150'],
+            'campos.*.rotuloFormulario' => ['nullable', 'string', 'max:300'],
             'campos.*.motivoFixo' => ['nullable', 'string', 'max:300'],
             'campos.*.regra' => ['nullable', 'string', 'max:30'],
             'campos.*.opcoes' => ['nullable', 'array'],
+            'campos.*.min' => ['nullable', 'integer'],
+            'campos.*.max' => ['nullable', 'integer'],
+            'campos.*.semNumero' => ['nullable', 'boolean'],
+            'campos.*.separador' => ['nullable', 'boolean'],
+            'campos.*.tamanho' => ['nullable', 'string', 'max:20'],
         ];
     }
 

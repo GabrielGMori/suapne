@@ -16,12 +16,13 @@ new class extends Component {
     public string $ate = '';
     public string $depois = '';
     public bool $apenasDefinicoes = false;
+    public bool $secoes = false;
 
     public array $valores = [];
 
     public function mount(): void
     {
-        $this->valores = (array) old('campos', $this->registro?->campos ?? []);
+        $this->valores = [...$this->valores, ...array_filter((array) old('campos', $this->registro?->campos ?? []), 'filled')];
     }
 
     #[Computed]
@@ -66,14 +67,26 @@ new class extends Component {
     $dentroDeSecao = $secao !== '';
 @endphp
 
-<div>
+<div @class(['flex flex-col gap-5' => $secoes && $dentroDeSecao])>
     @if ($apenasDefinicoes)
         @foreach ($this->campos as $campo)
             <x-campo-extra-hidden :campo="$campo" :snapshot="true" />
         @endforeach
     @else
         @foreach ($this->itens as $item)
-            @if (isset($item['grupo']))
+            @if (isset($item['grupo']) && $secoes)
+                <x-secao-expansivel :title="CamposTemplate::titulo($this->numeros[$item['campos'][0]['chave']] ?? null, $item['titulo'])"
+                    class="mb-5" wire:key="grupo-{{ $item['grupo'] }}">
+                    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5">
+                        @foreach ($item['campos'] as $campo)
+                            @include('components.stateful-forms.partials.campo-adicional-input', [
+                                'campo' => $campo,
+                                'compacto' => true,
+                            ])
+                        @endforeach
+                    </div>
+                </x-secao-expansivel>
+            @elseif (isset($item['grupo']))
                 <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="grupo-{{ $item['grupo'] }}">
                     <h2 class="text-display-small">{{ CamposTemplate::titulo($this->numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
 

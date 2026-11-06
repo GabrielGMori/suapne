@@ -8,6 +8,7 @@
         TipoFormularioEnum::PLANO_FLEXIBILIZACAO->value => ['icone' => 'tune', 'resumo' => 'Define o que será flexibilizado no currículo do estudante.'],
         TipoFormularioEnum::PLANO_TRABALHO->value => ['icone' => 'assignment', 'resumo' => 'Preenchido pela CNAPNE e completado pelo docente de cada componente.'],
         TipoFormularioEnum::ATENDIMENTO_SEMANAL->value => ['icone' => 'article_person', 'resumo' => 'Registro de cada encontro semanal com o estudante.'],
+        TipoFormularioEnum::ENTREVISTA_FAMILIAR->value => ['icone' => 'family_restroom', 'resumo' => 'Entrevista escolar feita com a família do estudante.'],
     ];
 @endphp
 

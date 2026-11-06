@@ -9,6 +9,7 @@ enum TipoFormularioEnum: string
     case PLANO_FLEXIBILIZACAO = 'PLANO_FLEXIBILIZACAO';
     case PLANO_TRABALHO = 'PLANO_TRABALHO';
     case ATENDIMENTO_SEMANAL = 'ATENDIMENTO_SEMANAL';
+    case ENTREVISTA_FAMILIAR = 'ENTREVISTA_FAMILIAR';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum TipoFormularioEnum: string
             self::PLANO_FLEXIBILIZACAO => 'Plano de Flexibilização Curricular',
             self::PLANO_TRABALHO => 'Plano de Trabalho do Estudante',
             self::ATENDIMENTO_SEMANAL => 'Atendimento Semanal',
+            self::ENTREVISTA_FAMILIAR => 'Entrevista Familiar',
         };
     }
 }

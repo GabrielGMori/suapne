@@ -29,6 +29,11 @@ trait ComCamposAdicionais
             'campos_extras.*.motivoFixo' => ['nullable', 'string', 'max:300'],
             'campos_extras.*.regra' => ['nullable', 'string', 'max:30'],
             'campos_extras.*.opcoes' => ['nullable', 'array'],
+            'campos_extras.*.min' => ['nullable', 'integer'],
+            'campos_extras.*.max' => ['nullable', 'integer'],
+            'campos_extras.*.semNumero' => ['nullable', 'boolean'],
+            'campos_extras.*.separador' => ['nullable', 'boolean'],
+            'campos_extras.*.tamanho' => ['nullable', 'string', 'max:20'],
         ];
 
         foreach ((array) $this->input('campos_extras', []) as $campo) {
@@ -40,11 +45,12 @@ trait ComCamposAdicionais
                 continue;
             }
 
-            $regra = CamposTemplate::regra($campo);
-
-            $regras["campos.{$campo['chave']}"] = filter_var($campo['obrigatorio'] ?? false, FILTER_VALIDATE_BOOLEAN)
-                ? ['required', $regra]
-                : ['nullable', $regra];
+            $regras["campos.{$campo['chave']}"] = [
+                filter_var($campo['obrigatorio'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'required' : 'nullable',
+                CamposTemplate::regra($campo),
+                ...(filled($campo['min'] ?? null) ? ["min:{$campo['min']}"] : []),
+                ...(filled($campo['max'] ?? null) ? ["max:{$campo['max']}"] : []),
+            ];
         }
 
         return $regras;
@@ -106,7 +112,7 @@ trait ComCamposAdicionais
                 'fixo' => filter_var($campo['fixo'] ?? false, FILTER_VALIDATE_BOOLEAN),
             ];
 
-            foreach (['secao', 'etapa', 'grupo', 'grupoTitulo', 'descricao', 'rotuloFormulario', 'motivoFixo', 'regra', 'opcoes'] as $opcional) {
+            foreach (['secao', 'etapa', 'grupo', 'grupoTitulo', 'descricao', 'rotuloFormulario', 'motivoFixo', 'regra', 'opcoes', 'min', 'max', 'semNumero', 'separador', 'tamanho'] as $opcional) {
                 if (filled($campo[$opcional] ?? null)) {
                     $item[$opcional] = $campo[$opcional];
                 }

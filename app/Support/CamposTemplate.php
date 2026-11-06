@@ -26,6 +26,7 @@ class CamposTemplate
             TipoFormularioEnum::PLANO_FLEXIBILIZACAO => self::planoFlexibilizacao(),
             TipoFormularioEnum::PLANO_TRABALHO => self::planoTrabalho(),
             TipoFormularioEnum::ATENDIMENTO_SEMANAL => self::atendimentoSemanal(),
+            TipoFormularioEnum::ENTREVISTA_FAMILIAR => self::entrevistaFamiliar(),
         };
     }
 
@@ -144,6 +145,10 @@ class CamposTemplate
         $numero = 1;
 
         foreach (self::agrupar($campos) as $item) {
+            if ($item['campos'][0]['semNumero'] ?? false) {
+                continue;
+            }
+
             $numero++;
 
             foreach ($item['campos'] ?? [$item['campo']] as $campo) {
@@ -158,6 +163,8 @@ class CamposTemplate
     {
         return match ($campo['tipo'] ?? 'text') {
             'especial' => ($campo['regra'] ?? null) === 'array' ? 'Seleção múltipla' : 'Texto longo',
+            'tel' => 'Telefone',
+            'email' => 'E-mail',
             default => self::TIPOS_CAMPO[$campo['tipo']] ?? 'Texto curto',
         };
     }
@@ -199,6 +206,7 @@ class CamposTemplate
         return match ($campo['tipo'] ?? 'text') {
             'date' => 'date',
             'number' => 'numeric',
+            'email' => 'email',
             'select' => (string) Rule::in(array_keys($campo['opcoes'] ?? [])),
             default => 'string',
         };
@@ -294,6 +302,161 @@ class CamposTemplate
             self::campo('registroDoAtendimento', 'Registro do Atendimento', 'textarea', ['obrigatorio' => true]),
             self::campo('encaminhamentos', 'Encaminhamentos', 'textarea', ['obrigatorio' => true]),
             self::campo('observacoesAdicionais', 'Observações adicionais'),
+        ];
+    }
+
+    private static function entrevistaFamiliar(): array
+    {
+        $simNao = ['Sim' => 'Sim', 'Não' => 'Não'];
+        $identificacao = ['secao' => 'dadosEstudante'];
+        $curso = ['grupo' => 'curso', 'grupoTitulo' => 'Identificação do curso'];
+        $familia = ['grupo' => 'familia', 'grupoTitulo' => 'Informações Familiares'];
+        $historia = ['grupo' => 'historia', 'grupoTitulo' => 'História Escolar do Estudante'];
+        $desenvolvimento = ['grupo' => 'desenvolvimento', 'grupoTitulo' => 'Desenvolvimento biopsicosocial'];
+        $comportamento = ['grupo' => 'comportamento', 'grupoTitulo' => 'Características de comportamento do Estudante'];
+        $gerais = ['grupo' => 'gerais', 'grupoTitulo' => 'Informações Gerais e de âmbito escolar'];
+        $escolaAnterior = ['grupo' => 'escolaAnterior', 'grupoTitulo' => 'Caso haja contato com a escola anterior', 'semNumero' => true];
+        $profissionais = ['grupo' => 'profissionais', 'grupoTitulo' => 'Caso haja contato com profissionais externos', 'semNumero' => true];
+
+        return [
+            self::campo('nomeCompleto', 'Nome completo do estudante', 'text', [...$identificacao, 'tamanho' => 'large', 'separador' => true, 'max' => 255]),
+            self::campo('nomeSocial', 'Nome social', 'text', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('idade', 'Idade', 'number', [...$identificacao, 'tamanho' => 'small', 'separador' => true, 'regra' => 'integer', 'min' => 0, 'max' => 140]),
+            self::campo('dataNascimento', 'Dia de nascimento', 'date', [...$identificacao, 'tamanho' => 'small', 'rotuloFormulario' => 'Data de nascimento']),
+            self::campo('podeSerChamadoSAMU', 'Pode ser chamado SAMU?', 'select', [...$identificacao, 'tamanho' => 'small', 'separador' => true, 'opcoes' => $simNao]),
+            self::campo('nomeMae', 'Nome completo da mãe', 'text', [...$identificacao, 'tamanho' => 'large', 'separador' => true, 'max' => 255]),
+            self::campo('nomePai', 'Nome completo do pai', 'text', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('nomeResponsavel', 'Nome completo da responsável', 'text', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('celularEstudante', 'Celular do estudante', 'tel', [...$identificacao, 'tamanho' => 'small', 'separador' => true, 'max' => 50]),
+            self::campo('celularMae', 'Celular da mãe', 'tel', [...$identificacao, 'tamanho' => 'small', 'max' => 50]),
+            self::campo('celularPai', 'Celular do pai', 'tel', [...$identificacao, 'tamanho' => 'small', 'max' => 50]),
+            self::campo('celularFixo', 'Celular fixo', 'tel', [...$identificacao, 'tamanho' => 'small', 'max' => 50]),
+            self::campo('emailEstudante', 'Email do estudante', 'email', [...$identificacao, 'tamanho' => 'large', 'separador' => true, 'max' => 255]),
+            self::campo('emailMae', 'Email da mãe', 'email', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('emailPai', 'Email do pai', 'email', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('emailResponsavel', 'Email do responsável', 'email', [...$identificacao, 'tamanho' => 'large', 'max' => 255]),
+
+            self::campo('nomeCurso', 'Nome do curso', 'text', [...$curso, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('formaOferta', 'Forma de oferta', 'select', [...$curso, 'opcoes' => ['FIC' => 'FIC', 'Proeja' => 'Proeja', 'Integrado' => 'Integrado', 'Subsequente' => 'Subsequente', 'Graduação - Licenciatura' => 'Graduação - Licenciatura', 'Graduação - Bacharelado' => 'Graduação - Bacharelado', 'Graduação - Tecnólogo' => 'Graduação - Tecnólogo', 'Especialização' => 'Especialização', 'Mestrado' => 'Mestrado']]),
+            self::campo('cota', 'Cota', 'select', [...$curso, 'opcoes' => ['PNE' => 'PNE', 'Pretos ou Pardos' => 'Pretos ou Pardos', 'Indígenas' => 'Indígenas', 'Entrada por sorteio público' => 'Entrada por sorteio público', 'Social' => 'Social', 'Escola Pública' => 'Escola Pública', 'Ampla Concorrência' => 'Ampla Concorrência', 'Quilombola' => 'Quilombola']]),
+            self::campo('matricula', 'Matrícula', 'text', [...$curso, 'tamanho' => 'small', 'rotuloFormulario' => 'Matricula', 'max' => 50]),
+            self::campo('turno', 'Turno', 'select', [...$curso, 'tamanho' => 'small', 'opcoes' => ['Matutino' => 'Matutino', 'Vespertino' => 'Vespertino', 'Noturno' => 'Noturno']]),
+            self::campo('anoPeriodo', 'Ano/Período', 'text', [...$curso, 'tamanho' => 'small', 'max' => 50]),
+
+            self::campo('formacaoMae', 'Formação da mãe', 'text', [...$familia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('profissaoMae', 'Profissão da mãe', 'text', [...$familia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('idadeMae', 'Idade da mãe', 'number', [...$familia, 'tamanho' => 'small', 'regra' => 'integer', 'min' => 0, 'max' => 140]),
+            self::campo('maeEmpregada', 'A mãe está atualmente empregada?', 'text', [...$familia, 'max' => 255]),
+            self::campo('formacaoPai', 'Formação do pai', 'text', [...$familia, 'tamanho' => 'large', 'separador' => true, 'max' => 255]),
+            self::campo('profissaoPai', 'Profissão do pai', 'text', [...$familia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('idadePai', 'Idade do pai', 'number', [...$familia, 'tamanho' => 'small', 'regra' => 'integer', 'min' => 0, 'max' => 140]),
+            self::campo('paiEmpregado', 'O pai está atualmente empregado?', 'text', [...$familia, 'max' => 255]),
+            self::campo('formacaoResponsavel', 'Formação do responsável', 'text', [...$familia, 'tamanho' => 'large', 'separador' => true, 'max' => 255]),
+            self::campo('profissaoResponsavel', 'Profissão do responsável', 'text', [...$familia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('idadeResponsavel', 'Idade do responsável', 'number', [...$familia, 'tamanho' => 'small', 'regra' => 'integer', 'min' => 0, 'max' => 140]),
+            self::campo('responsavelEmpregado', 'O responsável está atualmente empregado?', 'text', [...$familia, 'max' => 255]),
+            self::campo('numeroIrmaos', 'Número de irmãos', 'text', [...$familia, 'tamanho' => 'small', 'separador' => true, 'max' => 50]),
+            self::campo('moraCom', 'Estudante mora com', 'text', [...$familia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('paisSeparados', 'Pais separados?', 'select', [...$familia, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('deficiencia', 'Alguma pessoa da família tem deficiência?', 'select', [...$familia, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('tipoDeficiencia', 'Se sim, qual?', 'text', [...$familia, 'tamanho' => 'large']),
+            self::campo('rotinaDiaria', 'Rotina diária antes e depois das aulas/atividades domésticas', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('relacionamentoFamiliares', 'Relacionamento com familiares', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('comQuemConvive', 'Com quem mais convive fora da escola?', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('mantemAmizades', 'Mantém amizades com pessoas da mesma idade', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('atividadesLazer', 'A família se reúne para atividades de lazer? Que tipo?', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('condicoesMoradia', 'Condições de moradia (casa própria, alugada, outro)', 'text', [...$familia, 'tamanho' => 'large']),
+            self::campo('ambienteEstudo', 'Tem ambiente específico para estudo? Como é?', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('acompanhamento', 'Há acompanhamento sobre o que acessa no computador? Ou sobre interações no celular?', 'text', [...$familia, 'tamanho' => 'full']),
+            self::campo('localPermanencia', 'Qual é o local da casa onde o estudante permanece mais tempo?', 'text', [...$familia, 'tamanho' => 'large']),
+
+            self::campo('escolaOrigem', 'Qual a escola de origem?', 'text', [...$historia, 'tamanho' => 'large', 'max' => 255]),
+            self::campo('tempoIFPR', 'Há quanto tempo no IFPR?', 'text', [...$historia, 'max' => 100]),
+            self::campo('reprovacao', 'Já reprovou algum ano escolar? Qual? Motivo?', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('areasFacilidade', 'Áreas de conhecimento com as quais têm mais facilidade na escola', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('areasDificuldade', 'Áreas de conhecimento com as quais têm mais dificuldade na escola', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('trajetoriaEscolar', 'Trajetória escolar quanto a rendimentos, relacionamentos, adaptações, principais dificuldades e o que mais gostava (Antecedentes relevantes)', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('frequentouEducacaoInfantil', 'Frequentou educação infantil a partir de que idade?', 'text', [...$historia, 'tamanho' => 'large']),
+            self::campo('aprendeuLerEscrever', 'Com quantos anos aprendeu a ler e escrever?', 'text', [...$historia, 'tamanho' => 'large']),
+            self::campo('cursosExtraEscolares', 'Quais os cursos extra-escolares que já fez?', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('atendimentoEduacionalEspecializado', 'Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o atendimento?', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('adaptacaoCurricular', 'Foi necessária alguma Adaptação Curricular? Qual(is)?', 'text', [...$historia, 'tamanho' => 'full']),
+            self::campo('outrasNecessidades', 'Outras necessidades relatadas e/ou percebidas', 'text', [...$historia, 'tamanho' => 'full', 'rotuloFormulario' => 'Outras necessidades relatadas e/ou percebidas:']),
+            self::campo('potencialidades', 'Potencialidades do estudante. Em quais atividades se destaca? Na escola ou fora dela.', 'text', [...$historia, 'tamanho' => 'full']),
+
+            self::campo('gestacaoPlanejada', 'Gestação planejada/desejada', 'text', [...$desenvolvimento, 'tamanho' => 'large']),
+            self::campo('fezPreNatal', 'Fez pré-natal?', 'select', [...$desenvolvimento, 'tamanho' => 'small', 'rotuloFormulario' => 'Fez pré-natal', 'opcoes' => $simNao]),
+            self::campo('doencasApresentadas', 'Doenças apresentadas?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Doenças apresentadas']),
+            self::campo('usouFraldas', 'Usou fraldas até que idade?', 'text', $desenvolvimento),
+            self::campo('ateQueIdadeMamadeira', 'Até que idade fez uso de mamadeira, chupeta, outros recursos de segurança afetiva?', 'text', [...$desenvolvimento, 'tamanho' => 'large']),
+            self::campo('desenvolvimentoFalaAndar', 'Como foi o desenvolvimento da fala, do andar, alimentação e controle de esfíncteres (em que idade passou a ter independência nas atividades cotidianas)?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Como foi o desenvolvimento da fala, do andar, alimentação e controle de esfíncteres (em que idade passou a ter independência nas atividades cotidianas)']),
+            self::campo('IndicacoesVacinacao', 'As indicações de vacinação foram cumpridas? Se não, por quê?', 'text', [...$desenvolvimento, 'tamanho' => 'full']),
+            self::campo('fazUsoMedicamento', 'Faz uso de medicamento?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Faz uso de medicamento']),
+            self::campo('seletividadeRestricaoAlimentar', 'Seletividade ou restrição alimentar?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Seletividade ou restrição alimentar']),
+            self::campo('internamentosCirurgias', 'Internamentos e cirurgias?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Internamentos e cirurgias']),
+            self::campo('deficienciaTranstornos', 'Deficiência, Dificuldade, Transtorno ou Altas Habilidades (Diagnóstico e histórico do caso e atendimentos)?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Deficiência, Dificuldade, Transtorno ou Altas Habilidades (Diagnóstico e histórico do caso e atendimentos)']),
+            self::campo('acompanhamentoSaudeExterno', 'Fez ou faz algum acompanhamento com profissional de Saúde externo?', 'text', [...$desenvolvimento, 'tamanho' => 'full']),
+            self::campo('nomeFisioterapeuta', 'Nome do fisioterapeuta?', 'text', [...$desenvolvimento, 'tamanho' => 'large', 'rotuloFormulario' => 'Nome do fisioterapeuta', 'max' => 255]),
+            self::campo('contatoFisioterapeuta', 'Contato do fisioterapeuta?', 'text', [...$desenvolvimento, 'rotuloFormulario' => 'Contato do fisioterapeuta', 'max' => 50]),
+            self::campo('nomeFonoaudiologo', 'Nome do fonoaudiólogo?', 'text', [...$desenvolvimento, 'tamanho' => 'large', 'rotuloFormulario' => 'Nome do fonoaudiólogo', 'max' => 255]),
+            self::campo('contatoFonoaudiologo', 'Contato do fonoaudiólogo?', 'text', [...$desenvolvimento, 'rotuloFormulario' => 'Contato do fonoaudiólogo', 'max' => 50]),
+            self::campo('nomePsicologo', 'Nome do psicólogo?', 'text', [...$desenvolvimento, 'tamanho' => 'large', 'rotuloFormulario' => 'Nome do psicólogo', 'max' => 255]),
+            self::campo('contatoPsicologo', 'Contato do psicólogo?', 'text', [...$desenvolvimento, 'rotuloFormulario' => 'Contato do psicólogo', 'max' => 50]),
+            self::campo('nomeNeurologista', 'Nome do neurologista?', 'text', [...$desenvolvimento, 'tamanho' => 'large', 'rotuloFormulario' => 'Nome do neurologista', 'max' => 255]),
+            self::campo('contatoNeurologista', 'Contato do neurologista?', 'text', [...$desenvolvimento, 'rotuloFormulario' => 'Contato do neurologista', 'max' => 50]),
+            self::campo('observacoes', 'Observações?', 'text', [...$desenvolvimento, 'tamanho' => 'full', 'rotuloFormulario' => 'Observações']),
+
+            self::campo('timido', 'Timido?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('extrovertido', 'Extrovertido?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('persistente', 'Persistente?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('calmo', 'Calmo?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('agitado', 'Agitado?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('ansioso', 'Ansioso?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('organizado', 'Organizado?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('perfeccionista', 'Perfeccionista?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('responsavel', 'Responsável?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('amoroso', 'Amoroso?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('nervoso', 'Nervoso?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('inseguro', 'Inseguro?', 'select', [...$comportamento, 'tamanho' => 'small', 'opcoes' => $simNao]),
+            self::campo('outros', 'Outros?', 'text', [...$comportamento, 'tamanho' => 'full', 'rotuloFormulario' => 'Outros']),
+
+            self::campo('origemHistorico', 'Origem e histórico do caso e dos atendimentos', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('artefatosMobilidade', 'Faz uso de algum artefato para mobilidade? Qual(is)?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('adaptacaoMobiliario', 'Há necessidade de adaptação de mobiliário? (carteira, rampas, apoio para pés, etc.)', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('necessidadeLocacao', 'É totalmente dependente para a locação na rampa, banheiros, sala de aula, laboratórios? Qual a necessidade?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('adaptacaoComputador', 'Necessita de alguma adaptação para a utilização do computador? Qual?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('transporteCampus', 'Possui transporte para locomoção ao Campus? Necessita de auxílio para ingresso ao Campus?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('atendimentoEducativo', 'Já teve atendimento educacional especializado? Como, onde e por quanto tempo foi? Quem prestava o atendimento?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('necessidadeAdaptacaoCurricular', 'Foi necessária alguma Adaptação Curricular? Qual(is)?', 'text', [...$gerais, 'tamanho' => 'full']),
+            self::campo('sistemaLinguistico', 'Sistema linguístico utilizado pelo estudante(Oral, gestual, LIBRAS, outros)', 'text', [...$gerais, 'tamanho' => 'large']),
+            self::campo('recursosAcessibilidade', 'Recursos ou equipamentos de acessibilidade já usados pelo estudante', 'text', [...$gerais, 'tamanho' => 'full', 'rotuloFormulario' => 'Recursos ou equipamentos de acessibilidade já usados pelo estudante:']),
+            self::campo('recursosProvidenciados', 'Recursos ou equipamentos que necessitam ser providenciados', 'text', [...$gerais, 'tamanho' => 'full', 'rotuloFormulario' => 'Recursos ou equipamentos que necessitam ser providenciados:']),
+            self::campo('outrasNecessidadesEscolares', 'Outras necessidades relatadas e/ou percebidas', 'text', [...$gerais, 'tamanho' => 'full', 'rotuloFormulario' => 'Outras necessidades relatadas e/ou percebidas:']),
+            self::campo('sugestoesAdaptacao', 'Sugestões para melhoria da adaptação', 'text', [...$gerais, 'tamanho' => 'full']),
+
+            self::campo('acompanhamentoAEE', 'Teve acompanhamento de AEE? Fez uso da sala de recurso?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('potencialidadesDificuldades', 'Potencialidades e dificuldades acadêmicas', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('materialAdaptado', 'Tinha material adaptado? Quais?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('apoioEscolar', 'Participou de apoio escolar? Qual?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('comportamentoDiferenciado', 'Algum comportamento diferenciado?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('questaoSensibilidade', 'Alguma questão de sensibilidade?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('momentoCrise', 'Algum momento de crise? Que tipo?', 'text', [...$escolaAnterior, 'tamanho' => 'full']),
+            self::campo('laudoEscola', 'Teve laudo por encaminhamento da escola?', 'text', [...$escolaAnterior, 'tamanho' => 'large']),
+
+            self::campo('inicioTratamento', 'Quando começou o tratamento?', 'text', [...$profissionais, 'tamanho' => 'large']),
+            self::campo('porQueComecou', 'Por que começou?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('apresentaCrisesComportamento', 'Apresenta crises de comportamento?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('qualSituacoesDesencadeiamCrises', 'Qual ou quais situações desencadeiam crises?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('orientacoesEvitarEstresse', 'Orientações para evitar estresse', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('quaisMelhorias', 'Quais as melhorias?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('maioresOrientacoes', 'Maiores orientações para sala de aula e escola', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('necessitaAbafadorSom', 'Necessita de abafador de som no ambiente escolar?', 'text', $profissionais),
+            self::campo('comoSeOrganiza', 'Como o estudante se organiza? Utiliza agendas para registrar seus compromissos?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('comoAprende', 'Como o estudante aprende?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('quaisRecursosFacilitam', 'Quais recursos e/ou estratégias facilitam sua aprendizagem?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('quaisRecursosDificultam', 'Quais recursos e/ou estratégias dificultam sua aprendizagem?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('emQueAreaFacilidade', 'Em que área do conhecimento apresenta mais facilidade para aprender? Por quê?', 'text', [...$profissionais, 'tamanho' => 'full']),
+            self::campo('emQueAreaDificuldade', 'Em que área do conhecimento percebe mais dificuldade para aprender? Por quê?', 'text', [...$profissionais, 'tamanho' => 'full']),
         ];
     }
 }
