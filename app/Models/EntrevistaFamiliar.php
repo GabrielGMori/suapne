@@ -14,6 +14,8 @@ use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 use App\Enums\TipoFormularioEnum;
 use App\Models\Concerns\TemCamposAdicionais;
+use App\Support\CamposTemplate;
+
 class EntrevistaFamiliar extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
@@ -52,6 +54,11 @@ class EntrevistaFamiliar extends Model implements Auditable
     public function templateFormulario(): BelongsTo
     {
         return $this->belongsTo(TemplateFormulario::class);
+    }
+
+    public function usaCamposPadrao(): bool
+    {
+        return array_column($this->camposAdicionais(), 'chave') === array_column(CamposTemplate::campos(self::TIPO_FORMULARIO), 'chave');
     }
 
     public function enviadoPor()

@@ -7,6 +7,7 @@
     'vazio' => '---',
     'vazioObrigatorio' => null,
     'italicoVazio' => false,
+    'linhas' => false,
 ])
 
 @php
@@ -28,13 +29,26 @@
 @endphp
 
 @foreach ($itens as $item)
-    @if (isset($item['grupo']))
+    @if ($linhas)
+        @foreach ($item['campos'] ?? [$item['campo']] as $campo)
+            @continue($campo['tipo'] === 'especial')
+            @php $valor = $formatar($campo); @endphp
+
+            @if ($campo['separador'] ?? false)
+                <hr class="text-on-surface">
+            @endif
+            <p>{{ $campo['rotulo'] }}: {{ filled($valor) ? $valor : $vazio }}</p>
+        @endforeach
+    @elseif (isset($item['grupo']))
         @php $grupoCampos = array_filter($item['campos'], fn($c) => $c['tipo'] !== 'especial'); @endphp
         @if (count($grupoCampos))
             <div class="flex flex-col bg-surface rounded-lg gap-3 mb-5 p-5">
                 <h2 class="text-display-small mb-2">{{ CamposTemplate::titulo($numeros[$item['campos'][0]['chave']] ?? null, $item['titulo']) }}</h2>
                 @foreach ($grupoCampos as $campo)
                     @php $valor = $formatar($campo); @endphp
+                    @if ($campo['separador'] ?? false)
+                        <hr class="text-on-surface">
+                    @endif
                     <p>{{ $campo['rotulo'] }}: <b>{{ filled($valor) ? $valor : $vazio }}</b></p>
                 @endforeach
             </div>
