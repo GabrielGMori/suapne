@@ -3,6 +3,7 @@
 use App\Enums\TipoFormularioEnum;
 use App\Models\TemplateFormulario;
 use App\Support\CamposTemplate;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 new class extends Component {
@@ -17,6 +18,8 @@ new class extends Component {
     public array|string|null $novoTipo = ['textarea'];
     public bool $novoObrigatorio = false;
     public string $novasOpcoes = '';
+    public array|string|null $novaSecao = [CamposTemplate::SEM_SECAO];
+    public string $novaSecaoTitulo = '';
 
     public function mount(?TemplateFormulario $template = null, string $tipo = ''): void
     {
@@ -30,12 +33,15 @@ new class extends Component {
     public function adicionar(): void
     {
         $this->novoTipo = is_array($this->novoTipo) ? (string) (reset($this->novoTipo) ?: '') : (string) $this->novoTipo;
+        $this->novaSecao = is_array($this->novaSecao) ? (string) (reset($this->novaSecao) ?: CamposTemplate::SEM_SECAO) : (string) ($this->novaSecao ?: CamposTemplate::SEM_SECAO);
 
         $this->validate([
             'novoRotulo' => ['required', 'string', 'max:300'],
             'novoTipo' => ['required', 'in:' . implode(',', array_keys(CamposTemplate::TIPOS_CAMPO))],
             'novasOpcoes' => ['required_if:novoTipo,select', 'string', 'max:500'],
-        ], [], ['novoRotulo' => 'nome do campo', 'novoTipo' => 'tipo', 'novasOpcoes' => 'opções']);
+            'novaSecao' => ['required', Rule::in(array_keys($this->secoes()))],
+            'novaSecaoTitulo' => ['required_if:novaSecao,' . CamposTemplate::NOVA_SECAO, 'string', 'max:150'],
+        ], [], ['novoRotulo' => 'nome do campo', 'novoTipo' => 'tipo', 'novasOpcoes' => 'opções', 'novaSecao' => 'seção', 'novaSecaoTitulo' => 'nome da seção']);
 
         $opcoes = array_values(array_unique(array_filter(array_map('trim', explode(',', $this->novasOpcoes)))));
 
@@ -44,10 +50,17 @@ new class extends Component {
             return;
         }
 
-        $this->campos[] = CamposTemplate::novoCampo($this->novoRotulo, $this->novoTipo, $this->novoObrigatorio, $this->campos, $opcoes);
+        $campo = CamposTemplate::novoCampo($this->novoRotulo, $this->novoTipo, $this->novoObrigatorio, $this->campos, $opcoes);
+        $this->campos = CamposTemplate::inserir($this->campos, $campo, $this->novaSecao, $this->novaSecaoTitulo);
 
-        $this->reset('adicionando', 'novoRotulo', 'novoTipo', 'novoObrigatorio', 'novasOpcoes');
+        $this->reset('adicionando', 'novoRotulo', 'novoTipo', 'novoObrigatorio', 'novasOpcoes', 'novaSecao', 'novaSecaoTitulo');
         $this->novoTipo = ['textarea'];
+        $this->novaSecao = [CamposTemplate::SEM_SECAO];
+    }
+
+    public function secoes(): array
+    {
+        return CamposTemplate::secoesDisponiveis($this->tipoEnum(), $this->campos);
     }
 
     public function remover(int $indice): void
@@ -101,8 +114,9 @@ new class extends Component {
 
     public function cancelarNovo(): void
     {
-        $this->reset('adicionando', 'novoRotulo', 'novoObrigatorio', 'novasOpcoes');
+        $this->reset('adicionando', 'novoRotulo', 'novoObrigatorio', 'novasOpcoes', 'novaSecaoTitulo');
         $this->novoTipo = ['textarea'];
+        $this->novaSecao = [CamposTemplate::SEM_SECAO];
         $this->resetValidation();
     }
 
@@ -140,7 +154,7 @@ new class extends Component {
         <div class="flex flex-wrap justify-between items-center gap-3">
             <h2 class="text-display-small">Campos do formulário</h2>
             <p class="text-body-small text-secondary-accent">
-                Arraste os campos para mudar a ordem
+                Arraste os campos ou as seções para mudar a ordem
             </p>
         </div>
         <hr class="text-on-surface">
@@ -155,16 +169,59 @@ new class extends Component {
             x-data="{
                 origem: null,
                 sobre: null,
+                campo: null,
+                sobreCampo: null,
+                zona: null,
                 ordem() { return [...$el.querySelectorAll('[data-item]')].map(e => e.dataset.item) },
-                soltar() {
-                    if (this.origem === null || this.sobre === null || this.origem === this.sobre) { this.limpar(); return }
-                    const atual = this.ordem()
-                    const [movido] = atual.splice(atual.indexOf(this.origem), 1)
-                    atual.splice(atual.indexOf(this.sobre), 0, movido)
-                    $wire.reordenar(atual.flatMap(item => $el.querySelector(`[data-item='${item}']`).dataset.indices.split(',')))
+                indices(itens) { return itens.flatMap(item => $el.querySelector(`[data-item='${item}']`).dataset.indices.split(',')) },
+                mover(lista, de, para) {
+                    const posicao = lista.indexOf(para)
+                    lista.splice(lista.indexOf(de), 1)
+                    lista.splice(posicao, 0, de)
+                    return lista
+                },
+                iniciar(evento, item) {
+                    this.origem = item
+                    evento.dataTransfer.effectAllowed = 'move'
+                    evento.dataTransfer.setData('text/plain', item)
+                },
+                passar(evento, item) {
+                    if (this.origem === null) return
+                    evento.preventDefault()
+                    this.sobre = item
+                },
+                soltar(evento) {
+                    if (this.origem === null) return
+                    evento.preventDefault()
+                    if (this.sobre !== null && this.origem !== this.sobre) {
+                        $wire.reordenar(this.indices(this.mover(this.ordem(), this.origem, this.sobre)))
+                    }
                     this.limpar()
                 },
-                limpar() { this.origem = null; this.sobre = null },
+                iniciarCampo(evento, indice, zona) {
+                    evento.stopPropagation()
+                    this.campo = indice
+                    this.zona = zona
+                    evento.dataTransfer.effectAllowed = 'move'
+                    evento.dataTransfer.setData('text/plain', indice)
+                },
+                passarCampo(evento, indice, zona) {
+                    if (this.campo === null) return
+                    if (this.zona !== zona) { this.sobreCampo = null; return }
+                    evento.stopPropagation()
+                    evento.preventDefault()
+                    this.sobreCampo = indice
+                },
+                soltarCampo(evento, zona) {
+                    if (this.campo === null || this.zona !== zona) return
+                    evento.stopPropagation()
+                    evento.preventDefault()
+                    if (this.sobreCampo !== null && this.campo !== this.sobreCampo) {
+                        $wire.reordenar(this.mover(this.indices(this.ordem()), this.campo, this.sobreCampo))
+                    }
+                    this.limpar()
+                },
+                limpar() { this.origem = null; this.sobre = null; this.campo = null; this.sobreCampo = null; this.zona = null },
             }"
             x-on:dragend="limpar()"
             class="flex flex-col gap-3">
@@ -173,12 +230,23 @@ new class extends Component {
                 @php $primeiro = $campos[$item['indices'][0]]; @endphp
 
                 @if ($item['noTopo'])
+                    @php $indice = $item['indices'][0]; @endphp
+
                     <div wire:key="item-{{ $primeiro['chave'] }}" data-item="{{ $posicao }}"
-                        data-indices="{{ implode(',', $item['indices']) }}" x-data="{ arrastavel: false }"
-                        class="rounded-lg bg-on-surface p-4">
+                        data-indices="{{ implode(',', $item['indices']) }}"
+                        x-data="{ arrastavel: true }"
+                        x-bind:draggable="arrastavel"
+                        x-on:dragstart="iniciarCampo($event, '{{ $indice }}', 'topo')"
+                        x-on:dragover="passarCampo($event, '{{ $indice }}', 'topo')"
+                        x-on:drop="soltarCampo($event, 'topo')"
+                        x-bind:class="{
+                            'opacity-40': campo === '{{ $indice }}',
+                            'ring-2 ring-primary-accent': sobreCampo === '{{ $indice }}' && campo !== '{{ $indice }}',
+                        }"
+                        class="rounded-lg bg-on-surface p-4 transition-colors hover:bg-on-surface/70 cursor-grab active:cursor-grabbing">
                         @include('components.stateful-forms.partials.campo-template', [
                             'campo' => $primeiro,
-                            'indice' => $item['indices'][0],
+                            'indice' => $indice,
                             'numero' => null,
                         ])
                     </div>
@@ -187,9 +255,9 @@ new class extends Component {
                         data-indices="{{ implode(',', $item['indices']) }}"
                         x-data="{ arrastavel: true }"
                         x-bind:draggable="arrastavel"
-                        x-on:dragstart="origem = '{{ $posicao }}'; $event.dataTransfer.effectAllowed = 'move'"
-                        x-on:dragover.prevent="sobre = '{{ $posicao }}'"
-                        x-on:drop.prevent="soltar()"
+                        x-on:dragstart="iniciar($event, '{{ $posicao }}')"
+                        x-on:dragover="passar($event, '{{ $posicao }}')"
+                        x-on:drop="soltar($event)"
                         x-bind:class="{
                             'opacity-40': origem === '{{ $posicao }}',
                             'ring-2 ring-primary-accent': sobre === '{{ $posicao }}' && origem !== '{{ $posicao }}',
@@ -201,7 +269,17 @@ new class extends Component {
                                 <p class="text-title-small">{{ CamposTemplate::titulo($numeros[$primeiro['chave']] ?? null, $item['titulo']) }}</p>
 
                                 @foreach ($item['indices'] as $indice)
-                                    <div wire:key="campo-{{ $campos[$indice]['chave'] }}" class="rounded-lg bg-surface p-4">
+                                    <div wire:key="campo-{{ $campos[$indice]['chave'] }}"
+                                        x-data="{ arrastavel: true }"
+                                        x-bind:draggable="arrastavel"
+                                        x-on:dragstart="iniciarCampo($event, '{{ $indice }}', '{{ $item['grupo'] }}')"
+                                        x-on:dragover="passarCampo($event, '{{ $indice }}', '{{ $item['grupo'] }}')"
+                                        x-on:drop="soltarCampo($event, '{{ $item['grupo'] }}')"
+                                        x-bind:class="{
+                                            'opacity-40': campo === '{{ $indice }}',
+                                            'ring-2 ring-primary-accent': sobreCampo === '{{ $indice }}' && campo !== '{{ $indice }}',
+                                        }"
+                                        class="rounded-lg bg-surface p-4">
                                         @include('components.stateful-forms.partials.campo-template', [
                                             'campo' => $campos[$indice],
                                             'indice' => $indice,
@@ -237,6 +315,14 @@ new class extends Component {
 
                     <livewire:form.select label="Tipo" name="novo_tipo" appearance="outlined" placeholder="Selecionar"
                         wire:model.live="novoTipo" :options="CamposTemplate::TIPOS_CAMPO" wire:key="novo-tipo" />
+
+                    <livewire:form.select label="Seção" name="nova_secao" appearance="outlined" size="large"
+                        wire:model.live="novaSecao" :options="$this->secoes()" wire:key="nova-secao" />
+
+                    @if (in_array(CamposTemplate::NOVA_SECAO, (array) $novaSecao, true))
+                        <x-form.input label="Nome da nova seção" name="nova_secao_titulo" appearance="outlined" size="large"
+                            wire:model="novaSecaoTitulo" wire:keydown.enter.prevent="adicionar" :error="$errors->first('novaSecaoTitulo')" />
+                    @endif
 
                     @if (in_array('select', (array) $novoTipo, true))
                         <x-form.input label="Opções (separadas por vírgula)" name="novas_opcoes" appearance="outlined" size="large"

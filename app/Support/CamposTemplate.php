@@ -20,6 +20,10 @@ class CamposTemplate
 
     public const CONTEUDOS = 'conteudosComponente';
 
+    public const SEM_SECAO = 'nenhuma';
+
+    public const NOVA_SECAO = 'nova';
+
     public static function campos(TipoFormularioEnum $tipo): array
     {
         return match ($tipo) {
@@ -195,6 +199,63 @@ class CamposTemplate
             'fixo' => false,
             ...($tipo === 'select' ? ['opcoes' => array_combine($opcoes, $opcoes)] : []),
         ];
+    }
+
+    public static function secoesDisponiveis(TipoFormularioEnum $tipo, array $campos): array
+    {
+        $opcoes = [self::SEM_SECAO => 'Nenhuma (campo separado)'];
+
+        if ($tipo === TipoFormularioEnum::ENTREVISTA_FAMILIAR) {
+            $opcoes['secao:dadosEstudante'] = 'Identificação do Estudante';
+        }
+
+        foreach ($campos as $campo) {
+            if (filled($campo['grupo'] ?? null)) {
+                $opcoes["grupo:{$campo['grupo']}"] ??= $campo['grupoTitulo'] ?? $campo['grupo'];
+            }
+        }
+
+        return [...$opcoes, self::NOVA_SECAO => 'Nova seção'];
+    }
+
+    public static function inserir(array $campos, array $novo, string $secao, string $titulo = ''): array
+    {
+        if ($secao === self::NOVA_SECAO) {
+            $grupos = array_filter(array_column($campos, 'grupo'));
+            $base = Str::of($titulo)->slug('_')->limit(40, '')->toString() ?: 'secao';
+            $grupo = $base;
+            $n = 2;
+
+            while (in_array($grupo, $grupos, true)) {
+                $grupo = "{$base}_{$n}";
+                $n++;
+            }
+
+            return [...$campos, [...$novo, 'grupo' => $grupo, 'grupoTitulo' => $titulo]];
+        }
+
+        [$atributo, $valor] = explode(':', $secao, 2) + [1 => null];
+        $herdados = match ($atributo) {
+            'grupo' => ['grupo', 'grupoTitulo', 'semNumero'],
+            'secao' => ['secao'],
+            default => null,
+        };
+
+        $ultimo = null;
+
+        foreach ($campos as $indice => $campo) {
+            if ($herdados !== null && ($campo[$atributo] ?? null) === $valor) {
+                $ultimo = $indice;
+            }
+        }
+
+        if ($ultimo === null) {
+            return [...$campos, $novo];
+        }
+
+        array_splice($campos, $ultimo + 1, 0, [[...$novo, ...array_intersect_key($campos[$ultimo], array_flip($herdados))]]);
+
+        return $campos;
     }
 
     public static function regra(array $campo): string
