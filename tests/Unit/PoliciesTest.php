@@ -11,6 +11,7 @@ use App\Models\ObservacaoEstudante;
 use App\Models\PlanoFlexibilizacaoCurricular;
 use App\Models\PlanoTrabalhoEstudante;
 use App\Models\SolicitacaoRegistro;
+use App\Models\TemplateFormulario;
 use App\Models\User;
 use App\Policies\AtendimentoSemanalPolicy;
 use App\Policies\AuditPolicy;
@@ -156,6 +157,21 @@ test('PlanoTrabalhoEstudantePolicy permissions across roles', function () {
         ->and($this->professor->can('view', $planoOther))->toBeFalse()
         ->and($this->professor->can('update', $planoProf))->toBeTrue()
         ->and($this->professor->can('update', $planoOther))->toBeFalse();
+});
+
+test('TemplateFormularioPolicy permissions across roles', function () {
+    $template = new TemplateFormulario(['id' => 110, 'padrao' => false]);
+    $padrao = new TemplateFormulario(['id' => 111, 'padrao' => true]);
+
+    expect($this->docenteEspecial->can('viewAny', TemplateFormulario::class))->toBeTrue()
+        ->and($this->docenteEspecial->can('view', $template))->toBeTrue()
+        ->and($this->docenteEspecial->can('create', TemplateFormulario::class))->toBeTrue()
+        ->and($this->docenteEspecial->can('update', $template))->toBeTrue()
+        ->and($this->docenteEspecial->can('delete', $template))->toBeTrue()
+        ->and($this->docenteEspecial->can('update', $padrao))->toBeFalse()
+        ->and($this->docenteEspecial->can('delete', $padrao))->toBeFalse()
+        ->and($this->tecnico->can('viewAny', TemplateFormulario::class))->toBeFalse()
+        ->and($this->professor->can('viewAny', TemplateFormulario::class))->toBeFalse();
 });
 
 test('SolicitacaoRegistroPolicy permissions across roles', function () {
