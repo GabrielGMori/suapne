@@ -2,24 +2,42 @@
 
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use App\Enums\TipoFormularioEnum;
+use App\Livewire\Concerns\GerenciaCamposAdicionais;
 use App\Models\Estudante;
 use App\Models\AtendimentoSemanal;
+use App\Models\TemplateFormulario;
 
 new class extends Component {
+    use GerenciaCamposAdicionais;
+
     public ?AtendimentoSemanal $atendimento = null;
 
+<<<<<<< HEAD
     public ?string $estudanteId = null;
+=======
+    public array|string|int|null $estudanteId = null;
+    public ?int $templateId = null;
+>>>>>>> forms
     public ?string $perfil = '';
 
     public function mount(?AtendimentoSemanal $atendimento = null, mixed $estudanteId = null): void
     {
         $this->atendimento = $atendimento;
 
+<<<<<<< HEAD
         // Priority order: old input > model attribute > passed prop
         $initialEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
         $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
+=======
+        $rawEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
+        $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
+>>>>>>> forms
 
-        // Priority order: old input > current record > latest student profile
+        $this->templateId = $this->atendimento?->exists
+            ? $this->atendimento->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::ATENDIMENTO_SEMANAL)->id;
+
         $oldPerfil = old('campos.perfilDoEstudante');
 
         if ($oldPerfil !== null) {
@@ -55,6 +73,25 @@ new class extends Component {
         $this->perfil = $ultimoAtendimento?->campos['perfilDoEstudante'] ?? '';
     }
 
+<<<<<<< HEAD
+=======
+    private function getScalarEstudanteId(mixed $value = null): ?string
+    {
+        $val = $value ?? $this->estudanteId;
+
+        if (is_array($val)) {
+            $val = reset($val) ?: null;
+        }
+
+        return filled($val) ? (string) $val : null;
+    }
+
+    protected function contextoCampos(): array
+    {
+        return [TipoFormularioEnum::ATENDIMENTO_SEMANAL, $this->templateId, $this->atendimento];
+    }
+
+>>>>>>> forms
     #[Computed]
     public function estudanteOptions(): array
     {
@@ -64,6 +101,10 @@ new class extends Component {
 ?>
 
 @props(['atendimento' => null])
+
+@php
+    $perfilCampo = $this->campoDoFormulario('perfilDoEstudante');
+@endphp
 
 <form action="{{ $atendimento ? route('atendimentos.update', $atendimento) : route('atendimentos.store') }}"
     method="POST">
@@ -85,27 +126,19 @@ new class extends Component {
         <x-form.input type="datetime" label="Dia" appearance="outlined" name="data" wire:ignore
             :value="old('data', $atendimento?->data ?? '')" />
 
-        <x-form.input type="textarea" label="Perfil do Estudante" appearance="outlined" name="campos[perfilDoEstudante]"
-            wire:key="perfil-textarea" size="full" wire:model.blur="perfil" />
+        @if ($perfilCampo)
+            <div class="flex flex-col" wire:key="perfil-wrapper">
+                <label for="campos[perfilDoEstudante]" class="form-label form-label-outlined">Perfil do Estudante</label>
+
+                <x-form.input type="textarea" appearance="outlined" name="campos[perfilDoEstudante]"
+                    wire:key="perfil-textarea" size="full" wire:model.blur="perfil" />
+            </div>
+            <x-campo-extra-hidden :campo="$perfilCampo" />
+        @endif
     </div>
 
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">2. Registro do Atendimento</h2>
-        <x-form.input type="textarea" name="campos[registroDoAtendimento]" appearance="outlined" size="full"
-            wire:ignore :value="old('campos.registroDoAtendimento', $atendimento?->campos['registroDoAtendimento'] ?? '')" />
-    </div>
-
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">3. Encaminhamentos</h2>
-        <x-form.input type="textarea" name="campos[encaminhamentos]" appearance="outlined" size="full" wire:ignore
-            :value="old('campos.encaminhamentos', $atendimento?->campos['encaminhamentos'] ?? '')" />
-    </div>
-
-    <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
-        <h2 class="text-display-small">4. Observações adicionais</h2>
-        <x-form.input type="textarea" name="campos[observacoesAdicionais]" appearance="outlined" size="full"
-            wire:ignore :value="old('campos.observacoesAdicionais', $atendimento?->campos['observacoesAdicionais'] ?? '')" />
-    </div>
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::ATENDIMENTO_SEMANAL->value"
+        :template-id="$templateId" :registro="$atendimento" wire:key="campos-adicionais" />
 
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="atendimentos.index" />

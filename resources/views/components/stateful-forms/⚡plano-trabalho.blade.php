@@ -6,11 +6,19 @@ use Livewire\Attributes\On;
 use App\Models\Estudante;
 use App\Models\Disciplina;
 use App\Models\PlanoTrabalhoEstudante;
+use App\Models\TemplateFormulario;
+use App\Enums\TipoFormularioEnum;
+use App\Support\CamposTemplate;
 
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
 
+<<<<<<< HEAD
     public ?string $estudanteId = null;
+=======
+    public array|string|int|null $estudanteId = null;
+    public ?int $templateId = null;
+>>>>>>> forms
     public ?Estudante $estudante = null;
 
     public array $displayDisciplinas = [];
@@ -27,6 +35,10 @@ new class extends Component {
 
         $initialEstudanteId = old('estudante_id', $this->planoTrabalho?->estudante_id ?? $this->estudanteId);
         $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
+
+        $this->templateId = $this->planoTrabalho?->exists
+            ? $this->planoTrabalho->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::PLANO_TRABALHO)->id;
 
         if (filled($this->estudanteId)) {
             $this->estudante = Estudante::with('planosFlexibilizacaoCurricular')->find($this->estudanteId);
@@ -173,6 +185,13 @@ new class extends Component {
 
 @props(['planoTrabalho' => null])
 
+@php
+    $numeros = CamposTemplate::numeracao(
+        TipoFormularioEnum::PLANO_TRABALHO,
+        CamposTemplate::camposParaFormulario(TipoFormularioEnum::PLANO_TRABALHO, $templateId, $planoTrabalho)
+    );
+@endphp
+
 <form
     action="{{ !$planoTrabalho ? route('planos-trabalho.store') : route('planos-trabalho.update', ['planoTrabalho' => $planoTrabalho]) }}"
     method="POST">
@@ -226,22 +245,17 @@ new class extends Component {
             @endif
         </div>
 
-        <div wire:ignore>
-            <x-form.input label="Carga horária de atendimento (opcional)" name="campos[cargaHoraria]"
-                appearance="outlined" :value="old('campos.cargaHoraria', $planoTrabalho?->campos['cargaHoraria'] ?? '')" />
-            <x-form.input label="Local" name="campos[local]" appearance="outlined"
-                :value="old('campos.local', $planoTrabalho?->campos['local'] ?? '')" />
-        </div>
+        <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+            :template-id="$templateId" :registro="$planoTrabalho" secao="dadosEstudante" etapa="criacao"
+            wire:key="campos-dados-estudante" />
     </div>
 
-    <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:ignore>
-        <h2 class="text-display-small">2. Particularidades do estudante</h2>
-        <x-form.input type="textarea" name="campos[particularidadesEstudante]" appearance="outlined" size="full"
-            :value="old('campos.particularidadesEstudante', $planoTrabalho?->campos['particularidadesEstudante'] ?? '')" />
-    </div>
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="criacao"
+        wire:key="campos-criacao" />
 
     <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-        <h2 class="text-display-small">3. Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:</h2>
+        <h2 class="text-display-small">{{ CamposTemplate::titulo($numeros[CamposTemplate::CONTEUDOS], 'Conteúdos do componente curricular que necessitam de adaptação e/ou flexibilização:') }}</h2>
         <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5 border border-on-surface">
             @if (!$planoTrabalho)
                 <p class="text-label-large">
@@ -252,6 +266,13 @@ new class extends Component {
             @endif
         </div>
     </div>
+
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="livre" wire:key="campos-livres" />
+
+    <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::PLANO_TRABALHO->value"
+        :template-id="$templateId" :registro="$planoTrabalho" etapa="preenchimento" :apenas-definicoes="true"
+        wire:key="campos-definicoes-docente" />
 
     <input type="hidden" name="status" value="PENDENTE">
 

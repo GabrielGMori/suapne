@@ -9,18 +9,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Litvinjuan\LaravelCascadeSoftDeletes\CascadeSoftDeletes;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Enums\TipoFormularioEnum;
+use App\Models\Concerns\TemCamposAdicionais;
 
 use App\Models\Estudante;
 use App\Models\User;
 class AtendimentoSemanal extends Model implements Auditable
 {
     use HasFactory, SoftDeletes, CascadeSoftDeletes, AuditableTrait;
+    use TemCamposAdicionais;
+
+    public const TIPO_FORMULARIO = TipoFormularioEnum::ATENDIMENTO_SEMANAL;
 
     protected $table = 'atendimentos_semanais';
 
     protected $fillable = [
         'local',
         'campos',
+        'campos_extras',
+        'template_formulario_id',
         'data',
         'estudante_id',
         'user_id',
@@ -28,6 +35,7 @@ class AtendimentoSemanal extends Model implements Auditable
 
     protected $casts = [
         'campos' => 'array',
+        'campos_extras' => 'array',
         'data' => 'datetime',
     ];
 
@@ -39,6 +47,11 @@ class AtendimentoSemanal extends Model implements Auditable
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function templateFormulario(): BelongsTo
+    {
+        return $this->belongsTo(TemplateFormulario::class);
     }
 
     public function getNomeAttribute() : string

@@ -27,7 +27,7 @@ class EntrevistaFamiliarController extends Controller
     {
         abort_unless($request->user()->can('create', EntrevistaFamiliar::class), 404);
 
-        EntrevistaFamiliar::create($request->validated());
+        EntrevistaFamiliar::create($request->dadosValidados());
 
         return redirect()->route('estudantes.show', ['estudante' => $estudante])->with('status', 'Entrevista familiar cadastrada com sucesso!');
     }
@@ -53,7 +53,7 @@ class EntrevistaFamiliarController extends Controller
     {
         abort_unless($request->user()->can('update', $entrevistaFamiliar), 404);
 
-        $entrevistaFamiliar->update($request->validated());
+        $entrevistaFamiliar->update($request->dadosValidados());
 
         return redirect()->route('estudantes.show', [
             'estudante' => $estudante,

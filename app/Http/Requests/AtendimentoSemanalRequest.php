@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TipoFormularioEnum;
 use App\Models\AtendimentoSemanal;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AtendimentoSemanalRequest extends FormRequest
 {
+    use ComCamposAdicionais;
+
     public function authorize(): bool
     {
         return $this->user()->can('create',AtendimentoSemanal::class);
@@ -19,23 +22,31 @@ class AtendimentoSemanalRequest extends FormRequest
         $this->merge([
             'user_id' => Auth::id(),
         ]);
+        $this->definirTemplate(TipoFormularioEnum::ATENDIMENTO_SEMANAL, $this->route('atendimento'));
+        $this->prepararCampos();
     }
 
     public function rules(): array
     {
-        $atendimento = $this->route('atendimentos');
+        $registro = $this->route('atendimento');
 
         return [
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'estudante_id' => ['required', 'integer', 'exists:estudantes,id'],
             'local' => ['required', 'string', 'max:100'],
             'data' => ['required', 'date'],
-            'campos' => ['required', 'array'],
+            'template_formulario_id' => ['nullable', 'integer', 'exists:templates_formulario,id'],
 
-            'campos.perfilDoEstudante' => ['required','string'],
-            'campos.registroDoAtendimento' => ['required','string'],
-            'campos.encaminhamentos' => ['required','string'],
-            'campos.observacoesAdicionais' => ['nullable','string']
+            ...$this->regrasCamposAdicionais($this->chavesPermitidasPara(
+                TipoFormularioEnum::ATENDIMENTO_SEMANAL,
+                $registro instanceof AtendimentoSemanal ? $registro : null,
+                $this->input('template_formulario_id'),
+            )),
         ];
+    }
+
+    public function attributes(): array
+    {
+        return $this->rotulosCamposAdicionais();
     }
 }

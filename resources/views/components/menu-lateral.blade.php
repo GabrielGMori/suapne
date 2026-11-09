@@ -43,9 +43,15 @@
 
     $courseItems = [];
 
+<<<<<<< HEAD
     // if ($user->can('viewAny', App\Models\Disciplina::class)) {
     //     $courseItems[] = ['label' => 'Templates', 'href' => route('dashboard.index'), 'icon' => 'design_services'];
     // }
+=======
+    if ($user->can('viewAny', App\Models\TemplateFormulario::class)) {
+        $courseItems[] = ['label' => 'Templates', 'href' => route('templates.index'), 'icon' => 'design_services'];
+    }
+>>>>>>> forms
     
     if ($user->can('viewAny', App\Models\Curso::class)) {
         $courseItems[] = ['label' => 'Cursos', 'href' => route('cursos.index'), 'icon' => 'backpack'];

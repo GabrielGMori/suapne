@@ -37,41 +37,15 @@
             </td>
         </tr>
 
-        <tr>
-            <td>
-                <b>Perfil do estudante:</b><br>
-                <span class="textarea">{{ $atendimento->campos['perfilDoEstudante'] ?? '---' }}</span>
-            </td>
-        </tr>
+        @if ($atendimento->temCampo('perfilDoEstudante'))
+            <tr>
+                <td>
+                    <b>Perfil do estudante:</b><br>
+                    <span class="textarea">{{ $atendimento->campos['perfilDoEstudante'] ?? '---' }}</span>
+                </td>
+            </tr>
+        @endif
     </table>
 
-    <table class="table">
-        <tr>
-            <td class="bold">2. Registro do atendimento</td>
-        </tr>
-
-        <tr>
-            <td class="textarea">{{ $atendimento->campos['registroDoAtendimento'] ?? '---' }}</td>
-        </tr>
-    </table>
-
-    <table class="table">
-        <tr>
-            <td class="bold">3. Encaminhamentos</td>
-        </tr>
-
-        <tr>
-            <td class="textarea">{{ $atendimento->campos['encaminhamentos'] ?? '---' }}</td>
-        </tr>
-    </table>
-
-    <table class="table">
-        <tr>
-            <td class="bold">4. Observações Adicionais</td>
-        </tr>
-
-        <tr>
-            <td class="textarea">{{ $atendimento->campos['observacoesAdicionais'] ?? '---' }}</td>
-        </tr>
-    </table>
+    <x-campos-adicionais-pdf :registro="$atendimento" />
 </x-layouts.pdf>

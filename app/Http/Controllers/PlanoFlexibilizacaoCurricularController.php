@@ -31,7 +31,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     {
         abort_unless($request->user()->can('create', PlanoFlexibilizacaoCurricular::class), 404);
 
-        PlanoFlexibilizacaoCurricular::create($request->validated());
+        PlanoFlexibilizacaoCurricular::create($request->dadosValidados());
 
         return redirect()->route('planos-flexibilizacao.index')->with('status', 'Plano de Flexibilização cadastrado com sucesso!');
     }
@@ -52,7 +52,7 @@ class PlanoFlexibilizacaoCurricularController extends Controller
     public function update(PlanoFlexibilizacaoCurricularRequest $request, PlanoFlexibilizacaoCurricular $planoFlexibilizacao): RedirectResponse
     {
         abort_unless($request->user()->can('update', $planoFlexibilizacao), 404);
-        $planoFlexibilizacao->update($request->validated());
+        $planoFlexibilizacao->update($request->dadosValidados());
 
         return redirect()->route('planos-flexibilizacao.index', ['planoFlexibilizacao' => $planoFlexibilizacao])->with('status', 'Plano de Flexibilização atualizado com sucesso!');
     }

@@ -3,17 +3,28 @@
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use App\Enums\TipoFormularioEnum;
+use App\Livewire\Concerns\GerenciaCamposAdicionais;
 use App\Models\Estudante;
 use App\Models\Disciplina;
 use App\Models\PlanoFlexibilizacaoCurricular;
+use App\Models\TemplateFormulario;
 
 new class extends Component {
+    use GerenciaCamposAdicionais;
+
     public ?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null;
 
+<<<<<<< HEAD
     // Bound to a single <livewire:form.select>, which emits ?string.
     public ?string $estudanteId = null;
 
     // Bound to a multiselect, which emits array<string>.
+=======
+    public array|string|int|null $estudanteId = null;
+    public ?int $templateId = null;
+    public array $displayDisciplinas = [];
+>>>>>>> forms
     public array $selectedDisciplinas = [];
 
     public array $displayDisciplinas = [];
@@ -26,8 +37,16 @@ new class extends Component {
         $initialEstudanteId = old('estudante_id', $planoFlexibilizacao?->estudante_id ?? $estudanteId);
         $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
 
+<<<<<<< HEAD
         $initialDisciplinas = old('campos.componentesCurriculares', $planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
         $this->selectedDisciplinas = array_map('strval', (array) $initialDisciplinas);
+=======
+        $this->templateId = $this->planoFlexibilizacao?->exists
+            ? $this->planoFlexibilizacao->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::PLANO_FLEXIBILIZACAO)->id;
+
+        $this->selectedDisciplinas = old('campos.componentesCurriculares', $this->planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
+>>>>>>> forms
 
         $this->loadDisciplinas();
     }
@@ -75,6 +94,25 @@ new class extends Component {
             ->toArray();
     }
 
+<<<<<<< HEAD
+=======
+    private function getScalarEstudanteId(mixed $value = null): ?string
+    {
+        $val = $value ?? $this->estudanteId;
+
+        if (is_array($val)) {
+            $val = reset($val) ?: null;
+        }
+
+        return filled($val) ? (string) $val : null;
+    }
+
+    protected function contextoCampos(): array
+    {
+        return [TipoFormularioEnum::PLANO_FLEXIBILIZACAO, $this->templateId, $this->planoFlexibilizacao];
+    }
+
+>>>>>>> forms
     #[Computed]
     public function estudanteOptions(): array
     {
@@ -85,7 +123,7 @@ new class extends Component {
             ->get()
             ->mapWithKeys(function ($estudante) {
                 $semPlano = $estudante->planosFlexibilizacaoCurricular->isEmpty();
-                $label = $estudante->nome . ($semPlano ? ' (Sem plano!)' : '');
+                $label = $estudante->nome . ($semPlano ? ' (Sem plano)' : '');
                 return [(string) $estudante->id => $label];
             })
             ->toArray();
@@ -93,6 +131,16 @@ new class extends Component {
 };
 ?>
 
+<<<<<<< HEAD
+=======
+@props(['planoFlexibilizacao' => null])
+
+@php
+    $tipo = App\Enums\TipoFormularioEnum::PLANO_FLEXIBILIZACAO->value;
+    $componentesCampo = $this->campoDoFormulario('componentesCurriculares');
+@endphp
+
+>>>>>>> forms
 <form
     action="{{ $planoFlexibilizacao ? route('planos-flexibilizacao.update', $planoFlexibilizacao) : route('planos-flexibilizacao.store') }}"
     method="POST">
@@ -117,85 +165,29 @@ new class extends Component {
                 :options="$this->estudanteOptions" />
         </div>
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">2. Histórico de ações pedagógicas já realizadas e justificativa de
-                implementação da flexibilização curricular</h2>
-            <h3 class="text-body-large text-secondary-accent">(Registrar todas as ações pedagógicas e tentativas de
-                adaptações realizadas até o momento)</h3>
-            <x-form.input type="textarea" name="campos[acoesPedagogicas]" appearance="outlined" size="full"
-                wire:ignore :value="old('campos.acoesPedagogicas', $planoFlexibilizacao?->campos['acoesPedagogicas'] ?? '')" />
-        </div>
+        <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$planoFlexibilizacao"
+            ate="componentesCurriculares" wire:key="campos-antes" />
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">3. Atendimento multiprofissional</h2>
-            <h3 class="text-body-large text-secondary-accent">Profissionais, instituições ou serviços (internos ou
-                externos ao IFPR) que fazem o acompanhamento do estudante</h3>
-            <x-form.input type="textarea" name="campos[atendimentoMultiprofissional]" appearance="outlined"
-                size="full" wire:ignore :value="old(
-                    'campos.atendimentoMultiprofissional',
-                    $planoFlexibilizacao?->campos['atendimentoMultiprofissional'] ?? '',
-                )" />
-        </div>
+        @if ($componentesCampo)
+            <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="componentes-curriculares">
+                <h2 class="text-display-small">{{ App\Support\CamposTemplate::titulo($this->numeroDoCampo('componentesCurriculares'), $componentesCampo['rotulo']) }}</h2>
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">4. Flexibilização Curricular, visando a implementação de 1 (uma) ou mais
-                possibilidades</h2>
+                <div class="flex items-center gap-5">
+                    <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
+                        appearance="outlined" name="campos[componentesCurriculares]" size="xlarge"
+                        wire:key="disciplinas-select" wire:model.live="selectedDisciplinas" :options="$displayDisciplinas" />
 
-            <livewire:form.select wire:key="diferenciacao-curricular-select"
-                label="I - Diferenciação dos conteúdos previstos na ementa do componente curricular e que sejam registrados no PTE"
-                name="campos[diferenciacaoCurricular]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']" :value="old(
-                    'campos.diferenciacaoCurricular',
-                    $planoFlexibilizacao?->campos['diferenciacaoCurricular'] ?? '',
-                )" />
+                    <livewire:modal.stateful.add-disciplina wire:key="add-disciplina-modal" />
 
-            <livewire:form.select wire:key="atendimento-individualizado-select"
-                label="II - Atendimento educacional individualizado realizado pelo professor do componente curricular"
-                name="campos[atendimentoIndividualizado]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']" :value="old(
-                    'campos.atendimentoIndividualizado',
-                    $planoFlexibilizacao?->campos['atendimentoIndividualizado'] ?? '',
-                )" />
-
-            <livewire:form.select wire:key="alteracao-prazo-select"
-                label="III - Dilação ou redução do prazo para a conclusão do curso" name="campos[alteracaoPrazo]"
-                appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']" :value="old('campos.alteracaoPrazo', $planoFlexibilizacao?->campos['alteracaoPrazo'] ?? '')" />
-
-            <livewire:form.select wire:key="reorganizacao-curricular-select"
-                label="IV - Reorganização e/ou equivalência de componente curricular"
-                name="campos[reorganizacaoCurricular]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']" :value="old(
-                    'campos.reorganizacaoCurricular',
-                    $planoFlexibilizacao?->campos['reorganizacaoCurricular'] ?? '',
-                )" />
-
-            <livewire:form.select wire:key="criterios-diferenciados-select"
-                label="V - Definição de critérios diferenciados e adequados de avaliação, considerando as singularidades e especificidades dos estudantes."
-                name="campos[criteriosDiferenciados]" appearance="outlined" :options="['Sim' => 'Sim', 'Não' => 'Não']" :value="old(
-                    'campos.criteriosDiferenciados',
-                    $planoFlexibilizacao?->campos['criteriosDiferenciados'] ?? '',
-                )" />
-        </div>
-
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">5. Componentes curriculares a serem flexibilizados</h2>
-            <div class="flex items-center gap-5">
-                <livewire:form.select type="multiselect" label="Componentes curriculares" placeholder="Selecionar"
-                    appearance="outlined" name="campos[componentesCurriculares]" size="xlarge"
-                    wire:key="disciplinas-select" wire:model.live="selectedDisciplinas" :options="$displayDisciplinas" />
-
-                <livewire:modal.stateful.add-disciplina wire:key="add-disciplina-modal" />
-
-                <x-button type="button" size="dynamic" label="Selecionar todos do curso do estudante selecionado"
-                    color="secondary" wire:click="selecionarDisciplinasDoCurso" />
+                    <x-button type="button" size="dynamic" label="Selecionar todos do curso do estudante selecionado"
+                        color="secondary" wire:click="selecionarDisciplinasDoCurso" />
+                </div>
             </div>
-        </div>
+            <x-campo-extra-hidden :campo="$componentesCampo" />
+        @endif
 
-        <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5">
-            <h2 class="text-display-small">6. Informações adicionais</h2>
-            <x-form.input type="textarea" name="campos[informacoesAdicionais]" appearance="outlined" size="full"
-                wire:ignore :value="old(
-                    'campos.informacoesAdicionais',
-                    $planoFlexibilizacao?->campos['informacoesAdicionais'] ?? '',
-                )" />
-        </div>
+        <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$planoFlexibilizacao"
+            depois="componentesCurriculares" wire:key="campos-depois" />
 
         <div class="flex justify-end gap-2">
             <x-button.cancel fallback="planos-flexibilizacao.index" />

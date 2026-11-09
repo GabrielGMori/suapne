@@ -29,7 +29,7 @@ class AtendimentoSemanalController extends Controller
     {
         abort_unless($request->user()->can('create', AtendimentoSemanal::class), 404);
 
-        AtendimentoSemanal::create($request->validated());
+        AtendimentoSemanal::create($request->dadosValidados());
         return redirect()->route('atendimentos.index')->with('status','Atendimento semanal cadastrado com sucesso!');
     }
 
@@ -49,7 +49,7 @@ class AtendimentoSemanalController extends Controller
     public function update(AtendimentoSemanalRequest $request, AtendimentoSemanal $atendimento)
     {
         abort_unless($request->user()->can('update', $atendimento), 404);
-        $atendimento->update($request->validated());
+        $atendimento->update($request->dadosValidados());
         return redirect()->route('atendimentos.index')->with('status','Atendimento semanal editado com sucesso!');
     }
 
