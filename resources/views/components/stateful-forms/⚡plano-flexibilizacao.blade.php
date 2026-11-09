@@ -80,7 +80,7 @@ new class extends Component {
     {
         $currentYear = now()->year;
 
-        return Estudante::with(['planosFlexibilizacaoCurricular' => fn($q) => $q->where('ano', $currentYear)])
+        return Estudante::with(['planosFlexibilizacaoCurricular' => fn($q) => $q->whereYear('periodo_inicio', $currentYear)])
             ->orderBy('nome')
             ->get()
             ->mapWithKeys(function ($estudante) {
