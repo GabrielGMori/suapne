@@ -12,27 +12,17 @@ new class extends Component {
     use GerenciaCamposAdicionais;
 
     public ?AtendimentoSemanal $atendimento = null;
-
-<<<<<<< HEAD
     public ?string $estudanteId = null;
-=======
-    public array|string|int|null $estudanteId = null;
     public ?int $templateId = null;
->>>>>>> forms
+
     public ?string $perfil = '';
 
     public function mount(?AtendimentoSemanal $atendimento = null, mixed $estudanteId = null): void
     {
         $this->atendimento = $atendimento;
 
-<<<<<<< HEAD
-        // Priority order: old input > model attribute > passed prop
-        $initialEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
-        $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
-=======
         $rawEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
         $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
->>>>>>> forms
 
         $this->templateId = $this->atendimento?->exists
             ? $this->atendimento->template_formulario_id
@@ -73,8 +63,6 @@ new class extends Component {
         $this->perfil = $ultimoAtendimento?->campos['perfilDoEstudante'] ?? '';
     }
 
-<<<<<<< HEAD
-=======
     private function getScalarEstudanteId(mixed $value = null): ?string
     {
         $val = $value ?? $this->estudanteId;
@@ -91,7 +79,6 @@ new class extends Component {
         return [TipoFormularioEnum::ATENDIMENTO_SEMANAL, $this->templateId, $this->atendimento];
     }
 
->>>>>>> forms
     #[Computed]
     public function estudanteOptions(): array
     {

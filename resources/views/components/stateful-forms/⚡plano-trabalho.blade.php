@@ -13,12 +13,8 @@ use App\Support\CamposTemplate;
 new class extends Component {
     public ?PlanoTrabalhoEstudante $planoTrabalho = null;
 
-<<<<<<< HEAD
     public ?string $estudanteId = null;
-=======
-    public array|string|int|null $estudanteId = null;
     public ?int $templateId = null;
->>>>>>> forms
     public ?Estudante $estudante = null;
 
     public array $displayDisciplinas = [];

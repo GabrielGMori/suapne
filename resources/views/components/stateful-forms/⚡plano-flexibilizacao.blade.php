@@ -15,19 +15,10 @@ new class extends Component {
 
     public ?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null;
 
-<<<<<<< HEAD
-    // Bound to a single <livewire:form.select>, which emits ?string.
     public ?string $estudanteId = null;
-
-    // Bound to a multiselect, which emits array<string>.
-=======
-    public array|string|int|null $estudanteId = null;
     public ?int $templateId = null;
     public array $displayDisciplinas = [];
->>>>>>> forms
     public array $selectedDisciplinas = [];
-
-    public array $displayDisciplinas = [];
 
     public function mount(?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null, mixed $estudanteId = null): void
     {
@@ -37,16 +28,11 @@ new class extends Component {
         $initialEstudanteId = old('estudante_id', $planoFlexibilizacao?->estudante_id ?? $estudanteId);
         $this->estudanteId = filled($initialEstudanteId) ? (string) $initialEstudanteId : null;
 
-<<<<<<< HEAD
-        $initialDisciplinas = old('campos.componentesCurriculares', $planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
-        $this->selectedDisciplinas = array_map('strval', (array) $initialDisciplinas);
-=======
         $this->templateId = $this->planoFlexibilizacao?->exists
             ? $this->planoFlexibilizacao->template_formulario_id
             : TemplateFormulario::ativoDe(TipoFormularioEnum::PLANO_FLEXIBILIZACAO)->id;
 
         $this->selectedDisciplinas = old('campos.componentesCurriculares', $this->planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
->>>>>>> forms
 
         $this->loadDisciplinas();
     }
@@ -94,8 +80,6 @@ new class extends Component {
             ->toArray();
     }
 
-<<<<<<< HEAD
-=======
     private function getScalarEstudanteId(mixed $value = null): ?string
     {
         $val = $value ?? $this->estudanteId;
@@ -112,7 +96,6 @@ new class extends Component {
         return [TipoFormularioEnum::PLANO_FLEXIBILIZACAO, $this->templateId, $this->planoFlexibilizacao];
     }
 
->>>>>>> forms
     #[Computed]
     public function estudanteOptions(): array
     {
@@ -131,8 +114,6 @@ new class extends Component {
 };
 ?>
 
-<<<<<<< HEAD
-=======
 @props(['planoFlexibilizacao' => null])
 
 @php
@@ -140,7 +121,6 @@ new class extends Component {
     $componentesCampo = $this->campoDoFormulario('componentesCurriculares');
 @endphp
 
->>>>>>> forms
 <form
     action="{{ $planoFlexibilizacao ? route('planos-flexibilizacao.update', $planoFlexibilizacao) : route('planos-flexibilizacao.store') }}"
     method="POST">
