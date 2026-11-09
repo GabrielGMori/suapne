@@ -11,5 +11,6 @@ Route::controller(TemplateFormularioController::class)->name('templates.')->pref
     Route::post('/{tipo}', 'store')->name('store');
     Route::get('/{templateFormulario}/editar', 'edit')->name('edit');
     Route::patch('/{templateFormulario}', 'update')->name('update');
+    Route::patch('/{templateFormulario}/ativar', 'ativar')->name('ativar');
     Route::delete('/{templateFormulario}', 'destroy')->name('destroy');
 });

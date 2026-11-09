@@ -22,6 +22,7 @@ class PlanoFlexibilizacaoCurricularRequest extends FormRequest
         $this->merge([
             'user_id' => Auth::id(),
         ]);
+        $this->definirTemplate(TipoFormularioEnum::PLANO_FLEXIBILIZACAO, $this->route('planoFlexibilizacao'));
         $this->prepararCampos();
     }
 

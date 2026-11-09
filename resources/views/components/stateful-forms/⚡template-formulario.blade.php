@@ -73,6 +73,11 @@ new class extends Component {
         $this->campos = array_values($this->campos);
     }
 
+    public function removerTodos(): void
+    {
+        $this->campos = array_values(array_filter($this->campos, fn($campo) => $campo['fixo'] ?? false));
+    }
+
     public function reordenar(array $ordem): void
     {
         $novos = [];
@@ -153,9 +158,25 @@ new class extends Component {
     <div class="flex flex-col bg-surface rounded-lg gap-5 p-5 mb-5">
         <div class="flex flex-wrap justify-between items-center gap-3">
             <h2 class="text-display-small">Campos do formulário</h2>
-            <p class="text-body-small text-secondary-accent">
-                Arraste os campos ou as seções para mudar a ordem
-            </p>
+            <div class="flex flex-wrap items-center gap-3">
+                <p class="text-body-small text-secondary-accent">
+                    Arraste os campos ou as seções para mudar a ordem
+                </p>
+
+                @if (collect($campos)->contains(fn($campo) => !($campo['fixo'] ?? false)))
+                    <x-modal title="Remover todos os campos" label="Remover todos os campos" icon="delete" color="red" size="dynamic">
+                        <p class="mb-5 text-body-large">
+                            Tem certeza que deseja remover todos os campos?<br>
+                            Os campos com cadeado não podem ser removidos e continuam no template.
+                        </p>
+
+                        <div class="flex justify-end gap-3 mb-2">
+                            <x-button label="Cancelar" color="secondary" x-on:click="show=false" />
+                            <x-button label="Confirmar" color="red" wire:click="removerTodos" x-on:click="show=false" />
+                        </div>
+                    </x-modal>
+                @endif
+            </div>
         </div>
         <hr class="text-on-surface">
 

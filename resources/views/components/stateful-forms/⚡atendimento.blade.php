@@ -14,7 +14,7 @@ new class extends Component {
     public ?AtendimentoSemanal $atendimento = null;
 
     public array|string|int|null $estudanteId = null;
-    public array|string|int|null $templateId = null;
+    public ?int $templateId = null;
     public ?string $perfil = '';
 
     public function mount(?AtendimentoSemanal $atendimento = null, mixed $estudanteId = null): void
@@ -24,7 +24,9 @@ new class extends Component {
         $rawEstudanteId = old('estudante_id', $this->atendimento?->estudante_id ?? $estudanteId);
         $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
 
-        $this->templateId = $this->escalar(old('template_formulario_id', $this->atendimento?->template_formulario_id));
+        $this->templateId = $this->atendimento?->exists
+            ? $this->atendimento->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::ATENDIMENTO_SEMANAL)->id;
 
         $oldPerfil = old('campos.perfilDoEstudante');
 
@@ -41,12 +43,6 @@ new class extends Component {
     {
         $id = $this->getScalarEstudanteId($value);
         $this->loadPerfilForEstudante($id);
-        unset($this->camposDoFormulario);
-    }
-
-    public function updatedTemplateId(): void
-    {
-        unset($this->camposDoFormulario);
     }
 
     private function loadPerfilForEstudante(?string $id): void
@@ -72,23 +68,16 @@ new class extends Component {
     {
         $val = $value ?? $this->estudanteId;
 
-        return $this->escalar($val);
-    }
-
-    private function escalar(mixed $valor): ?string
-    {
-        if (is_array($valor)) {
-            $valor = reset($valor) ?: null;
+        if (is_array($val)) {
+            $val = reset($val) ?: null;
         }
 
-        return filled($valor) ? (string) $valor : null;
+        return filled($val) ? (string) $val : null;
     }
 
     protected function contextoCampos(): array
     {
-        $id = $this->escalar($this->templateId);
-
-        return [TipoFormularioEnum::ATENDIMENTO_SEMANAL, $id ? (int) $id : null, $this->atendimento];
+        return [TipoFormularioEnum::ATENDIMENTO_SEMANAL, $this->templateId, $this->atendimento];
     }
 
     #[Computed]
@@ -96,19 +85,12 @@ new class extends Component {
     {
         return Estudante::orderBy('nome')->pluck('nome', 'id')->toArray();
     }
-
-    #[Computed]
-    public function templateOptions(): array
-    {
-        return TemplateFormulario::opcoesDe(TipoFormularioEnum::ATENDIMENTO_SEMANAL);
-    }
 };
 ?>
 
 @props(['atendimento' => null])
 
 @php
-    $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
     $perfilCampo = $this->campoDoFormulario('perfilDoEstudante');
 @endphp
 
@@ -125,10 +107,6 @@ new class extends Component {
         <livewire:form.select label="Estudante" name="estudante_id" appearance="outlined" placeholder="Selecionar"
             wire:key="estudante-select-{{ $atendimento?->id ?? 'new' }}" wire:model.live="estudanteId"
             :options="$this->estudanteOptions" />
-
-        <livewire:form.select label="Template do formulário" name="template_formulario_id" appearance="outlined"
-            placeholder="Template padrão" wire:key="template-select-{{ $atendimento?->id ?? 'new' }}"
-            wire:model.live="templateId" :options="$this->templateOptions" />
 
         <x-form.input label="Local" appearance="outlined" size="small" name="local" wire:ignore
             :value="old('local', $atendimento?->local ?? '')" />
@@ -148,7 +126,7 @@ new class extends Component {
     </div>
 
     <livewire:stateful-forms.campos-adicionais :tipo="App\Enums\TipoFormularioEnum::ATENDIMENTO_SEMANAL->value"
-        :template-id="$templateId" :registro="$atendimento" wire:key="campos-adicionais-{{ $idTemplate ?? 'padrao' }}" />
+        :template-id="$templateId" :registro="$atendimento" wire:key="campos-adicionais" />
 
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="atendimentos.index" />

@@ -43,7 +43,7 @@
             <h2 class="text-display-small">Dados do template</h2>
             @if ($template->padrao)
                 <span class="flex items-center text-secondary-accent"
-                    title="Template usado quando nenhum outro é escolhido. Não pode ser alterado nem excluído.">
+                    title="Template criado pelo sistema. Não pode ser alterado nem excluído.">
                     <x-icon size="20">lock</x-icon>
                 </span>
             @endif

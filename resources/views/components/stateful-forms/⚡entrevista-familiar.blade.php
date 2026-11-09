@@ -1,7 +1,6 @@
 <?php
 
 use Livewire\Component;
-use Livewire\Attributes\Computed;
 use App\Enums\TipoFormularioEnum;
 use App\Models\EntrevistaFamiliar;
 use App\Models\Estudante;
@@ -11,14 +10,16 @@ new class extends Component {
     public ?EntrevistaFamiliar $entrevistaFamiliar = null;
     public ?Estudante $estudante = null;
 
-    public array|string|int|null $templateId = null;
+    public ?int $templateId = null;
 
     public function mount(?EntrevistaFamiliar $entrevistaFamiliar = null, ?Estudante $estudante = null): void
     {
         $this->entrevistaFamiliar = $entrevistaFamiliar?->exists ? $entrevistaFamiliar : null;
         $this->estudante = $estudante;
 
-        $this->templateId = old('template_formulario_id', $this->entrevistaFamiliar?->template_formulario_id);
+        $this->templateId = $this->entrevistaFamiliar
+            ? $this->entrevistaFamiliar->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::ENTREVISTA_FAMILIAR)->id;
     }
 
     public function valoresIniciais(): array
@@ -40,19 +41,12 @@ new class extends Component {
             'anoPeriodo' => $this->estudante?->periodo,
         ];
     }
-
-    #[Computed]
-    public function templateOptions(): array
-    {
-        return TemplateFormulario::opcoesDe(TipoFormularioEnum::ENTREVISTA_FAMILIAR);
-    }
 };
 ?>
 
 @props(['entrevistaFamiliar' => null, 'estudante' => null])
 
 @php
-    $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
     $tipo = App\Enums\TipoFormularioEnum::ENTREVISTA_FAMILIAR->value;
     $valoresIniciais = $this->valoresIniciais();
 @endphp
@@ -70,18 +64,14 @@ new class extends Component {
             <x-form.input label="Responsável pelo preenchimento" appearance="outlined" size="large" wire:ignore
                 name="responsavel_preenchimento" :value="old('responsavel_preenchimento', $entrevistaFamiliar?->responsavel_preenchimento ?? '')" required />
 
-            <livewire:form.select label="Template do formulário" name="template_formulario_id" appearance="outlined"
-                size="large" placeholder="Template padrão" wire:key="template-select-{{ $entrevistaFamiliar?->id ?? 'new' }}"
-                wire:model.live="templateId" :options="$this->templateOptions" />
-
             <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$entrevistaFamiliar"
                 :valores="$valoresIniciais" secao="dadosEstudante" :secoes="true"
-                wire:key="campos-identificacao-{{ $idTemplate ?? 'padrao' }}" />
+                wire:key="campos-identificacao" />
         </div>
     </x-secao-expansivel>
 
     <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$entrevistaFamiliar"
-        :valores="$valoresIniciais" :secoes="true" wire:key="campos-secoes-{{ $idTemplate ?? 'padrao' }}" />
+        :valores="$valoresIniciais" :secoes="true" wire:key="campos-secoes" />
 
     <div class="flex justify-end gap-2">
         <x-button.cancel fallback="estudantes.show" :args="['estudante' => $estudante]" />

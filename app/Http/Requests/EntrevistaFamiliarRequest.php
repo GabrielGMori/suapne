@@ -30,6 +30,7 @@ class EntrevistaFamiliarRequest extends FormRequest
             'user_id' => Auth::id(),
             'estudante_id' => $estudante instanceof Estudante ? $estudante->id : $estudante,
         ]);
+        $this->definirTemplate(TipoFormularioEnum::ENTREVISTA_FAMILIAR, $this->route('entrevistaFamiliar'));
         $this->prepararCampos();
     }
 

@@ -22,6 +22,7 @@ class AtendimentoSemanalRequest extends FormRequest
         $this->merge([
             'user_id' => Auth::id(),
         ]);
+        $this->definirTemplate(TipoFormularioEnum::ATENDIMENTO_SEMANAL, $this->route('atendimento'));
         $this->prepararCampos();
     }
 

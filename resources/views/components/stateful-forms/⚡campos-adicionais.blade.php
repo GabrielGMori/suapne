@@ -8,7 +8,7 @@ use Livewire\Component;
 
 new class extends Component {
     public string $tipo;
-    public array|string|int|null $templateId = null;
+    public ?int $templateId = null;
     public ?Model $registro = null;
 
     public string $secao = '';
@@ -30,7 +30,7 @@ new class extends Component {
     {
         return CamposTemplate::camposParaFormulario(
             TipoFormularioEnum::from($this->tipo),
-            $this->templateIdInt(),
+            $this->templateId,
             $this->registro,
             $this->valores,
         );
@@ -52,13 +52,6 @@ new class extends Component {
     public function itens(): array
     {
         return CamposTemplate::agrupar(array_values(array_filter($this->campos, fn($campo) => $campo['tipo'] !== 'especial')));
-    }
-
-    public function templateIdInt(): ?int
-    {
-        $id = is_array($this->templateId) ? (reset($this->templateId) ?: null) : $this->templateId;
-
-        return filled($id) ? (int) $id : null;
     }
 };
 ?>

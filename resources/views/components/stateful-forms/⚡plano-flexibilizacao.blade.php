@@ -16,7 +16,7 @@ new class extends Component {
     public ?PlanoFlexibilizacaoCurricular $planoFlexibilizacao = null;
 
     public array|string|int|null $estudanteId = null;
-    public array|string|int|null $templateId = null;
+    public ?int $templateId = null;
     public array $displayDisciplinas = [];
     public array $selectedDisciplinas = [];
 
@@ -27,7 +27,9 @@ new class extends Component {
         $rawEstudanteId = old('estudante_id', $this->planoFlexibilizacao?->estudante_id ?? $estudanteId);
         $this->estudanteId = $this->getScalarEstudanteId($rawEstudanteId);
 
-        $this->templateId = $this->escalar(old('template_formulario_id', $this->planoFlexibilizacao?->template_formulario_id));
+        $this->templateId = $this->planoFlexibilizacao?->exists
+            ? $this->planoFlexibilizacao->template_formulario_id
+            : TemplateFormulario::ativoDe(TipoFormularioEnum::PLANO_FLEXIBILIZACAO)->id;
 
         $this->selectedDisciplinas = old('campos.componentesCurriculares', $this->planoFlexibilizacao?->campos['componentesCurriculares'] ?? []);
 
@@ -37,13 +39,7 @@ new class extends Component {
     public function updatedEstudanteId($value): void
     {
         $this->estudanteId = $this->getScalarEstudanteId($value);
-        unset($this->camposDoFormulario);
         // Do NOT clear $this->selectedDisciplinas here so selections persist
-    }
-
-    public function updatedTemplateId(): void
-    {
-        unset($this->camposDoFormulario);
     }
 
     #[On('disciplina-created')]
@@ -95,23 +91,18 @@ new class extends Component {
 
     private function getScalarEstudanteId(mixed $value = null): ?string
     {
-        return $this->escalar($value ?? $this->estudanteId);
-    }
+        $val = $value ?? $this->estudanteId;
 
-    private function escalar(mixed $valor): ?string
-    {
-        if (is_array($valor)) {
-            $valor = reset($valor) ?: null;
+        if (is_array($val)) {
+            $val = reset($val) ?: null;
         }
 
-        return filled($valor) ? (string) $valor : null;
+        return filled($val) ? (string) $val : null;
     }
 
     protected function contextoCampos(): array
     {
-        $id = $this->escalar($this->templateId);
-
-        return [TipoFormularioEnum::PLANO_FLEXIBILIZACAO, $id ? (int) $id : null, $this->planoFlexibilizacao];
+        return [TipoFormularioEnum::PLANO_FLEXIBILIZACAO, $this->templateId, $this->planoFlexibilizacao];
     }
 
     #[Computed]
@@ -124,16 +115,10 @@ new class extends Component {
             ->get()
             ->mapWithKeys(function ($estudante) {
                 $semPlano = $estudante->planosFlexibilizacaoCurricular->isEmpty();
-                $label = $estudante->nome . ($semPlano ? ' (Sem plano!)' : '');
+                $label = $estudante->nome . ($semPlano ? ' (Sem plano)' : '');
                 return [(string) $estudante->id => $label];
             })
             ->toArray();
-    }
-
-    #[Computed]
-    public function templateOptions(): array
-    {
-        return TemplateFormulario::opcoesDe(TipoFormularioEnum::PLANO_FLEXIBILIZACAO);
     }
 };
 ?>
@@ -141,7 +126,6 @@ new class extends Component {
 @props(['planoFlexibilizacao' => null])
 
 @php
-    $idTemplate = is_array($templateId) ? (reset($templateId) ?: null) : $templateId;
     $tipo = App\Enums\TipoFormularioEnum::PLANO_FLEXIBILIZACAO->value;
     $componentesCampo = $this->campoDoFormulario('componentesCurriculares');
 @endphp
@@ -168,15 +152,10 @@ new class extends Component {
                 size="large" placeholder="Selecionar"
                 wire:key="estudante-select-{{ $planoFlexibilizacao?->id ?? 'new' }}" wire:model.live="estudanteId"
                 :options="$this->estudanteOptions" />
-
-            <livewire:form.select label="Template do formulário" name="template_formulario_id" appearance="outlined"
-                size="large" placeholder="Template padrão"
-                wire:key="template-select-{{ $planoFlexibilizacao?->id ?? 'new' }}" wire:model.live="templateId"
-                :options="$this->templateOptions" />
         </div>
 
         <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$planoFlexibilizacao"
-            ate="componentesCurriculares" wire:key="campos-antes-{{ $idTemplate ?? 'padrao' }}" />
+            ate="componentesCurriculares" wire:key="campos-antes" />
 
         @if ($componentesCampo)
             <div class="flex flex-col bg-surface rounded-lg gap-5 mb-5 p-5" wire:key="componentes-curriculares">
@@ -197,7 +176,7 @@ new class extends Component {
         @endif
 
         <livewire:stateful-forms.campos-adicionais :tipo="$tipo" :template-id="$templateId" :registro="$planoFlexibilizacao"
-            depois="componentesCurriculares" wire:key="campos-depois-{{ $idTemplate ?? 'padrao' }}" />
+            depois="componentesCurriculares" wire:key="campos-depois" />
 
         <div class="flex justify-end gap-2">
             <x-button.cancel fallback="planos-flexibilizacao.index" />

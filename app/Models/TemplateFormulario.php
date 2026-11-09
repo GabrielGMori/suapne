@@ -22,6 +22,7 @@ class TemplateFormulario extends Model implements Auditable
         'tipo',
         'campos',
         'padrao',
+        'ativo',
         'user_id',
     ];
 
@@ -29,6 +30,7 @@ class TemplateFormulario extends Model implements Auditable
         'tipo' => TipoFormularioEnum::class,
         'campos' => 'array',
         'padrao' => 'boolean',
+        'ativo' => 'boolean',
     ];
 
     public function user(): BelongsTo
@@ -52,12 +54,10 @@ class TemplateFormulario extends Model implements Auditable
             ]);
     }
 
-    public static function opcoesDe(TipoFormularioEnum $tipo): array
+    public static function ativoDe(TipoFormularioEnum $tipo): static
     {
-        return static::query()->doTipo($tipo)->orderByDesc('padrao')->orderBy('nome')
-            ->pluck('nome', 'id')
-            ->mapWithKeys(fn($nome, $id) => [(string) $id => $nome])
-            ->toArray();
+        return static::query()->doTipo($tipo)->where('ativo', true)->first()
+            ?? static::padraoDe($tipo);
     }
 
     public function getCriadoPorAttribute(): ?string

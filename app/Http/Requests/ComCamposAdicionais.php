@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\TipoFormularioEnum;
+use App\Models\TemplateFormulario;
 use App\Support\CamposTemplate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
@@ -75,6 +76,15 @@ trait ComCamposAdicionais
         $doRegistro = $registro ? array_column($registro->camposAdicionais(), 'chave') : [];
 
         return array_values(array_unique([...array_column($doTemplate, 'chave'), ...$doRegistro]));
+    }
+
+    protected function definirTemplate(TipoFormularioEnum $tipo, mixed $registro): void
+    {
+        $this->merge([
+            'template_formulario_id' => $registro instanceof Model
+                ? $registro->template_formulario_id
+                : TemplateFormulario::ativoDe($tipo)->id,
+        ]);
     }
 
     protected function prepararCampos(): void

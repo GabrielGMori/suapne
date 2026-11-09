@@ -25,6 +25,7 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
         $this->merge([
             'user_id' => Auth::id(),
         ]);
+        $this->definirTemplate(TipoFormularioEnum::PLANO_TRABALHO, $this->route('planoTrabalho'));
         $this->prepararCampos();
     }
 
@@ -66,7 +67,7 @@ class PlanoTrabalhoEstudanteRequest extends FormRequest
         return $this->chavesPermitidasPara(
             TipoFormularioEnum::PLANO_TRABALHO,
             $registro,
-            $registro?->template_formulario_id ?? $this->input('template_formulario_id'),
+            $this->input('template_formulario_id'),
         );
     }
 

@@ -1,4 +1,4 @@
-@props(['tipo', 'templates'])
+@props(['tipo', 'templates', 'ativo'])
 
 <x-layouts.main title="Templates de {{ $tipo->label() }}" header="Templates de {{ $tipo->label() }}">
     <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
@@ -23,6 +23,10 @@
             @endcan
         </div>
     @else
+        <p class="text-body-medium text-secondary-accent mb-4">
+            O template "Em uso" é aplicado em todos os novos formulários. Formulários já preenchidos continuam com o template que usaram.
+        </p>
+
         <div class="flex flex-col gap-4">
             @foreach ($templates as $template)
                 <article class="flex flex-wrap items-center gap-4 rounded-xl bg-surface p-5">
@@ -36,9 +40,12 @@
                                 class="text-title-small hover:text-primary transition-colors">{{ $template->nome }}</a>
                             @if ($template->padrao)
                                 <span class="flex items-center text-secondary-accent"
-                                    title="Template usado quando nenhum outro é escolhido. Não pode ser alterado nem excluído.">
+                                    title="Template criado pelo sistema. Não pode ser alterado nem excluído.">
                                     <x-icon size="20">lock</x-icon>
                                 </span>
+                            @endif
+                            @if ($template->is($ativo))
+                                <span class="text-body-medium text-secondary-accent">Em uso</span>
                             @endif
                         </div>
 
@@ -53,6 +60,17 @@
                     </div>
 
                     <div class="flex items-center gap-2">
+                        @if (!$template->is($ativo))
+                            @can('create', App\Models\TemplateFormulario::class)
+                                <form action="{{ route('templates.ativar', ['templateFormulario' => $template]) }}" method="POST">
+                                    @method('PATCH')
+                                    @csrf
+                                    <x-button type="submit" icon="check" label="Usar este template" color="secondary"
+                                        size="dynamic" title="Usar este template em todos os formulários" />
+                                </form>
+                            @endcan
+                        @endif
+
                         @can('view', $template)
                             <x-button type="link" icon="visibility" color="transparent" title="Visualizar template"
                                 href="{{ route('templates.show', ['templateFormulario' => $template]) }}" />
@@ -68,6 +86,9 @@
                                 <p class="mb-5 text-body-large">
                                     Tem certeza que deseja excluir o template <b>{{ $template->nome }}</b>?<br>
                                     Formulários já preenchidos não serão alterados.
+                                    @if ($template->is($ativo))
+                                        <br>Os novos formulários voltarão a usar o template padrão.
+                                    @endif
                                 </p>
 
                                 <div class="flex justify-end gap-3 mb-2">

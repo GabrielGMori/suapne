@@ -7,6 +7,7 @@ use App\Http\Requests\TemplateFormularioRequest;
 use App\Models\TemplateFormulario;
 use App\Support\CamposTemplate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TemplateFormularioController extends Controller
 {
@@ -24,6 +25,7 @@ class TemplateFormularioController extends Controller
         return view('templates.tipo', [
             'tipo' => $tipo,
             'templates' => TemplateFormulario::with('user')->doTipo($tipo)->latest()->get(),
+            'ativo' => TemplateFormulario::ativoDe($tipo),
         ]);
     }
 
@@ -86,6 +88,19 @@ class TemplateFormularioController extends Controller
 
         return redirect()->route('templates.tipo', ['tipo' => $templateFormulario->tipo])
             ->with('status', 'Template atualizado com sucesso!');
+    }
+
+    public function ativar(Request $request, TemplateFormulario $templateFormulario)
+    {
+        abort_unless($request->user()->can('create', TemplateFormulario::class), 404);
+
+        DB::transaction(function () use ($templateFormulario) {
+            TemplateFormulario::query()->doTipo($templateFormulario->tipo)->update(['ativo' => false]);
+            $templateFormulario->update(['ativo' => true]);
+        });
+
+        return redirect()->route('templates.tipo', ['tipo' => $templateFormulario->tipo])
+            ->with('status', 'Template em uso alterado com sucesso!');
     }
 
     public function destroy(Request $request, TemplateFormulario $templateFormulario)
